@@ -38,7 +38,7 @@ function AdminDashboardComponent() {
                     <Menu.Item key="21" icon={<HomeOutlined />}>Dashboard</Menu.Item>
                     <Menu.Item key="24" icon={<CarOutlined />}>Manage Cars</Menu.Item>
                     <Menu.Item key="22" icon={<MessageOutlined />}>Manage Feedback</Menu.Item>
-                    <SubMenu key="sub1" icon={<MailOutlined />} title="Navigation One">
+                    <SubMenu key="sub1" icon={<MailOutlined />} title="Navigation O">
                         <Menu.ItemGroup key="g1" title="Item 1">
                             <Menu.Item key="1">Option 1</Menu.Item>
                             <Menu.Item key="2">Option 2</Menu.Item>
