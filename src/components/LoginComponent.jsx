@@ -1,7 +1,14 @@
 import React from 'react';
 import login from '../images/login.png';
+import { useHistory } from "react-router-dom";
 
 function LoginComponent() {
+
+    const history = useHistory();
+    function loginSubmit(){
+        history.push('/');
+    }
+
     return (
         <div>
             <div className="login-page bg-light">
@@ -42,7 +49,7 @@ function LoginComponent() {
                                                 </div> */}
 
                                                 <div className="col-12">
-                                                    <button type="submit" className="btn px-4 text-white float-end mt-4" style={{ backgroundColor: '#FF7643' }}>Login</button>
+                                                    <button type="submit" className="btn px-4 text-white float-end mt-4" style={{ backgroundColor: '#FF7643' }} onClick={loginSubmit}>Login</button>
                                                 </div>
                                             </form>
                                         </div>
