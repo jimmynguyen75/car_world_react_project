@@ -1,0 +1,89 @@
+{
+    "Dashboard" : {
+        "1": "Trang chủ"
+    }, 
+    "Manage Cars": {
+        "1": "Quản lý xe"
+    },
+    "Manage Feedback": {
+        "1": "Quản lý báo cáo"
+    },
+    "Profile": {
+        "1": "Thông tin cá nhân"
+    },
+    "Log out": {
+        "1": "Đăng xuất"
+    },
+    "Manage Accounts": {
+        "1": "Quản lý tài khoản"
+    },
+    "Total Users": {
+        "1": "Tổng Số Người Dùng"
+    },
+    "People" : {
+        "1": "Người"
+    },
+    "Welcome" : {
+        "1": "Xin chào"
+    },
+    "Total of Contests and Events" : {
+        "1": "Tổng Cuộc Thi và Sự Kiện"
+    },
+    "Total of Exchange Cars and Accessories" : {
+        "1": "Tổng trao đổi Xe và Phụ Kiện"
+    },
+    "Car Name" : {
+        "1": "Tên xe"
+    },
+    "Brand" : {
+        "1": "Hiệu"
+    },
+    "Status" : {
+        "1": "Trạng thái"
+    },
+    "Last Modified" : {
+        "1": "Lần cuối sửa đổi"
+    },
+    "Action" : {
+        "1": "Hành động"
+    },
+    "Created Car Successfully" : {
+        "1": "Tạo Xe thành công"
+    },
+    "Create a new Car" : {
+        "1": "Tạo Xe mới"
+    },
+    "Create Car" : {
+        "1": "Tạo Xe"
+    },
+    "You will Delete this Car when you click!" : {
+        "1": "Bạn sẽ Xóa Xe này khi bạn nhấn!"
+    },
+    "You will View Detail this Car when you click!" : {
+        "1": "Bạn sẽ Xem chi tiết Xe này khi bạn nhấn!"
+    },
+    "You will Edit this Car when you click!" : {
+        "1": "Bạn sẽ sửa xe này khi bạn nhấn!"
+    },
+    "Delete Car!" : {
+        "1": "Xóa Xe!"
+    },
+    "Are you sure you want to Delete this Car?" : {
+        "1": "Bạn có chắc bạn muốn xóa chiếc Xe này không?"
+    },
+    "Ok" : {
+        "1": "Đồng ý"
+    },
+    "Cancel" : {
+        "1": "Hủy"
+    },
+    "View Button!" : {
+        "1": "Nút Xem!"
+    },
+    "Edit Button!" : {
+        "1": "Nút Sửa!"
+    },
+    "Delete Button!" : {
+        "1": "Nút Xóa!"
+    }
+}

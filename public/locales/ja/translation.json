@@ -1,0 +1,89 @@
+{
+    "Dashboard" : {
+        "1": "ダッシュボード"
+    }, 
+    "Manage Cars": {
+        "1": "車を管理する"
+    },
+    "Manage Feedback": {
+        "1": "フィードバックの管理"
+    },
+    "Profile": {
+        "1": "プロフィール"
+    },
+    "Log out": {
+        "1": "ログアウト"
+    },
+    "Manage Accounts": {
+        "1": "アカウントを管理する"
+    },
+    "Total Users": {
+        "1": "総ユーザー数"
+    },
+    "People" : {
+        "1": "人"
+    },
+    "Welcome" : {
+        "1": "いらっしゃいませ"
+    },
+    "Total of Contests and Events" : {
+        "1": "コンテストとイベントの合計"
+    },
+    "Total of Exchange Cars and Accessories" : {
+        "1": "交換車とアクセサリーの合計"
+    },
+    "Car Name" : {
+        "1": "車名"
+    },
+    "Brand" : {
+        "1": "ブランド"
+    },
+    "Status" : {
+        "1": "状態"
+    },
+    "Last Modified" : {
+        "1": "最終更新日"
+    },
+    "Action" : {
+        "1": "アクション"
+    },
+    "Created Car Successfully" : {
+        "1": "車の作成に成功"
+    },
+    "Create a new Car" : {
+        "1": "新しい車を作成する"
+    },
+    "Create Car" : {
+        "1": "車を作成する"
+    },
+    "You will Delete this Car when you click!" : {
+        "1": "クリックするとこの車が削除されます！"
+    },
+    "You will View Detail this Car when you click!" : {
+        "1": "クリックするとこの車の詳細が表示されます！"
+    },
+    "You will Edit this Car when you click!" : {
+        "1": "クリックするとこの車を編集します！"
+    },
+    "Delete Car!" : {
+        "1": "車を削除する!"
+    },
+    "Are you sure you want to Delete this Car?" : {
+        "1": "この車を削除してもよろしいですか?"
+    },
+    "Ok" : {
+        "1": "はい"
+    },
+    "Cancel" : {
+        "1": "キャンセル"
+    },
+    "View Button!" : {
+        "1": "表示ボタン!"
+    },
+    "Edit Button!" : {
+        "1": "編集ボタン!"
+    },
+    "Delete Button!" : {
+        "1": "削除ボタン!"
+    }
+}

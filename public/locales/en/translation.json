@@ -1,0 +1,89 @@
+{
+    "Dashboard" : {
+        "1": "Dasboard"
+    }, 
+    "Manage Cars": {
+        "1": "Manage Cars"
+    },
+    "Manage Feedback": {
+        "1": "Manage Feedback"
+    },
+    "Profile": {
+        "1": "Profile"
+    },
+    "Log out": {
+        "1": "Log out"
+    },
+    "Manage Accounts": {
+        "1": "Manage Accounts"
+    },
+    "Total Users": {
+        "1": "Total Users"
+    },
+    "People" : {
+        "1": "People"
+    },
+    "Welcome" : {
+        "1": "Welcome"
+    },
+    "Total of Contests and Events" : {
+        "1": "Total of Contests and Events"
+    },
+    "Total of Exchange Cars and Accessories" : {
+        "1": "Total of Exchange Cars and Accessories"
+    },
+    "Car Name" : {
+        "1": "Car Name"
+    },
+    "Brand" : {
+        "1": "Brand"
+    },
+    "Status" : {
+        "1": "Status"
+    },
+    "Last Modified" : {
+        "1": "Last Modified"
+    },
+    "Action" : {
+        "1": "Action"
+    },
+    "Created Car Successfully" : {
+        "1": "Created Car Successfully"
+    },
+    "Create a new Car" : {
+        "1": "Create a new Car"
+    },
+    "Create Car" : {
+        "1": "Create Car"
+    },
+    "You will Delete this Car when you click!" : {
+        "1": "You will Delete this Car when you click!"
+    },
+    "You will View Detail this Car when you click!" : {
+        "1": "You will View Detail this Car when you click!"
+    },
+    "You will Edit this Car when you click!" : {
+        "1": "You will Edit this Car when you click!"
+    },
+    "Delete Car!" : {
+        "1": "Delete Car!"
+    },
+    "Are you sure you want to Delete this Car?" : {
+        "1": "Are you sure you want to Delete this Car?"
+    },
+    "Ok" : {
+        "1": "Ok"
+    },
+    "Cancel" : {
+        "1": "Cancel"
+    },
+    "View Button!" : {
+        "1": "View Button!"
+    },
+    "Edit Button!" : {
+        "1": "Edit Button!"
+    },
+    "Delete Button!" : {
+        "1": "Delete Button!"
+    }
+}
