@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation } from "react-router-dom";
-import { Table, Input, Popover, Button, Space, Spin, Modal, Avatar } from 'antd';
+import { Table, Input, Popover, Button, Space, Spin, Modal, Avatar, message } from 'antd';
 import Highlighter from 'react-highlight-words';
-import {SearchOutlined, DeleteOutlined, EditOutlined, FundViewOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { SearchOutlined, DeleteOutlined, EditOutlined, FundViewOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import CarService from '../../services/CarService';
 import CreateCarModalComponent from './CreateCarModalComponent';
 import { useTranslation } from 'react-i18next';
+import CreateCarBodyModalComponent from './CreateCarBodyModalComponent';
+import ViewCarModalComponent from './ViewCarModalComponent';
 
 function ManageCarsComponent() {
 
     const history = useHistory();
     const [car, setCars] = useState(null);
     const { t, i18n } = useTranslation();
+    const [visible, setVisible] = React.useState(false);
+    const [visibleDetail, setVisibleDetail] = React.useState(false);
+    const [confirmLoading, setConfirmLoading] = React.useState(false);
+    const [visibleSuccess, setSuccess] = React.useState(false);
 
     const contentDelete = (
         <div>
@@ -49,6 +55,44 @@ function ManageCarsComponent() {
             cancelText: t('Cancel.1'),
         });
     }
+
+    const success = () => {
+        setSuccess(false);
+        message.success(t('Created Car Successfully.1'), 2);
+    };
+    const showModal = () => {
+        setVisible(true);
+    };
+
+    const showViewDetail = () => {
+        setVisibleDetail(true);
+    }
+    const handleOk = () => {
+        setConfirmLoading(true);
+        setTimeout(() => {
+            setVisible(false);
+            setConfirmLoading(false);
+        }, 2000);
+        setTimeout(() => {
+            success();
+            setSuccess(true);
+        }, 2000)
+    };
+    const handleOkDetail = () => {
+        setConfirmLoading(true);
+        setTimeout(() => {
+            setVisibleDetail(false);
+            setConfirmLoading(false);
+        }, 2000);
+    };
+    const handleCancel = () => {
+        console.log('Clicked cancel button');
+        setVisible(false);
+    };
+    const handleCancelDetail = () => {
+        console.log('Clicked cancel button');
+        setVisibleDetail(false);
+    };
 
     class Cars extends React.Component {
         state = {
@@ -184,11 +228,11 @@ function ManageCarsComponent() {
                             <Space size="middle">
                                 {/* <a>Invite {record.lastName}</a> */}
                                 <Popover content={contentView} title={t('View Button!.1')}>
-                                    <Button icon={<FundViewOutlined />}
+                                    <Button onClick={showViewDetail} icon={<FundViewOutlined />}
                                         block className="viewButton" />
                                 </Popover>
                                 <Popover content={contentEdit} title={t('Edit Button!.1')}>
-                                    <Button icon={<EditOutlined />}
+                                    <Button onClick={showModal} icon={<EditOutlined />}
                                         block className="editButton" />
                                 </Popover>
                                 <Popover content={contentDelete} title={t('Delete Button!.1')}>
@@ -221,7 +265,30 @@ function ManageCarsComponent() {
             spinning={car == null ? true : false}
             // delay={100}
             size="large" >
-            
+            <Modal
+                title={t('Create a new Car.1')}
+                visible={visible}
+                onOk={handleOk}
+                confirmLoading={confirmLoading}
+                onCancel={handleCancel}
+                width={1000}
+            >
+                <CreateCarBodyModalComponent />
+            </Modal>
+            <Modal
+                title="View Car Detail"
+                visible={visibleDetail}
+                onOk={handleOkDetail}
+                confirmLoading={confirmLoading}
+                onCancel={handleCancelDetail}
+                footer={[
+                    <Button key="back" onClick={handleCancelDetail}>
+                        Ok
+                    </Button>
+                ]}
+            >
+                <ViewCarModalComponent />
+            </Modal>
             <CreateCarModalComponent />
             <Cars />
         </Spin>

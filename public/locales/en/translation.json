@@ -1,6 +1,6 @@
 {
     "Dashboard" : {
-        "1": "Dasboard"
+        "1": "Dashboard"
     }, 
     "Manage Cars": {
         "1": "Manage Cars"
@@ -85,5 +85,8 @@
     },
     "Delete Button!" : {
         "1": "Delete Button!"
+    },
+    "Manage Accessories" : {
+        "1": "Manage Accessories"
     }
 }

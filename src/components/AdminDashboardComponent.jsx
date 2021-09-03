@@ -49,6 +49,9 @@ function AdminDashboardComponent() {
     function profile() {
         history.push('/profile')
     }
+    function manageAccessories() {
+        history.push('/mage/feedback')
+    }
 
     function confirmLogout() {
         Modal.confirm({
@@ -84,6 +87,7 @@ function AdminDashboardComponent() {
                 <Menu mode="inline" defaultSelectedKeys={[location.pathname]}>
                     <Menu.Item key="/admin" icon={<HomeOutlined />} onClick={dashboard}>{t('Dashboard.1')}</Menu.Item>
                     <Menu.Item key="/manage/cars" icon={<CarOutlined />} onClick={manageCars}>{t('Manage Cars.1')}</Menu.Item>
+                    <Menu.Item key="/manage/accessories" icon={<CarOutlined />} onClick={manageAccessories}>{t('Manage Accessories.1')}</Menu.Item>
                     <Menu.Item key="/manage/feedback" icon={<MessageOutlined />} onClick={manageFeedback}>{t('Manage Feedback.1')}</Menu.Item>
                     <Menu.Item key="/manage/accounts" icon={<UserSwitchOutlined />} onClick={manageAccounts}>{t('Manage Accounts.1')}</Menu.Item>
                     <Menu.Item key="/profile" icon={<UserOutlined />} onClick={profile}>{t('Profile.1')}</Menu.Item>
