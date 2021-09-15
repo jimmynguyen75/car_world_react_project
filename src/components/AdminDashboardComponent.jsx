@@ -14,7 +14,10 @@ import ManageAccountsComponent from './ManageAccountsComponent';
 import ProfileComponent from './ProfileComponent';
 import AccountService from '../services/AccountService';
 import DashboardComponent from './DashboardComponent';
+import ManagePostsComponent from './posts/ManagePostsComponent'
 import { useTranslation } from 'react-i18next';
+import CreatePostModalComponent from './posts/CreatePostModalComponent';
+import ManageAccessoryComponent from './accessories/ManageAccessoryComponent';
 
 function AdminDashboardComponent() {
     const { Title } = Typography;
@@ -29,7 +32,7 @@ function AdminDashboardComponent() {
     }, []);
 
     const currentUser = AccountService.getCurrentUser();
-    console.log(currentUser.username);
+
     function logoutButton() {
         AccountService.logOut();
         history.replace('/login');
@@ -50,7 +53,10 @@ function AdminDashboardComponent() {
         history.push('/profile')
     }
     function manageAccessories() {
-        history.push('/mage/feedback')
+        history.push('/manage/accessories')
+    }
+    function managePosts() {
+        history.push('/manage/posts')
     }
 
     function confirmLogout() {
@@ -88,7 +94,8 @@ function AdminDashboardComponent() {
                     <Menu.Item key="/admin" icon={<HomeOutlined />} onClick={dashboard}>{t('Dashboard.1')}</Menu.Item>
                     <Menu.Item key="/manage/cars" icon={<CarOutlined />} onClick={manageCars}>{t('Manage Cars.1')}</Menu.Item>
                     <Menu.Item key="/manage/accessories" icon={<CarOutlined />} onClick={manageAccessories}>{t('Manage Accessories.1')}</Menu.Item>
-                    <Menu.Item key="/manage/feedback" icon={<MessageOutlined />} onClick={manageFeedback}>{t('Manage Feedback.1')}</Menu.Item>
+                    <Menu.Item key="/manage/posts" icon={<CarOutlined />} onClick={managePosts}>{t('Manage Posts.1')}</Menu.Item>
+                    {/* <Menu.Item key="/manage/feedback" icon={<MessageOutlined />} onClick={manageFeedback}>{t('Manage Feedback.1')}</Menu.Item> */}
                     <Menu.Item key="/manage/accounts" icon={<UserSwitchOutlined />} onClick={manageAccounts}>{t('Manage Accounts.1')}</Menu.Item>
                     <Menu.Item key="/profile" icon={<UserOutlined />} onClick={profile}>{t('Profile.1')}</Menu.Item>
                     <Menu.Item key="" onClick={confirmLogout} icon={<LogoutOutlined />}>{t('Log out.1')}</Menu.Item>
@@ -103,7 +110,7 @@ function AdminDashboardComponent() {
                         <Radio.Button onClick={() => handleLang('ja')} value="c" style={{ fontSize: 12, color: '#646464', borderRadius: 15, marginLeft: 5 }}><Avatar size={20} className="country" src={"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/225px-Flag_of_Japan.svg.png"} /> JA</Radio.Button>
                     </Radio.Group>
                     <Avatar size={45} className="avatar" src={"https://reqres.in/img/faces/8-image.jpg"}> </Avatar>
-                    <Title level={5} className="userName">{t('Welcome.1')}, {currentUser.first_name}</Title>
+                    <Title level={5} className="userName">{t('Welcome.1')},</Title>
 
                 </Header>
 
@@ -129,6 +136,22 @@ function AdminDashboardComponent() {
                             case '/manage/accounts':
                                 return (
                                     <ManageAccountsComponent />
+                                )
+                            case '/manage/accessories':
+                                return (
+                                    < ManageAccessoryComponent />
+                                )
+                            case '/manage/posts':
+                                return (
+                                    <ManagePostsComponent />
+                                )
+                            case '/create/post':
+                                return (
+                                    <CreatePostModalComponent />
+                                )
+                            case '/profile':
+                                return (
+                                    <ProfileComponent />
                                 )
                             case '/logout':
                                 return (

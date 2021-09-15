@@ -21,14 +21,15 @@ function LoginComponent() {
 
     const handleLogin = (e) => {
         e.preventDefault();
-
         AccountService.login(username, password)
             .then(() => {
-                history.push("/admin");
+                console.log("Username: " + username);
+                console.log("Password: " + password);
+                history.replace("/admin");
                 window.location.reload();
             })
-            .catch(err => {
-                console.log(err)
+            .catch(error => {
+                console.log(error)
             })
     }
 
@@ -58,26 +59,18 @@ function LoginComponent() {
                                                             required></input>
                                                     </div>
                                                 </div>
-
                                                 <div className="col-12">
                                                     <label>Password<span className="text-danger">*</span></label>
                                                     <div className="input-group">
                                                         <div className="input-group-text"><i className="bi bi-lock-fill"></i></div>
                                                         <input
-                                                            type="text"
+                                                            type="password"
                                                             onChange={onChangePassword}
                                                             value={password}
                                                             name="password"
                                                             className="form-control"
                                                             placeholder="Enter Password"
                                                             required></input>
-                                                    </div>
-                                                </div>
-
-                                                <div className="col-sm-6">
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" id="inlineFormCheck"></input>
-                                                        <label className="form-check-label" >Remember me</label>
                                                     </div>
                                                 </div>
 

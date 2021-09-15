@@ -36,7 +36,7 @@ function CreateCarModalComponent() {
         };
         return (
             <>
-                <Button type="primary" shape="round" onClick={showModal} className="createButton" style={{ height: 35 }} icon={<PlusCircleOutlined />}>{t('Create Car.1')}</Button>
+                <Button type="primary" shape="round" onClick={showModal} className="createButton" style={{ height: 35 }} icon={<PlusCircleOutlined />}><span style={{marginTop: 2}}>{t('Create Car.1')}</span></Button>
                 <Modal
                     title={t('Create a new Car.1')}
                     visible={visible}

@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -8,11 +8,11 @@ import './i18next';
 
 ReactDOM.render(
   //<Suspense fallback={(<div>Loading...</div>)}> I will use it if needed
-    <React.StrictMode>
+  <React.StrictMode>
 
-      <App />
+    <App />
 
-    </React.StrictMode>,
+  </React.StrictMode>,
   //</Suspense>,
   document.getElementById('root')
 );

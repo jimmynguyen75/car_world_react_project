@@ -1,23 +1,22 @@
 import axios from 'axios';
 
-const ACCOUNTS_API_URL = "https://reqres.in/api/users";
+const ACCOUNTS_API_URL = "https://fakestoreapi.com/auth/login";
 
-const login = (email, first_name) => {
+const login = (username, password) => {
     return axios
         .post(ACCOUNTS_API_URL, {
-            email,
-            first_name,
+            username,
+            password
         })
         .then((response) => {
-            if (response.data.first_name) {
-                localStorage.setItem("user", JSON.stringify(response.data));
+            if (response.data.token) {
+                localStorage.setItem("accessToken", JSON.stringify(response.data));
             }
             return response.data;
         });
 };
 
 const getCurrentUser = () => {
-    return JSON.parse(localStorage.getItem("user"));
 };
 
 const logOut = () => {

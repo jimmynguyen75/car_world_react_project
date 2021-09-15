@@ -182,7 +182,6 @@ function ManageCarsComponent() {
             const columns = [
                 {
                     title: t('Car Name.1'),
-                    dataIndex: 'thumbnailUrl',
                     key: 'age',
                     width: '20%',
                     ...this.getColumnSearchProps('thumbnailUrl'),

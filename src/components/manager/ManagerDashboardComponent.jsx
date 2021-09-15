@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import 'antd/dist/antd.less';
-import logo2 from '../images/logo2.png';
+import logo2 from '../../images/logo2.png';
 import { useHistory, useLocation } from "react-router-dom";
 import { Menu, Avatar, Typography, Modal, Layout } from 'antd';
 import {
     HomeOutlined, MessageOutlined, UserOutlined, LogoutOutlined,
     ExclamationCircleOutlined, CarOutlined, UserSwitchOutlined
 } from '@ant-design/icons';
-import '../styles/admin-dashboard.less';
-import ManageCarsComponent from './cars/ManageCarsComponent';
-import ManageFeedbackComponent from './ManageFeedbackComponent';
-import ManageAccountsComponent from './ManageAccountsComponent';
-import ProfileComponent from './ProfileComponent';
+import '../../styles/admin-dashboard.less';
+import ManageCarsComponent from '../cars/ManageCarsComponent';
+import ManageFeedbackComponent from '../ManageFeedbackComponent';
+import ManageAccountsComponent from '../ManageAccountsComponent';
+import ProfileComponent from '../ProfileComponent';
 
 function ManagerDashboardComponent() {
     const { Title } = Typography;
@@ -71,7 +71,8 @@ function ManagerDashboardComponent() {
                 <img src={logo2} className="logo" alt="logo..." />
                 <Menu mode="inline" defaultSelectedKeys={[location.pathname]}>
                     <Menu.Item key="/admin" icon={<HomeOutlined />} onClick={dashboard}>Dashboard</Menu.Item>
-                    <Menu.Item key="/manage/cars" icon={<CarOutlined />} onClick={manageCars}>Manage Cars</Menu.Item>
+                    <Menu.Item key="/manage/cars" icon={<CarOutlined />} onClick={manageCars}>Manage Events</Menu.Item>
+                    <Menu.Item key="/manage/cars" icon={<CarOutlined />} onClick={manageCars}>Manage Contests</Menu.Item>
                     <Menu.Item key="/manage/feedback" icon={<MessageOutlined />} onClick={manageFeedback}>Manage Feedback</Menu.Item>
                     <Menu.Item key="/profile" icon={<UserOutlined />} onClick={profile}>Profile</Menu.Item>
                     <Menu.Item key="" onClick={confirmLogout} icon={<LogoutOutlined />}>Log out</Menu.Item>
