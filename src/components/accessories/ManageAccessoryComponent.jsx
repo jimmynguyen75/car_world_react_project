@@ -106,10 +106,19 @@ function ManageAccessoryComponent() {
             const columns = [
                 {
                     title: 'Name',
-                    dataIndex: 'Name',
                     key: 'name',
                     width: '30%',
                     ...this.getColumnSearchProps('name'),
+                    render: (text, record) => {
+                        return (
+                            <div>
+                                <div class="row">
+                                    <div class="col-5"> <img style={{ height: 100, maxWidth: '100%' }} src={record.Image} /></div>
+                                    <div class="col-7"><div>{record.Name}</div></div>
+                                </div>
+                            </div>
+                        );
+                    },
                 },
                 {
                     title: 'Brand',
