@@ -15,7 +15,7 @@ function ManagePostsComponent() {
 
     return (
         <div>
-            <Button type="primary" shape="round" onClick={createModal} className="createButton" style={{ height: 35 }} icon={<PlusCircleOutlined />}>{t('Create Post.1')}</Button>
+            <Button type="primary" shape="round" onClick={createModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2 }}>Tạo bài đăng</span></Button>
         </div>
     )
 }

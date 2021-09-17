@@ -1,24 +1,36 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Table, Input, Button, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
-import AccessoryService from '../../services/AccessoryService'
-import CreateAccessoryModalComponent from './CreateAccessoryModalComponent';
+import CreateEventsModalComponent from './CreateEventsModalComponent'
 
-function ManageAccessoryComponent() {
-    const [accessories, setAccessories] = useState(null);
-    useEffect(() => {
-        AccessoryService
-            .getAccessories()
-            .then(response => {
-                console.log("ra" + response);
-                setAccessories(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            })
-    }, []);
-
+function ManageEventsComponent() {
+    const data = [
+        {
+            key: '1',
+            name: 'John Brown',
+            age: 32,
+            address: 'New York No. 1 Lake Park',
+        },
+        {
+            key: '2',
+            name: 'Joe Black',
+            age: 42,
+            address: 'London No. 1 Lake Park',
+        },
+        {
+            key: '3',
+            name: 'Jim Green',
+            age: 32,
+            address: 'Sidney No. 1 Lake Park',
+        },
+        {
+            key: '4',
+            name: 'Jim Red',
+            age: 32,
+            address: 'London No. 2 Lake Park',
+        },
+    ];
     class App extends React.Component {
         state = {
             searchText: '',
@@ -107,58 +119,36 @@ function ManageAccessoryComponent() {
             const columns = [
                 {
                     title: 'Name',
+                    dataIndex: 'name',
                     key: 'name',
                     width: '30%',
                     ...this.getColumnSearchProps('name'),
-                    render: (text, record) => {
-                        return (
-                            <div>
-                                <div class="row">
-                                    <div class="col-5"> <img style={{ height: 100, maxWidth: '100%' }} src={record.Image} /></div>
-                                    <div class="col-7"><div>{record.Name}</div></div>
-                                </div>
-                            </div>
-                        );
-                    },
                 },
                 {
-                    title: 'Brand',
-                    dataIndex: 'age',
-                    key: 'age',
-                    width: '10%',
-                    ...this.getColumnSearchProps('age'),
-                },
-                {
-                    title: 'Price',
-                    dataIndex: 'Price',
-                    key: 'address',
-                    width: '15%',
-                    ...this.getColumnSearchProps('address'),
-                    sorter: (a, b) => a.address.length - b.address.length,
-                    sortDirections: ['descend', 'ascend'],
-                },
-                {
-                    title: 'Created',
+                    title: 'Age',
                     dataIndex: 'age',
                     key: 'age',
                     width: '20%',
                     ...this.getColumnSearchProps('age'),
                 },
                 {
-                    title: 'Action',
-                    key: 'action',
-                }
+                    title: 'Address',
+                    dataIndex: 'address',
+                    key: 'address',
+                    ...this.getColumnSearchProps('address'),
+                    sorter: (a, b) => a.address.length - b.address.length,
+                    sortDirections: ['descend', 'ascend'],
+                },
             ];
-            return <Table columns={columns} dataSource={accessories} />;
+            return <Table columns={columns} dataSource={data} />;
         }
     }
-
     return (
         <div>
-            <CreateAccessoryModalComponent />
+            <CreateEventsModalComponent />
             <App />
         </div>
     )
 }
 
-export default ManageAccessoryComponent;
+export default ManageEventsComponent;

@@ -8,10 +8,13 @@ import {
     ExclamationCircleOutlined, CarOutlined, UserSwitchOutlined
 } from '@ant-design/icons';
 import '../../styles/admin-dashboard.less';
-import ManageCarsComponent from '../cars/ManageCarsComponent';
-import ManageFeedbackComponent from '../ManageFeedbackComponent';
-import ManageAccountsComponent from '../ManageAccountsComponent';
-import ProfileComponent from '../ProfileComponent';
+import ManagePostsComponent from '../posts/ManagePostsComponent';
+import ManageFeedbackComponent from '../feedback/ManageFeedbackComponent';
+import ManageContestsComponent from '../contests/ManageContestsComponent';
+import ManageEventsComponent from '../events/ManageEventsComponent';
+import ProfileComponent from '../profile/ProfileComponent';
+import ManagerBodyDashboardComponent from './ManagerBodyDashboardComponent';
+
 
 function ManagerDashboardComponent() {
     const { Title } = Typography;
@@ -27,20 +30,23 @@ function ManagerDashboardComponent() {
     function logoutButton() {
         history.push('/login');
     }
-    function manageCars() {
-        history.push('/manage/cars')
+    function managePosts() {
+        history.push('/quan-ly/bai-dang')
+    }
+    function manageEvents() {
+        history.push('/quan-ly/su-kien')
     }
     function dashboard() {
-        history.push('/admin')
+        history.push('/quan-ly')
     }
     function manageFeedback() {
-        history.push('/manage/feedback')
+        history.push('/quan-ly/phan-hoi')
     }
-    function manageAccounts() {
-        history.push('/manage/accounts')
+    function manageContests() {
+        history.push('/quan-ly/cuoc-thi')
     }
     function profile() {
-        history.push('/profile')
+        history.push('/thong-tin-ca-nhan')
     }
 
     function confirmLogout() {
@@ -70,12 +76,13 @@ function ManagerDashboardComponent() {
             >
                 <img src={logo2} className="logo" alt="logo..." />
                 <Menu mode="inline" defaultSelectedKeys={[location.pathname]}>
-                    <Menu.Item key="/admin" icon={<HomeOutlined />} onClick={dashboard}>Dashboard</Menu.Item>
-                    <Menu.Item key="/manage/cars" icon={<CarOutlined />} onClick={manageCars}>Manage Events</Menu.Item>
-                    <Menu.Item key="/manage/cars" icon={<CarOutlined />} onClick={manageCars}>Manage Contests</Menu.Item>
-                    <Menu.Item key="/manage/feedback" icon={<MessageOutlined />} onClick={manageFeedback}>Manage Feedback</Menu.Item>
-                    <Menu.Item key="/profile" icon={<UserOutlined />} onClick={profile}>Profile</Menu.Item>
-                    <Menu.Item key="" onClick={confirmLogout} icon={<LogoutOutlined />}>Log out</Menu.Item>
+                    <Menu.Item key="/quan-ly" icon={<HomeOutlined />} onClick={dashboard}>Trang chủ</Menu.Item>
+                    <Menu.Item key="/quan-ly/bai-dang" icon={<CarOutlined />} onClick={managePosts}>Quản lý bài đăng</Menu.Item>
+                    <Menu.Item key="/quan-ly/su-kien" icon={<CarOutlined />} onClick={manageEvents}>Quản lý sự kiện</Menu.Item>
+                    <Menu.Item key="/quan-ly/cuoc-thi" icon={<CarOutlined />} onClick={manageContests}>Quản lý cuộc thi</Menu.Item>
+                    <Menu.Item key="/quan-ly/phan-hoi" icon={<MessageOutlined />} onClick={manageFeedback}>Quản lý phản hồi</Menu.Item>
+                    <Menu.Item key="/thong-tin-ca-nhan" icon={<UserOutlined />} onClick={profile}>Thông tin cá nhân</Menu.Item>
+                    <Menu.Item key="" onClick={confirmLogout} icon={<LogoutOutlined />}>Đăng xuất</Menu.Item>
                 </Menu>
             </Sider>
             <Layout className="site-layout" style={{ marginLeft: 200 }}>
@@ -87,17 +94,29 @@ function ManagerDashboardComponent() {
                 <Content style={{ margin: '24px 16px 0' }} >
                     {(() => {
                         switch (location.pathname) {
-                            case '/manage/cars':
+                            case '/quan-ly':
                                 return (
-                                    <ManageCarsComponent />
+                                    <ManagerBodyDashboardComponent />
                                 )
-                            case '/manage/feedback':
+                            case '/quan-ly/bai-dang':
+                                return (
+                                    <ManagePostsComponent />
+                                )
+                            case '/quan-ly/phan-hoi':
                                 return (
                                     <ManageFeedbackComponent />
                                 )
-                            case '/manage/accounts':
+                            case '/quan-ly/su-kien':
                                 return (
-                                    <ManageAccountsComponent />
+                                    <ManageEventsComponent />
+                                )
+                            case '/quan-ly/cuoc-thi':
+                                return (
+                                    <ManageContestsComponent />
+                                )
+                            case '/quan-ly/cuoc-thi':
+                                return (
+                                    <ManageContestsComponent />
                                 )
                             case '/logout':
                                 return (

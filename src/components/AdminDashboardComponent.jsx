@@ -9,9 +9,9 @@ import {
 } from '@ant-design/icons';
 import '../styles/admin-dashboard.less';
 import ManageCarsComponent from './cars/ManageCarsComponent';
-import ManageFeedbackComponent from './ManageFeedbackComponent';
+import ManageFeedbackComponent from './feedback/ManageFeedbackComponent';
 import ManageAccountsComponent from './ManageAccountsComponent';
-import ProfileComponent from './ProfileComponent';
+import ProfileComponent from './profile/ProfileComponent';
 import AccountService from '../services/AccountService';
 import DashboardComponent from './DashboardComponent';
 import ManagePostsComponent from './posts/ManagePostsComponent'

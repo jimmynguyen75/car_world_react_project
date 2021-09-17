@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import storage from "../services/ImageFirebase";
-import './posts/styles.less'
+import storage from "../../services/ImageFirebase";
+import '../posts/styles.less'
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 function ProfileComponent() {
