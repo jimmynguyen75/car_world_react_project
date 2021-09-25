@@ -1,49 +1,74 @@
-import React from 'react'
-import { Modal, Button, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
+import { Button, message, Modal, Popconfirm, Row } from 'antd';
+import React from 'react';
+import { useHistory } from "react-router-dom";
 import CreateCarBodyModalComponent from './CreateCarBodyModalComponent';
 import './styles.less';
-import { useTranslation } from 'react-i18next';
 
 function CreateCarModalComponent() {
     const App = () => {
+        const history = useHistory();
         const [visible, setVisible] = React.useState(false);
-        const [confirmLoading, setConfirmLoading] = React.useState(false);
-        const [visibleSuccess, setSuccess] = React.useState(false);
-        const { t, i18n } = useTranslation();
-
+        const [loadingButton, setLoadingButton] = React.useState(false)
         const success = () => {
-            setSuccess(false);
-            message.success(t('Created Car Successfully.1'), 2);
+            message.success('Created Car Successfully.1');
         };
         const showModal = () => {
             setVisible(true);
         };
         const handleOk = () => {
-            setConfirmLoading(true);
+            setLoadingButton(true);
             setTimeout(() => {
                 setVisible(false);
-                setConfirmLoading(false);
+                setLoadingButton(false);
+                history.push('/quan-ly/xe')
             }, 2000);
             setTimeout(() => {
                 success();
-                setSuccess(true);
             }, 2000)
         };
         const handleCancel = () => {
             console.log('Clicked cancel button');
             setVisible(false);
+            history.push('/quan-ly/xe')
         };
+        // function confirm(e) {
+        //     console.log(e);
+        //     message.success('Click on Yes');
+        // }
+
+        // function cancel(e) {
+        //     console.log(e);
+        //     message.error('Click on No');
+        // }
         return (
             <>
-                <Button type="primary" shape="round" onClick={showModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{marginTop: 2}}>{t('Create Car.1')}</span></Button>
+                <Button type="primary" shape="round" onClick={showModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2.5 }}>Tạo xe</span></Button>
                 <Modal
-                    title={t('Create a new Car.1')}
+                    title='Tạo xe mới'
                     visible={visible}
-                    onOk={handleOk}
-                    confirmLoading={confirmLoading}
                     onCancel={handleCancel}
                     width={1000}
+                    footer={[
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                            <Button form="myForm" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">
+                                Submit
+                            </Button>
+                            <Popconfirm
+                                title={"Are you sure to delete this task?"}
+                            // okText="Submit"
+                            // cancelText="Cancel"
+
+                            >
+                                <Button type="primary" key="submit" htmlType="submit">
+                                    Submit
+                                </Button>
+                            </Popconfirm>
+                        </Row>
+                    ]}
                 >
                     <CreateCarBodyModalComponent />
                 </Modal>

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import login from '../images/login.png';
+import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
+import login from '../images/login.png';
 import AccountService from '../services/AccountService';
 
 function LoginComponent() {
@@ -8,6 +8,7 @@ function LoginComponent() {
     const history = useHistory();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [incorrect, setIncorrect] = useState("none");
 
     const onChangeUsername = (e) => {
         const username = e.target.value;
@@ -21,14 +22,20 @@ function LoginComponent() {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        AccountService.login(username, password)
+        AccountService.login(username, password, 2)
             .then(() => {
-                console.log("Username: " + username);
-                console.log("Password: " + password);
-                history.replace("/admin");
-                window.location.reload();
+                console.log("Tên đăng nhập: " + username);
+                console.log("Mật khẩu: " + password);
+                console.log(AccountService.getCurrentUser().RoleId);
+                if (AccountService.getCurrentUser().RoleId === 1) {
+                    history.replace("/quan-tri")
+                } else {
+                    history.replace("/quan-ly")
+                }
             })
-            .catch(error => {
+            .catch((error) => {
+                setPassword("")
+                setIncorrect("")
                 console.log(error)
             })
     }
@@ -39,14 +46,14 @@ function LoginComponent() {
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-10 offset-lg-1">
-                            <h3 className="mb-3">Login Now</h3>
+                            <h3 className="mb-3">Car World</h3>
                             <div className="bg-white shadow rounded">
                                 <div className="row">
                                     <div className="col-md-7 pe-0">
                                         <div className="form-left h-100 py-5 px-5">
                                             <form className="row g-4" onSubmit={handleLogin}>
                                                 <div className="col-12">
-                                                    <label>Username<span className="text-danger">*</span></label>
+                                                    <label style={{ marginBottom: 5 }}>Tên đăng nhập<span className="text-danger">*</span></label>
                                                     <div className="input-group">
                                                         <div className="input-group-text"><i className="bi bi-person-fill"></i></div>
                                                         <input
@@ -55,12 +62,12 @@ function LoginComponent() {
                                                             value={username}
                                                             name="username"
                                                             className="form-control"
-                                                            placeholder="Enter Username"
+                                                            placeholder="Nhập tên đăng nhập"
                                                             required></input>
                                                     </div>
                                                 </div>
                                                 <div className="col-12">
-                                                    <label>Password<span className="text-danger">*</span></label>
+                                                    <label style={{ marginBottom: 5 }}>Mật khẩu<span className="text-danger">*</span></label>
                                                     <div className="input-group">
                                                         <div className="input-group-text"><i className="bi bi-lock-fill"></i></div>
                                                         <input
@@ -69,17 +76,15 @@ function LoginComponent() {
                                                             value={password}
                                                             name="password"
                                                             className="form-control"
-                                                            placeholder="Enter Password"
+                                                            placeholder="Nhập mật khẩu"
                                                             required></input>
                                                     </div>
                                                 </div>
-
-                                                {/* <div className="col-sm-6">
-                                                    <a href="#" className="float-end text-primary">Forgot Password?</a>
-                                                </div> */}
-
-                                                <div className="col-12">
-                                                    <button type="submit" className="btn px-4 text-white float-end mt-4" style={{ backgroundColor: '#FF7643' }}>Login</button>
+                                                <div className="col-8">
+                                                    <label style={{ display: incorrect, padding: 10, color: "white", borderRadius: 10, background: "#FF7171" }}>Tài khoản hoặc mật khẩu không đúng</label>
+                                                </div>
+                                                <div className="col-4">
+                                                    <button type="submit" className="btn px-4 text-white float-end mt-2" style={{ backgroundColor: '#FF7643' }}>Đăng nhập</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -95,12 +100,12 @@ function LoginComponent() {
                                     </div>
                                 </div>
                             </div>
-                            <p className="text-end text-secondary mt-3">In the history of the world, no one has ever washed a rented car</p>
+                            <p className="text-end text-secondary mt-3">Trong lịch sử thế giới, không ai tự rửa xe mình thuê bao giờ hết</p>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 

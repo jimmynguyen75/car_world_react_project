@@ -6,7 +6,7 @@ function CreateEventsModalComponent() {
     const App = () => {
         const [visible, setVisible] = React.useState(false);
         const [confirmLoading, setConfirmLoading] = React.useState(false);
-        const [visibleSuccess, setSuccess] = React.useState(false);
+        const [setSuccess] = React.useState(false);
         const success = () => {
             setSuccess(false);
             message.success("Create Acccessory Successfully", 2);

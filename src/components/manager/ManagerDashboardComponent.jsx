@@ -1,34 +1,58 @@
-import React, { useEffect } from 'react';
+import { CarOutlined, ExclamationCircleOutlined, HomeOutlined, LogoutOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Layout, Menu, Modal, Typography } from 'antd';
 import 'antd/dist/antd.less';
-import logo2 from '../../images/logo2.png';
+import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation } from "react-router-dom";
-import { Menu, Avatar, Typography, Modal, Layout } from 'antd';
-import {
-    HomeOutlined, MessageOutlined, UserOutlined, LogoutOutlined,
-    ExclamationCircleOutlined, CarOutlined, UserSwitchOutlined
-} from '@ant-design/icons';
+import logo2 from '../../images/logo2.png';
+import AccountService from '../../services/AccountService';
 import '../../styles/admin-dashboard.less';
-import ManagePostsComponent from '../posts/ManagePostsComponent';
-import ManageFeedbackComponent from '../feedback/ManageFeedbackComponent';
 import ManageContestsComponent from '../contests/ManageContestsComponent';
 import ManageEventsComponent from '../events/ManageEventsComponent';
+import ManageFeedbackComponent from '../feedback/ManageFeedbackComponent';
+import CreatePostModalComponent from '../posts/CreatePostModalComponent';
+import ManagePostsComponent from '../posts/ManagePostsComponent';
 import ProfileComponent from '../profile/ProfileComponent';
 import ManagerBodyDashboardComponent from './ManagerBodyDashboardComponent';
 
 
 function ManagerDashboardComponent() {
     const { Title } = Typography;
-    const { Header, Sider, Content, Footer } = Layout;
+    const { Header, Sider, Content } = Layout;
     const history = useHistory();
     const location = useLocation();
-
+    const currentUser = AccountService.getCurrentUser();
+    const [title, setTitle] = useState('');
     useEffect(() => {
-        let title = "Car World | Admin"
+        if (location.pathname === "/quan-ly") {
+            console.log(location.pathname)
+            setTitle('Trang chủ')
+        }
+        if (location.pathname === "/quan-ly/bai-dang") {
+            console.log(location.pathname)
+            setTitle('Quản lý bài đăng')
+        }
+        if (location.pathname === "/quan-ly/su-kien") {
+            console.log(location.pathname)
+            setTitle('Quản lý sư kiện')
+        }
+        if (location.pathname === "/quan-ly/cuoc-thi") {
+            console.log(location.pathname)
+            setTitle('Quản lý cuộc thi')
+        }
+        if (location.pathname === "/quan-ly/phan-hoi") {
+            console.log(location.pathname)
+            setTitle('Quản lý phản hồi')
+        }
+        if (location.pathname === "/thong-tin-ca-nhan") {
+            console.log(location.pathname)
+            setTitle('Thông tin cá nhân')
+        }
         document.title = title;
-    }, []);
+    }, [location.pathname, title])
 
     function logoutButton() {
-        history.push('/login');
+        AccountService.logOut();
+        history.replace('/login');
     }
     function managePosts() {
         history.push('/quan-ly/bai-dang')
@@ -63,10 +87,8 @@ function ManagerDashboardComponent() {
     return (
         <Layout>
             <Sider
-                breakpoint="lg"
-                theme="light"
-                //collapsedWidth="0"
                 className="siderDashboard"
+                theme="light"
                 style={{
                     overflow: 'auto',
                     height: '100vh',
@@ -82,13 +104,13 @@ function ManagerDashboardComponent() {
                     <Menu.Item key="/quan-ly/cuoc-thi" icon={<CarOutlined />} onClick={manageContests}>Quản lý cuộc thi</Menu.Item>
                     <Menu.Item key="/quan-ly/phan-hoi" icon={<MessageOutlined />} onClick={manageFeedback}>Quản lý phản hồi</Menu.Item>
                     <Menu.Item key="/thong-tin-ca-nhan" icon={<UserOutlined />} onClick={profile}>Thông tin cá nhân</Menu.Item>
-                    <Menu.Item key="" onClick={confirmLogout} icon={<LogoutOutlined />}>Đăng xuất</Menu.Item>
+                    <Menu.Item key="/log-out" onClick={confirmLogout} icon={<LogoutOutlined />}>Đăng xuất</Menu.Item>
                 </Menu>
             </Sider>
             <Layout className="site-layout" style={{ marginLeft: 200 }}>
                 <Header className="site-layout-sub-header-background" style={{ padding: 0 }}>
                     <Avatar size={40} className="avatar" icon={<UserOutlined />} />
-                    <Title level={5} className="userName">Welcome, Nguyễn Minh Thư</Title>
+                    <Title level={5} className="userName">Welcome, {currentUser.FullName}</Title>
                 </Header>
 
                 <Content style={{ margin: '24px 16px 0' }} >
@@ -102,6 +124,10 @@ function ManagerDashboardComponent() {
                                 return (
                                     <ManagePostsComponent />
                                 )
+                            case '/quan-ly/tao-bai-dang':
+                                return (
+                                    <CreatePostModalComponent />
+                                )
                             case '/quan-ly/phan-hoi':
                                 return (
                                     <ManageFeedbackComponent />
@@ -109,10 +135,6 @@ function ManagerDashboardComponent() {
                             case '/quan-ly/su-kien':
                                 return (
                                     <ManageEventsComponent />
-                                )
-                            case '/quan-ly/cuoc-thi':
-                                return (
-                                    <ManageContestsComponent />
                                 )
                             case '/quan-ly/cuoc-thi':
                                 return (

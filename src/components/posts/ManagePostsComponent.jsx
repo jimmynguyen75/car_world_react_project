@@ -1,16 +1,14 @@
-import React from 'react'
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
+import React from 'react';
 import { useHistory } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
 import './styles.less';
 
 function ManagePostsComponent() {
 
-    const { t, i18n } = useTranslation();
     const history = useHistory();
     const createModal = () => {
-        history.push('/create/post');
+        history.push("/quan-ly/tao-bai-dang");
     }
 
     return (

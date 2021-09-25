@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import storage from "./ImageFirebase";
 
-export const useStorage = (file) => {
+export const useStorage = (images) => {
     const [progress, setProgress] = useState(0);
-    const [url, setUrl] = useState(null);
+    const [url, setUrl] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (file) {
-            console.log("file: " + file)
-            const storageRef = storage.ref(`/images/${file.name}`);
-            const task = storageRef.put(file.originFileObj);
-            task.on("state_changed",
+        const promises = [];
+        images.map((image) => {
+            const uploadTask = storage.ref(`images/${image.name}`).put(image);
+            promises.push(uploadTask);
+            uploadTask.on("state_changed",
                 (snapshot) => {
                     let percentage =
                         Math.round(
@@ -23,11 +23,17 @@ export const useStorage = (file) => {
                     setError(err);
                 },
                 async () => {
-                    const downloadUrl = await storageRef.getDownloadURL();
-                    setUrl(downloadUrl);
+                    await storage
+                        .ref("images")
+                        .child(image.name)
+                        .getDownloadURL()
+                        .then((urls) => {
+                            setUrl((prevState) => [...prevState, urls]);
+                        });
                 }
-            )   
-        }
-    }, [file]);
+            )
+        })
+
+    }, [images]);
     return { url, error, progress };
 }

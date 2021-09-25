@@ -1,11 +1,13 @@
 import axios from 'axios'
+import authHeader from './AuthHeader'
 
-const CARS_API_URL = "https://jsonplaceholder.typicode.com/photos"
+const CARS_API_URL = "https://carworld.cosplane.asia/api/car/"
 
 class CarService {
     getCars() {
-        return axios.get(CARS_API_URL);
+        return axios.get(CARS_API_URL + "GetAllCars", { headers: authHeader() });
     }
+    
 }
 
 export default new CarService();

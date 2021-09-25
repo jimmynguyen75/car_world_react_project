@@ -1,162 +1,249 @@
-import React, { useEffect, useState } from 'react'
-import { Table, Input, Button, Space } from 'antd';
-import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
-import AccessoryService from '../../services/AccessoryService'
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Avatar, Button, Col, message, Modal, Popover, Row, Space, Spin, Table } from 'antd';
+import moment from 'moment';
+import 'moment/locale/vi';
+import React, { useEffect, useState } from 'react';
+import NumberFormat from 'react-number-format';
+import { useHistory } from "react-router-dom";
+import AccessoryService from '../../services/AccessoryService';
 import CreateAccessoryModalComponent from './CreateAccessoryModalComponent';
-
+import EditAccessoryBodyComponent from './EditAccessoryBodyComponent';
+import ViewDetailAccessoryComponent from './ViewDetailAccessoryBodyComponent';
 function ManageAccessoryComponent() {
+    const history = useHistory();
     const [accessories, setAccessories] = useState(null);
+    const [visible, setVisible] = React.useState(false);
+    const [confirmLoading, setConfirmLoading] = React.useState(false);
+    const [setSuccess] = React.useState(false);
+    const [detail, setDetail] = React.useState(false);
+    const [dataToChild, setDataToChild] = React.useState(null);
+    const [dataToChildFixingImage, setDataToChildFixingImage] = React.useState([]);
+    const success = () => {
+        setSuccess(false);
+        message.success("Create Acccessory Successfully", 2);
+    };
+    // useEffect(() => {
+    //     setDataToChild(dataToChildFixingImage);
+    // }, [dataToChildFixingImage])
     useEffect(() => {
+        let result = []
         AccessoryService
             .getAccessories()
             .then(response => {
-                console.log("ra" + response);
-                setAccessories(response.data);
+                response.data.forEach((req) => {
+                    if (req.IsDeleted === false) {
+                        result.push(req)
+                    }
+                })
+                console.log(result)
+                setAccessories(result);
             })
             .catch(error => {
                 console.log(error);
             })
     }, []);
 
-    class App extends React.Component {
-        state = {
-            searchText: '',
-            searchedColumn: '',
-        };
-
-        getColumnSearchProps = dataIndex => ({
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-                <div style={{ padding: 8 }}>
-                    <Input
-                        ref={node => {
-                            this.searchInput = node;
-                        }}
-                        placeholder={`Search ${dataIndex}`}
-                        value={selectedKeys[0]}
-                        onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                        onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-                        style={{ marginBottom: 8, display: 'block' }}
-                    />
-                    <Space>
-                        <Button
-                            type="primary"
-                            onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-                            icon={<SearchOutlined />}
-                            size="small"
-                            style={{ width: 90 }}
-                        >
-                            Search
-                        </Button>
-                        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
-                        </Button>
-                    </Space>
+    const contentDelete = (
+        <div>
+            <p>Bạn sẽ xóa phụ kiện này khi bạn nhấn đồng ý!</p>
+        </div>
+    );
+    const contentView = (
+        <div>
+            <p>Bạn sẽ xem chi tiết phụ kiện khi nhấn vào!</p>
+        </div>
+    );
+    const contentEdit = (
+        <div>
+            <p>Bạn sẽ chỉnh sửa phụ kiện khi nhấn vào!</p>
+        </div>
+    );
+    const showModal = () => {
+        setVisible(true);
+    };
+    const handleOk = () => {
+        setConfirmLoading(true);
+        setTimeout(() => {
+            setVisible(false);
+            setConfirmLoading(false);
+        }, 2000);
+        setTimeout(() => {
+            success();
+            setSuccess(true);
+        }, 2000)
+    };
+    const handleCancel = () => {
+        setVisible(false);
+    };
+    const handleCancelDetail = () => {
+        setDetail(false);
+        setDataToChildFixingImage({})
+        console.log("click cancel")
+        history.push('/quan-ly/phu-kien')
+    }
+    function confirmDelete(data) {
+        Modal.confirm({
+            title: "Xóa phụ kiện",
+            icon: <ExclamationCircleOutlined />,
+            content: (
+                <div>
+                    Bạn có muốn xóa {data.Name} không?
                 </div>
             ),
-            filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-            onFilter: (value, record) =>
-                record[dataIndex]
-                    ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-                    : '',
-            onFilterDropdownVisibleChange: visible => {
-                if (visible) {
-                    setTimeout(() => this.searchInput.select(), 100);
-                }
+            okText: "Đồng ý",
+            onOk() {
+                console.log(data.Id)
+                AccessoryService.deleteAccessoryById(data.Id)
+                    .then(() => window.location.reload(), console.log("Delete successfuly!"))
+                    .catch((err) => console.log(err))
             },
-            render: text =>
-                this.state.searchedColumn === dataIndex ? (
-                    <Highlighter
-                        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                        searchWords={[this.state.searchText]}
-                        autoEscape
-                        textToHighlight={text ? text.toString() : ''}
-                    />
-                ) : (
-                    text
-                ),
-        });
-
-        handleSearch = (selectedKeys, confirm, dataIndex) => {
-            confirm();
-            this.setState({
-                searchText: selectedKeys[0],
-                searchedColumn: dataIndex,
-            });
-        };
-
-        handleReset = clearFilters => {
-            clearFilters();
-            this.setState({ searchText: '' });
-        };
-
+            cancelText: "Không"
+        })
+    }
+    const showViewDetail = () => {
+        setDetail(true)
+    }
+    class App extends React.Component {
         render() {
             const columns = [
                 {
-                    title: 'Name',
+                    title: 'Tên phụ kiện',
                     key: 'name',
-                    width: '30%',
-                    ...this.getColumnSearchProps('name'),
-                    render: (text, record) => {
+                    width: '40%',
+                    render: (record) => {
                         return (
                             <div>
-                                <div class="row">
-                                    <div class="col-5"> <img style={{ height: 100, maxWidth: '100%' }} src={record.Image} /></div>
-                                    <div class="col-7"><div>{record.Name}</div></div>
-                                </div>
+                                <Row>
+                                    <Col span={3}> <div> <img alt="" style={{ height: 50, maxWidth: '100%' }} src={record.Image} /></div></Col>
+                                    <Col span={21}><Space size="middle"><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{record.Name}</div></Space></Col>
+                                </Row>
                             </div>
                         );
                     },
                 },
+                // , margin: 'auto', display: 'block'
                 {
-                    title: 'Brand',
-                    dataIndex: 'age',
-                    key: 'age',
-                    width: '10%',
-                    ...this.getColumnSearchProps('age'),
+                    title: 'Hãng phụ kiện',
+                    key: 'brand',
+                    width: '14%',
+                    render: (brand) => {
+                        return (
+                            <Row>
+                                <Avatar size="small" src={brand.Brand.Image} />
+                                <Space size="middle">
+                                    <div style={{ paddingLeft: 5 }}>{brand.Brand.Name}</div>
+                                </Space>
+                            </Row>
+                        )
+                    }
                 },
                 {
-                    title: 'Price',
-                    dataIndex: 'Price',
-                    key: 'address',
-                    width: '15%',
-                    ...this.getColumnSearchProps('address'),
-                    sorter: (a, b) => a.address.length - b.address.length,
-                    sortDirections: ['descend', 'ascend'],
+                    title: 'Giá',
+                    key: 'price',
+                    width: '14%',
+                    render: (price) => {
+                        return <NumberFormat
+                            value={price.Price}
+                            displayType="text"
+                            suffix=" vnđ"
+                            thousandSeparator={'.'}
+                            decimalSeparator={','}
+                        />
+                    }
                 },
                 {
-                    title: 'Created',
-                    dataIndex: 'age',
-                    key: 'age',
-                    width: '20%',
-                    ...this.getColumnSearchProps('age'),
+                    title: 'Ngày tạo',
+                    key: 'createdDate',
+                    width: '12%',
+                    render: (date) => {
+                        return <span style={{ color: '#868686', fontWeight: 450 }}>{moment(date.CreatedDate).format('ll')}</span>
+                    }
                 },
                 {
-                    title: 'Action',
+                    title: 'Các tác vụ',
                     key: 'action',
+                    render: (text, record, index) => {
+                        return (
+                            <Space size="middle">
+                                {/* <a>Invite {record.lastName}</a> */}
+                                <Popover content={contentView} title="Chi tiết phụ kiện">
+                                    <Button
+                                        onClick={() => {
+                                            showViewDetail()
+                                            setDataToChild(record)
+                                            let ex = record.Image.split("|")
+                                            if (ex.length > 1) {
+                                                ex.pop();
+                                            }
+                                            setDataToChildFixingImage(ex)
+                                        }}
+                                        block className="viewButton" ><i className="fas fa-eye fa-xs"></i></Button>
+                                </Popover>
+                                <Popover content={contentEdit} title="Chỉnh sửa phụ kiện">
+                                    <Button
+                                        onClick={() => {
+                                            showModal();
+                                            setDataToChild(record);
+                                            let ex = record.Image.split("|")
+                                            if (ex.length > 1) {
+                                                ex.pop();
+                                            }
+                                            setDataToChildFixingImage(ex)
+                                        }}
+                                        block className="editButton"><i className="fas fa-edit fa-xs"></i></Button>
+                                </Popover>
+                                <Popover content={contentDelete} title="Xóa phụ kiện">
+                                    <Button
+                                        onClick={() => confirmDelete({ record })}
+                                        block className="deleteButton"><i className="far fa-trash-alt fa-xs"></i></Button>
+                                </Popover>
+                            </Space>
+                        )
+                    },
                 }
             ];
-            return <Table columns={columns} dataSource={accessories} />;
+            return <Table columns={columns} dataSource={accessories} rowKey="Id"/>;
         }
     }
-
     return (
         <div>
+            <Modal
+                title={"Chỉnh sửa phụ kiện"}
+                visible={visible}
+                onOk={handleOk}
+                confirmLoading={confirmLoading}
+                onCancel={handleCancel}
+                width={1000}
+                footer={[
+                    <Row style={{ float: 'right' }}>
+                        <Button onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                        <Button form="myForm" type="primary" key="submit" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Row>
+                ]}
+            >
+                <EditAccessoryBodyComponent setDataToChild={dataToChild} setDataToChildFixingImage={dataToChildFixingImage} />
+            </Modal>
+            <Modal
+                title="Chi tiết phụ kiện"
+                visible={detail}
+                onCancel={handleCancelDetail}
+                width={1000}
+                footer={
+                    <Row style={{ float: 'right' }}>
+                        <Button type="primary" key="submit" onClick={handleCancelDetail}>Xong</Button>
+                    </Row>
+                }
+            >
+                <ViewDetailAccessoryComponent setDataToChild={dataToChild} setDataToChildFixingImage={dataToChildFixingImage} />
+            </Modal>
             <CreateAccessoryModalComponent />
-            <App />
+            <Spin size="large" spinning={accessories === null ? true : false}>
+                <App />
+            </Spin>
         </div>
     )
 }

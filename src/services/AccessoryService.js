@@ -1,10 +1,23 @@
 import axios from 'axios';
+import authHeader from './AuthHeader'
 
-const GET_ALL_ACCESSORIES_API_URL = "https://carworld.cosplane.asia/api/accessory/GetAllAccessories"
+const ACCESSORIES_API_URL = "https://carworld.cosplane.asia/api/accessory/"
 
 class AccessoryService {
     getAccessories() {
-        return axios.get(GET_ALL_ACCESSORIES_API_URL);
+        return axios.get(ACCESSORIES_API_URL + "GetAllAccessories", { headers: authHeader() });
+    }
+    getAccessoriesById(id) {
+        return axios.get(ACCESSORIES_API_URL + "GetAllAccessoryById/" + id, { headers: authHeader() });
+    }
+    deleteAccessoryById(id) {
+        return axios.put(ACCESSORIES_API_URL + "RemoveAccessory?id=" + id, { headers: authHeader() });
+    }
+    createNewAccessory(accessory) {
+        return axios.post(ACCESSORIES_API_URL + "CreateNewAccessory", accessory, { headers: authHeader() });
+    }
+    updateAccessoryById(accessory, id) {
+        return axios.put(ACCESSORIES_API_URL + "UpdateAccessory/" + id, accessory, { headers: authHeader() });
     }
 }
 

@@ -3,6 +3,7 @@ import firebase from 'firebase';
 const firebaseConfig = {
     apiKey: "AIzaSyCDuA0kQwv0ASOt9HthsqcVQl-iWJ5wrwo",
     authDomain: "car-world-react-project.firebaseapp.com",
+    databaseURL: "gs://car-world-react-project.appspot.com",
     projectId: "car-world-react-project",
     storageBucket: "car-world-react-project.appspot.com",
     messagingSenderId: "245546607778",

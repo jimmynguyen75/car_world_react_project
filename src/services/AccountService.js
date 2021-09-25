@@ -1,26 +1,62 @@
 import axios from 'axios';
+import authHeader from './AuthHeader'
 
-const ACCOUNTS_API_URL = "https://fakestoreapi.com/auth/login";
+const ACCOUNTS_API_URL = "https://carworld.cosplane.asia/api/user/"
 
-const login = (username, password) => {
+const login = (username, password, roleId) => {
     return axios
-        .post(ACCOUNTS_API_URL, {
+        .post(ACCOUNTS_API_URL + "LoginAdmin", {
             username,
-            password
+            password,
+            roleId
         })
         .then((response) => {
-            if (response.data.token) {
-                localStorage.setItem("accessToken", JSON.stringify(response.data));
+            if (response.data.User) {
+                localStorage.setItem("user", JSON.stringify(response.data.User));
             }
-            return response.data;
+            return response.data.User;
         });
-};
+}
+
+const updateProfile = (id, user) => {
+    return axios
+        .put(ACCOUNTS_API_URL + "UpdateProfile?id=" + id, user, { headers: authHeader() });
+}
 
 const getCurrentUser = () => {
-};
+    return JSON.parse(localStorage.getItem("user"));
+}
+
+const getUserById = (id) => {
+    return axios
+        .get(ACCOUNTS_API_URL + "GetUserById?id=" + id, { headers: authHeader() });
+}
 
 const logOut = () => {
     localStorage.removeItem("user");
 }
 
-export default { login, getCurrentUser, logOut };
+const getAllUser = () => {
+    return axios.get(ACCOUNTS_API_URL + "GetAllUsers", { headers: authHeader() })
+}
+
+const getAdminAndManger = () => {
+    return axios.get(ACCOUNTS_API_URL + "GetAllAdminsAndManagers", { headers: authHeader() })
+}
+
+const changeAccountStatus = (id, status) => {
+    return axios.put(ACCOUNTS_API_URL + "ChangeAccountStatus?id=" + id + "&status=" + status, { headers: authHeader() })
+}
+
+const updateRole = (id, role) => {
+    return axios.put(ACCOUNTS_API_URL + "UpdateRole?id=" + id + "&userRole=" + role, { headers: authHeader() })
+}
+
+const createAccount = (account) => {
+    return axios.post(ACCOUNTS_API_URL + "CreateNewAccount", account, { headers: authHeader() })
+}
+
+const object = {
+    login, getCurrentUser, logOut, getUserById, updateProfile, getAllUser, getAdminAndManger, changeAccountStatus, updateRole, createAccount
+}
+export default object;

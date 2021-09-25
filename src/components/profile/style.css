@@ -1,0 +1,78 @@
+.form-control:focus {
+    box-shadow: none;
+    border-color: #FF7643
+}
+
+.profile-button {
+    background: #FF7643;
+    box-shadow: none;
+    border: none
+}
+
+.profile-button:hover {
+    background: #FF7643
+}
+
+.profile-button:focus {
+    background: #FF7643;
+    box-shadow: none
+}
+
+.profile-button:active {
+    background: #FF7643;
+    box-shadow: none
+}
+
+.back:hover {
+    color: #FF7643;
+    cursor: pointer
+}
+
+.labels {
+    font-size: 11px
+}
+
+.add-experience:hover {
+    background: #FF7643;
+    color: #fff;
+    cursor: pointer;
+    border: solid 1px #FF7643
+}
+
+.rounded-circle:hover {
+    opacity: 0.5;
+}
+
+.buttonWithoutCSS {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    margin: 0;
+}
+
+#upload-photo {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+label {
+    cursor: pointer;
+    font-weight: 550;
+    /* Style as you please, it will become the visible UI component. */
+}
+
+.upload {
+    /* position: absolute;
+    top: 43%;
+    left: 34%; */
+    color:rgb(175, 175, 175)
+}
+
+label:hover {
+    color: #FF7643;
+}

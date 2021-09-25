@@ -1,64 +1,59 @@
-import React, { useEffect, useState } from 'react'
-import { useHistory, useLocation } from "react-router-dom";
-import { Table, Input, Popover, Button, Space, Spin, Modal, Avatar, message } from 'antd';
+import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Avatar, Button, Col, Input, message, Modal, Popover, Row, Space, Spin, Table } from 'antd';
+import React, { useEffect, useState } from 'react';
 import Highlighter from 'react-highlight-words';
-import { SearchOutlined, DeleteOutlined, EditOutlined, FundViewOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import CarService from '../../services/CarService';
-import CreateCarModalComponent from './CreateCarModalComponent';
-import { useTranslation } from 'react-i18next';
 import CreateCarBodyModalComponent from './CreateCarBodyModalComponent';
+import CreateCarModalComponent from './CreateCarModalComponent';
 import ViewCarModalComponent from './ViewCarModalComponent';
 
 function ManageCarsComponent() {
-
-    const history = useHistory();
-    const [car, setCars] = useState(null);
-    const { t, i18n } = useTranslation();
+    const imgPlacehoder = 'https://via.placeholder.com/120';
+    const [car, setCars] = useState([]);
     const [visible, setVisible] = React.useState(false);
     const [visibleDetail, setVisibleDetail] = React.useState(false);
     const [confirmLoading, setConfirmLoading] = React.useState(false);
-    const [visibleSuccess, setSuccess] = React.useState(false);
+    const [setSuccess] = React.useState(false);
 
     const contentDelete = (
         <div>
-            <p>{t('You will Delete this Car when you click!.1')}</p>
+            <p>You will Delete this Car when you click!.1</p>
         </div>
     );
     const contentView = (
         <div>
-            <p>{t('You will View Detail this Car when you click!.1')}</p>
+            <p>You will View Detail this Car when you click!.1'</p>
         </div>
     );
     const contentEdit = (
         <div>
-            <p>{t('You will Edit this Car when you click!.1')}</p>
+            <p>You will Edit this Car when you click!.1</p>
         </div>
     );
     useEffect(() => {
         CarService
             .getCars()
             .then(res => {
-                console.log(res)
+                console.log(res.data)
                 setCars(res.data)
             })
             .catch(err => {
                 console.log(err)
             })
     }, []);
-
     function confirmDelete() {
         Modal.confirm({
-            title: t('Delete Car!.1'),
+            title: 'Delete Car!.1',
             icon: <ExclamationCircleOutlined />,
-            content: t('Are you sure you want to Delete this Car?.1'),
-            okText: t('Ok.1'),
-            cancelText: t('Cancel.1'),
+            content: 'Are you sure you want to Delete this Car?',
+            okText: 'Ok.1',
+            cancelText: 'Cancel.1',
         });
     }
 
     const success = () => {
         setSuccess(false);
-        message.success(t('Created Car Successfully.1'), 2);
+        message.success('Created Car Successfully.1', 2);
     };
     const showModal = () => {
         setVisible(true);
@@ -181,62 +176,67 @@ function ManageCarsComponent() {
         render() {
             const columns = [
                 {
-                    title: t('Car Name.1'),
-                    key: 'age',
-                    width: '20%',
-                    ...this.getColumnSearchProps('thumbnailUrl'),
-                    render: (text, record) => {
+                    title: 'Tên xe',
+                    key: 'name',
+                    width: '40%',
+                    ...this.getColumnSearchProps('Name'),
+                    render: (record) => {
                         return (
-                            <div>
-                                <img src={record.thumbnailUrl} />
-                                {/*<Avatar src={record.productimage}/> */}
-                                <div>
-                                    <div>{record.title}</div>
-                                    <a href="javascript:alert('ciao');">{record.productname}</a>
-                                </div>
-                            </div>
+                            <Row>
+                                <Col span={8}><img alt="" src={record.Image === "string" ? imgPlacehoder : record.Image} /></Col>
+                                <Col span={16}><Space size="middle"> <div style={{ marginLeft: 10, fontWeight: 550 }}>{record.Name}</div></Space></Col>
+                            </Row>
                         );
                     },
                 },
                 {
-                    title: t('Brand.1'),
-                    dataIndex: 'title',
-                    key: 'name',
-                    width: '20%',
-                    ...this.getColumnSearchProps('title'),
+                    title: "Hãng xe",
+                    key: 'brand',
+                    width: '14%',
+                    ...this.getColumnSearchProps('Brand'),
+                    render: (brand) => {
+                        return (
+                            <Row>
+                                <Avatar src={brand.Brand.Image} />
+                                <Space size="middle">
+                                    <div style={{ paddingLeft: 5 }}>{brand.Brand.Name}</div>
+                                </Space>
+                            </Row>
+                        );
+                    }
                 },
                 {
-                    title: t('Status.1'),
-                    dataIndex: 'title',
-                    key: 'name',
-                    width: '20%',
-                    ...this.getColumnSearchProps('title'),
+                    title: 'Giá',
+                    dataIndex: 'Price',
+                    key: 'price',
+                    width: '14%',
+                    ...this.getColumnSearchProps('Price'),
                 },
                 {
-                    title: t('Last Modified.1'),
-                    dataIndex: 'title',
-                    key: 'name',
-                    width: '20%',
-                    ...this.getColumnSearchProps('title'),
+                    title: 'Ngày tạo',
+                    dataIndex: 'createdDate',
+                    key: 'date',
+                    width: '12%',
+                    ...this.getColumnSearchProps('CreatedDate'),
                 },
                 {
-                    title: t('Action.1'),
+                    title: 'Các tác vụ',
                     key: 'action',
                     render: (text, record) => {
                         return (
                             <Space size="middle">
                                 {/* <a>Invite {record.lastName}</a> */}
-                                <Popover content={contentView} title={t('View Button!.1')}>
-                                    <Button onClick={showViewDetail} icon={<FundViewOutlined />}
-                                        block className="viewButton" />
+                                <Popover content={contentView} title='View Button!.1'>
+                                    <Button onClick={showViewDetail}
+                                        block className="viewButton" ><i className="fas fa-eye"></i></Button>
                                 </Popover>
-                                <Popover content={contentEdit} title={t('Edit Button!.1')}>
-                                    <Button onClick={showModal} icon={<EditOutlined />}
-                                        block className="editButton" />
+                                <Popover content={contentEdit} title='Edit Button!.1'>
+                                    <Button onClick={showModal}
+                                        block className="editButton"><i className="fas fa-edit"></i></Button>
                                 </Popover>
-                                <Popover content={contentDelete} title={t('Delete Button!.1')}>
-                                    <Button onClick={confirmDelete} icon={<DeleteOutlined />}
-                                        block className="deleteButton" />
+                                <Popover content={contentDelete} title='Delete Button!.1'>
+                                    <Button onClick={confirmDelete}
+                                        block className="deleteButton"><i className="far fa-trash-alt"></i></Button>
                                 </Popover>
                             </Space>
                         )
@@ -244,6 +244,7 @@ function ManageCarsComponent() {
                 }
             ];
             return <Table
+                rowKey="Id"
                 columns={columns}
                 dataSource={car}
                 onChange={() => {
@@ -261,11 +262,11 @@ function ManageCarsComponent() {
 
     return (
         <Spin
-            spinning={car == null ? true : false}
+            spinning={car === null ? true : false}
             // delay={100}
             size="large" >
             <Modal
-                title={t('Create a new Car.1')}
+                title='Create a new Car.1'
                 visible={visible}
                 onOk={handleOk}
                 confirmLoading={confirmLoading}
@@ -281,7 +282,7 @@ function ManageCarsComponent() {
                 confirmLoading={confirmLoading}
                 onCancel={handleCancelDetail}
                 footer={[
-                    <Button key="back" onClick={handleCancelDetail}>
+                    <Button onClick={handleCancelDetail}>
                         Ok
                     </Button>
                 ]}

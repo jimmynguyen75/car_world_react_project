@@ -1,17 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import './styles.less'
-import { useHistory } from "react-router-dom";
-import { Button, Form, Input, Upload, Modal, Switch, Select } from 'antd'
-import { ArrowLeftOutlined, PlusOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
-import { convertToRaw, EditorState } from "draft-js";
-import { Editor } from "react-draft-wysiwyg"
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import storage from "../../services/ImageFirebase";
-import { useStorage } from '../../services/useStorage';
-import draftToHtml from "draftjs-to-html";
-import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document'
+import { ArrowLeftOutlined, CheckOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import parsedata from 'html-react-parser';
+import { Button, Form, Input, Modal, Select, Switch, Upload } from 'antd';
+// import { EditorState } from "draft-js";
+import React, { useState } from 'react';
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { useHistory } from "react-router-dom";
+import storage from "../../services/ImageFirebase";
+import './styles.less';
 
 function CreatePostModalComponent() {
     const { Option } = Select;
@@ -67,42 +63,42 @@ function CreatePostModalComponent() {
     );
     //end Featured Image
     //Editor
-    const [editorState, setEditorState] = useState(EditorState.createEmpty());
-    const onEditorStateChange = editorState => {
-        setEditorState(editorState);
-    }
-    const uploadImageCallBack = (file) => {
-        return new Promise(
-            (resolve, reject) => {
-                console.log('Uploading image...');
-                firebaseUpload(file)
-                    .then(link => {
-                        resolve({ data: { link } });
-                    })
-                    .catch(error => {
-                        reject(error);
-                    })
-            }
-        );
-    }
-    const firebaseUpload = (file) => {
-        return new Promise(
-            (resolve, reject) => {
-                const uploadTask = storage.ref(`images/${file.name}`).put(file)
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        console.log(snapshot)
-                    },
-                    (error) => {
-                        console.log(error)
-                    }, (complete) => {
-                        //Gets link back
-                        storage.ref('images').child(file.name).getDownloadURL()
-                            .then(url => resolve(url))
-                    })
-            }
-        );
-    }
+    // const [editorState, setEditorState] = useState(EditorState.createEmpty());
+    // const onEditorStateChange = editorState => {
+    //     setEditorState(editorState);
+    // }
+    // const uploadImageCallBack = (file) => {
+    //     return new Promise(
+    //         (resolve, reject) => {
+    //             console.log('Uploading image...');
+    //             firebaseUpload(file)
+    //                 .then(link => {
+    //                     resolve({ data: { link } });
+    //                 })
+    //                 .catch(error => {
+    //                     reject(error);
+    //                 })
+    //         }
+    //     );
+    // }
+    // const firebaseUpload = (file) => {
+    //     return new Promise(
+    //         (resolve, reject) => {
+    //             const uploadTask = storage.ref(`images/${file.name}`).put(file)
+    //             uploadTask.on('state_changed',
+    //                 (snapshot) => {
+    //                     console.log(snapshot)
+    //                 },
+    //                 (error) => {
+    //                     console.log(error)
+    //                 }, (complete) => {
+    //                     //Gets link back
+    //                     storage.ref('images').child(file.name).getDownloadURL()
+    //                         .then(url => resolve(url))
+    //                 })
+    //         }
+    //     );
+    // }
     const normFile = () => {
         return data.getData();
     };
@@ -161,6 +157,7 @@ function CreatePostModalComponent() {
                                             "Unknown error occurred, inspect error.serverResponse"
                                         );
                                         break;
+                                    default:
                                 }
                             },
                             function () {
@@ -203,7 +200,7 @@ function CreatePostModalComponent() {
         });
     return (
         <>
-            <div className="body">
+            <div className="body123">
                 <div><Button className="buttonBack" onClick={handleBack}><ArrowLeftOutlined /> Back</Button></div>
                 <div className="title">Create a new Post</div>
                 {/* Others */}
@@ -247,7 +244,10 @@ function CreatePostModalComponent() {
                                 onPreview={handlePreview}
                                 onChange={handleChange}
                                 customRequest={customRequest}
-                                accept="image/png, image/jpeg"
+                                //accept="image/png, image/jpeg"
+                                // multiple="true"
+                                // beforeUpload={() => false}
+                                accept=".png,.jpeg,.jpg"
                             >
                                 {fileList.length >= 3 ? null : uploadButton}
                             </Upload>
@@ -264,7 +264,7 @@ function CreatePostModalComponent() {
                             <Input.TextArea
                                 size="large"
                                 style={{ fontSize: 16, fontWeight: 600 }}
-                                showCount maxLength={200}
+                                maxLength={200} showCount
                                 autoSize={{ minRows: 1, maxRows: 10 }}
                             />
                         </Form.Item>

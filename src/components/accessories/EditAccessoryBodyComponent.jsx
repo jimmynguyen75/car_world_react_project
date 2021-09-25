@@ -1,17 +1,16 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Col, Form, Input, message, Modal, Row, Select, Upload } from "antd";
+import { Col, Form, Image, Input, message, Modal, Row, Select, Upload } from "antd";
 import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
-import AccessoryService from '../../services/AccessoryService';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
 import './styles.less';
-export default function CreateAccessoryBodyModalComponent() {
+export default function EditAccessoryBodyComponent({ setDataToChild, setDataToChildFixingImage }) {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
     const [visible, setVisible] = useState(false);
     const [fileList, setFileList] = useState([]);
-    const [urls, setUrls] = useState([]);
+    const [setUrls] = useState([]);
     const [form] = Form.useForm();
     const [brands, setBrands] = useState([]);
     const { Option } = Select;
@@ -23,11 +22,11 @@ export default function CreateAccessoryBodyModalComponent() {
         </div>
     );
     const onFinish = (values) => {
-        console.log("values", values);
-        AccessoryService
-            .createNewAccessory(values)
-            .then((finish) => console.log(finish))
-            .catch(err => console.log(err));
+        // AccessoryService
+        //     .createNewAccessory(values)
+        //     .then(() => console.log("ok"))
+        //     .catch(err => console.log(err));
+        console.log("Values: ", values)
     }
     const handleCancel = () => setVisible(false);
     function getBase64(file) {
@@ -68,11 +67,11 @@ export default function CreateAccessoryBodyModalComponent() {
             }
         );
     }
+
     const normFile = (e) => {
-        const stringData = urls.reduce((result, key) => {
+        const stringData = setDataToChildFixingImage.reduce((result, key) => {
             return `${result}${key}|`
         }, "")
-        console.log("oooo: ", stringData)
         return stringData
     };
     const beforeUpload = (file) => {
@@ -94,7 +93,14 @@ export default function CreateAccessoryBodyModalComponent() {
     const onChangePrice = (e) => {
         const string = e.target.value;
         setPrice(string.replace(/\D/g, ''))
+
     }
+
+    form.setFieldsValue({
+        name: setDataToChild.Name,
+        pricewithoutany: setDataToChild.Price,
+        description: setDataToChild.Description,
+    })
     form.setFieldsValue({
         price: price
     })
@@ -120,33 +126,37 @@ export default function CreateAccessoryBodyModalComponent() {
                     <Input></Input>
                 </Form.Item>
                 <Form.Item
-                    name="image" label="Ảnh phụ kiện"
+                    label="Ảnh phụ kiện"
+                    name="image"
                     getValueFromEvent={normFile}
                 >
-                    <Upload
-                        name="image"
-                        listType="picture-card"
-                        fileList={fileList}
-                        onPreview={handlePreview}
-                        onChange={handleChange}
-                        customRequest={customRequest}
-                        beforeUpload={beforeUpload}
-                        multiple={true}
-                        accept=".png,.jpeg,.jpg"
-                    >
-                        {fileList.length >= 3 ? null : uploadButton}
-                    </Upload>
+                    <Row>
+                        {setDataToChildFixingImage.map((object, i) => {
+                            return <div style={{ marginRight: 8 }}><Image style={{ padding: 8, border: '1px solid #d9d9d9' }} width={104} key={i} src={object} /></div>
+                        })}
+                        <div>
+                            <Upload
+                                name="image"
+                                listType="picture-card"
+                                fileList={fileList}
+                                onPreview={handlePreview}
+                                onChange={handleChange}
+                                customRequest={customRequest}
+                                beforeUpload={beforeUpload}
+                                multiple={true}
+                                accept=".png,.jpeg,.jpg"
+                            >
+                                {fileList.length >= 3 ? null : uploadButton}
+                            </Upload>
+                        </div>
+                    </Row>
                 </Form.Item>
                 <Form.Item label="Name" name="name">
-                    <Input.TextArea
-                        placeholder="Nhập phụ kiện"
-                        showCount maxLength={200}
-                        autoSize={{ minRows: 1, maxRows: 10 }}
-                    />
+                    <Input placeholder="Nhập tên phụ kiện" />
                 </Form.Item>
                 <Row gutter={15}>
                     <Col span={12}>
-                        <Form.Item label="Giá">
+                        <Form.Item label="Giá" name="pricewithoutany">
                             <NumberFormat
                                 onChange={onChangePrice}
                                 placeholder="Nhập giá phụ kiện (vnđ)"
@@ -169,6 +179,7 @@ export default function CreateAccessoryBodyModalComponent() {
                     <Col span={12}>
                         <Form.Item label="Hãng phụ kiện" name="brandName">
                             <Select
+                                defaultValue={setDataToChild.Brand.Name}
                                 showSearch
                                 placeholder="Chọn hãng phụ kiện"
                                 optionFilterProp="children"
@@ -184,12 +195,7 @@ export default function CreateAccessoryBodyModalComponent() {
                     </Col>
                 </Row>
                 <Form.Item label="Mô tả chi tiết" name="description">
-                    <Input.TextArea
-                        size="large"
-                        // style={{ fontSize: 16, fontWeight: 600 }}
-                        showCount maxLength={1000}
-                        autoSize={{ minRows: 3, maxRows: 10 }}
-                    />
+                    <Input.TextArea></Input.TextArea>
                 </Form.Item>
             </Form>
         </div>
