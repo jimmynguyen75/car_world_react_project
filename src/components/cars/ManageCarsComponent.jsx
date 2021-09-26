@@ -6,11 +6,12 @@ import CarService from '../../services/CarService';
 import CreateCarBodyModalComponent from './CreateCarBodyModalComponent';
 import CreateCarModalComponent from './CreateCarModalComponent';
 import ViewCarModalComponent from './ViewCarModalComponent';
+import NumberFormat from 'react-number-format';
 import moment from 'moment';
 import 'moment/locale/vi';
 function ManageCarsComponent() {
     const imgPlacehoder = 'https://via.placeholder.com/120';
-    const [car, setCars] = useState([]);
+    const [car, setCars] = useState(null);
     const [visible, setVisible] = React.useState(false);
     const [visibleDetail, setVisibleDetail] = React.useState(false);
     const [confirmLoading, setConfirmLoading] = React.useState(false);
@@ -89,7 +90,6 @@ function ManageCarsComponent() {
         console.log('Clicked cancel button');
         setVisibleDetail(false);
     };
-
     class Cars extends React.Component {
         state = {
             searchText: '',
@@ -185,7 +185,7 @@ function ManageCarsComponent() {
                         return (
                             <Row>
                                 <Col span={3}><img alt="" style={{ height: 50, maxWidth: '100%' }} src={record.Image === "string" ? imgPlacehoder : record.Image} /></Col>
-                                <Col span={21}><Space size="middle"> <div style={{ marginLeft: 10, fontWeight: 550 }}>{record.Name}</div></Space></Col>
+                                <Col span={21}><Space size="middle"><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{record.Name}</div></Space></Col>
                             </Row>
                         );
                     },
@@ -212,6 +212,15 @@ function ManageCarsComponent() {
                     key: 'price',
                     width: '14%',
                     ...this.getColumnSearchProps('Price'),
+                    render: (price) => {
+                        return <NumberFormat
+                            value={price}
+                            displayType="text"
+                            suffix=" vnđ"
+                            thousandSeparator={'.'}
+                            decimalSeparator={','}
+                        />
+                    }
                 },
                 {
                     title: 'Ngày tạo',
@@ -264,10 +273,7 @@ function ManageCarsComponent() {
     }
 
     return (
-        <Spin
-            spinning={car === null ? true : false}
-            // delay={100}
-            size="large" >
+        <div>
             <Modal
                 title='Create a new Car.1'
                 visible={visible}
@@ -293,8 +299,13 @@ function ManageCarsComponent() {
                 <ViewCarModalComponent />
             </Modal>
             <CreateCarModalComponent />
-            <Cars />
-        </Spin>
+            <Spin
+                spinning={car === null ? true : false}
+                // delay={100}
+                size="large" >
+                <Cars />
+            </Spin>
+        </div>
     )
 }
 

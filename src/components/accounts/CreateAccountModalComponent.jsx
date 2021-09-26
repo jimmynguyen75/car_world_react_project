@@ -1,6 +1,7 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Modal, Row, Select, Tooltip } from 'antd';
+import { Button, Form, Input, Modal, Row, Select, Tooltip, message } from 'antd';
 import React, { useState } from 'react';
+import AccountService from '../../services/AccountService'
 import './style.less';
 export default function CreateAccountModalComponent() {
     const [form] = Form.useForm();
@@ -15,12 +16,20 @@ export default function CreateAccountModalComponent() {
         form.resetFields();
     };
     const onFinish = (values) => {
-        // AccountService.createAccount(values)
-        //     .then((res) => {
-        //         window.location.reload();
-        //         console.log("Okkk")
-        //     })
-        //     .catch((err) => { console.log(err) })
+        AccountService.createAccount(values)
+            .then((res) => {
+                setTimeout(() => {
+                    message.success("Tạo thành công")
+                }, 200);
+                setTimeout(() => {
+                    window.location.reload();
+                    console.log("Okkk")
+                }, [500])
+            })
+            .catch((err) => {
+                message.error("Tạo không thành công")
+                console.log(err)
+            })
         console.log(values)
     }
     return (
@@ -50,7 +59,7 @@ export default function CreateAccountModalComponent() {
                     layout="vertical"
                     form={form}
                 >
-                    <Form.Item label="Họ và tên" name="fullname">
+                    <Form.Item label="Họ và tên" name="fullName">
                         <Input placeholder="Nhập họ và tên" />
                     </Form.Item>
                     <Form.Item label="Tên đăng nhập" name="username">

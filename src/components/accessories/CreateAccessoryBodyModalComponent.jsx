@@ -87,9 +87,16 @@ export default function CreateAccessoryBodyModalComponent() {
         return isImage && isLt5M;
     }
     useEffect(() => {
-        BrandService.getAllAccessoriesBrand().then(res => {
-            setBrands(res.data)
-        }).catch(err => console.log(err))
+        let result = []
+        BrandService.getAllAccessoriesBrand()
+            .then(res => {
+                res.data.forEach(data => {
+                    if (data.IsDeleted === false) {
+                        result.push(data)
+                    }
+                })
+                setBrands(result)
+            }).catch(err => console.log(err))
     }, [])
     const onChangePrice = (e) => {
         const string = e.target.value;

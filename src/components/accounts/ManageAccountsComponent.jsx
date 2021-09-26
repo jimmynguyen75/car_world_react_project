@@ -153,8 +153,8 @@ function ManageAccountsComponent() {
                     render: (data) => {
                         return (
                             <Row>
-                                <Avatar size="small" src={data.Image} icon={<UserOutlined />} />
-                                <div><span style={{ paddingLeft: 7 }}>{data.FullName}</span></div>
+                                <Avatar size="middle" src={data.Image} icon={<UserOutlined />} />
+                                <div style={{paddingTop: 5}}><span style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.FullName}</span></div>
                             </Row>
                         )
                     }
@@ -367,8 +367,8 @@ function ManageAccountsComponent() {
                     render: (data) => {
                         return (
                             <Row>
-                                <Avatar size="small" src={data.Image} icon={<UserOutlined />} />
-                                <div><span style={{ paddingLeft: 7 }}>{data.FullName}</span></div>
+                                <Avatar size="middle" src={data.Image} icon={<UserOutlined />} />
+                                <div style={{paddingTop: 5}}><span style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.FullName}</span></div>
                             </Row>
                         )
                     }

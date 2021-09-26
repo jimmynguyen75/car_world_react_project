@@ -151,10 +151,16 @@ export default function CreateCarBodyModalComponent() {
         </div>
     );
     useEffect(() => {
+        let result = []
         BrandService.getAllBrand()
             .then(res => {
-                console.log(res.data)
-                setBrands(res.data);
+                res.data.forEach(data => {
+                    if (data.IsDeleted === false) {
+                        result.push(data)
+                    }
+                })
+                console.log(result)
+                setBrands(result);
             })
             .catch(err => console.log(err))
     }, [])

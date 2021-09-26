@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { DownOutlined, SearchOutlined, UserOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Dropdown, Form, Input, Menu, Row, Space, Table, Tabs, Tooltip, Spin, Popconfirm, message, Modal, Typography } from 'antd';
+import { ExclamationCircleOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Button, Col, Form, Input, message, Modal, Row, Space, Spin, Table, Tabs, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
 import Highlighter from 'react-highlight-words';
-import './style.less';
+import { useStorage } from '../../hook/useBrand';
 import BrandService from '../../services/BrandService';
 import CreateBrandModalComponent from './CreateBrandModalComponent';
-import { useStorage } from '../../hook/useBrand'
+import './style.less';
 export default function ManageBrandComponent() {
     const { TabPane } = Tabs;
     const [brands, setBrands] = useState({ cars: [], accessories: [] });
@@ -39,12 +39,17 @@ export default function ManageBrandComponent() {
         form.setFieldsValue({
             image: url
         })
-    }, [url])
+    }, [url, form])
     const onFinish1 = (values) => {
         BrandService.updateBrand(values.id, values)
             .then((res) => {
-                window.location.href = '/quan-ly/thuong-hieu'
-                console.log("okkkk")
+                setTimeout(() => {
+                    message.success("Cập nhật thành công")
+                }, 200)
+                setTimeout(() => {
+                    window.location.href = '/quan-ly/thuong-hieu'
+                    console.log("okkkk")
+                }, 500)
             })
             .catch((err) => {
                 message.error("Chọn hiệu để cập nhật!")
@@ -149,13 +154,13 @@ export default function ManageBrandComponent() {
                 {
                     title: 'Tên thương hiệu',
                     key: 'name',
-                    width: '30%',
+                    width: '25%',
                     ...this.getColumnSearchProps('Name'),
                     render: (data) => {
                         return (
                             <Row>
-                                <Avatar size="small" src={data.Image} icon={<UserOutlined />} />
-                                <div><span style={{ paddingLeft: 7 }}>{data.Name}</span></div>
+                                <Avatar size="large" src={data.Image} icon={<UserOutlined />} />
+                                <div style={{ paddingTop: 7 }}><span style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.Name}</span></div>
                             </Row>
                         )
                     }
@@ -280,13 +285,13 @@ export default function ManageBrandComponent() {
                 {
                     title: 'Tên thương hiệu',
                     key: 'name',
-                    width: '30%',
+                    width: '25%',
                     ...this.getColumnSearchProps('Name'),
                     render: (data) => {
                         return (
                             <Row>
-                                <Avatar size="small" src={data.Image} icon={<UserOutlined />} />
-                                <div><span style={{ paddingLeft: 7 }}>{data.Name}</span></div>
+                                <Avatar size="large" src={data.Image} icon={<UserOutlined />} />
+                                <div style={{ paddingTop: 7 }}><span style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.Name}</span></div>
                             </Row>
                         )
                     }
@@ -393,7 +398,7 @@ export default function ManageBrandComponent() {
                                         </Form.Item>
                                     </Tooltip>
                                     <Form.Item style={{ textAlign: 'center' }}>
-                                        <Button type="primary" htmlType="submit">Hoàn tất</Button>
+                                        <Button type="primary" htmlType="submit">Cập nhật</Button>
                                     </Form.Item>
                                 </Form>
                             </Col>

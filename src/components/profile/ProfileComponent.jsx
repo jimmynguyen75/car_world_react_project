@@ -1,5 +1,5 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Form, Input, Popover, Spin } from 'antd';
+import { Avatar, Button, Form, Input, Popover, Spin, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useStorage } from '../../hook/useStorage';
 import AccountService from '../../services/AccountService';
@@ -41,7 +41,10 @@ function ProfileComponent() {
     const onFinish = (values) => {
         AccountService.updateProfile(currentUser.Id, values)
             .then(() => window.location.reload())
-            .catch(err => console.log(err))
+            .catch(err => {
+                message.error("Lỗi server, cập nhật không thành công")
+                console.log(err)
+            })
         console.log(values)
     }
     const content = (
@@ -78,7 +81,7 @@ function ProfileComponent() {
                         <div className="col-2"></div>
                         <div className="col-md-3" style={{ borderRight: "1px solid #E8EAE6" }}>
                             <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                <Popover content={content} title="Thay ảnh" >
+                                <Popover content={content} key="idd" title="Thay ảnh" >
                                     <button type="button" form="btnFile" className="buttonWithoutCSS mt-5"  >
                                         <Avatar size={170} width="150px" alt="" icon={<UserOutlined />} src={image} />
                                     </button>
@@ -99,7 +102,7 @@ function ProfileComponent() {
                                     <div className="col-md-8">
                                         <label className="labels">Họ và Tên</label>
                                         <Form.Item name="fullname">
-                                            <Input placeholder="nhập họ và tên"></Input>
+                                            <Input placeholder="Nhập họ và tên"></Input>
                                         </Form.Item>
                                     </div>
                                     <div className="col-md-4">
@@ -110,22 +113,25 @@ function ProfileComponent() {
                                     </div>
                                 </div>
                                 <div className="row" >
-                                    <div className="col-md-12" style={{ marginBottom: -15 }}>
+                                    <div className="col-md-12">
                                         <label className="labels">Email</label>
-                                        <Form.Item name="email">
-                                            <Input placeholder="nhập email"></Input>
+                                        <Form.Item
+                                            name="email"
+                                            rules={[{ type: "email", message: "Nhập đúng định dạng @" }]}
+                                        >
+                                            <Input placeholder="Nhập email"></Input>
                                         </Form.Item>
                                     </div>
-                                    <div className="col-md-12" style={{ marginBottom: -15 }}>
+                                    <div className="col-md-12">
                                         <label className="labels">Số điện thoại</label>
-                                        <Form.Item name="phone">
-                                            <Input placeholder="nhập số điện thoại"></Input>
+                                        <Form.Item name="phone" rules={[{ pattern: new RegExp(/^[0-9]+$/), message: "Nhập đúng định dạng số" }]}>
+                                            <Input placeholder="Nhập số điện thoại"></Input>
                                         </Form.Item>
                                     </div>
-                                    <div className="col-md-12" style={{ marginBottom: -5 }}>
+                                    <div className="col-md-12">
                                         <label className="labels">Địa chỉ</label>
                                         <Form.Item name="address">
-                                            <Input placeholder="nhập địa chỉ"></Input>
+                                            <Input placeholder="Nhập địa chỉ"></Input>
                                         </Form.Item>
                                     </div>
                                 </div>
@@ -139,7 +145,7 @@ function ProfileComponent() {
                                     <div className="col-md-6">
                                         <label className="labels">Mật khẩu</label>
                                         <Form.Item name="password">
-                                            <Input.Password placeholder="nhập password"></Input.Password>
+                                            <Input.Password placeholder="Nhập password"></Input.Password>
                                         </Form.Item>
                                     </div>
                                 </div>

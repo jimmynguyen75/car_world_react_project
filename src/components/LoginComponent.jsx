@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import login from '../images/login.png';
 import AccountService from '../services/AccountService';
+import { message } from 'antd'
 
 function LoginComponent() {
 
@@ -37,6 +38,7 @@ function LoginComponent() {
                 setPassword("")
                 setIncorrect("")
                 console.log(error)
+                message.error("Lỗi server, đăng nhập không thành công")
             })
     }
 
