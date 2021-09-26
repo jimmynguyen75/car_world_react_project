@@ -7,11 +7,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
   //<Suspense fallback={(<div>Loading...</div>)}> I will use it if needed
-  <React.StrictMode>
+  // <React.StrictMode>
 
-    <App />
+  <App />,
 
-  </React.StrictMode>,
+  //</React.StrictMode>,
   //</Suspense>,
   document.getElementById('root')
 );

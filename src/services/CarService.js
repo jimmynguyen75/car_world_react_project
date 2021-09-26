@@ -7,7 +7,10 @@ class CarService {
     getCars() {
         return axios.get(CARS_API_URL + "GetAllCars", { headers: authHeader() });
     }
-    
+    createNewCar(car) {
+        return axios.post(CARS_API_URL + "CreateNewCar", car, { headers: authHeader() });
+    }
+
 }
 
 export default new CarService();

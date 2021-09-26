@@ -8,6 +8,7 @@ import AccountService from '../services/AccountService';
 import '../styles/admin-dashboard.less';
 import ManageAccessoryComponent from './accessories/ManageAccessoryComponent';
 import ManageAccountsComponent from './accounts/ManageAccountsComponent';
+import ManageBrandsComponent from './brands/ManageBrandsComponent';
 import ManageCarsComponent from './cars/ManageCarsComponent';
 import DashboardComponent from './DashboardComponent';
 import ProfileComponent from './profile/ProfileComponent';
@@ -52,7 +53,7 @@ function AdminDashboardComponent() {
     }, [currentUser.Id]);
     function logoutButton() {
         AccountService.logOut();
-        history.replace('/login');
+        history.replace('/dang-nhap');
     }
     function manageCars() {
         history.push('/quan-ly/xe')
@@ -68,6 +69,9 @@ function AdminDashboardComponent() {
     }
     function manageAccessories() {
         history.push('/quan-ly/phu-kien')
+    }
+    function manageBrands() {
+        history.push('/quan-ly/thuong-hieu')
     }
 
     function confirmLogout() {
@@ -98,6 +102,7 @@ function AdminDashboardComponent() {
                     <Menu.Item key="/quan-tri" icon={<HomeOutlined style={{ color: '#316B83' }} />} onClick={dashboard}>Trang chủ</Menu.Item>
                     <Menu.Item key="/quan-ly/xe" icon={<CarOutlined style={{ color: '#F4D19B' }} />} onClick={manageCars}>Quản lý xe</Menu.Item>
                     <Menu.Item key="/quan-ly/phu-kien" icon={<CarOutlined style={{ color: '#BFA2DB' }} />} onClick={manageAccessories}>Quản lý phụ kiện</Menu.Item>
+                    <Menu.Item key="/quan-ly/thuong-hieu" icon={<CarOutlined style={{ color: '#BFA2DB' }} />} onClick={manageBrands}>Quản lý thương hiệu</Menu.Item>
                     <Menu.Item key="/quan-ly/tai-khoan" icon={<UserSwitchOutlined style={{ color: '#6B7AA1' }} />} onClick={manageAccounts}>Quản lý tài khoản</Menu.Item>
                     <Menu.Item key="/thong-tin-ca-nhan" icon={<UserOutlined style={{ color: '#9E7777' }} />} onClick={profile}>Thông tin cá nhân</Menu.Item>
                     <Menu.Item key="/log-out" onClick={confirmLogout} icon={<LogoutOutlined style={{ color: '#E2D5D5' }} />}>Đăng xuất</Menu.Item>
@@ -132,6 +137,10 @@ function AdminDashboardComponent() {
                             case '/quan-ly/phu-kien':
                                 return (
                                     < ManageAccessoryComponent />
+                                )
+                            case '/quan-ly/thuong-hieu':
+                                return (
+                                    < ManageBrandsComponent />
                                 )
                             case '/thong-tin-ca-nhan':
                                 return (

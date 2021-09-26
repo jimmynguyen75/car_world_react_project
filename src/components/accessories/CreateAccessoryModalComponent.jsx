@@ -1,31 +1,30 @@
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, message, Modal, Row } from 'antd';
-import React from 'react';
-import CreateAccessoryBodyModalComponent from './CreateAccessoryBodyModalComponent';
+import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
+import CreateAccessoryBodyModalComponent from './CreateAccessoryBodyModalComponent';
 function CreateAccessoryModalComponent() {
     const App = () => {
+        const [modalConfirm, setModalConfirm] = useState(false);
         const [visible, setVisible] = React.useState(false);
-        const [confirmLoading, setConfirmLoading] = React.useState(false);
-        const [setSuccess] = React.useState(false);
+        const [loadingButton, setLoadingButton] = React.useState(false)
         const history = useHistory();
         const success = () => {
-            setSuccess(false);
-            message.success("Create Acccessory Successfully", 2);
+            message.success("Tạo phụ kiện thành công");
         };
         const showModal = () => {
             setVisible(true);
         };
         const handleOk = () => {
-            setConfirmLoading(true);
+            setLoadingButton(true);
             setTimeout(() => {
                 setVisible(false);
-                setConfirmLoading(false);
+                setLoadingButton(true);
+                window.location.href = '/quan-ly/phu-kien'
             }, 2000);
             setTimeout(() => {
                 success();
-                setSuccess(true);
-            }, 2000)
+            }, 500)
         };
         const handleCancel = () => {
             console.log('Clicked cancel button');
@@ -34,21 +33,33 @@ function CreateAccessoryModalComponent() {
         };
         return (
             <>
+                <Modal
+                    title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
+                    centered
+                    icon={<ExclamationCircleOutlined />}
+                    visible={modalConfirm}
+                    onCancel={() => setModalConfirm(false)}
+                    footer={[
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button onClick={() => setModalConfirm(false)}>Hủy </Button>
+                            <Button form="myForm" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
+                        </Row>
+                    ]}
+                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn đăng chiếc xe này không?</span>
+                </Modal>
                 <Button type="primary" shape="round" onClick={showModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2.5 }}>{"Tạo phụ kiện"}</span></Button>
                 <Modal
                     title={"Tạo mới phụ kiện"}
                     visible={visible}
-                    onOk={handleOk}
-                    confirmLoading={confirmLoading}
                     onCancel={handleCancel}
                     width={1000}
                     footer={
                         <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
                             <Button onClick={handleCancel}>
-                                Cancel
+                                Hủy
                             </Button>
-                            <Button form="myForm" type="primary" key="submit" htmlType="submit">
-                                Submit
+                            <Button type="primary" onClick={() => setModalConfirm(true)}>
+                                Hoàn tất
                             </Button>
                         </Row>
                     }

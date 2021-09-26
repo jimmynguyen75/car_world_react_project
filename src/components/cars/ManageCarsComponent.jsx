@@ -6,7 +6,8 @@ import CarService from '../../services/CarService';
 import CreateCarBodyModalComponent from './CreateCarBodyModalComponent';
 import CreateCarModalComponent from './CreateCarModalComponent';
 import ViewCarModalComponent from './ViewCarModalComponent';
-
+import moment from 'moment';
+import 'moment/locale/vi';
 function ManageCarsComponent() {
     const imgPlacehoder = 'https://via.placeholder.com/120';
     const [car, setCars] = useState([]);
@@ -17,17 +18,17 @@ function ManageCarsComponent() {
 
     const contentDelete = (
         <div>
-            <p>You will Delete this Car when you click!.1</p>
+            <p>Bạn sẽ xóa chiếc xe này khi nhấn vào!</p>
         </div>
     );
     const contentView = (
         <div>
-            <p>You will View Detail this Car when you click!.1'</p>
+            <p>Bạn sẽ được xem chiếc xe này khi nhấn vào</p>
         </div>
     );
     const contentEdit = (
         <div>
-            <p>You will Edit this Car when you click!.1</p>
+            <p>Bạn sẽ chỉnh sửa chiếc xe này khi nhấn vào</p>
         </div>
     );
     useEffect(() => {
@@ -43,17 +44,17 @@ function ManageCarsComponent() {
     }, []);
     function confirmDelete() {
         Modal.confirm({
-            title: 'Delete Car!.1',
+            title: 'Xóa xe',
             icon: <ExclamationCircleOutlined />,
-            content: 'Are you sure you want to Delete this Car?',
-            okText: 'Ok.1',
-            cancelText: 'Cancel.1',
+            content: 'Bạn có muốn xóa chiếc xe này không?',
+            okText: 'Có',
+            cancelText: 'Không',
         });
     }
 
     const success = () => {
         setSuccess(false);
-        message.success('Created Car Successfully.1', 2);
+        message.success('Tạo xe thành công');
     };
     const showModal = () => {
         setVisible(true);
@@ -183,8 +184,8 @@ function ManageCarsComponent() {
                     render: (record) => {
                         return (
                             <Row>
-                                <Col span={8}><img alt="" src={record.Image === "string" ? imgPlacehoder : record.Image} /></Col>
-                                <Col span={16}><Space size="middle"> <div style={{ marginLeft: 10, fontWeight: 550 }}>{record.Name}</div></Space></Col>
+                                <Col span={3}><img alt="" style={{ height: 50, maxWidth: '100%' }} src={record.Image === "string" ? imgPlacehoder : record.Image} /></Col>
+                                <Col span={21}><Space size="middle"> <div style={{ marginLeft: 10, fontWeight: 550 }}>{record.Name}</div></Space></Col>
                             </Row>
                         );
                     },
@@ -197,7 +198,7 @@ function ManageCarsComponent() {
                     render: (brand) => {
                         return (
                             <Row>
-                                <Avatar src={brand.Brand.Image} />
+                                <Avatar size="small" src={brand.Brand.Image} />
                                 <Space size="middle">
                                     <div style={{ paddingLeft: 5 }}>{brand.Brand.Name}</div>
                                 </Space>
@@ -214,10 +215,12 @@ function ManageCarsComponent() {
                 },
                 {
                     title: 'Ngày tạo',
-                    dataIndex: 'createdDate',
                     key: 'date',
                     width: '12%',
                     ...this.getColumnSearchProps('CreatedDate'),
+                    render: (date) => {
+                        return <div style={{ color: '#868686', fontWeight: 450 }}>{moment(date.CreatedDate).format('ll')}</div>
+                    }
                 },
                 {
                     title: 'Các tác vụ',

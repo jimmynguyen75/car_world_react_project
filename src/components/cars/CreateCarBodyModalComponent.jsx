@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
+import CarService from '../../services/CarService'
 export default function CreateCarBodyModalComponent() {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -21,7 +22,6 @@ export default function CreateCarBodyModalComponent() {
     const [height, setHeight] = useState(0);
     const [displacement, setDisplacement] = useState(0);
     const [groundClearance, setGroundClearance] = useState(0);
-    const [turningRadius, setOnTurningRadius] = useState(0);
     const [fuelConsumption, setOnFuelConsumption] = useState(0);
     const [kerbWeight, setOnKerbWeight] = useState(0);
     const [fuelCapacity, setFuelCapacity] = useState(0);
@@ -54,10 +54,6 @@ export default function CreateCarBodyModalComponent() {
         const string = e.target.value;
         setGroundClearance(string.replace(/\D/g, ''))
     }
-    const onTurningRadius = (e) => {
-        const string = e.target.value;
-        setOnTurningRadius(string.replace(/\D/g, ''))
-    }
     const onFuelConsumption = (e) => {
         const string = e.target.value;
         setOnFuelConsumption(string)
@@ -78,13 +74,17 @@ export default function CreateCarBodyModalComponent() {
         width: width,
         displacement: displacement,
         groundClearance: groundClearance,
-        turningRadius: turningRadius,
         fuelConsumption: fuelConsumption,
         kerbWeight: kerbWeight,
         fuelCapacity: fuelCapacity,
     })
     //--------//
     const onFinish = (values) => {
+        CarService.createNewCar(values)
+            .then(() => {
+                console.log("okkkk")
+            })
+            .catch(err => { console.log(err) });
         console.log("values", values);
     }
     const handleCancel = () => setVisible(false);
@@ -197,9 +197,6 @@ export default function CreateCarBodyModalComponent() {
                 <Form.Item hidden={true} name="groundClearance" >
                     <Input></Input>
                 </Form.Item>
-                <Form.Item hidden={true} name="turningRadius" >
-                    <Input></Input>
-                </Form.Item>
                 <Form.Item hidden={true} name="fuelConsumption" >
                     <Input></Input>
                 </Form.Item>
@@ -228,16 +225,19 @@ export default function CreateCarBodyModalComponent() {
                         {fileList.length >= 3 ? null : uploadButton}
                     </Upload>
                 </Form.Item>
-                <Form.Item label="Tên xe" name="Name">
+                <Form.Item label="Tên xe" name="name">
                     <Input.TextArea
                         placeholder="Nhập tên xe"
                         showCount maxLength={200}
                         autoSize={{ minRows: 1, maxRows: 10 }}
                     />
                 </Form.Item>
+                <Form.Item label="Kiểu dáng" name="bodyType">
+                    <Input placeholder="Nhập kiểu dáng xe" />
+                </Form.Item>
                 <Row gutter={15}>
                     <Col span={8}>
-                        <Form.Item label="Hãng xe" name="Brand">
+                        <Form.Item label="Hãng xe" name="brandName">
                             <Select
                                 showSearch
                                 placeholder="Chọn hãng xe"
@@ -247,7 +247,7 @@ export default function CreateCarBodyModalComponent() {
                                 }
                             >
                                 {brands.map(brands => (
-                                    <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                    <Option key={brands.Id} value={brands.Name}>{brands.Name}</Option>
                                 ))}
                             </Select>
                         </Form.Item>
@@ -456,9 +456,8 @@ export default function CreateCarBodyModalComponent() {
                 </Row>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Bán kính quay xe">
+                        <Form.Item label="Bán kính quay xe" name="turningRadius">
                             <NumberFormat
-                                onChange={onTurningRadius}
                                 maxLength={9}
                                 placeholder="Nhập bán kính quay (m)"
                                 className="currency"
@@ -617,7 +616,7 @@ export default function CreateCarBodyModalComponent() {
                         />
                     </Form.Item>
                 </Col> */}
-                <Form.Item label="Mô tả" name="Description">
+                <Form.Item label="Mô tả" name="despcription">
                     <Input.TextArea
                         size="large"
                         maxLength={1000} showCount

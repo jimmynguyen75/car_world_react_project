@@ -43,7 +43,7 @@ function ManagerDashboardComponent() {
             console.log(location.pathname)
             setTitle('Quản lý phản hồi')
         }
-        if (location.pathname === "/thong-tin-ca-nhan") {
+        if (location.pathname === "/quan-ly/thong-tin-ca-nhan") {
             console.log(location.pathname)
             setTitle('Thông tin cá nhân')
         }
@@ -52,7 +52,7 @@ function ManagerDashboardComponent() {
 
     function logoutButton() {
         AccountService.logOut();
-        history.replace('/login');
+        history.replace('/dang-nhap');
     }
     function managePosts() {
         history.push('/quan-ly/bai-dang')
@@ -70,7 +70,7 @@ function ManagerDashboardComponent() {
         history.push('/quan-ly/cuoc-thi')
     }
     function profile() {
-        history.push('/thong-tin-ca-nhan')
+        history.push('/quan-ly/thong-tin-ca-nhan')
     }
 
     function confirmLogout() {
@@ -103,7 +103,7 @@ function ManagerDashboardComponent() {
                     <Menu.Item key="/quan-ly/su-kien" icon={<CarOutlined />} onClick={manageEvents}>Quản lý sự kiện</Menu.Item>
                     <Menu.Item key="/quan-ly/cuoc-thi" icon={<CarOutlined />} onClick={manageContests}>Quản lý cuộc thi</Menu.Item>
                     <Menu.Item key="/quan-ly/phan-hoi" icon={<MessageOutlined />} onClick={manageFeedback}>Quản lý phản hồi</Menu.Item>
-                    <Menu.Item key="/thong-tin-ca-nhan" icon={<UserOutlined />} onClick={profile}>Thông tin cá nhân</Menu.Item>
+                    <Menu.Item key="/quan-ly/thong-tin-ca-nhan" icon={<UserOutlined />} onClick={profile}>Thông tin cá nhân</Menu.Item>
                     <Menu.Item key="/log-out" onClick={confirmLogout} icon={<LogoutOutlined />}>Đăng xuất</Menu.Item>
                 </Menu>
             </Sider>
@@ -139,6 +139,10 @@ function ManagerDashboardComponent() {
                             case '/quan-ly/cuoc-thi':
                                 return (
                                     <ManageContestsComponent />
+                                )
+                            case '/quan-ly/thong-tin-ca-nhan':
+                                return (
+                                    <ProfileComponent />
                                 )
                             case '/logout':
                                 return (

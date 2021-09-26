@@ -1,5 +1,5 @@
 import { DownOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Dropdown, Form, Input, Menu, Row, Space, Table, Tabs, Tooltip } from 'antd';
+import { Avatar, Button, Col, Dropdown, Form, Input, Menu, Row, Space, Table, Tabs, Tooltip, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import AccountService from '../../services/AccountService';
@@ -461,108 +461,110 @@ function ManageAccountsComponent() {
     }
     const { TabPane } = Tabs;
     return (
-        <div>
-            <CreateAccountModalComponent />
-            <Tabs defaultActiveKey="tab1">
-                <TabPane
-                    tab={
-                        <span className="createButton">
-                            <i className="fas fa-users-cog" style={{ color: '#986D8E' }} />&nbsp;
-                            Quản trị và quản lý
-                        </span>
-                    }
-                    key="tab1"
-                >
-                    <Row gutter={25}>
-                        <Col span="15">
-                            <AdminAndManager />
-                        </Col>
-                        <Col span="9">
-                            <Form
-                                form={form}
-                                colon={false}
-                                className="formDetail"
-                            >
-                                <Form.Item style={{ textAlign: 'center' }} name="image" valuePropName="src">
-                                    <Avatar shape="square" size={120} icon={<UserOutlined />} />
-                                </Form.Item>
-                                <Tooltip title="Tên đăng nhập" color="#6B7AA1" placement="topLeft">
-                                    <Form.Item label={<i className="fas fa-user-tie fa-lg" style={{ color: '#6B7AA1' }} />} name="username1">
-                                        <Input disabled style={{ marginLeft: 7, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Tên đăng nhập" />
+        <Spin size="large" spinning={user.length === 0 ? true : false}>
+            <div>
+                <CreateAccountModalComponent />
+                <Tabs defaultActiveKey="tab1">
+                    <TabPane
+                        tab={
+                            <span className="createButton">
+                                <i className="fas fa-users-cog" style={{ color: '#986D8E' }} />&nbsp;
+                                Quản trị và quản lý
+                            </span>
+                        }
+                        key="tab1"
+                    >
+                        <Row gutter={25}>
+                            <Col span="15">
+                                <AdminAndManager />
+                            </Col>
+                            <Col span="9">
+                                <Form
+                                    form={form}
+                                    colon={false}
+                                    className="formDetail"
+                                >
+                                    <Form.Item style={{ textAlign: 'center' }} name="image" valuePropName="src">
+                                        <Avatar shape="square" size={120} icon={<UserOutlined />} />
                                     </Form.Item>
-                                </Tooltip>
-                                <Tooltip title="Họ và tên" color="#B97A95" placement="topLeft">
-                                    <Form.Item label={<i className="fas fa-user fa-lg" style={{ color: '#B97A95' }}></i>} name="fullName">
-                                        <Input disabled style={{ marginLeft: 7, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Họ và tên" />
+                                    <Tooltip title="Tên đăng nhập" color="#6B7AA1" placement="topLeft">
+                                        <Form.Item label={<i className="fas fa-user-tie fa-lg" style={{ color: '#6B7AA1' }} />} name="username1">
+                                            <Input disabled style={{ marginLeft: 7, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Tên đăng nhập" />
+                                        </Form.Item>
+                                    </Tooltip>
+                                    <Tooltip title="Họ và tên" color="#B97A95" placement="topLeft">
+                                        <Form.Item label={<i className="fas fa-user fa-lg" style={{ color: '#B97A95' }}></i>} name="fullName">
+                                            <Input disabled style={{ marginLeft: 7, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Họ và tên" />
+                                        </Form.Item>
+                                    </Tooltip>
+                                    <Tooltip title="Email" color="#9D9D9D" placement="topLeft">
+                                        <Form.Item label={<i className="fas fa-envelope fa-lg" style={{ color: '#9D9D9D' }}></i>} name="email">
+                                            <Input disabled style={{ marginLeft: 5, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Email" />
+                                        </Form.Item>
+                                    </Tooltip>
+                                    <Tooltip title="Số điện thoại" color="#FABDAD" placement="topLeft">
+                                        <Form.Item label={<i className="fas fa-phone fa-lg" style={{ color: '#FABDAD' }}></i>} name="phone">
+                                            <Input disabled style={{ marginLeft: 5, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Số điện thoại" />
+                                        </Form.Item>
+                                    </Tooltip>
+                                    <Tooltip title="Địa chỉ" color="#BFA2DB" placement="topLeft">
+                                        <Form.Item label={<i className="fas fa-address-card fa-lg" style={{ color: '#BFA2DB' }}></i>} name="address">
+                                            <Input disabled style={{ marginLeft: 3, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Địa chỉ" />
+                                        </Form.Item>
+                                    </Tooltip>
+                                </Form>
+                            </Col>
+                        </Row>
+                    </TabPane>
+                    <TabPane
+                        tab={
+                            <span className="createButton">
+                                <i className="fas fa-users" style={{ color: '#3EA0A5' }} />&nbsp;
+                                Người dùng
+                            </span>
+                        }
+                        key="tab2"
+                    >
+                        <Row gutter={25}>
+                            <Col span="15">
+                                <User />
+                            </Col>
+                            <Col span="9">
+                                <Form
+                                    form={form}
+                                    colon={false}
+                                    className="formDetail"
+                                >
+                                    <Form.Item style={{ textAlign: 'center' }} name="image" valuePropName="src">
+                                        <Avatar shape="square" size={120} icon={<UserOutlined />} />
                                     </Form.Item>
-                                </Tooltip>
-                                <Tooltip title="Email" color="#9D9D9D" placement="topLeft">
-                                    <Form.Item label={<i className="fas fa-envelope fa-lg" style={{ color: '#9D9D9D' }}></i>} name="email">
-                                        <Input disabled style={{ marginLeft: 5, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Email" />
-                                    </Form.Item>
-                                </Tooltip>
-                                <Tooltip title="Số điện thoại" color="#FABDAD" placement="topLeft">
-                                    <Form.Item label={<i className="fas fa-phone fa-lg" style={{ color: '#FABDAD' }}></i>} name="phone">
-                                        <Input disabled style={{ marginLeft: 5, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Số điện thoại" />
-                                    </Form.Item>
-                                </Tooltip>
-                                <Tooltip title="Địa chỉ" color="#BFA2DB" placement="topLeft">
-                                    <Form.Item label={<i className="fas fa-address-card fa-lg" style={{ color: '#BFA2DB' }}></i>} name="address">
-                                        <Input disabled style={{ marginLeft: 3, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Địa chỉ" />
-                                    </Form.Item>
-                                </Tooltip>
-                            </Form>
-                        </Col>
-                    </Row>
-                </TabPane>
-                <TabPane
-                    tab={
-                        <span className="createButton">
-                            <i className="fas fa-users" style={{ color: '#3EA0A5' }} />&nbsp;
-                            Người dùng
-                        </span>
-                    }
-                    key="tab2"
-                >
-                    <Row gutter={25}>
-                        <Col span="15">
-                            <User />
-                        </Col>
-                        <Col span="9">
-                            <Form
-                                form={form}
-                                colon={false}
-                                className="formDetail"
-                            >
-                                <Form.Item style={{ textAlign: 'center' }} name="image" valuePropName="src">
-                                    <Avatar shape="square" size={120} icon={<UserOutlined />} />
-                                </Form.Item>
-                                <Tooltip title="Họ và tên" color="#B97A95" placement="topLeft">
-                                    <Form.Item label={<i className="fas fa-user fa-lg" style={{ color: '#B97A95' }}></i>} name="fullName">
-                                        <Input disabled style={{ marginLeft: 7, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Họ và tên" />
-                                    </Form.Item>
-                                </Tooltip>
-                                <Tooltip title="Email" color="#9D9D9D" placement="topLeft">
-                                    <Form.Item label={<i className="fas fa-envelope fa-lg" style={{ color: '#9D9D9D' }}></i>} name="email">
-                                        <Input disabled style={{ marginLeft: 5, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Email" />
-                                    </Form.Item>
-                                </Tooltip>
-                                <Tooltip title="Số điện thoại" color="#FABDAD" placement="topLeft">
-                                    <Form.Item label={<i className="fas fa-phone fa-lg" style={{ color: '#FABDAD' }}></i>} name="phone">
-                                        <Input disabled style={{ marginLeft: 5, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Số điện thoại" />
-                                    </Form.Item>
-                                </Tooltip>
-                                <Tooltip title="Địa chỉ" color="#BFA2DB" placement="topLeft">
-                                    <Form.Item label={<i className="fas fa-address-card fa-lg" style={{ color: '#BFA2DB' }}></i>} name="address">
-                                        <Input disabled style={{ marginLeft: 3, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Địa chỉ" />
-                                    </Form.Item>
-                                </Tooltip>
-                            </Form>
-                        </Col>
-                    </Row>
-                </TabPane>
-            </Tabs>
-        </div>
+                                    <Tooltip title="Họ và tên" color="#B97A95" placement="topLeft">
+                                        <Form.Item label={<i className="fas fa-user fa-lg" style={{ color: '#B97A95' }}></i>} name="fullName">
+                                            <Input disabled style={{ marginLeft: 7, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Họ và tên" />
+                                        </Form.Item>
+                                    </Tooltip>
+                                    <Tooltip title="Email" color="#9D9D9D" placement="topLeft">
+                                        <Form.Item label={<i className="fas fa-envelope fa-lg" style={{ color: '#9D9D9D' }}></i>} name="email">
+                                            <Input disabled style={{ marginLeft: 5, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Email" />
+                                        </Form.Item>
+                                    </Tooltip>
+                                    <Tooltip title="Số điện thoại" color="#FABDAD" placement="topLeft">
+                                        <Form.Item label={<i className="fas fa-phone fa-lg" style={{ color: '#FABDAD' }}></i>} name="phone">
+                                            <Input disabled style={{ marginLeft: 5, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Số điện thoại" />
+                                        </Form.Item>
+                                    </Tooltip>
+                                    <Tooltip title="Địa chỉ" color="#BFA2DB" placement="topLeft">
+                                        <Form.Item label={<i className="fas fa-address-card fa-lg" style={{ color: '#BFA2DB' }}></i>} name="address">
+                                            <Input disabled style={{ marginLeft: 3, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }} placeholder="Địa chỉ" />
+                                        </Form.Item>
+                                    </Tooltip>
+                                </Form>
+                            </Col>
+                        </Row>
+                    </TabPane>
+                </Tabs>
+            </div>
+        </Spin>
     )
 }
 

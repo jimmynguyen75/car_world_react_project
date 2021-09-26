@@ -1,6 +1,6 @@
-import { PlusCircleOutlined } from '@ant-design/icons';
-import { Button, message, Modal, Popconfirm, Row } from 'antd';
-import React from 'react';
+import { PlusCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button, message, Modal, Row } from 'antd';
+import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import CreateCarBodyModalComponent from './CreateCarBodyModalComponent';
 import './styles.less';
@@ -8,10 +8,11 @@ import './styles.less';
 function CreateCarModalComponent() {
     const App = () => {
         const history = useHistory();
+        const [modalConfirm, setModalConfirm] = useState(false);
         const [visible, setVisible] = React.useState(false);
         const [loadingButton, setLoadingButton] = React.useState(false)
         const success = () => {
-            message.success('Created Car Successfully.1');
+            message.success('Tạo xe thành công!');
         };
         const showModal = () => {
             setVisible(true);
@@ -32,17 +33,22 @@ function CreateCarModalComponent() {
             setVisible(false);
             history.push('/quan-ly/xe')
         };
-        // function confirm(e) {
-        //     console.log(e);
-        //     message.success('Click on Yes');
-        // }
-
-        // function cancel(e) {
-        //     console.log(e);
-        //     message.error('Click on No');
-        // }
         return (
             <>
+                <Modal
+                    title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
+                    centered
+                    icon={<ExclamationCircleOutlined />}
+                    visible={modalConfirm}
+                    onCancel={() => setModalConfirm(false)}
+                    footer={[
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button onClick={() => setModalConfirm(false)}>Hủy </Button>
+                            <Button form="myForm" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
+                        </Row>
+                    ]}
+                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn đăng chiếc xe này không?</span>
+                </Modal>
                 <Button type="primary" shape="round" onClick={showModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2.5 }}>Tạo xe</span></Button>
                 <Modal
                     title='Tạo xe mới'
@@ -52,21 +58,11 @@ function CreateCarModalComponent() {
                     footer={[
                         <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
                             <Button onClick={handleCancel}>
-                                Cancel
+                                Hủy
                             </Button>
-                            <Button form="myForm" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">
-                                Submit
+                            <Button type="primary" onClick={() => setModalConfirm(true)}>
+                                Hoàn tất
                             </Button>
-                            <Popconfirm
-                                title={"Are you sure to delete this task?"}
-                            // okText="Submit"
-                            // cancelText="Cancel"
-
-                            >
-                                <Button type="primary" key="submit" htmlType="submit">
-                                    Submit
-                                </Button>
-                            </Popconfirm>
                         </Row>
                     ]}
                 >

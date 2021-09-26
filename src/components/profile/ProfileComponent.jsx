@@ -27,6 +27,7 @@ function ProfileComponent() {
                     phone: res.data.Phone,
                     address: res.data.Address,
                     image: res.data.Image,
+                    status: res.data.Status,
                 })
                 setData(res.data)
                 setFullname(res.data.FullName)
@@ -68,6 +69,9 @@ function ProfileComponent() {
                         <Input />
                     </Form.Item>
                     <Form.Item name="image" hidden={true}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="status" hidden={true}>
                         <Input />
                     </Form.Item>
                     <div className="row">
