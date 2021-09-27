@@ -9,22 +9,17 @@ function CreateAccessoryModalComponent() {
         const [visible, setVisible] = React.useState(false);
         const [loadingButton, setLoadingButton] = React.useState(false)
         const history = useHistory();
-        const success = () => {
-            message.success("Tạo phụ kiện thành công");
-        };
         const showModal = () => {
             setVisible(true);
         };
-        const handleOk = () => {
+        const handleOk = () => {         
             setLoadingButton(true);
             setTimeout(() => {
-                setVisible(false);
-                setLoadingButton(true);
-                window.location.href = '/quan-ly/phu-kien'
-            }, 2000);
+                setModalConfirm(false)
+            }, 1000);
             setTimeout(() => {
-                success();
-            }, 500)
+                setLoadingButton(false);
+            }, 1000);
         };
         const handleCancel = () => {
             console.log('Clicked cancel button');
@@ -45,7 +40,7 @@ function CreateAccessoryModalComponent() {
                             <Button form="myForm" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
                         </Row>
                     ]}
-                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn đăng chiếc xe này không?</span>
+                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn tạo phụ kiện này không?</span>
                 </Modal>
                 <Button type="primary" shape="round" onClick={showModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2.5 }}>{"Tạo phụ kiện"}</span></Button>
                 <Modal

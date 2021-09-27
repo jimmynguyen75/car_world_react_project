@@ -11,22 +11,18 @@ function CreateCarModalComponent() {
         const [modalConfirm, setModalConfirm] = useState(false);
         const [visible, setVisible] = React.useState(false);
         const [loadingButton, setLoadingButton] = React.useState(false)
-        const success = () => {
-            message.success('Tạo xe thành công!');
-        };
+
         const showModal = () => {
             setVisible(true);
         };
         const handleOk = () => {
             setLoadingButton(true);
             setTimeout(() => {
-                setVisible(false);
-                setLoadingButton(false);
-                history.push('/quan-ly/xe')
-            }, 2000);
+                setModalConfirm(false)
+            }, 1000);
             setTimeout(() => {
-                success();
-            }, 2000)
+                setLoadingButton(false);
+            }, 1000)
         };
         const handleCancel = () => {
             console.log('Clicked cancel button');

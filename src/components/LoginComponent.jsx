@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import login from '../images/login.png';
 import AccountService from '../services/AccountService';
-import { message } from 'antd'
+import { message, Spin } from 'antd'
 
 function LoginComponent() {
 
@@ -23,22 +23,31 @@ function LoginComponent() {
 
     const handleLogin = (e) => {
         e.preventDefault();
+        setTimeout(() => {
+            message.loading({ content: 'Đang tải...', duration: 2 });
+        }, 10)
         AccountService.login(username, password, 2)
             .then(() => {
                 console.log("Tên đăng nhập: " + username);
                 console.log("Mật khẩu: " + password);
                 console.log(AccountService.getCurrentUser().RoleId);
                 if (AccountService.getCurrentUser().RoleId === 1) {
-                    history.replace("/quan-tri")
+                    setTimeout(() => {
+                        message.success({ content: 'Đăng nhập thành công!', duration: 2 });
+                    }, 1000);
+                    setTimeout(() => { history.replace("/quan-tri") }, 3000)
                 } else {
-                    history.replace("/quan-ly")
+                    setTimeout(() => {
+                        message.success({ content: 'Đăng nhập thành công!', duration: 2 });
+                    }, 1000);
+                    setTimeout(() => { history.replace("/quan-ly") }, 3000)
                 }
             })
             .catch((error) => {
                 setPassword("")
                 setIncorrect("")
                 console.log(error)
-                message.error("Lỗi server, đăng nhập không thành công")
+                message.error("Đăng nhập không thành công")
             })
     }
 

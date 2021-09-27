@@ -82,10 +82,18 @@ export default function CreateCarBodyModalComponent() {
     const onFinish = (values) => {
         CarService.createNewCar(values)
             .then(() => {
-                console.log("okkkk")
+                console.log(values)
+                setTimeout(() => {
+                    message.success("Tạo xe thành công");
+                }, 500)
+                setTimeout(() => {
+                    window.location.href = '/quan-ly/xe'
+                }, 1500)
             })
-            .catch(err => { console.log(err) });
-        console.log("values", values);
+            .catch(err => {
+                console.log(err)
+                message.error("Lỗi server hoặc tên không được trùng nhau!")
+            });
     }
     const handleCancel = () => setVisible(false);
     function getBase64(file) {

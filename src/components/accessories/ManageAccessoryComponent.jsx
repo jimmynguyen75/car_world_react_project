@@ -148,6 +148,7 @@ function ManageAccessoryComponent() {
                             suffix=" vnđ"
                             thousandSeparator={'.'}
                             decimalSeparator={','}
+                            style={{ fontWeight: '500' }}
                         />
                     }
                 },
@@ -202,7 +203,12 @@ function ManageAccessoryComponent() {
                     },
                 }
             ];
-            return <Table columns={columns} dataSource={accessories} rowKey="Id"/>;
+            return <Table
+                columns={columns}
+                dataSource={accessories}
+                rowKey="Id"
+                pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15', '20'] }}
+            />;
         }
     }
     return (

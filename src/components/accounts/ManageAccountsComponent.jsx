@@ -153,8 +153,8 @@ function ManageAccountsComponent() {
                     render: (data) => {
                         return (
                             <Row>
-                                <Avatar size="middle" src={data.Image} icon={<UserOutlined />} />
-                                <div style={{paddingTop: 5}}><span style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.FullName}</span></div>
+                                <Avatar size="large" src={data.Image} icon={<UserOutlined />} />
+                                <div style={{ paddingTop: 7 }}><span style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.FullName}</span></div>
                             </Row>
                         )
                     }
@@ -367,8 +367,8 @@ function ManageAccountsComponent() {
                     render: (data) => {
                         return (
                             <Row>
-                                <Avatar size="middle" src={data.Image} icon={<UserOutlined />} />
-                                <div style={{paddingTop: 5}}><span style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.FullName}</span></div>
+                                <Avatar size="large" src={data.Image} icon={<UserOutlined />} />
+                                <div style={{ paddingTop: 7 }}><span style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.FullName}</span></div>
                             </Row>
                         )
                     }
@@ -455,6 +455,7 @@ function ManageAccountsComponent() {
                 }}
                 columns={columns}
                 dataSource={allUser}
+                rowKey="Id"
                 pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15', '20'] }}
             />;
         }

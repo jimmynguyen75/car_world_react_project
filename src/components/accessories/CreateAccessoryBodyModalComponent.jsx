@@ -24,10 +24,20 @@ export default function CreateAccessoryBodyModalComponent() {
     );
     const onFinish = (values) => {
         console.log("values", values);
-        AccessoryService
-            .createNewAccessory(values)
-            .then((finish) => console.log(finish))
-            .catch(err => console.log(err));
+        AccessoryService.createNewAccessory(values)
+            .then((finish) => {
+                console.log(finish)
+                setTimeout(() => {               
+                    message.success("Tạo phụ kiện thành công");
+                }, 500)
+                setTimeout(() => {
+                    window.location.href = '/quan-ly/phu-kien'
+                }, 1500)
+            })
+            .catch((err) => {
+                message.error("Lỗi server hoặc tên không được trùng nhau!")
+                console.log(err)
+            });
     }
     const handleCancel = () => setVisible(false);
     function getBase64(file) {
@@ -129,6 +139,7 @@ export default function CreateAccessoryBodyModalComponent() {
                 <Form.Item
                     name="image" label="Ảnh phụ kiện"
                     getValueFromEvent={normFile}
+                    rules={[{ required: true, message: "Ảnh phụ kiện không được bỏ trống" }]}
                 >
                     <Upload
                         name="image"
@@ -144,7 +155,7 @@ export default function CreateAccessoryBodyModalComponent() {
                         {fileList.length >= 3 ? null : uploadButton}
                     </Upload>
                 </Form.Item>
-                <Form.Item label="Name" name="name">
+                <Form.Item label="Name" name="name" rules={[{ required: true, message: "Tên phụ kiện không được bỏ trống" }]}>
                     <Input.TextArea
                         placeholder="Nhập phụ kiện"
                         showCount maxLength={200}
@@ -153,7 +164,7 @@ export default function CreateAccessoryBodyModalComponent() {
                 </Form.Item>
                 <Row gutter={15}>
                     <Col span={12}>
-                        <Form.Item label="Giá">
+                        <Form.Item label="Giá" name="Giá" rules={[{ required: true, message: "Tiền phụ kiện không được bỏ trống" }]}>
                             <NumberFormat
                                 onChange={onChangePrice}
                                 placeholder="Nhập giá phụ kiện (vnđ)"
@@ -174,7 +185,7 @@ export default function CreateAccessoryBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Hãng phụ kiện" name="brandName">
+                        <Form.Item label="Hãng phụ kiện" name="brandName" rules={[{ required: true, message: "Hãng phụ kiện không được bỏ trống" }]}>
                             <Select
                                 showSearch
                                 placeholder="Chọn hãng phụ kiện"
@@ -190,7 +201,7 @@ export default function CreateAccessoryBodyModalComponent() {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item label="Mô tả chi tiết" name="description">
+                <Form.Item label="Mô tả chi tiết" name="description" rules={[{ required: true, message: "Mô tả phụ kiện không được bỏ trống" }]}>
                     <Input.TextArea
                         size="large"
                         // style={{ fontSize: 16, fontWeight: 600 }}
