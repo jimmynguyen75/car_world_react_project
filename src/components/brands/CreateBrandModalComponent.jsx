@@ -23,9 +23,9 @@ export default function CreateBrandModalComponent() {
                 window.location.href = '/quan-ly/thuong-hieu';
                 console.log("Okkk")
             })
-            .catch((err) => { 
+            .catch((err) => {
                 message.error("Vui lòng nhập ảnh")
-                console.log(err) 
+                console.log(err)
             })
         console.log(values)
     }
@@ -64,11 +64,11 @@ export default function CreateBrandModalComponent() {
                     <Form.Item name="image" hidden={true} >
                         <Input />
                     </Form.Item>
-                    <Form.Item label={<div><span style={{ color: "#ff4d4f", lineHeight: 1, fontSize: 14, fontFamily: ' SimSun, sans-serif'}}>*</span> Ảnh</div>} style={{ textAlign: "center" }}
+                    <Form.Item label={<div><span style={{ color: "#ff4d4f", lineHeight: 1, fontSize: 14, fontFamily: ' SimSun, sans-serif' }}>*</span> Ảnh</div>} style={{ textAlign: "center" }}
                     >
                         <Avatar size={64} width="150px" alt="" icon={<UserOutlined />} src={url} /> <br />
                         <label className="upload" htmlFor="upload-photoCreateBand" ><i className="fas fa-plus-circle fa-1x"><span style={{ marginLeft: 3 }}>Chọn ảnh</span></i></label>
-                        <input type="file" onChange={changeImage} name="photo" id="upload-photoCreateBand" />
+                        <input type="file" accept="image/png, image/jpeg, image/jpg" onChange={changeImage} name="photo" id="upload-photoCreateBand" />
                     </Form.Item>
                     <Form.Item
                         label="Tên thương hiệu"

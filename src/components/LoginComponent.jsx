@@ -1,8 +1,8 @@
+import { message } from 'antd';
 import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import login from '../images/login.png';
 import AccountService from '../services/AccountService';
-import { message, Spin } from 'antd'
 
 function LoginComponent() {
 

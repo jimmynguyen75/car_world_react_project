@@ -10,6 +10,9 @@ class CarService {
     createNewCar(car) {
         return axios.post(CARS_API_URL + "CreateNewCar", car, { headers: authHeader() });
     }
+    deleteCar(id) {
+        return axios.put(CARS_API_URL + "RemoveCar?id=" + id, { headers: authHeader() });
+    }
 
 }
 

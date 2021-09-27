@@ -1,5 +1,5 @@
 import { ExclamationCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, message, Modal, Row } from 'antd';
+import { Button, Modal, Row } from 'antd';
 import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import CreateAccessoryBodyModalComponent from './CreateAccessoryBodyModalComponent';

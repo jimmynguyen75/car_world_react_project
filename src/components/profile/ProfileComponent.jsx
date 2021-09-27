@@ -89,7 +89,7 @@ function ProfileComponent() {
                                 <span className="font-weight-bold mt-2">{fullname}</span>
                                 <span className="text-black-50">{email}</span>
                                 <label className="upload" htmlFor="upload-photo"><i className="fas fa-plus-circle fa-1x"><span style={{ marginLeft: 3 }}>Cập nhật ảnh</span></i></label>
-                                <input type="file" onChange={changeImage} name="photo" id="upload-photo" />
+                                <input accept="image/png, image/jpeg, image/jpg" type="file" onChange={changeImage} name="photo" id="upload-photo" />
                                 <span> </span>
                             </div>
                         </div>

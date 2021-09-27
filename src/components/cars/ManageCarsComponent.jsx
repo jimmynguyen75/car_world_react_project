@@ -16,6 +16,8 @@ function ManageCarsComponent() {
     const [visibleDetail, setVisibleDetail] = React.useState(false);
     const [confirmLoading, setConfirmLoading] = React.useState(false);
     const [setSuccess] = React.useState(false);
+    const [record, setRecord] = React.useState([]);
+    const [recordImage, setRecordImage] = React.useState(null);
 
     const contentDelete = (
         <div>
@@ -33,23 +35,44 @@ function ManageCarsComponent() {
         </div>
     );
     useEffect(() => {
+        let result = []
         CarService
             .getCars()
             .then(res => {
-                console.log(res.data)
-                setCars(res.data)
+                res.data.forEach((data) => {
+                    if (data.IsDeleted === false) {
+                        result.push(data)
+                    }
+                })
+                console.log(result)
+                setCars(result)
             })
             .catch(err => {
                 console.log(err)
             })
     }, []);
-    function confirmDelete() {
+    function confirmDelete(id) {
         Modal.confirm({
             title: 'Xóa xe',
             icon: <ExclamationCircleOutlined />,
             content: 'Bạn có muốn xóa chiếc xe này không?',
             okText: 'Có',
             cancelText: 'Không',
+            onOk: () => {
+                CarService.deleteCar(id)
+                    .then(() => {
+                        setTimeout(() => {
+                            message.success("Xóa xe thành công");
+                        }, 500)
+                        setTimeout(() => {
+                            window.location.href = '/quan-ly/xe'
+                        }, 1500)
+                    })
+                    .catch(err => {
+                        message.error("Lỗi server, vui lòng thử lại sau")
+                        console.log(err);
+                    })
+            }
         });
     }
 
@@ -234,20 +257,28 @@ function ManageCarsComponent() {
                 {
                     title: 'Các tác vụ',
                     key: 'action',
-                    render: (text, record) => {
+                    render: (record) => {
                         return (
                             <Space size="middle">
                                 {/* <a>Invite {record.lastName}</a> */}
-                                <Popover content={contentView} title='View Button!.1'>
-                                    <Button onClick={showViewDetail}
+                                <Popover content={contentView} title='Xem chi tiết'>
+                                    <Button onClick={() => {
+                                        showViewDetail()
+                                        setRecord(record)
+                                        let ex = record.Image.split("|")
+                                        if (ex.length > 1) {
+                                            ex.pop();
+                                        }
+                                        setRecordImage(ex);
+                                    }}
                                         block className="viewButton" ><i className="fas fa-eye"></i></Button>
                                 </Popover>
-                                <Popover content={contentEdit} title='Edit Button!.1'>
+                                <Popover content={contentEdit} title='Chỉnh sửa'>
                                     <Button onClick={showModal}
                                         block className="editButton"><i className="fas fa-edit"></i></Button>
                                 </Popover>
-                                <Popover content={contentDelete} title='Delete Button!.1'>
-                                    <Button onClick={confirmDelete}
+                                <Popover content={contentDelete} title='Xóa'>
+                                    <Button onClick={() => confirmDelete(record.Id)}
                                         block className="deleteButton"><i className="far fa-trash-alt"></i></Button>
                                 </Popover>
                             </Space>
@@ -271,11 +302,10 @@ function ManageCarsComponent() {
             />;
         }
     }
-
     return (
         <div>
             <Modal
-                title='Create a new Car.1'
+                title='Tạo xe mới'
                 visible={visible}
                 onOk={handleOk}
                 confirmLoading={confirmLoading}
@@ -285,18 +315,21 @@ function ManageCarsComponent() {
                 <CreateCarBodyModalComponent />
             </Modal>
             <Modal
-                title="View Car Detail"
+                title="Xem chi tiết xe"
                 visible={visibleDetail}
                 onOk={handleOkDetail}
                 confirmLoading={confirmLoading}
                 onCancel={handleCancelDetail}
+                width={1100}
                 footer={[
-                    <Button onClick={handleCancelDetail}>
-                        Ok
-                    </Button>
+                    <Row style={{ float: 'right' }}>
+                        <Button type="primary" onClick={handleCancelDetail}>
+                            Xong
+                        </Button>
+                    </Row>
                 ]}
             >
-                <ViewCarModalComponent />
+                <ViewCarModalComponent record={record} recordImage={recordImage} />
             </Modal>
             <CreateCarModalComponent />
             <Spin
