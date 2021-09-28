@@ -17,7 +17,7 @@ function ManageCarsComponent() {
     const [visibleDetail, setVisibleDetail] = React.useState(false);
     const [confirmLoading, setConfirmLoading] = React.useState(false);
     const [setSuccess] = React.useState(false);
-    const [record, setRecord] = React.useState([]);
+    const [record, setRecord] = React.useState(null);
     const [recordImage, setRecordImage] = React.useState(null);
 
     const contentDelete = (
@@ -209,7 +209,7 @@ function ManageCarsComponent() {
                         return (
                             <Row>
                                 <Col span={3}><img alt="" style={{ height: 50, maxWidth: '100%' }} src={record.Image === "string" ? imgPlacehoder : record.Image} /></Col>
-                                <Col span={21}><Space size="middle"><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{record.Name}</div></Space></Col>
+                                <Col span={21}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15, width: '100%' }}>{record.Name}</div></Col>
                             </Row>
                         );
                     },
@@ -217,7 +217,7 @@ function ManageCarsComponent() {
                 {
                     title: "Hãng xe",
                     key: 'brand',
-                    width: '14%',
+                    width: '16%',
                     ...this.getColumnSearchProps('Brand'),
                     render: (brand) => {
                         return (
@@ -275,7 +275,15 @@ function ManageCarsComponent() {
                                         block className="viewButton" ><i className="fas fa-eye"></i></Button>
                                 </Popover>
                                 <Popover content={contentEdit} title='Chỉnh sửa'>
-                                    <Button onClick={showModal}
+                                    <Button onClick={() => {
+                                        showModal()
+                                        setRecord(record)
+                                        let ex = record.Image.split("|")
+                                        if (ex.length > 1) {
+                                            ex.pop();
+                                        }
+                                        setRecordImage(ex)
+                                    }}
                                         block className="editButton"><i className="fas fa-edit"></i></Button>
                                 </Popover>
                                 <Popover content={contentDelete} title='Xóa'>
@@ -296,9 +304,9 @@ function ManageCarsComponent() {
                     document.documentElement.scrollTop = 0;
                 }}
                 pagination={{
-                    defaultPageSize: 3,
+                    defaultPageSize: 5,
                     showSizeChanger: true,
-                    pageSizeOptions: ['3', '10', '15', '20']
+                    pageSizeOptions: ['5', '10', '15', '20']
                 }}
             />;
         }
@@ -347,13 +355,13 @@ function ManageCarsComponent() {
                         <Button onClick={handleCancel}>
                             Cancel
                         </Button>
-                        <Button form="myForm" type="primary" key="submit" htmlType="submit">
+                        <Button form="myFormEdit" type="primary" key="submit" htmlType="submit">
                             Submit
                         </Button>
                     </Row>
                 ]}
             >
-                <EditCarBodyComponent />
+                <EditCarBodyComponent record={record} recordImage={recordImage} />
             </Modal>
             <CreateCarModalComponent />
             <Spin

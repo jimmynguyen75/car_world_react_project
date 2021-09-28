@@ -33,21 +33,23 @@ function LoginComponent() {
                 console.log(AccountService.getCurrentUser().RoleId);
                 if (AccountService.getCurrentUser().RoleId === 1) {
                     setTimeout(() => {
-                        message.success({ content: 'Đăng nhập thành công!', duration: 2 });
+                        message.success({ content: 'Đăng nhập thành công', duration: 2 });
                     }, 1000);
-                    setTimeout(() => { history.replace("/quan-tri") }, 3000)
+                    setTimeout(() => { window.location.href = "/" }, 2000)
                 } else {
                     setTimeout(() => {
-                        message.success({ content: 'Đăng nhập thành công!', duration: 2 });
+                        message.success({ content: 'Đăng nhập thành công', duration: 2 });
                     }, 1000);
-                    setTimeout(() => { history.replace("/quan-ly") }, 3000)
+                    setTimeout(() => { window.location.href = "/" }, 2000)
                 }
             })
             .catch((error) => {
                 setPassword("")
                 setIncorrect("")
                 console.log(error)
-                message.error("Đăng nhập không thành công")
+                setTimeout(() => {
+                    message.error("Đăng nhập không thành công")
+                }, 1000)
             })
     }
 

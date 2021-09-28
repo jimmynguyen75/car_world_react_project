@@ -12,6 +12,7 @@ import ManageFeedbackComponent from '../feedback/ManageFeedbackComponent';
 import CreatePostModalComponent from '../posts/CreatePostModalComponent';
 import ManagePostsComponent from '../posts/ManagePostsComponent';
 import ProfileComponent from '../profile/ProfileComponent';
+import ManageProposalsComponent from '../proposals/ManageProposalsComponent';
 import ManagerBodyDashboardComponent from './ManagerBodyDashboardComponent';
 
 
@@ -20,30 +21,35 @@ function ManagerDashboardComponent() {
     const { Header, Sider, Content } = Layout;
     const history = useHistory();
     const location = useLocation();
+    const [user, setUser] = useState("")
     const currentUser = AccountService.getCurrentUser();
     const [title, setTitle] = useState('');
     useEffect(() => {
-        if (location.pathname === "/quan-ly") {
+        if (location.pathname === "/") {
             console.log(location.pathname)
             setTitle('Trang chủ')
         }
-        if (location.pathname === "/quan-ly/bai-dang") {
+        if (location.pathname === "/bai-dang") {
             console.log(location.pathname)
             setTitle('Quản lý bài đăng')
         }
-        if (location.pathname === "/quan-ly/su-kien") {
+        if (location.pathname === "/de-xuat") {
             console.log(location.pathname)
-            setTitle('Quản lý sư kiện')
+            setTitle('Quản lý đề xuất')
         }
-        if (location.pathname === "/quan-ly/cuoc-thi") {
+        if (location.pathname === "/su-kien") {
+            console.log(location.pathname)
+            setTitle('Quản lý sự kiện')
+        }
+        if (location.pathname === "/cuoc-thi") {
             console.log(location.pathname)
             setTitle('Quản lý cuộc thi')
         }
-        if (location.pathname === "/quan-ly/phan-hoi") {
+        if (location.pathname === "/phan-hoi") {
             console.log(location.pathname)
             setTitle('Quản lý phản hồi')
         }
-        if (location.pathname === "/quan-ly/thong-tin-ca-nhan") {
+        if (location.pathname === "/thong-tin-ca-nhan") {
             console.log(location.pathname)
             setTitle('Thông tin cá nhân')
         }
@@ -52,34 +58,43 @@ function ManagerDashboardComponent() {
 
     function logoutButton() {
         AccountService.logOut();
-        history.replace('/dang-nhap');
+        window.location.href = '/'
+    }
+    function manageProposal() {
+        history.push('/de-xuat')
     }
     function managePosts() {
-        history.push('/quan-ly/bai-dang')
+        history.push('/bai-dang')
     }
     function manageEvents() {
-        history.push('/quan-ly/su-kien')
+        history.push('/su-kien')
     }
     function dashboard() {
-        history.push('/quan-ly')
+        history.push('/')
     }
     function manageFeedback() {
-        history.push('/quan-ly/phan-hoi')
+        history.push('/phan-hoi')
     }
     function manageContests() {
-        history.push('/quan-ly/cuoc-thi')
+        history.push('/cuoc-thi')
     }
     function profile() {
-        history.push('/quan-ly/thong-tin-ca-nhan')
+        history.push('/thong-tin-ca-nhan')
     }
-
+    useEffect(() => {
+        AccountService.getUserById(currentUser.Id)
+            .then((res) => {
+                setUser(res.data)
+            })
+            .catch(err => { console.log(err) });
+    }, [currentUser.Id]);
     function confirmLogout() {
         Modal.confirm({
-            title: 'Log out',
+            title: 'Đăng xuất',
             icon: <ExclamationCircleOutlined />,
-            content: 'Are you sure you want to log out?',
-            okText: 'Ok',
-            cancelText: 'Cancel',
+            content: 'Bạn có muốn đăng xuất không?',
+            okText: 'Có',
+            cancelText: 'Không',
             onOk: logoutButton,
         });
     }
@@ -98,19 +113,20 @@ function ManagerDashboardComponent() {
             >
                 <img src={logo2} className="logo" alt="logo..." />
                 <Menu mode="inline" defaultSelectedKeys={[location.pathname]}>
-                    <Menu.Item key="/quan-ly" icon={<HomeOutlined />} onClick={dashboard}>Trang chủ</Menu.Item>
-                    <Menu.Item key="/quan-ly/bai-dang" icon={<CarOutlined />} onClick={managePosts}>Quản lý bài đăng</Menu.Item>
-                    <Menu.Item key="/quan-ly/su-kien" icon={<CarOutlined />} onClick={manageEvents}>Quản lý sự kiện</Menu.Item>
-                    <Menu.Item key="/quan-ly/cuoc-thi" icon={<CarOutlined />} onClick={manageContests}>Quản lý cuộc thi</Menu.Item>
-                    <Menu.Item key="/quan-ly/phan-hoi" icon={<MessageOutlined />} onClick={manageFeedback}>Quản lý phản hồi</Menu.Item>
-                    <Menu.Item key="/quan-ly/thong-tin-ca-nhan" icon={<UserOutlined />} onClick={profile}>Thông tin cá nhân</Menu.Item>
-                    <Menu.Item key="/log-out" onClick={confirmLogout} icon={<LogoutOutlined />}>Đăng xuất</Menu.Item>
+                    <Menu.Item key="/" icon={<HomeOutlined style={{ fontSize: 18, color: '#316B83', paddingTop: 2 }} />} onClick={dashboard}>Trang chủ</Menu.Item>
+                    <Menu.Item key="/de-xuat" onClick={manageProposal}><i class="far fa-lightbulb" style={{ fontSize: 18, color: '#FF7878', paddingTop: 4 }} />&nbsp;&nbsp;&nbsp;&nbsp;Quản lý đề xuất</Menu.Item>
+                    <Menu.Item key="/bai-dang" onClick={managePosts}><i class="far fa-clone" style={{ fontSize: 18, color: '#DBAD68', paddingTop: 4 }} />&nbsp;&nbsp;<span style={{paddingLeft: 2}}>Quản lý bài đăng</span></Menu.Item>
+                    <Menu.Item key="/su-kien" onClick={manageEvents}><i class="fas fa-calendar-alt" style={{ fontSize: 18, color: '#52BCC2' }} />&nbsp;&nbsp;&nbsp;Quản lý sự kiện</Menu.Item>
+                    <Menu.Item key="/cuoc-thi" onClick={manageContests}><i class="fas fa-trophy" style={{ fontSize: 18, color: '#BFA2DB', paddingTop: 4 }} />&nbsp;&nbsp;Quản lý cuộc thi</Menu.Item>
+                    <Menu.Item key="/phan-hoi" icon={<MessageOutlined style={{ fontSize: 18, color: '#6B7AA1', paddingTop: 2 }} />} onClick={manageFeedback}>Quản lý phản hồi</Menu.Item>
+                    <Menu.Item key="/thong-tin-ca-nhan" icon={<UserOutlined style={{ fontSize: 18, color: '#9E7777' }} />} onClick={profile}>Thông tin cá nhân</Menu.Item>
+                    <Menu.Item key="/dang-xuat" onClick={confirmLogout} icon={<LogoutOutlined style={{ fontSize: 18, color: '#E9BEBE', paddingTop: 2 }} />}>Đăng xuất</Menu.Item>
                 </Menu>
             </Sider>
             <Layout className="site-layout" style={{ marginLeft: 200 }}>
                 <Header className="site-layout-sub-header-background" style={{ padding: 0 }}>
-                    <Avatar size={40} className="avatar" icon={<UserOutlined />} />
-                    <Title level={5} className="userName">Welcome, {currentUser.FullName}</Title>
+                    <Avatar size={45} className="avatar" src={user.Image}> </Avatar>
+                    <Title level={5} className="userName">Welcome, {user.FullName}</Title>
                 </Header>
 
                 <Content style={{ margin: '24px 16px 0' }} >
@@ -120,37 +136,37 @@ function ManagerDashboardComponent() {
                                 return (
                                     <ManagerBodyDashboardComponent />
                                 )
-                            case '/quan-ly/bai-dang':
+                            case '/bai-dang':
                                 return (
                                     <ManagePostsComponent />
                                 )
-                            case '/quan-ly/tao-bai-dang':
+                            case '/tao-bai-dang':
                                 return (
                                     <CreatePostModalComponent />
                                 )
-                            case '/quan-ly/phan-hoi':
+                            case '/phan-hoi':
                                 return (
                                     <ManageFeedbackComponent />
                                 )
-                            case '/quan-ly/su-kien':
+                            case '/su-kien':
                                 return (
                                     <ManageEventsComponent />
                                 )
-                            case '/quan-ly/cuoc-thi':
+                            case '/cuoc-thi':
                                 return (
                                     <ManageContestsComponent />
                                 )
-                            case '/quan-ly/thong-tin-ca-nhan':
+                            case '/de-xuat':
                                 return (
-                                    <ProfileComponent />
+                                    <ManageProposalsComponent />
                                 )
-                            case '/logout':
+                            case '/thong-tin-ca-nhan':
                                 return (
                                     <ProfileComponent />
                                 )
                             default:
                                 return (
-                                    console.log("deo ok")
+                                    console.log("Success")
                                 )
                         }
                     })()}

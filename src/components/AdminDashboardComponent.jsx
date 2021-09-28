@@ -1,4 +1,4 @@
-import { CarOutlined, ExclamationCircleOutlined, HomeOutlined, LogoutOutlined, UserOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { CarOutlined, ExclamationCircleOutlined, HomeOutlined, LogoutOutlined, UserOutlined, UserSwitchOutlined, TagsOutlined } from '@ant-design/icons';
 import { Avatar, Layout, Menu, Modal, Typography } from 'antd';
 import 'antd/dist/antd.less';
 import React, { useEffect, useState } from 'react';
@@ -22,23 +22,23 @@ function AdminDashboardComponent() {
     const currentUser = AccountService.getCurrentUser();
     const [title, setTitle] = useState('');
     useEffect(() => {
-        if (location.pathname === "/quan-tri") {
+        if (location.pathname === "/") {
             console.log(location.pathname)
             setTitle('Trang chủ')
         }
-        if (location.pathname === "/quan-ly/xe") {
+        if (location.pathname === "/xe") {
             console.log(location.pathname)
             setTitle('Quản lý xe')
         }
-        if (location.pathname === "/quan-ly/phu-kien") {
+        if (location.pathname === "/phu-kien") {
             console.log(location.pathname)
             setTitle('Quản lý phụ kiện')
         }
-        if (location.pathname === "/quan-ly/tai-khoan") {
+        if (location.pathname === "/tai-khoan") {
             console.log(location.pathname)
             setTitle('Quản lý tài khoản')
         }
-        if (location.pathname === "/quan-ly/thuong-hieu") {
+        if (location.pathname === "/thuong-hieu") {
             console.log(location.pathname)
             setTitle('Quản lý thương hiệu')
         }
@@ -57,32 +57,32 @@ function AdminDashboardComponent() {
     }, [currentUser.Id]);
     function logoutButton() {
         AccountService.logOut();
-        history.replace('/dang-nhap');
+        window.location.href = '/'
     }
     function manageCars() {
-        history.push('/quan-ly/xe')
+        history.push('/xe')
     }
     function dashboard() {
-        history.push('/quan-tri')
+        history.push('/')
     }
     function manageAccounts() {
-        history.push('/quan-ly/tai-khoan')
+        history.push('/tai-khoan')
     }
     function profile() {
         history.push('/thong-tin-ca-nhan')
     }
     function manageAccessories() {
-        history.push('/quan-ly/phu-kien')
+        history.push('/phu-kien')
     }
     function manageBrands() {
-        history.push('/quan-ly/thuong-hieu')
+        history.push('/thuong-hieu')
     }
 
     function confirmLogout() {
         Modal.confirm({
             title: 'Đăng xuất',
             icon: <ExclamationCircleOutlined />,
-            content: 'Bạn có chắc bạn muốn đăng xuất không?',
+            content: 'Bạn có muốn đăng xuất không?',
             okText: 'Có',
             cancelText: 'Không',
             onOk: logoutButton,
@@ -103,13 +103,13 @@ function AdminDashboardComponent() {
             >
                 <img src={logo2} className="logo" alt="logo..." />
                 <Menu mode="inline" defaultSelectedKeys={[location.pathname]}>
-                    <Menu.Item key="/quan-tri" icon={<HomeOutlined style={{ color: '#316B83' }} />} onClick={dashboard}>Trang chủ</Menu.Item>
-                    <Menu.Item key="/quan-ly/xe" icon={<CarOutlined style={{ color: '#F4D19B' }} />} onClick={manageCars}>Quản lý xe</Menu.Item>
-                    <Menu.Item key="/quan-ly/phu-kien" icon={<CarOutlined style={{ color: '#BFA2DB' }} />} onClick={manageAccessories}>Quản lý phụ kiện</Menu.Item>
-                    <Menu.Item key="/quan-ly/thuong-hieu" icon={<CarOutlined style={{ color: '#BFA2DB' }} />} onClick={manageBrands}>Quản lý thương hiệu</Menu.Item>
-                    <Menu.Item key="/quan-ly/tai-khoan" icon={<UserSwitchOutlined style={{ color: '#6B7AA1' }} />} onClick={manageAccounts}>Quản lý tài khoản</Menu.Item>
-                    <Menu.Item key="/thong-tin-ca-nhan" icon={<UserOutlined style={{ color: '#9E7777' }} />} onClick={profile}>Thông tin cá nhân</Menu.Item>
-                    <Menu.Item key="/log-out" onClick={confirmLogout} icon={<LogoutOutlined style={{ color: '#E2D5D5' }} />}>Đăng xuất</Menu.Item>
+                    <Menu.Item key="/" icon={<HomeOutlined style={{ fontSize: 18, color: '#316B83', paddingTop: 2 }} />} onClick={dashboard}>Trang chủ</Menu.Item>
+                    <Menu.Item key="/xe" icon={<CarOutlined style={{ fontSize: 18, color: '#DBAD68', paddingTop: 4 }} />} onClick={manageCars}>Quản lý xe</Menu.Item>
+                    <Menu.Item key="/phu-kien" onClick={manageAccessories}><i className="fas fa-peace" style={{ fontSize: 18, color: '#52BCC2' }} />&nbsp;&nbsp;&nbsp;Quản lý phụ kiện</Menu.Item>
+                    <Menu.Item key="/thuong-hieu" icon={<TagsOutlined style={{ fontSize: 18, color: '#BFA2DB', paddingTop: 4 }} />} onClick={manageBrands}>Quản lý thương hiệu</Menu.Item>
+                    <Menu.Item key="/tai-khoan" icon={<UserSwitchOutlined style={{ fontSize: 18, color: '#6B7AA1', paddingTop: 2 }} />} onClick={manageAccounts}>Quản lý tài khoản</Menu.Item>
+                    <Menu.Item key="/thong-tin-ca-nhan" icon={<UserOutlined style={{ fontSize: 18, color: '#9E7777' }} />} onClick={profile}>Thông tin cá nhân</Menu.Item>
+                    <Menu.Item key="/dang-xuat" onClick={confirmLogout} icon={<LogoutOutlined style={{ fontSize: 18, color: '#E9BEBE', paddingTop: 2 }} />}>Đăng xuất</Menu.Item>
                 </Menu>
 
             </Sider>
@@ -130,19 +130,19 @@ function AdminDashboardComponent() {
                                 return (
                                     <DashboardComponent />
                                 )
-                            case '/quan-ly/xe':
+                            case '/xe':
                                 return (
                                     <ManageCarsComponent />
                                 )
-                            case '/quan-ly/tai-khoan':
+                            case '/tai-khoan':
                                 return (
                                     <ManageAccountsComponent />
                                 )
-                            case '/quan-ly/phu-kien':
+                            case '/phu-kien':
                                 return (
                                     < ManageAccessoryComponent />
                                 )
-                            case '/quan-ly/thuong-hieu':
+                            case '/thuong-hieu':
                                 return (
                                     < ManageBrandsComponent />
                                 )
@@ -150,13 +150,9 @@ function AdminDashboardComponent() {
                                 return (
                                     <ProfileComponent />
                                 )
-                            case '/logout':
-                                return (
-                                    <ProfileComponent />
-                                )
                             default:
                                 return (
-                                    console.log("deo ok")
+                                    console.log("Success")
                                 )
                         }
                     })()}

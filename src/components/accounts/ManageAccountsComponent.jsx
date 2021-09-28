@@ -72,7 +72,7 @@ function ManageAccountsComponent() {
                 console.log(err)
             })
     }
-
+    const sorter = (a, b) => (isNaN(a) && isNaN(b) ? (a || '').localeCompare(b || '') : a - b);
     class AdminAndManager extends React.Component {
         state = {
             searchText: '',
@@ -130,7 +130,6 @@ function ManageAccountsComponent() {
                     text
                 ),
         });
-
         handleSearch = (selectedKeys, confirm, dataIndex) => {
             confirm();
             this.setState({
@@ -138,18 +137,18 @@ function ManageAccountsComponent() {
                 searchedColumn: dataIndex,
             });
         };
-
         handleReset = clearFilters => {
             clearFilters();
             this.setState({ searchText: '' });
         };
-
         render() {
             const columns = [
                 {
                     title: 'Họ và tên',
                     key: 'fullname1',
                     ...this.getColumnSearchProps('FullName'),
+                    defaultSortOrder: 'ascend',
+                    sorter: (a, b) => sorter(a.FullName, b.FullName),
                     render: (data) => {
                         return (
                             <Row>
@@ -364,6 +363,8 @@ function ManageAccountsComponent() {
                     title: 'Họ và tên',
                     key: 'fullName2',
                     ...this.getColumnSearchProps('FullName'),
+                    defaultSortOrder: 'ascend',
+                    sorter: (a, b) => sorter(a.FullName, b.FullName),
                     render: (data) => {
                         return (
                             <Row>

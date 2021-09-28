@@ -114,7 +114,8 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
         pricewithoutany: setDataToChild.Price,
         description: setDataToChild.Description,
         brandName: setDataToChild.Brand.Name,
-        image: images
+        image: images,
+        price: setDataToChild.Price
     })
     function deleteImage(index) {
         setImg(setDataToChildFixingImage.splice(index, 1))

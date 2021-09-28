@@ -1,4 +1,4 @@
-import { Carousel, Col, Descriptions, Image, Row, Spin } from 'antd';
+import { Carousel, Col, Descriptions, Image, Row, Spin, Input } from 'antd';
 import React, { useState } from 'react';
 import NumberFormat from 'react-number-format';
 function ViewCarModalComponent({ record, recordImage }) {
@@ -55,7 +55,13 @@ function ViewCarModalComponent({ record, recordImage }) {
                                 {record.GearBox}
                             </Descriptions.Item>
                             <Descriptions.Item label="Chỗ ngồi">
-                                {record.Seats}
+                                <NumberFormat
+                                    value={record.Seats}
+                                    displayType="text"
+                                    suffix=" chỗ"
+                                    thousandSeparator={'.'}
+                                    decimalSeparator={','}
+                                />
                             </Descriptions.Item>
                             <Descriptions.Item label="Năm sản xuất">
                                 {record.YearOfManufactor}
@@ -77,16 +83,40 @@ function ViewCarModalComponent({ record, recordImage }) {
                             title={<div style={{ textDecoration: 'underline' }}>Thông số cơ bản</div>}
                         >
                             <Descriptions.Item label="Chiều dài">
-                                {record.Length}
+                                <NumberFormat
+                                    value={record.Length}
+                                    displayType="text"
+                                    suffix=" mm"
+                                    thousandSeparator={'.'}
+                                    decimalSeparator={','}
+                                />
                             </Descriptions.Item>
                             <Descriptions.Item label="Chiều rộng">
-                                {record.Width}
+                                <NumberFormat
+                                    value={record.Width}
+                                    displayType="text"
+                                    suffix=" mm"
+                                    thousandSeparator={'.'}
+                                    decimalSeparator={','}
+                                />
                             </Descriptions.Item>
                             <Descriptions.Item label="Chiều cao">
-                                {record.Height}
+                                <NumberFormat
+                                    value={record.Height}
+                                    displayType="text"
+                                    suffix=" mm"
+                                    thousandSeparator={'.'}
+                                    decimalSeparator={','}
+                                />
                             </Descriptions.Item>
                             <Descriptions.Item label="Dung tích">
-                                {record.Displacement}
+                                <NumberFormat
+                                    value={record.Displacement}
+                                    displayType="text"
+                                    suffix=" cc"
+                                    thousandSeparator={'.'}
+                                    decimalSeparator={','}
+                                />
                             </Descriptions.Item>
                             <Descriptions.Item label="Động cơ">
                                 {record.EngineType}
@@ -98,7 +128,13 @@ function ViewCarModalComponent({ record, recordImage }) {
                                 {record.MaxTorque}
                             </Descriptions.Item>
                             <Descriptions.Item label="Khoảng cách gầm xe">
-                                {record.GroundClearance}
+                                <NumberFormat
+                                    value={record.GroundClearance}
+                                    displayType="text"
+                                    suffix=" mm"
+                                    thousandSeparator={'.'}
+                                    decimalSeparator={','}
+                                />
                             </Descriptions.Item>
                             <Descriptions.Item label="Bán kính quay xe">
                                 {record.TurningRadius}
@@ -117,13 +153,29 @@ function ViewCarModalComponent({ record, recordImage }) {
                             title={<div style={{ textDecoration: 'underline' }}>Thông số kĩ thuật</div>}
                         >
                             <Descriptions.Item label="Trọng lượng thô">
-                                {record.KerbWeight}
+                                <NumberFormat
+                                    value={record.KerbWeight}
+                                    displayType="text"
+                                    suffix=" kg"
+                                    thousandSeparator={'.'}
+                                    decimalSeparator={','}
+                                />
                             </Descriptions.Item>
                             <Descriptions.Item label="Dung tích bình xăng">
-                                {record.FuelCapacity}
+                                <NumberFormat
+                                    value={record.FuelCapacity}
+                                    displayType="text"
+                                    suffix=" lít"
+                                />
                             </Descriptions.Item>
                             <Descriptions.Item label="Kích thước mâm xe">
-                                {record.WheelSize}
+                                <NumberFormat
+                                    value={record.WheelSize}
+                                    displayType="text"
+                                    suffix=" inch"
+                                    thousandSeparator={'.'}
+                                    decimalSeparator={','}
+                                />
                             </Descriptions.Item>
                             <Descriptions.Item label="Thông số lốp">
                                 {record.TyreSize}
@@ -167,10 +219,8 @@ function ViewCarModalComponent({ record, recordImage }) {
                     size="small"
                     title={<div style={{ textDecoration: 'underline' }}>Mô tả</div>}
                 >
-                    <Descriptions.Item>
-                        {record.Despcription}
-                    </Descriptions.Item>
                 </Descriptions>
+                <Input.TextArea style={{ color: 'black', backgroundColor: 'white', cursor: 'auto' }} autoSize={{ maxRows: 30 }} disabled value={record.Despcription}></Input.TextArea>
             </>
         )
     }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Modal, Button, message } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
+import CreateEventBodyModalComponent from './CreateEventBodyModalComponent';
 
 function CreateEventsModalComponent() {
     const App = () => {
@@ -40,6 +41,7 @@ function CreateEventsModalComponent() {
                     onCancel={handleCancel}
                     width={1000}
                 >
+                    <CreateEventBodyModalComponent />
                 </Modal>
             </>
         );

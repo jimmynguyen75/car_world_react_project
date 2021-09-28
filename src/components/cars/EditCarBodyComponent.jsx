@@ -1,11 +1,11 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Col, Form, Input, message, Modal, Row, Select, Upload } from "antd";
+import { Col, Form, Input, message, Modal, Row, Select, Upload, Tooltip, Image } from "antd";
 import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
 import CarService from '../../services/CarService'
-export default function EditCarBodyComponent({ record }) {
+export default function EditCarBodyComponent({ record, recordImage }) {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
     const [visible, setVisible] = useState(false);
@@ -14,19 +14,13 @@ export default function EditCarBodyComponent({ record }) {
     const [form] = Form.useForm();
     const [brands, setBrands] = useState([]);
     const { Option } = Select;
+    const [img, setImg] = useState([]);
+    const [images, setImages] = useState([]);
     //--------//
-    const [price, setPrice] = useState(0);
-    const [seats, setSeat] = useState(0);
-    const [length, setLength] = useState(0);
-    const [width, setWidth] = useState(0);
-    const [height, setHeight] = useState(0);
-    const [displacement, setDisplacement] = useState(0);
-    const [groundClearance, setGroundClearance] = useState(0);
-    const [fuelConsumption, setOnFuelConsumption] = useState(0);
-    const [kerbWeight, setOnKerbWeight] = useState(0);
-    const [fuelCapacity, setFuelCapacity] = useState(0);
     //***
+    console.log("record: ", record);
     const onPrice = (price) => {
+        console.log("price: ", price)
         form.setFieldsValue({
             price: price === 0 ? record.Price : price
         })
@@ -41,7 +35,6 @@ export default function EditCarBodyComponent({ record }) {
             length: length === 0 ? record.Length : length
         })
     }
-    //trung
     const onWidth = (width) => {
         form.setFieldsValue({
             width: width === 0 ? record.Width : width
@@ -77,35 +70,77 @@ export default function EditCarBodyComponent({ record }) {
             fuelCapacity: fuelCapacity === 0 ? record.FuelCapacity : fuelCapacity
         })
     }
-    ///trung
+    const onWheelSize = (wheelSize) => {
+        form.setFieldsValue({
+            wheelSize: wheelSize === 0 ? record.WheelSize : wheelSize
+        })
+    }
+    const onYearOfManufactor = (yearOfManufactor) => {
+        form.setFieldsValue({
+            yearOfManufactor: yearOfManufactor === 0 ? record.YearOfManufactor : yearOfManufactor
+        })
+    }
     form.setFieldsValue({
-        price: price,
-        seats: seats,
-        length: length,
-        height: height,
-        width: width,
-        displacement: displacement,
-        groundClearance: groundClearance,
-        fuelConsumption: fuelConsumption,
-        kerbWeight: kerbWeight,
-        fuelCapacity: fuelCapacity,
+        priceWithoutAny: record.Price,
+        seatsWithoutAny: record.Seats,
+        lengthWithoutAny: record.Length,
+        widthWithoutAny: record.Width,
+        heightWithoutAny: record.Height,
+        displacementWithoutAny: record.Displacement,
+        groundClearanceWithoutAny: record.GroundClearance,
+        fuelConsumptionWithoutAny: record.FuelConsumption,
+        kerbWeightWithoutAny: record.KerbWeight,
+        fuelCapacityWithoutAny: record.FuelCapacity,
+        wheelSizeWithoutAny: record.WheelSize,
+        yearOfManufactorWithoutAny: record.YearOfManufactor,
+        yearOfManufactor: record.YearOfManufactor,
+        price: record.Price,
+        seats: record.Seats,
+        length: record.Length,
+        width: record.Width,
+        height: record.Height,
+        displacement: record.Displacement,
+        groundClearance: record.GroundClearance,
+        fuelConsumption: record.FuelConsumption,
+        kerbWeight: record.KerbWeight,
+        fuelCapacity: record.FuelCapacity,
+        name: record.Name,
+        bodyType: record.BodyType,
+        brandName: record.Brand.Name,
+        gearBox: record.GearBox,
+        origin: record.Origin,
+        engineType: record.EngineType,
+        maxTorque: record.MaxTorque,
+        maxPower: record.MaxPower,
+        turningRadius: record.TurningRadius,
+        tyreSize: record.TyreSize,
+        wheelSize: record.WheelSize,
+        frontSuspension: record.FrontSuspension,
+        rearSuspension: record.RearSuspension,
+        tailLights: record.TailLights,
+        headLights: record.HeadLights,
+        fogLamps: record.FogLamps,
+        interiorMaterial: record.InteriorMaterial,
+        despcription: record.Despcription,
+        image: images
     })
     //--------//
     const onFinish = (values) => {
-        CarService.createNewCar(values)
-            .then(() => {
-                console.log(values)
-                setTimeout(() => {
-                    message.success("Tạo xe thành công");
-                }, 500)
-                setTimeout(() => {
-                    window.location.href = '/quan-ly/xe'
-                }, 1500)
-            })
-            .catch(err => {
-                console.log(err)
-                message.error("Lỗi server hoặc tên không được trùng nhau!")
-            });
+        // CarService.createNewCar(values)
+        //     .then(() => {
+        //         console.log(values)
+        //         setTimeout(() => {
+        //             message.success("Tạo xe thành công");
+        //         }, 500)
+        //         setTimeout(() => {
+        //             window.location.href = '/quan-ly/xe'
+        //         }, 1500)
+        //     })
+        //     .catch(err => {
+        //         console.log(err)
+        //         message.error("Lỗi server hoặc tên không được trùng nhau!")
+        //     });
+        console.log(values)
     }
     const handleCancel = () => setVisible(false);
     function getBase64(file) {
@@ -146,13 +181,6 @@ export default function EditCarBodyComponent({ record }) {
             }
         );
     }
-    const normFile = (e) => {
-        const stringData = urls.reduce((result, key) => {
-            return `${result}${key}|`
-        }, "")
-        console.log("oooo: ", stringData)
-        return stringData
-    };
     const beforeUpload = (file) => {
         const isImage = file.type.indexOf('image/') === 0;
         if (!isImage) {
@@ -170,6 +198,9 @@ export default function EditCarBodyComponent({ record }) {
             <div style={{ marginTop: 8 }}>Upload</div>
         </div>
     );
+    function deleteImage(index) {
+        setImg(recordImage.splice(index, 1))
+    }
     useEffect(() => {
         let result = []
         BrandService.getAllBrand()
@@ -184,6 +215,19 @@ export default function EditCarBodyComponent({ record }) {
             })
             .catch(err => console.log(err))
     }, [])
+    useEffect(() => {
+        const stringUrl = urls.reduce((result, key) => {
+            return `${result}${key}|`
+        }, "")
+        const stringData = img.reduce((result, key) => {
+            return `${result}${key}|`
+        }, "")
+        const data = (stringData + stringUrl)
+        setImages(data)
+    }, [img, urls])
+    useEffect(() => {
+        setImg(recordImage)
+    }, [recordImage, img])
     return (
         <div>
             <Modal
@@ -199,9 +243,12 @@ export default function EditCarBodyComponent({ record }) {
                 layout="vertical"
                 className="formCreate"
                 onFinish={onFinish}
-                id="myForm"
+                id="myFormEdit"
                 form={form}
             >
+                <Form.Item hidden={true} name="image">
+                    <Input></Input>
+                </Form.Item>
                 <Form.Item hidden={true} name="price" >
                     <Input></Input>
                 </Form.Item>
@@ -232,25 +279,45 @@ export default function EditCarBodyComponent({ record }) {
                 <Form.Item hidden={true} name="fuelCapacity" >
                     <Input></Input>
                 </Form.Item>
+                <Form.Item hidden={true} name="wheelSize" >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item hidden={true} name="yearOfManufactor" >
+                    <Input></Input>
+                </Form.Item>
                 <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Thông số chính</div>
                 <Form.Item
                     name="image" label="Ảnh phụ kiện"
-                    getValueFromEvent={normFile}
                     rules={[{ required: true, message: "Ảnh xe không được bỏ trống" }]}
                 >
-                    <Upload
-                        name="image"
-                        listType="picture-card"
-                        fileList={fileList}
-                        onPreview={handlePreview}
-                        onChange={handleChange}
-                        customRequest={customRequest}
-                        beforeUpload={beforeUpload}
-                        multiple={true}
-                        accept=".png,.jpeg,.jpg"
-                    >
-                        {fileList.length >= 3 ? null : uploadButton}
-                    </Upload>
+                    <Row>
+                        {img.map((object, i) => {
+                            return (
+
+                                <div style={{ marginRight: 8 }}>
+                                    <Tooltip placement="bottomRight" color="#FF7643" title={<i onClick={() => { deleteImage(i) }} id="btnDelete" class="far fa-trash-alt"> Xóa hình</i>}>
+                                        <Image style={{ padding: 8, border: '1px solid #d9d9d9' }} width={104} height={104} key={i} src={object} />
+                                    </Tooltip>
+                                </div>
+
+                            )
+                        })}
+                        <div>
+                            <Upload
+                                name="image"
+                                listType="picture-card"
+                                fileList={fileList}
+                                onPreview={handlePreview}
+                                onChange={handleChange}
+                                customRequest={customRequest}
+                                beforeUpload={beforeUpload}
+                                multiple={true}
+                                accept=".png,.jpeg,.jpg"
+                            >
+                                {fileList.length >= 8 ? null : uploadButton}
+                            </Upload>
+                        </div>
+                    </Row>
                 </Form.Item>
                 <Form.Item label="Tên xe" name="name" rules={[{ required: true, message: "Tên xe không được bỏ trống" }]}>
                     <Input.TextArea
@@ -260,7 +327,10 @@ export default function EditCarBodyComponent({ record }) {
                     />
                 </Form.Item>
                 <Form.Item label="Kiểu dáng" name="bodyType" rules={[{ required: true, message: "Kiểu dáng xe không được bỏ trống" }]}>
-                    <Input placeholder="Nhập kiểu dáng xe" />
+                    <Input.TextArea placeholder="Nhập kiểu dáng xe"
+                        showCount maxLength={50}
+                        autoSize={{ minRows: 1, maxRows: 10 }}
+                    />
                 </Form.Item>
                 <Row gutter={15}>
                     <Col span={8}>
@@ -280,11 +350,12 @@ export default function EditCarBodyComponent({ record }) {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item label="Giá" name="Giá" rules={[{ required: true, message: "Giá xe không được bỏ trống" }]}>
+                        <Form.Item label="Giá" name="priceWithoutAny" rules={[{ required: true, message: "Giá xe không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     onPrice(values.value)
                                 }}
+                                maxLength={20}
                                 placeholder="Nhập giá xe (vnđ)"
                                 className="currency"
                                 displayType="input"
@@ -303,13 +374,16 @@ export default function EditCarBodyComponent({ record }) {
                     </Col>
                     <Col span={8}>
                         <Form.Item label="Hộp số" name="gearBox" rules={[{ required: true, message: "Hộp số xe không được bỏ trống" }]}>
-                            <Input placeholder="Nhập hộp số" />
+                            <Input.TextArea placeholder="Nhập hộp số"
+                                showCount maxLength={50}
+                                autoSize={{ minRows: 1, maxRows: 10 }}
+                            />
                         </Form.Item>
                     </Col>
                 </Row>
                 <Row gutter={15}>
                     <Col span={8}>
-                        <Form.Item label="Chỗ ngồi" name="ngoi" rules={[{ required: true, message: "Chỗ ngồi xe không được bỏ trống" }]}>
+                        <Form.Item label="Chỗ ngồi" name="seatsWithoutAny" rules={[{ required: true, message: "Chỗ ngồi xe không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     onSeat(values.value)
@@ -330,9 +404,11 @@ export default function EditCarBodyComponent({ record }) {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item label="Năm sản xuất" name="yearOfManufactor" rules={[{ required: true, message: "Năm sản xuất xe không được bỏ trống" }]}>
+                        <Form.Item label="Năm sản xuất" name="yearOfManufactorWithoutAny" rules={[{ required: true, message: "Năm sản xuất xe không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onLength}
+                                onValueChange={(values) => {
+                                    onYearOfManufactor(values.value)
+                                }}
                                 maxLength={4}
                                 placeholder="Nhập năm sản xuất"
                                 className="currency"
@@ -350,19 +426,21 @@ export default function EditCarBodyComponent({ record }) {
                     </Col>
                     <Col span={8}>
                         <Form.Item label="Xuất xứ" name="origin" rules={[{ required: true, message: "Xuất xứ xe không được bỏ trống" }]}>
-                            <Input placeholder="Nhập xuất xứ" />
+                            <Input.TextArea placeholder="Nhập xuất xứ"
+                                showCount maxLength={50}
+                                autoSize={{ minRows: 1, maxRows: 10 }}
+                            />
                         </Form.Item>
                     </Col>
                 </Row>
                 <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Thông số cơ bản</div>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Chiều dài" name="dai" rules={[{ required: true, message: "Chiều dài xe không được bỏ trống" }]}>
+                        <Form.Item label="Chiều dài" name="lengthWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     onLength(values.value)
                                 }}
-                                onChange={onLength}
                                 maxLength={9}
                                 placeholder="Nhập chiều dài (mm)"
                                 className="currency"
@@ -382,7 +460,7 @@ export default function EditCarBodyComponent({ record }) {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Chiều rộng" name="rong" rules={[{ required: true, message: "Chiều rộng xe không được bỏ trống" }]}>
+                        <Form.Item label="Chiều rộng" name="widthWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     onWidth(values.value)
@@ -406,7 +484,7 @@ export default function EditCarBodyComponent({ record }) {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Chiều cao" name="cao" rules={[{ required: true, message: "Chiều cao xe không được bỏ trống" }]}>
+                        <Form.Item label="Chiều cao" name="heightWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     onHeight(values.value)
@@ -430,7 +508,7 @@ export default function EditCarBodyComponent({ record }) {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Dung tích" name="Dung tích" rules={[{ required: true, message: "Dung tích xe không được bỏ trống" }]}>
+                        <Form.Item label="Dung tích" name="displacementWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     onDisplacement(values.value)
@@ -455,24 +533,29 @@ export default function EditCarBodyComponent({ record }) {
                     </Col>
                 </Row>
                 <Row gutter={15}>
-
                     <Col span={6}>
-                        <Form.Item label="Động cơ" name="enginType" rules={[{ required: true, message: "Động cơ xe không được bỏ trống" }]}>
-                            <Input placeholder="Nhập động cơ xe" />
+                        <Form.Item label="Động cơ" name="engineType" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                            <Input.TextArea placeholder="Nhập động cơ xe"
+                                showCount maxLength={50}
+                                autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Công suất cực đại" name="maxPower" rules={[{ required: true, message: "Công suất xe không được bỏ trống" }]}>
-                            <Input placeholder="Nhập công xuất cực đại (Hp)" />
+                        <Form.Item label="Công suất cực đại" name="maxPower" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                            <Input.TextArea placeholder="Nhập công xuất cực đại (Hp)"
+                                showCount maxLength={50}
+                                autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Mô-men xoắn cực đại" name="maxTorque" rules={[{ required: true, message: "Mô-men xe không được bỏ trống" }]}>
-                            <Input placeholder="Nhập mô-men xoắn cực đại (Nm)" />
+                        <Form.Item label="Mô-men xoắn cực đại" name="maxTorque" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                            <Input.TextArea placeholder="Nhập mô-men xoắn cực đại"
+                                showCount maxLength={50}
+                                autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Khoảng cách gầm xe" name="kho" rules={[{ required: true, message: "Khoảng cách gầm xe không được bỏ trống" }]}>
+                        <Form.Item label="Khoảng cách gầm xe" name="groundClearanceWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     onGroundClearance(values.value)
@@ -498,7 +581,7 @@ export default function EditCarBodyComponent({ record }) {
                 </Row>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Bán kính quay xe" name="turningRadius" rules={[{ required: true, message: "Bán kính quay xe không được bỏ trống" }]}>
+                        <Form.Item label="Bán kính quay xe" name="turningRadius" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
                                 maxLength={9}
                                 placeholder="Nhập bán kính quay (m)"
@@ -519,12 +602,12 @@ export default function EditCarBodyComponent({ record }) {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Tiêu hao nhiên liệu" name="nhien" rules={[{ required: true, message: "Tiêu hao nhiên liệu xe không được bỏ trống" }]}>
+                        <Form.Item label="Tiêu hao nhiên liệu" name="fuelConsumptionWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     onFuelConsumption(values.value)
                                 }}
-                                maxLength={13}
+                                maxLength={14}
                                 placeholder="Nhập mức tiêu hao nhiên liệu (lít/100km)"
                                 className="currency"
                                 displayType="input"
@@ -546,7 +629,7 @@ export default function EditCarBodyComponent({ record }) {
                 <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Thông số kĩ thuật</div>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Trọng lượng khô" name="tr" rules={[{ required: true, message: "Trọng lượng thô xe không được bỏ trống" }]}>
+                        <Form.Item label="Trọng lượng khô" name="kerbWeightWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     onKerbWeight(values.value)
@@ -570,9 +653,11 @@ export default function EditCarBodyComponent({ record }) {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Dung tích bình xăng" name="dung" rules={[{ required: true, message: "Dung tích bình xăng xe không được bỏ trống" }]}>
+                        <Form.Item label="Dung tích bình xăng" name="fuelCapacityWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onFuelCapacity}
+                                onValueChange={(values) => {
+                                    onFuelCapacity(values.value)
+                                }}
                                 maxLength={7}
                                 placeholder="Nhập dung tích bình xăng (lít)"
                                 className="currency"
@@ -592,10 +677,12 @@ export default function EditCarBodyComponent({ record }) {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Kích thước mâm xe" name="wheelSize" rules={[{ required: true, message: "Kích thước xe không được bỏ trống" }]}>
+                        <Form.Item label="Kích thước mâm xe" name="wheelSizeWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onFuelCapacity}
-                                maxLength={7}
+                                onValueChange={(values) => {
+                                    onWheelSize(values.value)
+                                }}
+                                maxLength={10}
                                 placeholder="Nhập kích thước mâm xe (inch)"
                                 className="currency"
                                 displayType="input"
@@ -614,59 +701,67 @@ export default function EditCarBodyComponent({ record }) {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Thông số lốp" name="tyreSize" rules={[{ required: true, message: "Thông số lốp xe không được bỏ trống" }]}>
-                            <Input placeholder="Nhập thông số lốp" />
+                        <Form.Item label="Thông số lốp" name="tyreSize" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                            <Input.TextArea placeholder="Nhập thông số lốp"
+                                showCount maxLength={50}
+                                autoSize={{ minRows: 1, maxRows: 10 }}
+                            />
                         </Form.Item>
                     </Col>
                 </Row>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Hệ thống treo trước" name="frontSuspension" rules={[{ required: true, message: "Hệ thống treo trước xe không được bỏ trống" }]}>
-                            <Input placeholder="Nhập hệ thống treo trước" />
+                        <Form.Item label="Hệ thống treo trước" name="frontSuspension" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                            <Input.TextArea placeholder="Nhập hệ thống treo trước"
+                                showCount maxLength={50}
+                                autoSize={{ minRows: 1, maxRows: 10 }}
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Hệ thống treo sau" name="rearSuspension" rules={[{ required: true, message: "Hệ thống treo sau xe không được bỏ trống" }]}>
-                            <Input placeholder="Nhập hệ thống treo sau" />
+                        <Form.Item label="Hệ thống treo sau" name="rearSuspension" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                            <Input.TextArea placeholder="Nhập hệ thống treo sau"
+                                showCount maxLength={50}
+                                autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                 </Row>
                 <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Nội thất và ngoại thất</div>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Chất liệu nội thất" name="interiorMaterial" rules={[{ required: true, message: "Chất liệu nội thất xe không được bỏ trống" }]}>
-                            <Input placeholder="Nhập chất liệu nội thất" />
+                        <Form.Item label="Chất liệu nội thất" name="interiorMaterial" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                            <Input.TextArea placeholder="Nhập chất liệu nội thất"
+                                showCount maxLength={50}
+                                autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Cụm đèn trước" name="headLights" rules={[{ required: true, message: "Cùm đèn trước xe không được bỏ trống" }]}>
-                            <Input placeholder="Nhập cụm đèn trước" />
+                        <Form.Item label="Cụm đèn trước" name="headLights" rules={[{ required: true, message: "Đèn không được bỏ trống" }]}>
+                            <Input.TextArea placeholder="Nhập cụm đèn trước"
+                                showCount maxLength={50}
+                                autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Cụm đèn sau" name="tailLights" rules={[{ required: true, message: "Cụm đèn sau xe không được bỏ trống" }]}>
-                            <Input placeholder="Nhập cụm đèn sau" />
+                        <Form.Item label="Cụm đèn sau" name="tailLights" rules={[{ required: true, message: "Đèn không được bỏ trống" }]}>
+                            <Input.TextArea placeholder="Nhập cụm đèn sau"
+                                showCount maxLength={50}
+                                autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Đèn sương mù" name="fogLamps" rules={[{ required: true, message: "Đèn sương mù xe không được bỏ trống" }]}>
-                            <Input placeholder="Nhập đèn sương mù" />
+                        <Form.Item label="Đèn sương mù" name="fogLamps" rules={[{ required: true, message: "Đèn không được bỏ trống" }]}>
+                            <Input.TextArea placeholder="Nhập đèn sương mù"
+                                showCount maxLength={50}
+                                autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                 </Row>
-                {/* <Col span={6}>
-                    <Form.Item label="Public">
-                        <Switch
-                            checkedChildren={<CheckOutlined />}
-                            unCheckedChildren={<CloseOutlined />}
-                        />
-                    </Form.Item>
-                </Col> */}
                 <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Mô tả</div>
                 <Form.Item name="despcription">
                     <Input.TextArea
                         size="large"
-                        maxLength={1000} showCount
+                        maxLength={2000} showCount
                         autoSize={{ minRows: 3, maxRows: 10 }}
                     />
                 </Form.Item>

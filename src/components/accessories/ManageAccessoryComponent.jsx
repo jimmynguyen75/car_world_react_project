@@ -120,7 +120,7 @@ function ManageAccessoryComponent() {
                             <div>
                                 <Row>
                                     <Col span={3}> <div> <img alt="" style={{ height: 50, maxWidth: '100%' }} src={record.Image} /></div></Col>
-                                    <Col span={21}><Space size="middle"><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{record.Name}</div></Space></Col>
+                                    <Col span={21}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15, width: '100%' }}>{record.Name}</div></Col>
                                 </Row>
                             </div>
                         );
