@@ -38,6 +38,10 @@ function AdminDashboardComponent() {
             console.log(location.pathname)
             setTitle('Quản lý tài khoản')
         }
+        if (location.pathname === "/quan-ly/thuong-hieu") {
+            console.log(location.pathname)
+            setTitle('Quản lý thương hiệu')
+        }
         if (location.pathname === "/thong-tin-ca-nhan") {
             console.log(location.pathname)
             setTitle('Thông tin cá nhân')

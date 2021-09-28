@@ -123,7 +123,7 @@ function ViewCarModalComponent({ record, recordImage }) {
                                 {record.FuelCapacity}
                             </Descriptions.Item>
                             <Descriptions.Item label="Kích thước mâm xe">
-                                {record.WheelSizeTyreSize}
+                                {record.WheelSize}
                             </Descriptions.Item>
                             <Descriptions.Item label="Thông số lốp">
                                 {record.TyreSize}

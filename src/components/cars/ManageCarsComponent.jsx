@@ -9,6 +9,7 @@ import ViewCarModalComponent from './ViewCarModalComponent';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
 import 'moment/locale/vi';
+import EditCarBodyComponent from './EditCarBodyComponent';
 function ManageCarsComponent() {
     const imgPlacehoder = 'https://via.placeholder.com/120';
     const [car, setCars] = useState(null);
@@ -305,6 +306,7 @@ function ManageCarsComponent() {
     return (
         <div>
             <Modal
+                destroyOnClose={true}
                 title='Tạo xe mới'
                 visible={visible}
                 onOk={handleOk}
@@ -315,6 +317,7 @@ function ManageCarsComponent() {
                 <CreateCarBodyModalComponent />
             </Modal>
             <Modal
+                destroyOnClose={true}
                 title="Xem chi tiết xe"
                 visible={visibleDetail}
                 onOk={handleOkDetail}
@@ -330,6 +333,27 @@ function ManageCarsComponent() {
                 ]}
             >
                 <ViewCarModalComponent record={record} recordImage={recordImage} />
+            </Modal>
+            <Modal
+                destroyOnClose={true}
+                title={"Chỉnh sửa phụ kiện"}
+                visible={visible}
+                onOk={handleOk}
+                confirmLoading={confirmLoading}
+                onCancel={handleCancel}
+                width={1000}
+                footer={[
+                    <Row style={{ float: 'right' }}>
+                        <Button onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                        <Button form="myForm" type="primary" key="submit" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Row>
+                ]}
+            >
+                <EditCarBodyComponent />
             </Modal>
             <CreateCarModalComponent />
             <Spin

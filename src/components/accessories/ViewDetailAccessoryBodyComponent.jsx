@@ -1,24 +1,30 @@
 import { Avatar, Carousel, Col, Image, Row, Spin } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import NumberFormat from 'react-number-format';
 function ViewDetailAccessoryComponent({ setDataToChild, setDataToChildFixingImage }) {
-    console.log("cccc: ", setDataToChildFixingImage)
-    console.log(setDataToChild)
-
+    const [loading, setLoading] = useState("0");
+    const [visible, setVisible] = useState("none")
+    setTimeout(() => {
+        setVisible(true);
+        setLoading("none")
+    }, 1000)
     return (
         <div>
             <Row gutter={15}>
                 <Col span="12">
-                    <Spin size="middle" spinning={setDataToChildFixingImage === null ? true : false}>
-                        <Carousel effect="fade">
-                            {setDataToChildFixingImage.map((object, i) => {
-                                return (
-                                    <div>
-                                        <Image preview={false} style={{ height: 350, display: 'block', margin: 'auto' }} key={i} src={object} />
-                                    </div>
-                                )
-                            })}
-                        </Carousel>
+                    <Spin size="middle" spinning={setDataToChildFixingImage[0] === 'string' ? true : false}>
+                        <div style={{ display: loading, textAlign: 'center' }}><span style={{ fontSize: 16, fontWeight: 'bold' }}>Đang tải</span></div>
+                        <div style={{ display: visible }}>
+                            <Carousel effect="fade" >
+                                {setDataToChildFixingImage.map((object, i) => {
+                                    return (
+                                        <div>
+                                            <Image preview={false} style={{ height: 350, display: 'block', margin: 'auto' }} key={i} src={object} />
+                                        </div>
+                                    )
+                                })}
+                            </Carousel>
+                        </div>
                     </Spin>
                 </Col>
                 <Col span="12">

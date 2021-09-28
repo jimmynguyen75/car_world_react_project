@@ -340,6 +340,7 @@ export default function ManageBrandComponent() {
             />;
         }
     }
+
     return (
         <Spin size="large" spinning={brands.cars.length === 0 ? true : false}>
             <div>

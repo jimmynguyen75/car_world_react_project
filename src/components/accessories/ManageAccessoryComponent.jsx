@@ -73,11 +73,16 @@ function ManageAccessoryComponent() {
         }, 2000)
     };
     const handleCancel = () => {
+        console.log("cancel clicked")
+        setDataToChildFixingImage(0)
+        history.push(
+            '/quan-ly/phu-kien'
+        )
         setVisible(false);
     };
     const handleCancelDetail = () => {
         setDetail(false);
-        setDataToChildFixingImage({})
+        setDataToChildFixingImage(0)
         console.log("click cancel")
         history.push('/quan-ly/phu-kien')
     }
@@ -214,6 +219,7 @@ function ManageAccessoryComponent() {
     return (
         <div>
             <Modal
+                destroyOnClose={true}
                 title={"Chỉnh sửa phụ kiện"}
                 visible={visible}
                 onOk={handleOk}
@@ -234,6 +240,7 @@ function ManageAccessoryComponent() {
                 <EditAccessoryBodyComponent setDataToChild={dataToChild} setDataToChildFixingImage={dataToChildFixingImage} />
             </Modal>
             <Modal
+                destroyOnClose={true}
                 title="Chi tiết phụ kiện"
                 visible={detail}
                 onCancel={handleCancelDetail}

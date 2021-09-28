@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Col, Form, Image, Input, message, Modal, Row, Select, Upload } from "antd";
+import { Col, Form, Image, Input, message, Modal, Row, Select, Tooltip, Upload } from "antd";
 import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
@@ -10,11 +10,12 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
     const [previewTitle, setPreviewTitle] = useState('');
     const [visible, setVisible] = useState(false);
     const [fileList, setFileList] = useState([]);
-    const [setUrls] = useState([]);
+    const [urls, setUrls] = useState([]);
     const [form] = Form.useForm();
     const [brands, setBrands] = useState([]);
     const { Option } = Select;
-    const [price, setPrice] = useState(0);
+    const [img, setImg] = useState([]);
+    const [images, setImages] = useState([]);
     const uploadButton = (
         <div>
             <PlusOutlined />
@@ -28,7 +29,9 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
         //     .catch(err => console.log(err));
         console.log("Values: ", values)
     }
-    const handleCancel = () => setVisible(false);
+    const handleCancel = () => {
+        setVisible(false)
+    };
     function getBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -67,13 +70,6 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
             }
         );
     }
-
-    const normFile = (e) => {
-        const stringData = setDataToChildFixingImage.reduce((result, key) => {
-            return `${result}${key}|`
-        }, "")
-        return stringData
-    };
     const beforeUpload = (file) => {
         const isImage = file.type.indexOf('image/') === 0;
         if (!isImage) {
@@ -86,24 +82,46 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
         return isImage && isLt5M;
     }
     useEffect(() => {
-        BrandService.getAllAccessoriesBrand().then(res => {
-            setBrands(res.data)
-        }).catch(err => console.log(err))
+        let result = []
+        BrandService.getAllAccessoriesBrand()
+            .then(res => {
+                res.data.forEach(data => {
+                    if (data.IsDeleted === false) {
+                        result.push(data)
+                    }
+                })
+                setBrands(result)
+            }).catch(err => console.log(err))
     }, [])
-    const onChangePrice = (e) => {
-        const string = e.target.value;
-        setPrice(string.replace(/\D/g, ''))
-
+    const onChangePrice = (price) => {
+        form.setFieldsValue({
+            price: price === 0 ? setDataToChild.Price : price
+        })
+        // setPrice(string.replace(/\D/g, ''))
     }
-
+    useEffect(() => {
+        const stringUrl = urls.reduce((result, key) => {
+            return `${result}${key}|`
+        }, "")
+        const stringData = img.reduce((result, key) => {
+            return `${result}${key}|`
+        }, "")
+        const data = (stringData + stringUrl)
+        setImages(data)
+    }, [img, urls])
     form.setFieldsValue({
         name: setDataToChild.Name,
         pricewithoutany: setDataToChild.Price,
         description: setDataToChild.Description,
+        brandName: setDataToChild.Brand.Name,
+        image: images
     })
-    form.setFieldsValue({
-        price: price
-    })
+    function deleteImage(index) {
+        setImg(setDataToChildFixingImage.splice(index, 1))
+    }
+    useEffect(() => {
+        setImg(setDataToChildFixingImage)
+    }, [setDataToChildFixingImage, img])
     return (
         <div>
             <Modal
@@ -125,14 +143,23 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
                 <Form.Item hidden={true} name="price" >
                     <Input></Input>
                 </Form.Item>
+                <Form.Item hidden={true} name="image" >
+                    <Input></Input>
+                </Form.Item>
                 <Form.Item
                     label="Ảnh phụ kiện"
-                    name="image"
-                    getValueFromEvent={normFile}
                 >
                     <Row>
-                        {setDataToChildFixingImage.map((object, i) => {
-                            return <div style={{ marginRight: 8 }}><Image style={{ padding: 8, border: '1px solid #d9d9d9' }} width={104} key={i} src={object} /></div>
+                        {img.map((object, i) => {
+                            return (
+
+                                <div style={{ marginRight: 8 }}>
+                                    <Tooltip placement="topRight" color="#FF7643" title={<i onClick={() => { deleteImage(i) }} id="btnDelete" class="far fa-trash-alt"> Xóa hình</i>}>
+                                        <Image style={{ padding: 8, border: '1px solid #d9d9d9' }} width={104} height={104} key={i} src={object} />
+                                    </Tooltip>
+                                </div>
+
+                            )
                         })}
                         <div>
                             <Upload
@@ -151,14 +178,17 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
                         </div>
                     </Row>
                 </Form.Item>
-                <Form.Item label="Name" name="name">
+                <Form.Item label="Name" name="name" rules={[{ required: true, message: "Tên phụ kiện không được bỏ trống" }]}>
                     <Input placeholder="Nhập tên phụ kiện" />
                 </Form.Item>
                 <Row gutter={15}>
                     <Col span={12}>
-                        <Form.Item label="Giá" name="pricewithoutany">
+                        <Form.Item label="Giá" name="pricewithoutany" rules={[{ required: true, message: "Tiền phụ kiện không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onChangePrice}
+                                onValueChange={(values) => {
+                                    // formattedValue, floatValue
+                                    onChangePrice(values.value)
+                                }}
                                 placeholder="Nhập giá phụ kiện (vnđ)"
                                 className="currency"
                                 displayType="input"
@@ -179,6 +209,7 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
                     <Col span={12}>
                         <Form.Item label="Hãng phụ kiện" name="brandName">
                             <Select
+                                name="brandName"
                                 defaultValue={setDataToChild.Brand.Name}
                                 showSearch
                                 placeholder="Chọn hãng phụ kiện"
@@ -194,7 +225,7 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item label="Mô tả chi tiết" name="description">
+                <Form.Item label="Mô tả chi tiết" name="description" rules={[{ required: true, message: "Mô tả phụ kiện không được bỏ trống" }]}>
                     <Input.TextArea></Input.TextArea>
                 </Form.Item>
             </Form>

@@ -5,7 +5,7 @@ import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
 import CarService from '../../services/CarService'
-export default function CreateCarBodyModalComponent() {
+export default function EditCarBodyComponent({ record }) {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
     const [visible, setVisible] = useState(false);
@@ -25,57 +25,59 @@ export default function CreateCarBodyModalComponent() {
     const [fuelConsumption, setOnFuelConsumption] = useState(0);
     const [kerbWeight, setOnKerbWeight] = useState(0);
     const [fuelCapacity, setFuelCapacity] = useState(0);
-    const [wheelSize, setWheelSize] = useState(0);
-    const [yearOfManufactor, setYearOfManufactor] = useState(0);
     //***
-    const onPrice = (e) => {
-        const string = e.target.value;
-        setPrice(string.replace(/\D/g, ''))
+    const onPrice = (price) => {
+        form.setFieldsValue({
+            price: price === 0 ? record.Price : price
+        })
     }
-    const onSeat = (e) => {
-        const string = e.target.value;
-        setSeat(string.replace(/\D/g, ''))
+    const onSeat = (seats) => {
+        form.setFieldsValue({
+            seats: seats === 0 ? record.Seats : seats
+        })
     }
-    const onLength = (e) => {
-        const string = e.target.value;
-        setLength(string.replace(/\D/g, ''))
+    const onLength = (length) => {
+        form.setFieldsValue({
+            length: length === 0 ? record.Length : length
+        })
     }
-    const onWidth = (e) => {
-        const string = e.target.value;
-        setWidth(string.replace(/\D/g, ''))
+    //trung
+    const onWidth = (width) => {
+        form.setFieldsValue({
+            width: width === 0 ? record.Width : width
+        })
     }
-    const onHeight = (e) => {
-        const string = e.target.value;
-        setHeight(string.replace(/\D/g, ''))
+    const onHeight = (height) => {
+        form.setFieldsValue({
+            height: height === 0 ? record.Height : height
+        })
     }
-    const onDisplacement = (e) => {
-        const string = e.target.value;
-        setDisplacement(string.replace(/\D/g, ''))
+    const onDisplacement = (displacement) => {
+        form.setFieldsValue({
+            displacement: displacement === 0 ? record.Displacement : displacement
+        })
     }
-    const onGroundClearance = (e) => {
-        const string = e.target.value;
-        setGroundClearance(string.replace(/\D/g, ''))
+    const onGroundClearance = (groundClearance) => {
+        form.setFieldsValue({
+            groundClearance: groundClearance === 0 ? record.GroundClearance : groundClearance
+        })
     }
-    const onFuelConsumption = (e) => {
-        const string = e.target.value;
-        setOnFuelConsumption(string)
+    const onFuelConsumption = (fuelConsumption) => {
+        form.setFieldsValue({
+            fuelConsumption: fuelConsumption === 0 ? record.FuelConsumption : fuelConsumption
+        })
     }
-    const onKerbWeight = (e) => {
-        const string = e.target.value;
-        setOnKerbWeight(string.replace(/\D/g, ''))
+    const onKerbWeight = (kerbWeight) => {
+        form.setFieldsValue({
+            kerbWeight: kerbWeight === 0 ? record.OnKerbWeight : kerbWeight
+        })
     }
-    const onFuelCapacity = (e) => {
-        const string = e.target.value;
-        setFuelCapacity(string.replace(/\D/g, ''))
+    const onFuelCapacity = (fuelCapacity) => {
+        form.setFieldsValue({
+            fuelCapacity: fuelCapacity === 0 ? record.FuelCapacity : fuelCapacity
+        })
     }
-    const onWheelSize = (e) => {
-        const string = e.target.value;
-        setWheelSize(string.replace(/\D/g, ''))
-    }
-    const onYearOfManuFactor = (e) => {
-        const string = e.target.value;
-        setYearOfManufactor(string.replace(/\D/g, ''))
-    }
+    ///trung
     form.setFieldsValue({
         price: price,
         seats: seats,
@@ -87,8 +89,6 @@ export default function CreateCarBodyModalComponent() {
         fuelConsumption: fuelConsumption,
         kerbWeight: kerbWeight,
         fuelCapacity: fuelCapacity,
-        wheelSize: wheelSize,
-        yearOfManufactor: yearOfManufactor,
     })
     //--------//
     const onFinish = (values) => {
@@ -232,12 +232,6 @@ export default function CreateCarBodyModalComponent() {
                 <Form.Item hidden={true} name="fuelCapacity" >
                     <Input></Input>
                 </Form.Item>
-                <Form.Item hidden={true} name="wheelSize" >
-                    <Input></Input>
-                </Form.Item>
-                <Form.Item hidden={true} name="yearOfManufactor" >
-                    <Input></Input>
-                </Form.Item>
                 <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Thông số chính</div>
                 <Form.Item
                     name="image" label="Ảnh phụ kiện"
@@ -255,7 +249,7 @@ export default function CreateCarBodyModalComponent() {
                         multiple={true}
                         accept=".png,.jpeg,.jpg"
                     >
-                        {fileList.length >= 8 ? null : uploadButton}
+                        {fileList.length >= 3 ? null : uploadButton}
                     </Upload>
                 </Form.Item>
                 <Form.Item label="Tên xe" name="name" rules={[{ required: true, message: "Tên xe không được bỏ trống" }]}>
@@ -288,7 +282,9 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={8}>
                         <Form.Item label="Giá" name="Giá" rules={[{ required: true, message: "Giá xe không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onPrice}
+                                onValueChange={(values) => {
+                                    onPrice(values.value)
+                                }}
                                 placeholder="Nhập giá xe (vnđ)"
                                 className="currency"
                                 displayType="input"
@@ -315,7 +311,9 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={8}>
                         <Form.Item label="Chỗ ngồi" name="ngoi" rules={[{ required: true, message: "Chỗ ngồi xe không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onSeat}
+                                onValueChange={(values) => {
+                                    onSeat(values.value)
+                                }}
                                 maxLength={6}
                                 placeholder="Nhập chỗ ngồi"
                                 className="currency"
@@ -334,7 +332,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={8}>
                         <Form.Item label="Năm sản xuất" name="yearOfManufactor" rules={[{ required: true, message: "Năm sản xuất xe không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onYearOfManuFactor}
+                                onChange={onLength}
                                 maxLength={4}
                                 placeholder="Nhập năm sản xuất"
                                 className="currency"
@@ -361,6 +359,9 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Chiều dài" name="dai" rules={[{ required: true, message: "Chiều dài xe không được bỏ trống" }]}>
                             <NumberFormat
+                                onValueChange={(values) => {
+                                    onLength(values.value)
+                                }}
                                 onChange={onLength}
                                 maxLength={9}
                                 placeholder="Nhập chiều dài (mm)"
@@ -383,7 +384,9 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Chiều rộng" name="rong" rules={[{ required: true, message: "Chiều rộng xe không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onWidth}
+                                onValueChange={(values) => {
+                                    onWidth(values.value)
+                                }}
                                 maxLength={9}
                                 placeholder="Nhập chiều rộng (mm)"
                                 className="currency"
@@ -405,7 +408,9 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Chiều cao" name="cao" rules={[{ required: true, message: "Chiều cao xe không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onHeight}
+                                onValueChange={(values) => {
+                                    onHeight(values.value)
+                                }}
                                 maxLength={9}
                                 placeholder="Nhập chiều cao (mm)"
                                 className="currency"
@@ -427,7 +432,9 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Dung tích" name="Dung tích" rules={[{ required: true, message: "Dung tích xe không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onDisplacement}
+                                onValueChange={(values) => {
+                                    onDisplacement(values.value)
+                                }}
                                 maxLength={9}
                                 placeholder="Nhập dung tích (cc)"
                                 className="currency"
@@ -450,7 +457,7 @@ export default function CreateCarBodyModalComponent() {
                 <Row gutter={15}>
 
                     <Col span={6}>
-                        <Form.Item label="Động cơ" name="engineType" rules={[{ required: true, message: "Động cơ xe không được bỏ trống" }]}>
+                        <Form.Item label="Động cơ" name="enginType" rules={[{ required: true, message: "Động cơ xe không được bỏ trống" }]}>
                             <Input placeholder="Nhập động cơ xe" />
                         </Form.Item>
                     </Col>
@@ -467,7 +474,9 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Khoảng cách gầm xe" name="kho" rules={[{ required: true, message: "Khoảng cách gầm xe không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onGroundClearance}
+                                onValueChange={(values) => {
+                                    onGroundClearance(values.value)
+                                }}
                                 maxLength={9}
                                 placeholder="Nhập khoảng cách gầm xe (mm)"
                                 className="currency"
@@ -512,7 +521,9 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Tiêu hao nhiên liệu" name="nhien" rules={[{ required: true, message: "Tiêu hao nhiên liệu xe không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onFuelConsumption}
+                                onValueChange={(values) => {
+                                    onFuelConsumption(values.value)
+                                }}
                                 maxLength={13}
                                 placeholder="Nhập mức tiêu hao nhiên liệu (lít/100km)"
                                 className="currency"
@@ -537,7 +548,9 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Trọng lượng khô" name="tr" rules={[{ required: true, message: "Trọng lượng thô xe không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onKerbWeight}
+                                onValueChange={(values) => {
+                                    onKerbWeight(values.value)
+                                }}
                                 maxLength={10}
                                 placeholder="Nhập trọng lượng thô (kg)"
                                 className="currency"
@@ -579,9 +592,9 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Kích thước mâm xe" name="wheel" rules={[{ required: true, message: "Kích thước xe không được bỏ trống" }]}>
+                        <Form.Item label="Kích thước mâm xe" name="wheelSize" rules={[{ required: true, message: "Kích thước xe không được bỏ trống" }]}>
                             <NumberFormat
-                                onChange={onWheelSize}
+                                onChange={onFuelCapacity}
                                 maxLength={7}
                                 placeholder="Nhập kích thước mâm xe (inch)"
                                 className="currency"
