@@ -332,7 +332,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item label="Năm sản xuất" name="yearOfManufactor" rules={[{ required: true, message: "Năm sản xuất xe không được bỏ trống" }]}>
+                        <Form.Item label="Năm sản xuất" name="yearOf" rules={[{ required: true, message: "Năm sản xuất xe không được bỏ trống" }]}>
                             <NumberFormat
                                 onChange={onYearOfManuFactor}
                                 maxLength={4}
