@@ -126,10 +126,6 @@ function AdminDashboardComponent() {
                                 return (
                                     <DashboardComponent />
                                 )
-                            case '/quan-tri':
-                                return (
-                                    <DashboardComponent />
-                                )
                             case '/xe':
                                 return (
                                     <ManageCarsComponent />

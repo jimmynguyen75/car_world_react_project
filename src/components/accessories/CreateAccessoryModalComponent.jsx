@@ -24,7 +24,7 @@ function CreateAccessoryModalComponent() {
         const handleCancel = () => {
             console.log('Clicked cancel button');
             setVisible(false);
-            history.push('/quan-ly/phu-kien');
+            history.push('/phu-kien');
         };
         return (
             <>

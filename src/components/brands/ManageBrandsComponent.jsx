@@ -47,7 +47,7 @@ export default function ManageBrandComponent() {
                     message.success("Cập nhật thành công")
                 }, 200)
                 setTimeout(() => {
-                    window.location.href = '/quan-ly/thuong-hieu'
+                    window.location.href = '/thuong-hieu'
                     console.log("okkkk")
                 }, 500)
             })
@@ -71,7 +71,7 @@ export default function ManageBrandComponent() {
                             message.success("Xóa hiệu thành công");
                         }, 200)
                         setTimeout(() => {
-                            window.location.href = '/quan-ly/thuong-hieu'
+                            window.location.href = '/thuong-hieu'
                         }, 500)
                     })
                     .catch(() => { message.error(id); })

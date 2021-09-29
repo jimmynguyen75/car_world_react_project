@@ -76,7 +76,7 @@ function ManageAccessoryComponent() {
         console.log("cancel clicked")
         setDataToChildFixingImage(0)
         history.push(
-            '/quan-ly/phu-kien'
+            '/phu-kien'
         )
         setVisible(false);
     };
@@ -84,7 +84,7 @@ function ManageAccessoryComponent() {
         setDetail(false);
         setDataToChildFixingImage(0)
         console.log("click cancel")
-        history.push('/quan-ly/phu-kien')
+        history.push('/phu-kien')
     }
     function confirmDelete(data) {
         Modal.confirm({

@@ -31,7 +31,7 @@ export default function CreateAccessoryBodyModalComponent() {
                     message.success("Tạo phụ kiện thành công");
                 }, 500)
                 setTimeout(() => {
-                    window.location.href = '/quan-ly/phu-kien'
+                    window.location.href = '/phu-kien'
                 }, 1500)
             })
             .catch((err) => {

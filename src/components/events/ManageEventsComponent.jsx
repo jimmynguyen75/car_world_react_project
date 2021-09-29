@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Input, Button, Space } from 'antd';
+import { Table, Input, Button, Space, Row, Col } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import CreateEventsModalComponent from './CreateEventsModalComponent'
@@ -146,7 +146,14 @@ function ManageEventsComponent() {
     return (
         <div>
             <CreateEventsModalComponent />
-            <App />
+            <Row>
+                <Col span={16}>
+                    <App />
+                </Col>
+                <Col span={8}>
+
+                </Col>
+            </Row>
         </div>
     )
 }

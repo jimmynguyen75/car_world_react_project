@@ -20,7 +20,7 @@ export default function CreateBrandModalComponent() {
     const onFinish = (values) => {
         BrandService.createNewBrand(values)
             .then(() => {
-                window.location.href = '/quan-ly/thuong-hieu';
+                window.location.href = '/thuong-hieu';
                 console.log("Okkk")
             })
             .catch((err) => {

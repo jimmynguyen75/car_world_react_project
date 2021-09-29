@@ -21,7 +21,6 @@ function App() {
             <Switch>
               {/* Admin */}
               <Route path="/" exact component={AdminDashboardComponent}></Route>
-              <Route path="/quan-tri" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/xe" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/tai-khoan" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/phu-kien" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
@@ -39,7 +38,6 @@ function App() {
             <Switch>
               {/* Manager */}
               <Route path="/" exact component={ManagerDashboardComponent}></Route>
-              <Route path="/quan-ly" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/de-xuat" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/phan-hoi" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>

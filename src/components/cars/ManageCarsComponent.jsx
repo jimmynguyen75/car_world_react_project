@@ -66,7 +66,7 @@ function ManageCarsComponent() {
                             message.success("Xóa xe thành công");
                         }, 500)
                         setTimeout(() => {
-                            window.location.href = '/quan-ly/xe'
+                            window.location.href = '/xe'
                         }, 1500)
                     })
                     .catch(err => {

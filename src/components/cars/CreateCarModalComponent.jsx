@@ -27,7 +27,7 @@ function CreateCarModalComponent() {
         const handleCancel = () => {
             console.log('Clicked cancel button');
             setVisible(false);
-            history.push('/quan-ly/xe')
+            history.push('/xe')
         };
         return (
             <>

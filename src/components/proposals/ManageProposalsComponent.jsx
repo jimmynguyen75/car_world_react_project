@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Tag, Space, Row, Col } from 'antd';
+import { Table, Tag, Space, Row, Col, Spin } from 'antd';
 import './style.less';
 import moment from 'moment';
 import 'moment/locale/vi';
@@ -66,8 +66,7 @@ export default function ManageProposalsComponent() {
                 </Space>
             ),
         },
-    ];
-
+    ]
     useEffect(() => {
         ProposalService.getAllProposals()
             .then((res) => {
@@ -87,19 +86,21 @@ export default function ManageProposalsComponent() {
         )
     }
     return (
-        <div>
-            <div><span className="proposalTitle">Các đề xuất</span></div>
-            <div className="proposal" ><Proposal /></div>
-            <Row gutter={30}>
-                <Col span="12">
-                    <div><span className="proposalTitle">Đã được duyệt</span></div>
-                    <div className="proposal" ><Proposal /></div>
-                </Col>
-                <Col span="12">
-                    <div><span className="proposalTitle">Không được duyệt</span></div>
-                    <div className="proposal" ><Proposal /></div>
-                </Col>
-            </Row>
-        </div>
+        <Spin size="large" spinning={proposal === null ? true : false}>
+            <div>
+                <div><span className="proposalTitle">Các đề xuất</span></div>
+                <div className="proposal" ><Proposal /></div>
+                <Row gutter={30}>
+                    <Col span="12">
+                        <div><span className="proposalTitle">Đã được duyệt</span></div>
+                        <div className="proposal" ><Proposal /></div>
+                    </Col>
+                    <Col span="12">
+                        <div><span className="proposalTitle">Không được duyệt</span></div>
+                        <div className="proposal" ><Proposal /></div>
+                    </Col>
+                </Row>
+            </div>
+        </Spin>
     )
 }
