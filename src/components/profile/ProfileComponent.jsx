@@ -28,6 +28,7 @@ function ProfileComponent() {
                     address: res.data.Address,
                     image: res.data.Image,
                     status: res.data.Status,
+                    createdDate: res.data.CreatedDate,
                 })
                 setData(res.data)
                 setFullname(res.data.FullName)
@@ -40,7 +41,10 @@ function ProfileComponent() {
     }, [currentUser.Id, form])
     const onFinish = (values) => {
         AccountService.updateProfile(currentUser.Id, values)
-            .then(() => window.location.reload())
+            .then(() => {
+                setTimeout(() => { message.success("Cập nhật thành công") }, 100)
+                setTimeout(() => { window.location.reload() }, 1000)
+            })
             .catch(err => {
                 message.error("Lỗi server, cập nhật không thành công")
                 console.log(err)
@@ -75,6 +79,9 @@ function ProfileComponent() {
                         <Input />
                     </Form.Item>
                     <Form.Item name="status" hidden={true}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="createdDate" hidden={true}>
                         <Input />
                     </Form.Item>
                     <div className="row">

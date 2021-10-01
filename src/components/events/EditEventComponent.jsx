@@ -1,27 +1,65 @@
-import { Col, ConfigProvider, DatePicker, Form, Input, Row, Modal, Upload, message } from 'antd';
+import { Form, Modal, Upload, Image, message, Row, Tooltip, Input, ConfigProvider, DatePicker, Col } from "antd";
+import React, { useState, useEffect } from 'react';
+import storage from '../../services/ImageFirebase';
+import { PlusOutlined } from '@ant-design/icons';
 import locale from 'antd/es/locale-provider/fr_FR';
 import 'moment/locale/vi';
 import moment from 'moment';
+import AccountService from '../../services/AccountService'
 import NumberFormat from 'react-number-format';
-import { PlusOutlined } from '@ant-design/icons';
-import React, { useState } from 'react';
-import storage from '../../services/ImageFirebase';
-import './styles.less'
-import EventService from '../../services/EventService';
-import AccountService from '../../services/AccountService';
-export default function CreateEventBodyModalComponent() {
+import EventService from "../../services/EventService";
+export default function EditEventComponent({ record, recordImage }) {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
     const [visible, setVisible] = useState(false);
     const [fileList, setFileList] = useState([]);
     const [urls, setUrls] = useState([]);
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [startRegister, setStartRegister] = useState(null);
-    const [endRegister, setEndRegister] = useState(null);
     const [form] = Form.useForm();
+    const [img, setImg] = useState([]);
+    const [images, setImages] = useState([]);
+    const [r, setR] = useState([]);
+    const [s, setS] = useState([]);
+    //Date --------------------
+    function minRegister(value) {
+        form.setFieldsValue({
+            minParticipants: value
+        })
+    }
+    function maxRegister(value) {
+        form.setFieldsValue({
+            maxParticipants: value
+        })
+    }
+    function onChangeRegister(value, dateString) {
+        const start = moment(dateString[0], 'HH:mm - DD/MM/yyyy').format("yyyy-MM-DDTHH:mm:ss")
+        const end = moment(dateString[1], 'HH:mm - DD/MM/yyyy').format("yyyy-MM-DDTHH:mm:ss")
+        setR([moment(dateString[0], "HH:mm - DD/MM/yyyy"), moment(dateString[1], "HH:mm - DD/MM/yyyy")])
+        form.setFieldsValue({
+            startRegister: start,
+            endRegister: end,
+        })
+    }
+    function onChangeDate(value, dateString) {
+        const start = moment(dateString[0], 'HH:mm - DD/MM/yyyy').format("yyyy-MM-DDTHH:mm:ss")
+        const end = moment(dateString[1], 'HH:mm - DD/MM/yyyy').format("yyyy-MM-DDTHH:mm:ss")
+        setS([moment(dateString[0], "HH:mm - DD/MM/yyyy"), moment(dateString[1], "HH:mm - DD/MM/yyyy")])
+        form.setFieldsValue({
+            startDate: start,
+            endDate: end
+        })
+    }
     const { RangePicker } = DatePicker;
-    const handleCancel = () => setVisible(false);
+    //End ----------------------------------
+    //Upload Image -----------------------------
+    const uploadButton = (
+        <div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
+        </div>
+    );
+    const handleCancel = () => {
+        setVisible(false)
+    };
     function getBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -60,13 +98,6 @@ export default function CreateEventBodyModalComponent() {
             }
         );
     }
-    const normFile = (e) => {
-        const stringData = urls.reduce((result, key) => {
-            return `${result}${key}|`
-        }, "")
-        console.log("oooo: ", stringData)
-        return stringData
-    };
     const beforeUpload = (file) => {
         const isImage = file.type.indexOf('image/') === 0;
         if (!isImage) {
@@ -78,62 +109,75 @@ export default function CreateEventBodyModalComponent() {
         }
         return isImage && isLt5M;
     }
-    const uploadButton = (
-        <div>
-            <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
-        </div>
-    );
-    function onChangeDate(value, dateString) {
-        const start = moment(dateString[0], 'HH:mm - DD/MM/yyyy').format("yyyy-MM-DDTHH:mm:ss")
-        const end = moment(dateString[1], 'HH:mm - DD/MM/yyyy').format("yyyy-MM-DDTHH:mm:ss")
-        console.log("startt: ", start)
-        console.log("enddd: ", end)
-        setStartDate(start);
-        setEndDate(end);
+    function deleteImage(index) {
+        setImg(recordImage.splice(index, 1))
     }
-    function onChangeRegister(value, dateString) {
-        const start = moment(dateString[0], 'HH:mm - DD/MM/yyyy').format("yyyy-MM-DDTHH:mm:ss")
-        const end = moment(dateString[1], 'HH:mm - DD/MM/yyyy').format("yyyy-MM-DDTHH:mm:ss")
-        console.log("starttRegister: ", start)
-        console.log("endddRegister: ", end)
-        setStartRegister(start);
-        setEndRegister(end);
-    }
-    function minRegister(value) {
+    //End -----------------------------
+    //Effect -----------------------------
+    useEffect(() => {
+        setR([moment(record.StartRegister, "yyyy-MM-DDTHH:mm:ss"), moment(record.EndRegister, "yyyy-MM-DDTHH:mm:ss")])
+        setS([moment(record.StartDate, "yyyy-MM-DDTHH:mm:ss"), moment(record.EndDate, "yyyy-MM-DDTHH:mm:ss")])
         form.setFieldsValue({
-            minParticipants: value
+            startRegister: record.StartRegister,
+            endRegister: record.EndRegister,
+            startDate: record.StartDate,
+            endDate: record.EndDate,
         })
-    }
-    function maxRegister(value) {
-        form.setFieldsValue({
-            maxParticipants: value
-        })
-    }
+    }, [record, form])
     form.setFieldsValue({
-        startDate: startDate,
-        endDate: endDate,
-        startRegister: startRegister,
-        endRegister: endRegister,
-        createdBy: AccountService.getCurrentUser().Id,
-        proposalId: null,
-        modifiedBy: null
+        image: images,
     })
+    useEffect(() => {
+        form.setFieldsValue({
+            title: record.Title,
+            description: record.Description,
+            venue: record.Venue,
+            proposalId: null,
+            modifiedBy: null,
+            createdBy: AccountService.getCurrentUser().Id,
+            min: record.MinParticipants,
+            max: record.MaxParticipants,
+            id: record.Id,
+            createdDate: record.CreatedDate,
+            currentParticipants: record.CurrentParticipants,
+            //fake           
+        })
+    }, [form, record])
+    useEffect(() => {
+        form.setFieldsValue({
+            registerFAKE: (moment(r[0], "yyyy-MM-DDTHH:mm:ss")._i) === "" ? null : r,
+            startFAKE: (moment(s[0], "yyyy-MM-DDTHH:mm:ss")._i) === "" ? null : s,
+        })
+    }, [r, s, form])
+    useEffect(() => {
+        const stringUrl = urls.reduce((result, key) => {
+            return `${result}${key}|`
+        }, "")
+        const stringData = img.reduce((result, key) => {
+            return `${result}${key}|`
+        }, "")
+        const data = (stringData + stringUrl)
+        setImages(data)
+    }, [img, urls])
+    useEffect(() => {
+        setImg(recordImage)
+    }, [recordImage, img])
+    //End -----------------------------
     const onFinish = (values) => {
-        console.log(values)
-        EventService.createNewEvent(values)
+        console.log(values);
+        EventService.updateEvent(values.id, values)
             .then((result) => {
-                console.log(result)
+                console.log(result);
                 setTimeout(() => {
-                    message.success("Tạo sự kiện thành công");
+                    message.success("Cập nhật thành công")
                 }, 500)
                 setTimeout(() => {
                     window.location.href = '/su-kien'
-                }, 1500)
+                }, 1000)
             })
-            .catch((error) => {
-                message.error("Lỗi server hoặc tên không được trùng nhau!")
-                console.log(error)
+            .catch((err) => {
+                console.log(err);
+                message.error('Cập nhật không thành công')
             })
     }
     return (
@@ -147,12 +191,9 @@ export default function CreateEventBodyModalComponent() {
             >
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
-            <Form
-                layout="vertical"
-                id="myEvent"
-                onFinish={onFinish}
-                form={form}
-            >
+            <Form onFinish={onFinish} layout="vertical" id="editEvent" form={form}>
+                <Form.Item hidden={true} name="id"><Input></Input></Form.Item>
+                <Form.Item hidden={true} name="image"><Input></Input></Form.Item>
                 <Form.Item hidden={true} name="createdBy"><Input /></Form.Item>
                 <Form.Item hidden={true} name="modifiedBy"><Input /></Form.Item>
                 <Form.Item hidden={true} name="proposalId"><Input /></Form.Item>
@@ -162,49 +203,59 @@ export default function CreateEventBodyModalComponent() {
                 <Form.Item hidden={true} name="endRegister"><Input /></Form.Item>
                 <Form.Item hidden={true} name="minParticipants"><Input /></Form.Item>
                 <Form.Item hidden={true} name="maxParticipants"><Input /></Form.Item>
-                <Form.Item label="Ảnh sự kiện" name="image"
-                    getValueFromEvent={normFile}
-                    rules={[{ required: true, message: "Ảnh sự kiện không được bỏ trống" }]}>
-                    <Upload
-                        name="image"
-                        listType="picture-card"
-                        fileList={fileList}
-                        onPreview={handlePreview}
-                        onChange={handleChange}
-                        customRequest={customRequest}
-                        beforeUpload={beforeUpload}
-                        multiple={true}
-                        accept=".png,.jpeg,.jpg"
-                    >
-                        {fileList.length >= 3 ? null : uploadButton}
-                    </Upload>
+                <Form.Item hidden={true} name="currentParticipants"><Input /></Form.Item>
+                <Form.Item hidden={true} name="createdDate"><Input /></Form.Item>
+                <Form.Item label={<div><span style={{ color: 'red', fontFamily: 'SimSun, sans-serif' }}>*</span>&nbsp;Ảnh sự kiện</div>}>
+                    <Row>
+                        {img.map((object, i) => {
+                            return (
+                                <div style={{ marginRight: 8 }}>
+                                    <Tooltip placement="topRight" color="#FF7643" title={<i onClick={() => { deleteImage(i) }} id="btnDelete" class="far fa-trash-alt"> Xóa hình</i>}>
+                                        <Image style={{ padding: 8, border: '1px solid #d9d9d9' }} width={104} height={104} key={i} src={object} />
+                                    </Tooltip>
+                                </div>
+                            )
+                        })}
+                        <div>
+                            <Upload
+                                name="image"
+                                listType="picture-card"
+                                fileList={fileList}
+                                onPreview={handlePreview}
+                                onChange={handleChange}
+                                customRequest={customRequest}
+                                beforeUpload={beforeUpload}
+                                multiple={true}
+                                accept=".png,.jpeg,.jpg"
+                            >
+                                {fileList.length >= 3 ? null : uploadButton}
+                            </Upload>
+                        </div>
+                    </Row>
                 </Form.Item>
-                <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
-                    <Input.TextArea
-                        placeholder="Nhập tên sự kiện"
-                        showCount maxLength={200}
-                        autoSize={{ minRows: 1, maxRows: 10 }}
-                    />
+                <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
+                    <Input />
                 </Form.Item>
                 <Row gutter={15}>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>
-                            <Form.Item label={<div>Ngày bắt đầu <span style={{ color: 'red' }}>ĐĂNG KÝ</span> và kết thúc</div>} name="dateRegister" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
+                            <Form.Item name="registerFAKE" label={<div>Ngày bắt đầu <span style={{ color: 'red' }}>ĐĂNG KÝ</span> và kết thúc</div>} rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
                                 <RangePicker
+                                    //value={(moment(r[0], "yyyy-MM-DDTHH:mm:ss")._i) === "" ? null : r}
                                     style={{ width: '100%' }}
                                     placeholder={['Ngày bắt đầu đăng ký', 'Ngày kết thúc đăng ký']}
                                     format={"HH:mm - DD/MM/yyyy"}
                                     onChange={onChangeRegister}
                                     showTime
-                                    placeholderText='Tiếp'
                                 />
                             </Form.Item>
                         </ConfigProvider>
                     </Col>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>
-                            <Form.Item label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>SỰ KIỆN</span> và kết thúc</div>} name="dateEvent" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
+                            <Form.Item name="startFAKE" label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>SỰ KIỆN</span> và kết thúc</div>} rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
                                 <RangePicker
+                                    //value={(moment(s[0], "yyyy-MM-DDTHH:mm:ss")._i) === "" ? null : s}
                                     style={{ width: '100%' }}
                                     placeholder={['Ngày bắt đầu sự kiện', 'Ngày kết thúc sự kiện']}
                                     format={"HH:mm - DD/MM/yyyy"}
@@ -280,6 +331,6 @@ export default function CreateEventBodyModalComponent() {
                     />
                 </Form.Item>
             </Form>
-        </div>
+        </div >
     )
 }

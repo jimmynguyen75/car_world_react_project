@@ -1,10 +1,9 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Col, Form, Input, message, Modal, Row, Select, Upload, Tooltip, Image } from "antd";
+import { Col, Form, Image, Input, message, Modal, Row, Select, Tooltip, Upload } from "antd";
 import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
-import CarService from '../../services/CarService'
 export default function EditCarBodyComponent({ record, recordImage }) {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');

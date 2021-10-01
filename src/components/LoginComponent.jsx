@@ -1,12 +1,10 @@
 import { message } from 'antd';
 import React, { useState } from 'react';
-import { useHistory } from "react-router-dom";
 import login from '../images/login.png';
 import AccountService from '../services/AccountService';
 
 function LoginComponent() {
 
-    const history = useHistory();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [incorrect, setIncorrect] = useState("none");
@@ -26,7 +24,7 @@ function LoginComponent() {
         setTimeout(() => {
             message.loading({ content: 'Đang tải...', duration: 2 });
         }, 10)
-        AccountService.login(username, password, 2)
+        AccountService.login(username, password)
             .then(() => {
                 console.log("Tên đăng nhập: " + username);
                 console.log("Mật khẩu: " + password);

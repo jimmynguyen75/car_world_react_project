@@ -6,11 +6,11 @@ class ProposalService {
     getAllProposals() {
         return axios.get(PROPOSAL_API_URL + "GetAllProposal", { headers: authHeader() })
     }
-    approveProposal() {
-        return axios.put(PROPOSAL_API_URL + "ApprovedProposal", { headers: authHeader() })
+    approveProposal(proposal) {
+        return axios.put(PROPOSAL_API_URL + "ApprovedProposal", proposal, { headers: authHeader() })
     }
-    disapproveProposal() {
-        return axios.put(PROPOSAL_API_URL + "DisApprovedProposal", { headers: authHeader() })
+    disapproveProposal(proposal) {
+        return axios.put(PROPOSAL_API_URL + "DisApprovedProposal", proposal, { headers: authHeader() })
     }
 
 }

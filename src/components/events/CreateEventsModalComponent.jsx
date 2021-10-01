@@ -37,10 +37,10 @@ function CreateEventsModalComponent() {
                     footer={[
                         <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
                             <Button onClick={() => setModalConfirm(false)}>Hủy </Button>
-                            <Button form="myForm" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
+                            <Button form="myEvent" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
                         </Row>
                     ]}
-                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn đăng chiếc xe này không?</span>
+                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn tạo sự kiện này không?</span>
                 </Modal>
                 <Button type="primary" shape="round" onClick={showModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2 }}>{"Tạo sự kiện"}</span></Button>
                 <Modal

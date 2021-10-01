@@ -3,18 +3,18 @@ import authHeader from './AuthHeader'
 
 const ACCOUNTS_API_URL = "https://carworld.cosplane.asia/api/user/"
 
-const login = (username, password, roleId) => {
+const login = (username, password) => {
     return axios
         .post(ACCOUNTS_API_URL + "LoginAdmin", {
             username,
             password,
-            roleId
+            headers: authHeader()
         })
         .then((response) => {
-            if (response.data.User) {
-                localStorage.setItem("user", JSON.stringify(response.data.User));
+            if (response.data) {
+                localStorage.setItem("user", JSON.stringify(response.data));
             }
-            return response.data.User;
+            return response.data;
         });
 }
 

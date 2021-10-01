@@ -1,6 +1,5 @@
 // import React, { useState, useEffect } from 'react'
 // import NumberFormat from "react-number-format";
-import './testStyle.less'
 // export default function Test() {
 //     const [num, setNum] = React.useState(0);
 //     const onChange = (e) => {
@@ -29,7 +28,6 @@ import './testStyle.less'
 //                     width: '100%',
 //                     border: '1px solid #d9d9d9',
 //                     padding: '4px 11px'
-
 //                 }}
 //             />
 //             <NumberFormat
@@ -39,8 +37,6 @@ import './testStyle.less'
 //         </div>
 //     )
 // }
-
-
 // import React, { useEffect } from 'react'
 // import AccessoryService from '../services/AccessoryService'
 // export default function Test() {
@@ -53,7 +49,6 @@ import './testStyle.less'
 //     })
 //     const [array, setArray] = React.useState([]);
 //     const datas = "https://firebasestorage.googleapis.com/v0/b/car-world-react-project.appspot.com/o/images%2Fvintage-1950s-887272_1280.jpg?alt=media&token=130e03c8-bc80-4a40-83aa-dfe17fb6b7a4|https://firebasestorage.googleapis.com/v0/b/car-world-react-project.appspot.com/o/images%2Fshoes-434918_1280.jpg?alt=media&token=c9ae5390-95bb-4c09-af86-b31a80fdd82b|";
-
 //     useEffect(() => {
 //         setArray(datas.split("|"))
 //     }, [datas])
@@ -66,7 +61,6 @@ import './testStyle.less'
 //         </div>
 //     )
 // }
-
 // import React, { useEffect, useState } from 'react'
 // import { Table, Input, Row, Typography, AutoComplete, Col, Space, Button } from "antd";
 // import Highlighter from 'react-highlight-words';
@@ -82,7 +76,6 @@ import './testStyle.less'
 //             setData(res.data);
 //         })
 //     }, [])
-
 //     function getColumnSearchProps(dataIndex) {
 //         return {
 //             filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -134,18 +127,15 @@ import './testStyle.less'
 //                 ),
 //         }
 //     };
-
 //     function handleSearch(selectedKeys, confirm, dataIndex) {
 //         confirm();
 //         setSearchText(selectedKeys[0]);
 //         setSearchedColumn(dataIndex);
 //     };
-
 //     function handleReset(clearFilters) {
 //         clearFilters();
 //         setSearchText('');
 //     };
-
 //     const columns = [
 //         {
 //             title: 'Name',
@@ -162,32 +152,23 @@ import './testStyle.less'
 //             ...getColumnSearchProps('Price'),
 //         }
 //     ];
-
 //     return <Table columns={columns} dataSource={data} />;
-
 // }
-
 // export default App;
-
-
 // import React, { useState } from 'react';
 // import { Modal, Button } from 'antd';
 // export default function Test() {
 //     const App = () => {
 //         const [isModalVisible, setIsModalVisible] = useState(false);
-
 //         const showModal = () => {
 //             setIsModalVisible(true);
 //         };
-
 //         const handleOk = () => {
 //             setIsModalVisible(false);
 //         };
-
 //         const handleCancel = () => {
 //             setIsModalVisible(false);
 //         };
-
 //         return (
 //             <>
 //                 <Button type="primary" onClick={showModal}>
@@ -207,63 +188,37 @@ import './testStyle.less'
 //         </div>
 //     )
 // }
-
-import React, { useState, useEffect } from 'react'
-import { Calendar, Alert, Badge } from 'antd';
+import React, { useState } from 'react';
+import { DatePicker, Button } from 'antd'
+import 'moment/locale/vi';
 import moment from 'moment';
-
+import './testStyle.less';
 export default function Test() {
+    const { RangePicker } = DatePicker;
+    const dateFormat = 'YYYY/MM/DD';
+    const DateSelect = () => {
+        const [dateRange, setDateRange] = useState([moment(), moment()])
 
-    function getListData(value) {
-        //   console.log("value: ", value.date())
-        let listData;
-        switch (value.date()) {
-            case 8:
-                listData = [
-                    { type: 'warning', content: 'This is warning event.' },
-                    { type: 'success', content: 'This is usual event.' },
-                ];
-                break;
-            case 10:
-                listData = [
-                    { type: 'warning', content: 'This is warning event.' },
-                    { type: 'success', content: 'This is usual event.' },
-                    { type: 'error', content: 'This is error event.' },
-                ];
-                break;
-            case 15:
-                listData = [
-                    { type: 'warning', content: 'This is warning event' },
-                    { type: 'success', content: 'This is very long usual event。。....' },
-                    { type: 'error', content: 'This is error event 1.' },
-                    { type: 'error', content: 'This is error event 2.' },
-                    { type: 'error', content: 'This is error event 3.' },
-                    { type: 'error', content: 'This is error event 4.' },
-                ];
-                break;
-            default:
-        }
-        return listData || [];
-    }
-    function dateCellRender(value) {
-        console.log("value: ", value.month())
-        const listData = getListData(value);
         return (
-            <ul className="events">
-                {listData.map(item => (
-                    <li key={item.content}>
-                        <Badge status={item.type} text={item.content} />
-                    </li>
-                ))}
-            </ul>
-        );
+            <div>
+                <Button onClick={() => setDateRange(dateRange.map(d => d.add(1, 'w')))}>Add 7 days
+                </Button>
+                <RangePicker
+                    value={dateRange}
+                    format={dateFormat}
+                    onChange={(v) => {
+                        setDateRange(v)
+                        console.log(v)
+                    }}
+                />
+                <span> {dateRange[0].format(dateFormat)} - {dateRange[1].format(dateFormat)} </span>
+            </div>
+        )
     }
-
     return (
         <div>
-            <Calendar dateCellRender={dateCellRender} />
+            <Button >submit</Button>
+            <DateSelect />
         </div>
     )
 }
-
-

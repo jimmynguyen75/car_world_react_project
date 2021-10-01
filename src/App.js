@@ -7,7 +7,6 @@ import NotFound404Component from './components/notFound/NotFound404Component';
 import Test from './components/Test';
 import AccountService from './services/AccountService';
 import './styles/login.css';
-import React, { useEffect, useState } from 'react';
 import CheckLogin from './components/notFound/CheckLogin';
 function App() {
 

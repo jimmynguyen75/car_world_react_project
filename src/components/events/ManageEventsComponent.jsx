@@ -1,42 +1,84 @@
-import React from 'react'
-import { Table, Input, Button, Space, Row, Col } from 'antd';
+import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Calendar, Col, Input, Modal, Row, Space, Spin, Table, Tag } from 'antd';
+import moment from 'moment';
+import 'moment/locale/vi';
+import React, { useEffect, useState } from 'react';
 import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
-import CreateEventsModalComponent from './CreateEventsModalComponent'
-
+import { useHistory } from "react-router-dom";
+import EventService from '../../services/EventService';
+import ProposalService from '../../services/ProposalService';
+import CreateEventsModalComponent from './CreateEventsModalComponent';
+import EditEventComponent from './EditEventComponent';
+import ViewEventComponent from './ViewEventComponent';
 function ManageEventsComponent() {
-    const data = [
-        {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-        },
-        {
-            key: '2',
-            name: 'Joe Black',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-        },
-        {
-            key: '3',
-            name: 'Jim Green',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
-        },
-        {
-            key: '4',
-            name: 'Jim Red',
-            age: 32,
-            address: 'London No. 2 Lake Park',
-        },
-    ];
+    const [events, setEvents] = useState(null);
+    const [proposals, setProposals] = useState(null);
+    const imgPlacehoder = 'https://via.placeholder.com/120';
+    const [modalConfirm, setModalConfirm] = useState(false);
+    const [visibleView, setVisibleView] = React.useState(false);
+    const [visibleEdit, setVisibleEdit] = useState(false);
+    const [loadingButton, setLoadingButton] = React.useState(false)
+    const history = useHistory();
+    const [record, setRecord] = useState(null)
+    const [recordImage, setRecordImage] = useState(null)
+    const [page, setPage] = React.useState(1);
+    const [pageSize, setPageSize] = React.useState(5)
+    const showModalView = () => {
+        setVisibleView(true);
+    };
+    const showModalEdit = () => {
+        setVisibleEdit(true);
+    };
+    const showModalConfirm = () => {
+        setModalConfirm(true)
+    }
+    const handleOk = () => {
+        setLoadingButton(true);
+        setTimeout(() => {
+            setModalConfirm(false)
+        }, 1000);
+        setTimeout(() => {
+            setLoadingButton(false);
+        }, 1000);
+    };
+    const handleCancel = () => {
+        console.log('Clicked cancel button');
+        setVisibleView(false);
+        setVisibleEdit(false);
+        history.push('/su-kien');
+    };
+    function onPanelChange(value, mode) {
+        console.log(value, mode);
+    }
+    const showSelect = (values) => {
+        console.log(values)
+    }
+    useEffect(() => {
+        EventService.getAllEvents()
+            .then((response) => {
+                setEvents(response.data)
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }, [])
+    useEffect(() => {
+        let result = [];
+        ProposalService.getAllProposals()
+            .then((res) => {
+                res.data.forEach((data) => {
+                    if (data.Status === 2) {
+                        result.push(data)
+                    }
+                })
+                setProposals(result)
+            })
+    }, [])
     class App extends React.Component {
         state = {
             searchText: '',
             searchedColumn: '',
         };
-
         getColumnSearchProps = dataIndex => ({
             filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
                 <div style={{ padding: 8 }}>
@@ -101,7 +143,6 @@ function ManageEventsComponent() {
                     text
                 ),
         });
-
         handleSearch = (selectedKeys, confirm, dataIndex) => {
             confirm();
             this.setState({
@@ -109,52 +150,270 @@ function ManageEventsComponent() {
                 searchedColumn: dataIndex,
             });
         };
-
         handleReset = clearFilters => {
             clearFilters();
             this.setState({ searchText: '' });
         };
-
         render() {
             const columns = [
                 {
-                    title: 'Name',
-                    dataIndex: 'name',
+                    title: 'Tên sự kiện',
                     key: 'name',
                     width: '30%',
-                    ...this.getColumnSearchProps('name'),
+                    ...this.getColumnSearchProps('Title'),
+                    render: (data) => {
+                        return (
+                            <Row>
+                                <Col span={5}><img alt="" style={{ height: 50, maxWidth: '100%' }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
+                                <Col span={19}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{data.Title}</div></Col>
+                            </Row>
+                        )
+                    }
                 },
                 {
-                    title: 'Age',
-                    dataIndex: 'age',
+                    title: 'Ngày diễn ra',
                     key: 'age',
-                    width: '20%',
+                    width: '28%',
                     ...this.getColumnSearchProps('age'),
+                    render: (data) => {
+                        return (
+                            <Row>
+                                <div style={{ paddingTop: 15, width: '40px', fontSize: '0.5rem' }}><i className="far fa-clock fa-3x" style={{ color: '#F29191' }} /></div>
+                                <div>
+                                    <div style={{ marginBottom: 5 }}>Bắt đầu:&nbsp;{moment(data.StartDate).format('LT')} - {moment(data.StartDate).format('L')}</div>
+                                    <div>Kết thúc:&nbsp;{moment(data.EndDate).format('LT')} - {moment(data.EndDate).format('L')}</div>
+                                </div>
+                            </Row>
+                        )
+                    }
                 },
                 {
-                    title: 'Address',
-                    dataIndex: 'address',
-                    key: 'address',
-                    ...this.getColumnSearchProps('address'),
-                    sorter: (a, b) => a.address.length - b.address.length,
+                    title: 'Đã tham gia',
+                    key: 'join',
+                    sorter: (a, b) => a.CurrentParticipants - b.CurrentParticipants,
                     sortDirections: ['descend', 'ascend'],
+                    render: (data) => {
+                        let color = '#4CBE9A';
+                        if (data.CurrentParticipants > 10) {
+                            color = '#EBA3A4'
+                        }
+                        if (data.CurrentParticipants > 20) {
+                            color = '#9DAD7F'
+                        }
+                        return (
+                            <Tag style={{ fontSize: 15 }} color={color} key={data}>
+                                <i className="fas fa-users"></i>&nbsp;&nbsp;{data.CurrentParticipants}
+                            </Tag>
+                        )
+                    }
+                },
+                // {
+                //     title: 'Số lượng',
+                //     key: 'min',
+                //     sorter: (a, b) => a.MinParticipants - b.MinParticipants,
+                //     sortDirections: ['descend', 'ascend'],
+                //     render: (data) => {
+                //         let color = '#4CBE9A';
+                //         if (data.MinParticipants > 20) {
+                //             color = '#EBA3A4'
+                //         }
+                //         if (data.MinParticipants > 50) {
+                //             color = '#9DAD7F'
+                //         }
+                //         return (
+                //             <Tag style={{ fontSize: 15 }} color={color} key={data}>
+                //                 <i className="fas fa-users"></i>&nbsp;&nbsp;{data.MinParticipants} - {data.MaxParticipants}
+                //             </Tag>
+                //         )
+                //     }
+                // },
+                {
+                    title: 'Thời hạn đăng ký',
+                    key: 'deadline',
+                    render: (data) => {
+                        const then = moment(data.EndRegister);
+                        const now = moment().format('yyyy-MM-DDTHH:mm:ss');
+                        const diff = then.diff(now)
+                        const result = (Math.round(diff / 86400) / 1000).toFixed()
+                        return (
+                            <div>
+                                {/* <Countdown value={countdown} onFinish={onFinish} /> */}
+                                {result} ngày còn lại
+                            </div>
+                        )
+                    }
+                },
+                {
+                    title: 'Tác vụ',
+                    width: '11%',
+                    key: 'action',
+                    render: (record) => {
+                        return (
+                            <div style={{ textAlign: 'center', fontSize: '0.6rem' }}>
+                                <i onClick={() => {
+                                    showModalView()
+                                    setRecord(record)
+                                    let ex = record.Image.split("|")
+                                    if (ex.length > 1) {
+                                        ex.pop();
+                                    }
+                                    setRecordImage(ex);
+                                }} className="far fa-eye fa-2x" style={{ color: '#5AA469', cursor: 'zoom-in' }}></i>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <i onClick={() => {
+                                    showModalEdit()
+                                    setRecord(record)
+                                    let ex = record.Image.split("|")
+                                    if (ex.length > 1) {
+                                        ex.pop();
+                                    }
+                                    setRecordImage(ex);
+                                }} className="fas fa-cog fa-2x" style={{ color: '#6155A6', cursor: 'alias' }}></i>
+                            </div>
+                        )
+                    }
                 },
             ];
-            return <Table columns={columns} dataSource={data} />;
+            return <Table
+                rowKey="uid1"
+                columns={columns}
+                dataSource={events}
+                pagination={{
+                    current: page,
+                    pageSize: pageSize,
+                    onChange: (page, pageSize) => {
+                        setPage(page)
+                        setPageSize(pageSize)
+                    },
+                    pageSizeOptions: ['5', '10', '15', '20'],
+                    showSizeChanger: true,
+                    locale: { items_per_page: "/ trang" },
+                }}
+            />;
         }
     }
+    const Proposal = () => {
+        const columns = [
+            {
+                title: 'Tên đề xuất',
+                dataIndex: 'Title',
+                sorter: (a, b) => a.Title.length - b.Title.length,
+                sortDirections: ['descend'],
+                //defaultSortOrder: ['descend']
+                render: (data) => {
+                    return <div style={{ width: 170 }}>{data}</div>
+                }
+            },
+            {
+                title: 'Đề xuất',
+                render: (data) => {
+                    return (
+                        <div style={{ textAlign: 'center', cursor: 'copy' }}>
+                            <span style={{ backgroundColor: '#FF7171', padding: '3px 12px', color: 'white', borderRadius: 5 }}
+                                onClick={() => {
+                                    showSelect(data)
+                                }}>
+                                Chọn</span>
+                        </div>
+                    )
+                }
+            }
+        ];
+        function onChange(pagination, filters, sorter, extra) {
+            console.log('params', pagination, filters, sorter, extra);
+        }
+        return (
+            <Table
+                columns={columns}
+                dataSource={proposals}
+                showSorterTooltip={{ title: 'Sắp xếp tăng giảm' }}
+                onChange={onChange}
+                rowKey="uid2"
+            />
+        )
+    }
     return (
-        <div>
-            <CreateEventsModalComponent />
-            <Row>
-                <Col span={16}>
-                    <App />
-                </Col>
-                <Col span={8}>
-
-                </Col>
-            </Row>
-        </div>
+        <Spin size="large" spinning={events === null ? true : false}>
+            <div>
+                {/* Modal Edit */}
+                <Modal
+                    destroyOnClose={true}
+                    title={"Chỉnh sửa sự kiện"}
+                    visible={visibleEdit}
+                    onCancel={handleCancel}
+                    width={1000}
+                    footer={
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button onClick={handleCancel}>
+                                Hủy
+                            </Button>
+                            <Button type="primary" onClick={showModalConfirm}>
+                                Hoàn tất
+                            </Button>
+                        </Row>
+                    }
+                >
+                    <EditEventComponent record={record} recordImage={recordImage} />
+                </Modal>
+                <Modal
+                    title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
+                    centered
+                    icon={<ExclamationCircleOutlined />}
+                    visible={modalConfirm}
+                    onCancel={() => setModalConfirm(false)}
+                    footer={[
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button onClick={() => setModalConfirm(false)}>Hủy </Button>
+                            <Button form="editEvent" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
+                        </Row>
+                    ]}
+                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn tạo phụ kiện này không?</span>
+                </Modal>
+                {/* Modal View */}
+                <Modal
+                    destroyOnClose={true}
+                    title={"Chi tiết sự kiện"}
+                    visible={visibleView}
+                    onCancel={handleCancel}
+                    width={1000}
+                    footer={
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button type="primary" onClick={handleCancel}>
+                                Xong
+                            </Button>
+                        </Row>
+                    }
+                >
+                    <ViewEventComponent record={record} recordImage={recordImage} />
+                </Modal>
+                <Row gutter={15}>
+                    <Col span={18}>
+                        <Row>
+                            <CreateEventsModalComponent />
+                            <Row style={{ marginLeft: 'auto', paddingTop: '5px' }}>
+                                <Button className="textEventApproved" style={{ marginRight: 10, borderRadius: 3, backgroundColor: '#37A063' }}><i class="fas fa-spinner"></i>&nbsp;&nbsp;Sự kiện đang diễn ra</Button>
+                                <Button className="textEventApproved" style={{ borderRadius: 3, backgroundColor: '#AC7E92' }}><i class="fas fa-history"></i>&nbsp;&nbsp;Lịch sử</Button>
+                            </Row>
+                        </Row>
+                    </Col>
+                    <Col span={6}>
+                        <p className="textEventAndProposal"><span className="textEventAndProposalChild"><i className="far fa-calendar-minus"></i>&nbsp;&nbsp;Lịch sự kiện và đề xuất</span></p>
+                    </Col>
+                </Row>
+                <Row gutter={15}>
+                    <Col span={18}>
+                        <App />
+                    </Col>
+                    <Col span={6}>
+                        <div className="site-calendar-demo-card">
+                            <Calendar fullscreen={false} onPanelChange={onPanelChange} />
+                        </div>
+                        <br />
+                        <Proposal />
+                    </Col>
+                </Row>
+            </div>
+        </Spin>
     )
 }
 

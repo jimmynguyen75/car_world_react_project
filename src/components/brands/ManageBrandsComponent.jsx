@@ -154,13 +154,17 @@ export default function ManageBrandComponent() {
                 {
                     title: 'Tên thương hiệu',
                     key: 'name',
-                    width: '25%',
+                    width: '27%',
                     ...this.getColumnSearchProps('Name'),
                     render: (data) => {
                         return (
                             <Row>
-                                <Avatar size="large" src={data.Image} icon={<UserOutlined />} />
-                                <div style={{ paddingTop: 7 }}><span style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.Name}</span></div>
+                                <Col span={6}>
+                                    <Avatar style={{ height: 'auto', width: 'auto', margin: 'auto', maxHeight: '50px', maxWidth: '50px' }} size="large" src={data.Image} icon={<UserOutlined />} />
+                                </Col>
+                                <Col span={18}>
+                                    <div><span style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.Name}</span></div>
+                                </Col>
                             </Row>
                         )
                     }

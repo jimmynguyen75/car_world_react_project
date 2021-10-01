@@ -222,10 +222,12 @@ function ManageCarsComponent() {
                     render: (brand) => {
                         return (
                             <Row>
-                                <Avatar size="small" src={brand.Brand.Image} />
-                                <Space size="middle">
+                                <Col span={6}>
+                                    <Avatar style={{ display: true, height: 'auto', width: 'auto', margin: 'auto', maxHeight: '30px', maxWidth: '30px' }} size="small" src={brand.Brand.Image} />
+                                </Col>
+                                <Col span={18}>
                                     <div style={{ paddingLeft: 5 }}>{brand.Brand.Name}</div>
-                                </Space>
+                                </Col>
                             </Row>
                         );
                     }

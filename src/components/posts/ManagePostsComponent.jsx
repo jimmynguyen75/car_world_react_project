@@ -8,7 +8,7 @@ function ManagePostsComponent() {
 
     const history = useHistory();
     const createModal = () => {
-        history.push("/quan-ly/tao-bai-dang");
+        history.push("/tao-bai-dang");
     }
 
     return (

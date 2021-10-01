@@ -1,7 +1,7 @@
-import { CarOutlined, ExclamationCircleOutlined, HomeOutlined, LogoutOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, HomeOutlined, LogoutOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Layout, Menu, Modal, Typography } from 'antd';
 import 'antd/dist/antd.less';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from "react-router-dom";
 import logo2 from '../../images/logo2.png';
 import AccountService from '../../services/AccountService';
@@ -14,7 +14,6 @@ import ManagePostsComponent from '../posts/ManagePostsComponent';
 import ProfileComponent from '../profile/ProfileComponent';
 import ManageProposalsComponent from '../proposals/ManageProposalsComponent';
 import ManagerBodyDashboardComponent from './ManagerBodyDashboardComponent';
-
 
 function ManagerDashboardComponent() {
     const { Title } = Typography;
