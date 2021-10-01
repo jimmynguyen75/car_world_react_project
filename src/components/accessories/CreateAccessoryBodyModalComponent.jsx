@@ -27,7 +27,7 @@ export default function CreateAccessoryBodyModalComponent() {
         AccessoryService.createNewAccessory(values)
             .then((finish) => {
                 console.log(finish)
-                setTimeout(() => {               
+                setTimeout(() => {
                     message.success("Tạo phụ kiện thành công");
                 }, 500)
                 setTimeout(() => {
@@ -98,7 +98,7 @@ export default function CreateAccessoryBodyModalComponent() {
     }
     useEffect(() => {
         let result = []
-        BrandService.getAllAccessoriesBrand()
+        BrandService.getBrands()
             .then(res => {
                 res.data.forEach(data => {
                     if (data.IsDeleted === false) {

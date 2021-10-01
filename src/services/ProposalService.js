@@ -6,6 +6,9 @@ class ProposalService {
     getAllProposals() {
         return axios.get(PROPOSAL_API_URL + "GetAllProposal", { headers: authHeader() })
     }
+    getProposalById(id) {
+        return axios.get(PROPOSAL_API_URL + "GetProposalById?id=" + id, { headers: authHeader() })
+    }
     approveProposal(proposal) {
         return axios.put(PROPOSAL_API_URL + "ApprovedProposal", proposal, { headers: authHeader() })
     }

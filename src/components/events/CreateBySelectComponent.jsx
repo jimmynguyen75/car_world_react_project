@@ -132,12 +132,11 @@ export default function CreateBySelectComponent({ record, recordImage }) {
             title: record.Title,
             description: record.Description,
             venue: record.Venue,
-            proposalId: null,
+            proposalId: record.Id,
             modifiedBy: null,
             createdBy: AccountService.getCurrentUser().Id,
             min: record.MinParticipants,
             max: record.MaxParticipants,
-            id: record.Id,
             createdDate: record.CreatedDate,
             currentParticipants: record.CurrentParticipants,
             //fake           
@@ -145,7 +144,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
     }, [form, record])
     useEffect(() => {
         form.setFieldsValue({
-            registerFAKE: (moment(r[0], "yyyy-MM-DDTHH:mm:ss")._i) === "" ? null : r,
+            registerFAKE: (moment(r[0], "yyyy-MM-DDTHH:mm:ss")._isValid) === false ? null : r,
             startFAKE: (moment(s[0], "yyyy-MM-DDTHH:mm:ss")._i) === "" ? null : s,
         })
     }, [r, s, form])
@@ -165,7 +164,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
     //End -----------------------------
     const onFinish = (values) => {
         console.log(values);
-        EventService.updateEvent(values.id, values)
+        EventService.createNewEvent(values)
             .then((result) => {
                 console.log(result);
                 setTimeout(() => {
@@ -192,7 +191,6 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
             <Form onFinish={onFinish} layout="vertical" id="editEvent" form={form}>
-                <Form.Item hidden={true} name="id"><Input></Input></Form.Item>
                 <Form.Item hidden={true} name="image"><Input></Input></Form.Item>
                 <Form.Item hidden={true} name="createdBy"><Input /></Form.Item>
                 <Form.Item hidden={true} name="modifiedBy"><Input /></Form.Item>

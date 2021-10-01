@@ -5,6 +5,7 @@ import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
 import './styles.less';
+import AccessoryService from '../../services/AccessoryService';
 export default function EditAccessoryBodyComponent({ setDataToChild, setDataToChildFixingImage }) {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -23,10 +24,21 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
         </div>
     );
     const onFinish = (values) => {
-        // AccessoryService
-        //     .createNewAccessory(values)
-        //     .then(() => console.log("ok"))
-        //     .catch(err => console.log(err));
+        AccessoryService
+            .updateAccessoryById(values.id, values)
+            .then(() => {
+                console.log(values)
+                setTimeout(() => {
+                    message.success("Cập nhật phụ kiện thành công");
+                }, 500)
+                setTimeout(() => {
+                    window.location.href = '/phu-kien'
+                }, 1500)
+            })
+            .catch(err => {
+                console.log(err)
+                message.error("Lỗi server hoặc tên không được trùng nhau!")
+            });
         console.log("Values: ", values)
     }
     const handleCancel = () => {
@@ -115,7 +127,9 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
         description: setDataToChild.Description,
         brandName: setDataToChild.Brand.Name,
         image: images,
-        price: setDataToChild.Price
+        price: setDataToChild.Price,
+        id: setDataToChild.Id,
+        createdDate: setDataToChild.CreatedDate,
     })
     function deleteImage(index) {
         setImg(setDataToChildFixingImage.splice(index, 1))
@@ -141,6 +155,12 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
                 id="myForm"
                 form={form}
             >
+                <Form.Item hidden={true} name="id" >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item hidden={true} name="createdDate" >
+                    <Input></Input>
+                </Form.Item>
                 <Form.Item hidden={true} name="price" >
                     <Input></Input>
                 </Form.Item>

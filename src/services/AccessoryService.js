@@ -16,8 +16,8 @@ class AccessoryService {
     createNewAccessory(accessory) {
         return axios.post(ACCESSORIES_API_URL + "CreateNewAccessory", accessory, { headers: authHeader() });
     }
-    updateAccessoryById(accessory, id) {
-        return axios.put(ACCESSORIES_API_URL + "UpdateAccessory/" + id, accessory, { headers: authHeader() });
+    updateAccessoryById(id, accessory) {
+        return axios.put(ACCESSORIES_API_URL + "UpdateAccessory?id=" + id, accessory, { headers: authHeader() });
     }
 }
 

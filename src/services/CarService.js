@@ -13,6 +13,9 @@ class CarService {
     deleteCar(id) {
         return axios.put(CARS_API_URL + "RemoveCar?id=" + id, { headers: authHeader() });
     }
+    updateCar(id, car) {
+        return axios.put(CARS_API_URL + "UpdateCar?id=" + id, car, { headers: authHeader() });
+    }
 
 }
 

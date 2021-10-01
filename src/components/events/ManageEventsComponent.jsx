@@ -1,5 +1,5 @@
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Calendar, Col, Input, Modal, Row, Space, Spin, Table, Tag } from 'antd';
+import { Button, Avatar, Calendar, Col, Input, Modal, Row, Space, Spin, Table, Tag } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
@@ -10,6 +10,8 @@ import ProposalService from '../../services/ProposalService';
 import CreateEventsModalComponent from './CreateEventsModalComponent';
 import EditEventComponent from './EditEventComponent';
 import ViewEventComponent from './ViewEventComponent';
+import CreateBySelectComponent from './CreateBySelectComponent';
+import AccountService from '../../services/AccountService'
 function ManageEventsComponent() {
     const [events, setEvents] = useState(null);
     const [proposals, setProposals] = useState(null);
@@ -17,17 +19,23 @@ function ManageEventsComponent() {
     const [modalConfirm, setModalConfirm] = useState(false);
     const [visibleView, setVisibleView] = React.useState(false);
     const [visibleEdit, setVisibleEdit] = useState(false);
+    const [visibleSelect, setVisibleSelect] = useState(false);
     const [loadingButton, setLoadingButton] = React.useState(false)
     const history = useHistory();
     const [record, setRecord] = useState(null)
     const [recordImage, setRecordImage] = useState(null)
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = React.useState(5)
+    const [userId, setUserId] = React.useState(0)
+    const [proposalId, setProposalId] = useState(0)
     const showModalView = () => {
         setVisibleView(true);
     };
     const showModalEdit = () => {
         setVisibleEdit(true);
+    };
+    const showModalSelect = () => {
+        setVisibleSelect(true);
     };
     const showModalConfirm = () => {
         setModalConfirm(true)
@@ -45,6 +53,7 @@ function ManageEventsComponent() {
         console.log('Clicked cancel button');
         setVisibleView(false);
         setVisibleEdit(false);
+        setVisibleSelect(false);
         history.push('/su-kien');
     };
     function onPanelChange(value, mode) {
@@ -68,12 +77,26 @@ function ManageEventsComponent() {
             .then((res) => {
                 res.data.forEach((data) => {
                     if (data.Status === 2) {
-                        result.push(data)
+                        if (data.Type === 2) {
+                            result.push(data)
+                        }
                     }
                 })
                 setProposals(result)
             })
     }, [])
+    useEffect(() => {
+        ProposalService.getProposalById(record !== null && record.ProposalId)
+            .then((res) => {
+                setProposalId(res.data)
+            })
+        AccountService.getUserById(record !== null && record.UserId)
+            .then((res) => {
+                setUserId(res.data)
+            })
+    }, [record])
+    console.log("record: ", record)
+    console.log("pro: ", proposalId)
     class App extends React.Component {
         state = {
             searchText: '',
@@ -311,7 +334,13 @@ function ManageEventsComponent() {
                         <div style={{ textAlign: 'center', cursor: 'copy' }}>
                             <span style={{ backgroundColor: '#FF7171', padding: '3px 12px', color: 'white', borderRadius: 5 }}
                                 onClick={() => {
-                                    showSelect(data)
+                                    showModalSelect()
+                                    setRecord(data)
+                                    let ex = data.Image.split("|")
+                                    if (ex.length > 1) {
+                                        ex.pop();
+                                    }
+                                    setRecordImage(ex);
                                 }}>
                                 Chọn</span>
                         </div>
@@ -335,6 +364,46 @@ function ManageEventsComponent() {
     return (
         <Spin size="large" spinning={events === null ? true : false}>
             <div>
+                {/* Modal Select */}
+                <Modal
+                    destroyOnClose={true}
+                    title={
+                        <Row>
+                            <Space size="middle"><div>Đề xuất bởi </div></Space>
+                            <Avatar src={userId.Image} style={{ marginLeft: 5 }}></Avatar>
+                            <Space size="middle"><div style={{ fontWeight: '500', fontSize: 14, color: '#2A528A', marginLeft: 5 }}>{userId.FullName}</div></Space>
+                        </Row>
+                    }
+                    visible={visibleSelect}
+                    onCancel={handleCancel}
+                    width={1000}
+                    footer={
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button onClick={handleCancel}>
+                                Hủy
+                            </Button>
+                            <Button type="primary" onClick={showModalConfirm}>
+                                Hoàn tất
+                            </Button>
+                        </Row>
+                    }
+                >
+                    <CreateBySelectComponent record={record} recordImage={recordImage} />
+                </Modal>
+                <Modal
+                    title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
+                    centered
+                    icon={<ExclamationCircleOutlined />}
+                    visible={modalConfirm}
+                    onCancel={() => setModalConfirm(false)}
+                    footer={[
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button onClick={() => setModalConfirm(false)}>Hủy </Button>
+                            <Button form="editEvent" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
+                        </Row>
+                    ]}
+                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn tạo phụ kiện này không?</span>
+                </Modal>
                 {/* Modal Edit */}
                 <Modal
                     destroyOnClose={true}
@@ -372,7 +441,13 @@ function ManageEventsComponent() {
                 {/* Modal View */}
                 <Modal
                     destroyOnClose={true}
-                    title={"Chi tiết sự kiện"}
+                    // title={
+                    //     // <Row>
+                    //     //     <Space size="middle"><div>Đề xuất bởi </div></Space>
+                    //     //     <Avatar src={userId.Image} style={{ marginLeft: 5 }}></Avatar>
+                    //     //     <Space size="middle"><div style={{ fontWeight: '500', fontSize: 14, color: '#2A528A', marginLeft: 5 }}>{userId.FullName}</div></Space>
+                    //     // </Row>
+                    // }
                     visible={visibleView}
                     onCancel={handleCancel}
                     width={1000}

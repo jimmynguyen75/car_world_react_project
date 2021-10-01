@@ -7,6 +7,9 @@ class BrandService {
     getAllBrand() {
         return axios.get(BRAND_API_URL + "GetAllBrandsOfCar", { headers: authHeader() })
     }
+    getBrands() {
+        return axios.get(BRAND_API_URL + "GetAllBrands", { headers: authHeader() })
+    }
     getAllAccessoriesBrand() {
         return axios.get(BRAND_API_URL + "GetAllBrandsOfAccessory", { headers: authHeader() })
     }

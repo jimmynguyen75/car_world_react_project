@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
+import CarService from '../../services/CarService'
 export default function EditCarBodyComponent({ record, recordImage }) {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -121,24 +122,26 @@ export default function EditCarBodyComponent({ record, recordImage }) {
         fogLamps: record.FogLamps,
         interiorMaterial: record.InteriorMaterial,
         despcription: record.Despcription,
-        image: images
+        image: images,
+        createdDate: record.CreatedDate,
+        id: record.Id
     })
     //--------//
     const onFinish = (values) => {
-        // CarService.createNewCar(values)
-        //     .then(() => {
-        //         console.log(values)
-        //         setTimeout(() => {
-        //             message.success("Tạo xe thành công");
-        //         }, 500)
-        //         setTimeout(() => {
-        //             window.location.href = '/quan-ly/xe'
-        //         }, 1500)
-        //     })
-        //     .catch(err => {
-        //         console.log(err)
-        //         message.error("Lỗi server hoặc tên không được trùng nhau!")
-        //     });
+        CarService.updateCar(values.id, values)
+            .then(() => {
+                console.log(values)
+                setTimeout(() => {
+                    message.success("Cập nhật xe thành công");
+                }, 500)
+                setTimeout(() => {
+                    window.location.href = '/xe'
+                }, 1500)
+            })
+            .catch(err => {
+                console.log(err)
+                message.error("Lỗi server hoặc tên không được trùng nhau!")
+            });
         console.log(values)
     }
     const handleCancel = () => setVisible(false);
@@ -245,6 +248,12 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                 id="myFormEdit"
                 form={form}
             >
+                <Form.Item hidden={true} name="id" >
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item hidden={true} name="createdDate" >
+                    <Input></Input>
+                </Form.Item>
                 <Form.Item hidden={true} name="image">
                     <Input></Input>
                 </Form.Item>
