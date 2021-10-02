@@ -51,7 +51,7 @@ export default function CreateEventBodyModalComponent() {
             },
             async () => {
                 await storage
-                    .ref("images")
+                    .ref("events")
                     .child(file.name)
                     .getDownloadURL()
                     .then((urls) => {
@@ -216,6 +216,7 @@ export default function CreateEventBodyModalComponent() {
                 <Form.Item hidden={true} name="endRegister"><Input /></Form.Item>
                 <Form.Item hidden={true} name="minParticipants"><Input /></Form.Item>
                 <Form.Item hidden={true} name="maxParticipants"><Input /></Form.Item>
+                
                 <Form.Item label="Ảnh sự kiện" name="image"
                     getValueFromEvent={normFile}
                     rules={[{ required: true, message: "Ảnh sự kiện không được bỏ trống" }]}>

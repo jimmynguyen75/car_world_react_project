@@ -89,7 +89,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
             },
             async () => {
                 await storage
-                    .ref("images")
+                    .ref("events")
                     .child(file.name)
                     .getDownloadURL()
                     .then((urls) => {

@@ -1,13 +1,14 @@
 import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { Button, Form, Input, Modal, Row, Select, Upload } from 'antd';
+import { Button, Form, Input, Modal, Row, Select, Upload, message } from 'antd';
 import React, { useState } from 'react';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useHistory } from "react-router-dom";
 import storage from "../../services/ImageFirebase";
 import './styles.less';
-
+import AccountService from '../../services/AccountService'
+import PostService from '../../services/PostService'
 function CreatePostModalComponent() {
     const { Option } = Select;
     const history = useHistory();
@@ -16,7 +17,6 @@ function CreatePostModalComponent() {
     const [imageURL, setImageURL] = useState([]);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
-
     function handleBack() {
         history.goBack();
     }
@@ -24,7 +24,21 @@ function CreatePostModalComponent() {
     const [form] = Form.useForm()
     const onFinish = (values) => {
         console.log(values)
-        console.log(data.getData())
+        // console.log(data.getData())
+        PostService.createNewPost(values)
+            .then((finish) => {
+                console.log(finish)
+                setTimeout(() => {
+                    message.success("Tạo bài thành công");
+                }, 500)
+                setTimeout(() => {
+                    window.location.href = '/bai-dang'
+                }, 1500)
+            })
+            .catch((err) => {
+                message.error("Lỗi server hoặc tên không được trùng nhau!")
+                console.log(err)
+            });
     };
     const handleCancel = () => setVisible(false);
     function getBase64(file) {
@@ -188,6 +202,10 @@ function CreatePostModalComponent() {
         .catch(err => {
             console.error(err);
         });
+    form.setFieldsValue({
+        createdBy: AccountService.getCurrentUser().Id,
+        modifiedBy: null
+    })
     return (
         <>
             <div className="body123">
@@ -212,6 +230,8 @@ function CreatePostModalComponent() {
                         onFinish={onFinish}
                         style={{ margin: '0px 50px ' }}
                     >
+                        <Form.Item hidden={true} name="createdBy"><Input /></Form.Item>
+                        <Form.Item hidden={true} name="modifiedBy"><Input /></Form.Item>
                         <Form.Item
                             label={<div style={{ letterSpacing: '1px' }}>Ảnh đại diện</div>}
                             name="featuredImage"
@@ -233,15 +253,16 @@ function CreatePostModalComponent() {
                         </Form.Item>
                         <Form.Item
                             label={<div style={{ letterSpacing: '1px' }}>Chuyên mục</div>}
-                            name="category"
+                            name="type"
                         >
                             <Select
-                                labelInValue
                                 style={{ width: 160 }}
                                 placeholder="Chọn chuyên mục"
                             >
-                                <Option value="1">Xe</Option>
-                                <Option value="2">Phụ Kiện</Option>
+                                <Option key="1" value="1">Xe</Option>
+                                <Option key="2" value="2">Phụ Kiện</Option>
+                                <Option key="3" value="3">Sự kiện</Option>
+                                <Option key="4" value="4">Cuộc thi</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
@@ -256,7 +277,7 @@ function CreatePostModalComponent() {
                             />
                         </Form.Item>
                         <Form.Item
-                            name="description"
+                            name="overview"
                             label={<div style={{ letterSpacing: '1px' }}>Mô tả</div>}
                             rules={[
                                 {
