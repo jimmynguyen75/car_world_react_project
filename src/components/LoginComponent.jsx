@@ -26,8 +26,6 @@ function LoginComponent() {
         }, 10)
         AccountService.login(username, password)
             .then(() => {
-                console.log("Tên đăng nhập: " + username);
-                console.log("Mật khẩu: " + password);
                 console.log(AccountService.getCurrentUser().RoleId);
                 if (AccountService.getCurrentUser().RoleId === 1) {
                     setTimeout(() => {

@@ -50,18 +50,11 @@ function ManageEventsComponent() {
         }, 1000);
     };
     const handleCancel = () => {
-        console.log('Clicked cancel button');
         setVisibleView(false);
         setVisibleEdit(false);
         setVisibleSelect(false);
         history.push('/su-kien');
     };
-    function onPanelChange(value, mode) {
-        console.log(value, mode);
-    }
-    const showSelect = (values) => {
-        console.log(values)
-    }
     useEffect(() => {
         EventService.getAllEvents()
             .then((response) => {
@@ -82,21 +75,18 @@ function ManageEventsComponent() {
                         }
                     }
                 })
-                setProposals(result)
             })
     }, [])
-    useEffect(() => {
-        ProposalService.getProposalById(record !== null && record.ProposalId)
-            .then((res) => {
-                setProposalId(res.data)
-            })
-        AccountService.getUserById(record !== null && record.UserId)
-            .then((res) => {
-                setUserId(res.data)
-            })
-    }, [record])
-    console.log("record: ", record)
-    console.log("pro: ", proposalId)
+    // useEffect(() => {
+    //     ProposalService.getProposalById(record !== null && record.ProposalId)
+    //         .then((res) => {
+    //             setProposalId(res.data)
+    //         })
+    //     AccountService.getUserById(record !== null && record.UserId)
+    //         .then((res) => {
+    //             setUserId(res.data)
+    //         })
+    // }, [record])
     class App extends React.Component {
         state = {
             searchText: '',
@@ -298,7 +288,7 @@ function ManageEventsComponent() {
                 },
             ];
             return <Table
-                rowKey="uid1"
+                rowKey="eventKey2"
                 columns={columns}
                 dataSource={events}
                 pagination={{
@@ -319,6 +309,7 @@ function ManageEventsComponent() {
         const columns = [
             {
                 title: 'Tên đề xuất',
+                key: 'p1',
                 dataIndex: 'Title',
                 sorter: (a, b) => a.Title.length - b.Title.length,
                 sortDirections: ['descend'],
@@ -329,6 +320,7 @@ function ManageEventsComponent() {
             },
             {
                 title: 'Đề xuất',
+                key: 'p2',
                 render: (data) => {
                     return (
                         <div style={{ textAlign: 'center', cursor: 'copy' }}>
@@ -348,16 +340,12 @@ function ManageEventsComponent() {
                 }
             }
         ];
-        function onChange(pagination, filters, sorter, extra) {
-            console.log('params', pagination, filters, sorter, extra);
-        }
         return (
             <Table
                 columns={columns}
                 dataSource={proposals}
                 showSorterTooltip={{ title: 'Sắp xếp tăng giảm' }}
-                onChange={onChange}
-                rowKey="uid2"
+                rowKey="eventKey1"
             />
         )
     }
@@ -466,8 +454,8 @@ function ManageEventsComponent() {
                         <Row>
                             <CreateEventsModalComponent />
                             <Row style={{ marginLeft: 'auto', paddingTop: '5px' }}>
-                                <Button className="textEventApproved" style={{ marginRight: 10, borderRadius: 3, backgroundColor: '#37A063' }}><i class="fas fa-spinner"></i>&nbsp;&nbsp;Sự kiện đang diễn ra</Button>
-                                <Button className="textEventApproved" style={{ borderRadius: 3, backgroundColor: '#AC7E92' }}><i class="fas fa-history"></i>&nbsp;&nbsp;Lịch sử</Button>
+                                <Button className="textEventApproved" style={{ marginRight: 10, borderRadius: 3, backgroundColor: '#37A063' }}><i className="fas fa-spinner"></i>&nbsp;&nbsp;Sự kiện đang diễn ra</Button>
+                                <Button className="textEventApproved" style={{ borderRadius: 3, backgroundColor: '#AC7E92' }}><i className="fas fa-history"></i>&nbsp;&nbsp;Lịch sử</Button>
                             </Row>
                         </Row>
                     </Col>
@@ -481,7 +469,7 @@ function ManageEventsComponent() {
                     </Col>
                     <Col span={6}>
                         <div className="site-calendar-demo-card">
-                            <Calendar fullscreen={false} onPanelChange={onPanelChange} />
+                            <Calendar fullscreen={false} />
                         </div>
                         <br />
                         <Proposal />

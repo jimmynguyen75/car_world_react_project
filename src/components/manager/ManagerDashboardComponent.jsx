@@ -25,31 +25,24 @@ function ManagerDashboardComponent() {
     const [title, setTitle] = useState('');
     useEffect(() => {
         if (location.pathname === "/") {
-            console.log(location.pathname)
             setTitle('Trang chủ')
         }
         if (location.pathname === "/bai-dang") {
-            console.log(location.pathname)
             setTitle('Quản lý bài đăng')
         }
         if (location.pathname === "/de-xuat") {
-            console.log(location.pathname)
             setTitle('Quản lý đề xuất')
         }
         if (location.pathname === "/su-kien") {
-            console.log(location.pathname)
             setTitle('Quản lý sự kiện')
         }
         if (location.pathname === "/cuoc-thi") {
-            console.log(location.pathname)
             setTitle('Quản lý cuộc thi')
         }
         if (location.pathname === "/phan-hoi") {
-            console.log(location.pathname)
             setTitle('Quản lý phản hồi')
         }
         if (location.pathname === "/thong-tin-ca-nhan") {
-            console.log(location.pathname)
             setTitle('Thông tin cá nhân')
         }
         document.title = title;
@@ -113,10 +106,10 @@ function ManagerDashboardComponent() {
                 <img src={logo2} className="logo" alt="logo..." />
                 <Menu mode="inline" defaultSelectedKeys={[location.pathname]}>
                     <Menu.Item key="/" icon={<HomeOutlined style={{ fontSize: 18, color: '#316B83', paddingTop: 2 }} />} onClick={dashboard}>Trang chủ</Menu.Item>
-                    <Menu.Item key="/de-xuat" onClick={manageProposal}><i class="far fa-lightbulb" style={{ fontSize: 18, color: '#FF7878', paddingTop: 4 }} />&nbsp;&nbsp;&nbsp;&nbsp;Quản lý đề xuất</Menu.Item>
-                    <Menu.Item key="/bai-dang" onClick={managePosts}><i class="far fa-clone" style={{ fontSize: 18, color: '#DBAD68', paddingTop: 4 }} />&nbsp;&nbsp;<span style={{paddingLeft: 2}}>Quản lý bài đăng</span></Menu.Item>
-                    <Menu.Item key="/su-kien" onClick={manageEvents}><i class="fas fa-calendar-alt" style={{ fontSize: 18, color: '#52BCC2' }} />&nbsp;&nbsp;&nbsp;Quản lý sự kiện</Menu.Item>
-                    <Menu.Item key="/cuoc-thi" onClick={manageContests}><i class="fas fa-trophy" style={{ fontSize: 18, color: '#BFA2DB', paddingTop: 4 }} />&nbsp;&nbsp;Quản lý cuộc thi</Menu.Item>
+                    <Menu.Item key="/de-xuat" onClick={manageProposal}><i className="far fa-lightbulb" style={{ fontSize: 18, color: '#FF7878', paddingTop: 4 }} />&nbsp;&nbsp;&nbsp;&nbsp;Quản lý đề xuất</Menu.Item>
+                    <Menu.Item key="/bai-dang" onClick={managePosts}><i className="far fa-clone" style={{ fontSize: 18, color: '#DBAD68', paddingTop: 4 }} />&nbsp;&nbsp;<span style={{ paddingLeft: 2 }}>Quản lý bài đăng</span></Menu.Item>
+                    <Menu.Item key="/su-kien" onClick={manageEvents}><i className="fas fa-calendar-alt" style={{ fontSize: 18, color: '#52BCC2' }} />&nbsp;&nbsp;&nbsp;Quản lý sự kiện</Menu.Item>
+                    <Menu.Item key="/cuoc-thi" onClick={manageContests}><i className="fas fa-trophy" style={{ fontSize: 18, color: '#BFA2DB', paddingTop: 4 }} />&nbsp;&nbsp;Quản lý cuộc thi</Menu.Item>
                     <Menu.Item key="/phan-hoi" icon={<MessageOutlined style={{ fontSize: 18, color: '#6B7AA1', paddingTop: 2 }} />} onClick={manageFeedback}>Quản lý phản hồi</Menu.Item>
                     <Menu.Item key="/thong-tin-ca-nhan" icon={<UserOutlined style={{ fontSize: 18, color: '#9E7777' }} />} onClick={profile}>Thông tin cá nhân</Menu.Item>
                     <Menu.Item key="/dang-xuat" onClick={confirmLogout} icon={<LogoutOutlined style={{ fontSize: 18, color: '#E9BEBE', paddingTop: 2 }} />}>Đăng xuất</Menu.Item>
@@ -131,7 +124,7 @@ function ManagerDashboardComponent() {
                 <Content style={{ margin: '24px 16px 0' }} >
                     {(() => {
                         switch (location.pathname) {
-                            case '/quan-ly':
+                            case '/':
                                 return (
                                     <ManagerBodyDashboardComponent />
                                 )

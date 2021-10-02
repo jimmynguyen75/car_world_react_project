@@ -59,16 +59,16 @@ export default function CreateAccountModalComponent() {
                     layout="vertical"
                     form={form}
                 >
-                    <Form.Item label="Họ và tên" name="fullName">
+                    <Form.Item label="Họ và tên" name="fullName" rules={[{ required: true, message: "Tên không được bỏ trống" }]}>
                         <Input placeholder="Nhập họ và tên" />
                     </Form.Item>
-                    <Form.Item label="Tên đăng nhập" name="username">
+                    <Form.Item label="Tên đăng nhập" name="username" rules={[{ required: true, message: "Tên đăng nhập không được bỏ trống" }]}>
                         <Input placeholder="Nhập tên đăng nhập" />
                     </Form.Item>
-                    <Form.Item label="Mật khẩu" name="password">
+                    <Form.Item label="Mật khẩu" name="password" rules={[{ required: true, message: "Mật khẩu không được bỏ trống" }]}>
                         <Input.Password placeholder="Nhập mật khẩu" />
                     </Form.Item>
-                    <Form.Item label="Vai trò" name="roleId" >
+                    <Form.Item label="Vai trò" name="roleId" rules={[{ required: true, message: "Vai trò không được bỏ trống" }]}>
                         <Select
                             showSearch
                             placeholder="Chọn vai trò"

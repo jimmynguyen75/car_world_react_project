@@ -1,8 +1,7 @@
-import { ArrowLeftOutlined, CheckOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { Button, Form, Input, Modal, Select, Switch, Upload } from 'antd';
-// import { EditorState } from "draft-js";
+import { Button, Form, Input, Modal, Row, Select, Upload } from 'antd';
 import React, { useState } from 'react';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useHistory } from "react-router-dom";
@@ -21,14 +20,6 @@ function CreatePostModalComponent() {
     function handleBack() {
         history.goBack();
     }
-    const layout = {
-        labelCol: {
-            span: 3,
-        },
-        wrapperCol: {
-            span: 18,
-        },
-    };
     //Form
     const [form] = Form.useForm()
     const onFinish = (values) => {
@@ -105,7 +96,6 @@ function CreatePostModalComponent() {
     const fearturedImage = () => {
         return imageURL;
     }
-
     const customRequest = ({ file, onSuccess, onError }) => {
         const storageRef = storage.ref(`/images/${file.name}`)
         const task = storageRef.put(file);
@@ -202,7 +192,7 @@ function CreatePostModalComponent() {
         <>
             <div className="body123">
                 <div><Button className="buttonBack" onClick={handleBack}><ArrowLeftOutlined /> Back</Button></div>
-                <div className="title">Create a new Post</div>
+                <div className="title">Tạo bài đăng</div>
                 {/* Others */}
                 <Modal
                     animation={false}
@@ -215,27 +205,16 @@ function CreatePostModalComponent() {
                 </Modal>
                 {/* End Others */}
                 <div>
-                    <Form {...layout}
+                    <Form
+                        layout="vertical"
                         form={form}
                         name="control-hooks"
                         onFinish={onFinish}
+                        style={{ margin: '0px 50px ' }}
                     >
                         <Form.Item
-                            label="Chuyên mục"
-                            name={['category', 'name']}
-                        >
-                            <Select
-                                labelInValue
-                                style={{ width: 160 }}
-                                placeholder="Chọn chuyên mục"
-                            >
-                                <Option value="Xe">Xe</Option>
-                                <Option value="Phụ Kiện">Phụ Kiện</Option>
-                            </Select>
-                        </Form.Item>
-                        <Form.Item
-                            label="Featured Image"
-                            name={['fearuredImage', 'name']}
+                            label={<div style={{ letterSpacing: '1px' }}>Ảnh đại diện</div>}
+                            name="featuredImage"
                             getValueFromEvent={fearturedImage}
                         >
                             <Upload
@@ -249,28 +228,36 @@ function CreatePostModalComponent() {
                                 // beforeUpload={() => false}
                                 accept=".png,.jpeg,.jpg"
                             >
-                                {fileList.length >= 3 ? null : uploadButton}
+                                {fileList.length >= 1 ? null : uploadButton}
                             </Upload>
                         </Form.Item>
                         <Form.Item
-                            name={['name', 'name']}
-                            label="Name"
-                            rules={[
-                                {
-                                    // required: true,
-                                },
-                            ]}
+                            label={<div style={{ letterSpacing: '1px' }}>Chuyên mục</div>}
+                            name="category"
+                        >
+                            <Select
+                                labelInValue
+                                style={{ width: 160 }}
+                                placeholder="Chọn chuyên mục"
+                            >
+                                <Option value="1">Xe</Option>
+                                <Option value="2">Phụ Kiện</Option>
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            name="title"
+                            label={<div style={{ letterSpacing: '1px' }}>Tiêu đề</div>}
                         >
                             <Input.TextArea
                                 size="large"
-                                style={{ fontSize: 16, fontWeight: 600 }}
                                 maxLength={200} showCount
                                 autoSize={{ minRows: 1, maxRows: 10 }}
+                                placeholder="Nhập tiêu đề"
                             />
                         </Form.Item>
                         <Form.Item
-                            name={['description', 'name']}
-                            label="Description"
+                            name="description"
+                            label={<div style={{ letterSpacing: '1px' }}>Mô tả</div>}
                             rules={[
                                 {
                                     // required: true,
@@ -279,14 +266,14 @@ function CreatePostModalComponent() {
                         >
                             <Input.TextArea
                                 size="large"
-                                style={{ fontSize: 16, fontWeight: 600 }}
-                                showCount maxLength={200}
+                                showCount maxLength={1000}
                                 autoSize={{ minRows: 3, maxRows: 5 }}
+                                placeholder="Nhập Mô tả"
                             />
                         </Form.Item>
                         <Form.Item
-                            label="Content"
-                            name={['content', 'name']}
+                            label={<div style={{ letterSpacing: '1px' }}>Nội dung</div>}
+                            name="contents"
                             getValueFromEvent={normFile}
                         >
                             <CKEditor
@@ -303,14 +290,14 @@ function CreatePostModalComponent() {
                                     editor.editing.view.change((writer) => {
                                         writer.setStyle(
                                             "min-height",
-                                            "200px",
+                                            "300px",
                                             editor.editing.view.document.getRoot()
                                         );
                                     });
                                 }}
                             />
                         </Form.Item>
-                        <Form.Item
+                        {/* <Form.Item
                             name={['publish', 'name']}
                             label="Publish"
                             valuePropName="checked"
@@ -319,9 +306,12 @@ function CreatePostModalComponent() {
                                 checkedChildren={<CheckOutlined />}
                                 unCheckedChildren={<CloseOutlined />}
                             />
-                        </Form.Item>
+                        </Form.Item> */}
                         <Form.Item>
-                            <Button type="primary" htmlType="submit">Submit</Button>
+                            <Row style={{ float: 'right' }}>
+                                <Button style={{ marginBottom: 30 }} onClick={handleBack} >Hủy</Button>
+                                <Button style={{ marginBottom: 30, marginLeft: 10 }} type="primary" htmlType="submit">Hoàn tất</Button>
+                            </Row>
                         </Form.Item>
                     </Form>
                 </div>

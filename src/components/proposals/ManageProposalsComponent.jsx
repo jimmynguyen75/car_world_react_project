@@ -239,7 +239,7 @@ export default function ManageProposalsComponent() {
                 width: '10%',
                 render: (text, record) => (
                     <Space size="middle">
-                        <a href="/#">Chọn</a>
+                        <div>Chon</div>
                     </Space>
                 ),
             },

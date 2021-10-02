@@ -147,7 +147,6 @@ function ManageAccountsComponent() {
                     title: 'Họ và tên',
                     key: 'fullname1',
                     ...this.getColumnSearchProps('FullName'),
-                    defaultSortOrder: 'ascend',
                     sorter: (a, b) => sorter(a.FullName, b.FullName),
                     render: (data) => {
                         return (
@@ -363,7 +362,6 @@ function ManageAccountsComponent() {
                     title: 'Họ và tên',
                     key: 'fullName2',
                     ...this.getColumnSearchProps('FullName'),
-                    defaultSortOrder: 'ascend',
                     sorter: (a, b) => sorter(a.FullName, b.FullName),
                     render: (data) => {
                         return (

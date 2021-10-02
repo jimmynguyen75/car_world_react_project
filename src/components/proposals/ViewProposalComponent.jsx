@@ -1,9 +1,8 @@
-import { MinusOutlined } from '@ant-design/icons';
-import { Carousel, Col, Descriptions, Image, Row, Spin, Tag, Avatar, Space } from 'antd';
+import { Avatar, Carousel, Col, Descriptions, Image, Row, Space, Spin, Tag } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
-import React, { useState, useEffect } from 'react';
-import AccountService from '../../services/AccountService'
+import React, { useEffect, useState } from 'react';
+import AccountService from '../../services/AccountService';
 export default function ViewProposalComponent({ record, recordImage }) {
     console.log("record: ", record);
     console.log("recordImage: ", recordImage);

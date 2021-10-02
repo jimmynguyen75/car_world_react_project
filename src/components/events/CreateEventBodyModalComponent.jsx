@@ -136,6 +136,60 @@ export default function CreateEventBodyModalComponent() {
                 console.log(error)
             })
     }
+    function disabledDateR(current) {
+        return current && current < moment().subtract(1, 'days').endOf('day');
+    }
+    function disabledDateS(current) {
+        return current && current < moment(endRegister, "yyyy-MM-DDTHH:mm:ss");
+    }
+    function range(start, end) {
+        const result = [];
+        for (let i = start; i < end; i++) {
+            result.push(i);
+        }
+
+        return result;
+    }
+    function disabledRangeTimeR(_, type) {
+        if ((_ !== null && moment(_._d).format('DD')) === (moment().format('DD'))) {
+            if (type === 'start') {
+                return {
+                    disabledHours: () => range(0, 60).splice(0, moment().format('H')),
+                    disabledMinutes: () => range(0, 60).splice(0, moment().format('mm')),
+                    disabledSeconds: () => [55, 56],
+                };
+            }
+        }
+        if ((_ !== null && moment(_._d).format('DD')) === (moment().format('DD'))) {
+            if (type === 'end') {
+                return {
+                    disabledHours: () => range(0, 60).splice(0, moment().format('H')),
+                    disabledMinutes: () => range(0, 60).splice(0, moment().format('mm')),
+                    disabledSeconds: () => [55, 56],
+                };
+            }
+        }
+    }
+    function disabledRangeTimeS(_, type) {
+        if ((_ !== null && moment(_._d).format('DD')) === (moment(endRegister).format('DD'))) {
+            if (type === 'start') {
+                return {
+                    disabledHours: () => range(0, 60).splice(0, moment(endRegister).format('H')),
+                    disabledMinutes: () => range(0, 60).splice(0, moment(endRegister).format('mm')),
+                    disabledSeconds: () => [55, 56],
+                };
+            }
+        }
+        if ((_ !== null && moment(_._d).format('DD')) === (moment(endRegister).format('DD'))) {
+            if (type === 'end') {
+                return {
+                    disabledHours: () => range(0, 60).splice(0, moment(endRegister).format('H')),
+                    disabledMinutes: () => range(0, 60).splice(0, moment(endRegister).format('mm')),
+                    disabledSeconds: () => [55, 56],
+                };
+            }
+        }
+    }
     return (
         <div>
             <Modal
@@ -192,6 +246,8 @@ export default function CreateEventBodyModalComponent() {
                             <Form.Item label={<div>Ngày bắt đầu <span style={{ color: 'red' }}>ĐĂNG KÝ</span> và kết thúc</div>} name="dateRegister" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
                                 <RangePicker
                                     style={{ width: '100%' }}
+                                    disabledDate={disabledDateR}
+                                    disabledTime={disabledRangeTimeR}
                                     placeholder={['Ngày bắt đầu đăng ký', 'Ngày kết thúc đăng ký']}
                                     format={"HH:mm - DD/MM/yyyy"}
                                     onChange={onChangeRegister}
@@ -206,6 +262,8 @@ export default function CreateEventBodyModalComponent() {
                             <Form.Item label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>SỰ KIỆN</span> và kết thúc</div>} name="dateEvent" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
                                 <RangePicker
                                     style={{ width: '100%' }}
+                                    disabledDate={disabledDateS}
+                                    disabledTime={disabledRangeTimeS}
                                     placeholder={['Ngày bắt đầu sự kiện', 'Ngày kết thúc sự kiện']}
                                     format={"HH:mm - DD/MM/yyyy"}
                                     onChange={onChangeDate}

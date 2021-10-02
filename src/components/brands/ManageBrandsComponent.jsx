@@ -1,10 +1,12 @@
 import { ExclamationCircleOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Form, Input, message, Modal, Row, Space, Spin, Table, Tabs, Tooltip } from 'antd';
+import { Avatar, Button, Col, Form, Input, message, Modal, Row, Space, Spin, Table, Tabs, Tooltip, Image } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { useStorage } from '../../hook/useBrand';
 import BrandService from '../../services/BrandService';
 import CreateBrandModalComponent from './CreateBrandModalComponent';
+import carImage from '../../images/thinking.gif'
+import accessoryImage from '../../images/write.gif'
 import './style.less';
 export default function ManageBrandComponent() {
     const { TabPane } = Tabs;
@@ -12,6 +14,20 @@ export default function ManageBrandComponent() {
     const [form] = Form.useForm();
     const [file, setFile] = useState(null);
     const { url } = useStorage(file)
+    const [displayImageCar, setDisplayImageCar] = useState("true")
+    const [editCar, setEditCar] = useState("none")
+    const [displayImageAccessory, setDisplayImageAccessory] = useState("true")
+    const [editAccessory, setEditAccessory] = useState("none")
+    const [page, setPage] = React.useState(1);
+    const [pageSize, setPageSize] = React.useState(5)
+    function hideImageCar() {
+        setDisplayImageCar("none")
+        setEditCar(true)
+    }
+    function hideImageAccessory() {
+        setDisplayImageAccessory("none")
+        setEditAccessory(true)
+    }
     useEffect(() => {
         const fetchData = async () => {
             let carFilter = []
@@ -154,7 +170,7 @@ export default function ManageBrandComponent() {
                 {
                     title: 'Tên thương hiệu',
                     key: 'name',
-                    width: '27%',
+                    width: '26%',
                     ...this.getColumnSearchProps('Name'),
                     render: (data) => {
                         return (
@@ -163,7 +179,7 @@ export default function ManageBrandComponent() {
                                     <Avatar style={{ height: 'auto', width: 'auto', margin: 'auto', maxHeight: '50px', maxWidth: '50px' }} size="large" src={data.Image} icon={<UserOutlined />} />
                                 </Col>
                                 <Col span={18}>
-                                    <div><span style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.Name}</span></div>
+                                    <div style={{ paddingLeft: 10 }}><span style={{ color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.Name}</span></div>
                                 </Col>
                             </Row>
                         )
@@ -175,7 +191,7 @@ export default function ManageBrandComponent() {
                     key: 'description',
                     ...this.getColumnSearchProps('Description'),
                     render: (data) => {
-                        return <p class="textOverflow">{data}</p>
+                        return <p className="textOverflow">{data}</p>
                     }
                 },
                 {
@@ -185,7 +201,7 @@ export default function ManageBrandComponent() {
                     render: (id) => {
                         return (
                             <Tooltip title="Xóa hiệu xe" onClick={() => confirm(id.Id)} color="#FF7878" placement="topLeft">
-                                <div style={{ textAlign: 'center', color: '#FF7878' }}><i class="far fa-trash-alt fa-lg"></i></div>
+                                <div style={{ textAlign: 'center', color: '#FF7878' }}><i className="far fa-trash-alt fa-lg"></i></div>
                             </Tooltip>
                         )
                     }
@@ -204,12 +220,23 @@ export default function ManageBrandComponent() {
                                 createdDate: record.CreatedDate,
                                 type: record.Type,
                             })
+                            hideImageCar()
                         }, // click row
                     };
                 }}
                 columns={columns}
                 dataSource={brands.cars}
-                pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15', '20'] }}
+                pagination={{
+                    current: page,
+                    pageSize: pageSize,
+                    onChange: (page, pageSize) => {
+                        setPage(page)
+                        setPageSize(pageSize)
+                    },
+                    pageSizeOptions: ['5', '10', '15', '20'],
+                    showSizeChanger: true,
+                    locale: { items_per_page: "/ trang" },
+                }}
             />;
         }
     }
@@ -289,13 +316,17 @@ export default function ManageBrandComponent() {
                 {
                     title: 'Tên thương hiệu',
                     key: 'name',
-                    width: '25%',
+                    width: '26%',
                     ...this.getColumnSearchProps('Name'),
                     render: (data) => {
                         return (
                             <Row>
-                                <Avatar size="large" src={data.Image} icon={<UserOutlined />} />
-                                <div style={{ paddingTop: 7 }}><span style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.Name}</span></div>
+                                <Col span={6}>
+                                    <Avatar style={{ height: 'auto', width: 'auto', margin: 'auto', maxHeight: '50px', maxWidth: '50px' }} size="large" src={data.Image} icon={<UserOutlined />} />
+                                </Col>
+                                <Col span={18}>
+                                    <div style={{ paddingLeft: 10, paddingTop: 7 }}><span style={{ color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.Name}</span></div>
+                                </Col>
                             </Row>
                         )
                     }
@@ -306,7 +337,7 @@ export default function ManageBrandComponent() {
                     key: 'description',
                     ...this.getColumnSearchProps('Description'),
                     render: (data) => {
-                        return <p class="textOverflow">{data}</p>
+                        return <p className="textOverflow">{data}</p>
                     }
                 },
                 {
@@ -316,7 +347,7 @@ export default function ManageBrandComponent() {
                     render: (id) => {
                         return (
                             <Tooltip title="Xóa hiệu xe" onClick={() => confirm(id.Id)} color="#FF7878" placement="topLeft">
-                                <div style={{ textAlign: 'center', color: '#FF7878' }}><i class="far fa-trash-alt fa-lg"></i></div>
+                                <div style={{ textAlign: 'center', color: '#FF7878' }}><i className="far fa-trash-alt fa-lg"></i></div>
                             </Tooltip>
                         )
                     }
@@ -335,6 +366,7 @@ export default function ManageBrandComponent() {
                                 createdDate: record.CreatedDate,
                                 type: record.Type,
                             })
+                            hideImageAccessory()
                         }, // click row
                     };
                 }}
@@ -344,7 +376,6 @@ export default function ManageBrandComponent() {
             />;
         }
     }
-
     return (
         <Spin size="large" spinning={brands.cars.length === 0 ? true : false}>
             <div>
@@ -359,11 +390,11 @@ export default function ManageBrandComponent() {
                         }
                         key="tab1"
                     >
-                        <Row gutter={25}>
+                        <Row gutter={20}>
                             <Col span={15}>
                                 <Cars />
                             </Col>
-                            <Col span={9}>
+                            <Col span={9} style={{ display: editCar }}>
                                 <Form
                                     form={form}
                                     colon={false}
@@ -407,6 +438,11 @@ export default function ManageBrandComponent() {
                                     </Form.Item>
                                 </Form>
                             </Col>
+                            <Col span={9} style={{ display: displayImageCar }}>
+                                <div>
+                                    <Image style={{ height: '520px', margin: 'auto', textAlign: 'center' }} src={carImage} preview={false}></Image>
+                                </div>
+                            </Col>
                         </Row>
                     </TabPane>
                     <TabPane
@@ -418,11 +454,11 @@ export default function ManageBrandComponent() {
                         }
                         key="tab2"
                     >
-                        <Row gutter={25}>
+                        <Row gutter={20}>
                             <Col span={15}>
                                 <Accessories />
                             </Col>
-                            <Col span={9}>
+                            <Col span={9} style={{ display: editAccessory }}>
                                 <Form
                                     form={form}
                                     colon={false}
@@ -456,9 +492,14 @@ export default function ManageBrandComponent() {
                                         </Form.Item>
                                     </Tooltip>
                                     <Form.Item style={{ textAlign: 'center' }}>
-                                        <Button type="primary" htmlType="submit">Hoàn tất</Button>
+                                        <Button type="primary" htmlType="submit">Cập nhật</Button>
                                     </Form.Item>
                                 </Form>
+                            </Col>
+                            <Col span={9} style={{ display: displayImageAccessory }}>
+                                <div>
+                                    <Image style={{ height: '520px', margin: 'auto', textAlign: 'center' }} src={accessoryImage} preview={false}></Image>
+                                </div>
                             </Col>
                         </Row>
                     </TabPane>

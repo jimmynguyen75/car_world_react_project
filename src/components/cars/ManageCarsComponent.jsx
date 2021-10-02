@@ -208,8 +208,8 @@ function ManageCarsComponent() {
                     render: (record) => {
                         return (
                             <Row>
-                                <Col span={3}><img alt="" style={{ height: 50, maxWidth: '100%' }} src={record.Image === "string" ? imgPlacehoder : record.Image} /></Col>
-                                <Col span={21}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15, width: '100%' }}>{record.Name}</div></Col>
+                                <Col span={3} style={{height: 50, textAlign: 'center', display: 'flex', alignItems: 'center'}}><img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }} src={record.Image === "string" ? imgPlacehoder : record.Image} /></Col>
+                                <Col span={21} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15, width: '100%' }} class="textOverflow">{record.Name}</div></Col>
                             </Row>
                         );
                     },
