@@ -180,6 +180,60 @@ export default function EditEventComponent({ record, recordImage }) {
                 message.error('Cập nhật không thành công')
             })
     }
+    function disabledDateR(current) {
+        return current && current < moment().subtract(1, 'days').endOf('day');
+    }
+    function disabledDateS(current) {
+        return current && current < moment(record.EndRegister, "yyyy-MM-DDTHH:mm:ss");
+    }
+    function range(start, end) {
+        const result = [];
+        for (let i = start; i < end; i++) {
+            result.push(i);
+        }
+
+        return result;
+    }
+    function disabledRangeTimeR(_, type) {
+        if ((_ !== null && moment(_._d).format('DD')) === (moment().format('DD'))) {
+            if (type === 'start') {
+                return {
+                    disabledHours: () => range(0, 60).splice(0, moment().format('H')),
+                    disabledMinutes: () => range(0, 60).splice(0, moment().format('mm')),
+                    disabledSeconds: () => [55, 56],
+                };
+            }
+        }
+        if ((_ !== null && moment(_._d).format('DD')) === (moment().format('DD'))) {
+            if (type === 'end') {
+                return {
+                    disabledHours: () => range(0, 60).splice(0, moment().format('H')),
+                    disabledMinutes: () => range(0, 60).splice(0, moment().format('mm')),
+                    disabledSeconds: () => [55, 56],
+                };
+            }
+        }
+    }
+    function disabledRangeTimeS(_, type) {
+        if ((_ !== null && moment(_._d).format('DD')) === (moment(record.EndRegister).format('DD'))) {
+            if (type === 'start') {
+                return {
+                    disabledHours: () => range(0, 60).splice(0, moment(record.EndRegister).format('H')),
+                    disabledMinutes: () => range(0, 60).splice(0, moment(record.EndRegister).format('mm')),
+                    disabledSeconds: () => [55, 56],
+                };
+            }
+        }
+        if ((_ !== null && moment(_._d).format('DD')) === (moment(record.EndRegister).format('DD'))) {
+            if (type === 'end') {
+                return {
+                    disabledHours: () => range(0, 60).splice(0, moment(record.EndRegister).format('H')),
+                    disabledMinutes: () => range(0, 60).splice(0, moment(record.EndRegister).format('mm')),
+                    disabledSeconds: () => [55, 56],
+                };
+            }
+        }
+    }
     return (
         <div>
             <Modal
@@ -246,6 +300,8 @@ export default function EditEventComponent({ record, recordImage }) {
                                     placeholder={['Ngày bắt đầu đăng ký', 'Ngày kết thúc đăng ký']}
                                     format={"HH:mm - DD/MM/yyyy"}
                                     onChange={onChangeRegister}
+                                    disabledDate={disabledDateR}
+                                    disabledTime={disabledRangeTimeR}
                                     showTime
                                 />
                             </Form.Item>
@@ -260,6 +316,8 @@ export default function EditEventComponent({ record, recordImage }) {
                                     placeholder={['Ngày bắt đầu sự kiện', 'Ngày kết thúc sự kiện']}
                                     format={"HH:mm - DD/MM/yyyy"}
                                     onChange={onChangeDate}
+                                    disabledDate={disabledDateS}
+                                    disabledTime={disabledRangeTimeS}
                                     showTime
                                 />
                             </Form.Item>

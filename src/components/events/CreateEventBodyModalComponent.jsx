@@ -253,7 +253,6 @@ export default function CreateEventBodyModalComponent() {
                                     format={"HH:mm - DD/MM/yyyy"}
                                     onChange={onChangeRegister}
                                     showTime
-                                    placeholderText='Tiếp'
                                 />
                             </Form.Item>
                         </ConfigProvider>
