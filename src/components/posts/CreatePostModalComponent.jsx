@@ -1,7 +1,7 @@
 import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { Button, Form, Input, Modal, Row, Select, Upload, message } from 'antd';
+import { Button, Form, Input, Modal, Row, Select, Upload, message, Col } from 'antd';
 import React, { useState } from 'react';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useHistory } from "react-router-dom";
@@ -209,7 +209,7 @@ function CreatePostModalComponent() {
     return (
         <>
             <div className="body123">
-                <div><Button className="buttonBack" onClick={handleBack}><ArrowLeftOutlined /> Back</Button></div>
+                <div><Button className="buttonBack" onClick={handleBack}><ArrowLeftOutlined /> Trở về</Button></div>
                 <div className="title">Tạo bài đăng</div>
                 {/* Others */}
                 <Modal
@@ -251,31 +251,38 @@ function CreatePostModalComponent() {
                                 {fileList.length >= 1 ? null : uploadButton}
                             </Upload>
                         </Form.Item>
-                        <Form.Item
-                            label={<div style={{ letterSpacing: '1px' }}>Chuyên mục</div>}
-                            name="type"
-                        >
-                            <Select
-                                style={{ width: 160 }}
-                                placeholder="Chọn chuyên mục"
-                            >
-                                <Option key="1" value="1">Xe</Option>
-                                <Option key="2" value="2">Phụ Kiện</Option>
-                                <Option key="3" value="3">Sự kiện</Option>
-                                <Option key="4" value="4">Cuộc thi</Option>
-                            </Select>
-                        </Form.Item>
-                        <Form.Item
-                            name="title"
-                            label={<div style={{ letterSpacing: '1px' }}>Tiêu đề</div>}
-                        >
-                            <Input.TextArea
-                                size="large"
-                                maxLength={200} showCount
-                                autoSize={{ minRows: 1, maxRows: 10 }}
-                                placeholder="Nhập tiêu đề"
-                            />
-                        </Form.Item>
+                        <Row gutter={15}>
+                            <Col span={18}>
+                                <Form.Item
+                                    name="title"
+                                    label={<div style={{ letterSpacing: '1px' }}>Tiêu đề</div>}
+                                >
+                                    <Input.TextArea
+                                        size="large"
+                                        maxLength={200} showCount
+                                        autoSize={{ minRows: 1, maxRows: 10 }}
+                                        placeholder="Nhập tiêu đề"
+                                        spellcheck="false"
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={6}>
+                                <Form.Item
+                                    label={<div style={{ letterSpacing: '1px' }}>Chuyên mục</div>}
+                                    name="type"
+                                >
+                                    <Select
+                                        placeholder="Chọn chuyên mục"
+                                        size="large"
+                                    >
+                                        <Option key="1" value="1">Xe</Option>
+                                        <Option key="2" value="2">Phụ Kiện</Option>
+                                        <Option key="3" value="3">Sự kiện</Option>
+                                        <Option key="4" value="4">Cuộc thi</Option>
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+                        </Row>
                         <Form.Item
                             name="overview"
                             label={<div style={{ letterSpacing: '1px' }}>Mô tả</div>}
@@ -290,6 +297,7 @@ function CreatePostModalComponent() {
                                 showCount maxLength={1000}
                                 autoSize={{ minRows: 3, maxRows: 5 }}
                                 placeholder="Nhập Mô tả"
+                                spellcheck="false"
                             />
                         </Form.Item>
                         <Form.Item
@@ -311,7 +319,7 @@ function CreatePostModalComponent() {
                                     editor.editing.view.change((writer) => {
                                         writer.setStyle(
                                             "min-height",
-                                            "300px",
+                                            "400px",
                                             editor.editing.view.document.getRoot()
                                         );
                                     });

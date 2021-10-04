@@ -6,6 +6,7 @@ import { Table, Input, Button, Space, Row, Col } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import PostService from '../../services/PostService'
+import removeVietnamese from '../../utils/removeVietnamese'
 function ManagePostsComponent() {
     const imageHolder = "https://via.placeholder.com/150";
     const { TabPane } = Tabs;
@@ -13,8 +14,16 @@ function ManagePostsComponent() {
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = React.useState(5)
     const [data, setData] = useState({ all: [], car: [], accessory: [], event: [], contest: [] })
+    const [key, setKey] = useState("");
     const createModal = () => {
         history.push("/tao-bai-dang");
+    }
+    function callback(key) {
+        setKey(key)
+    }
+    const viewPost = (record) => {
+        let repo = removeVietnamese.removeVietnameseTones(record.Title)
+        history.push(`/${repo.replace(/\s+/g, '-').toLowerCase()}`, { record: record });
     }
     useEffect(() => {
         const fetchData = async () => {
@@ -150,7 +159,7 @@ function ManagePostsComponent() {
             />;
         }
     }
-    class Car extends React.Component {
+    class GetAll extends React.Component {
         state = {
             searchText: '',
             searchedColumn: '',
@@ -240,18 +249,22 @@ function ManagePostsComponent() {
                     render: (data) => {
                         return (
                             <Row>
-                                <Col span={3} style={{ height: 50, textAlign: 'center', display: 'flex', alignItems: 'center' }}> <img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }} src={data.FearturedImage} /></Col>
-                                <Col span={21}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{data.Title}</div></Col>
+                                <Col span={3} style={{ height: 50, textAlign: 'center', display: 'flex', alignItems: 'center' }}> <img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }} src={data.FeaturedImage} /></Col>
+                                <Col span={21} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }} className="textOverflow">{data.Title}</div></Col>
                             </Row>
                         )
                     }
                 },
                 {
                     title: 'Mô tả',
-                    dataIndex: 'Overview',
                     key: 'age',
                     width: '20%',
                     ...this.getColumnSearchProps('age'),
+                    render: (data) => {
+                        return (
+                            <div className="textOverflow">{data.Overview}</div>
+                        )
+                    }
                 },
                 {
                     title: 'Người tạo',
@@ -281,24 +294,27 @@ function ManagePostsComponent() {
                                 //     }
                                 //     setProposalImage(ex)
                                 // }}
-                                >
-                                <i class="fas fa-info"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Chi tiết</span>
+                                onClick={() => {
+                                    viewPost(record)
+                                }}
+                            >
+                                <i className="fas fa-info"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Chi tiết</span>
                             </div>
                             <div className="approveEventBtn" style={{ color: '#3ECA90' }}
-                                // onClick={() => {
-                                //     showModalApprove()
-                                //     setProposalDetail(record)
-                                // }}
-                                >
-                                <i class="far fa-edit"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Sửa</span>
+                            // onClick={() => {
+                            //     showModalApprove()
+                            //     setProposalDetail(record)
+                            // }}
+                            >
+                                <i className="far fa-edit"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Sửa</span>
                             </div>
                             <div className="disapprovedEventBtn" style={{ color: '#FD7E89' }}
-                                // onClick={() => {
-                                //     showModalDisapproved()
-                                //     setProposalDetail(record)
-                                // }}
+                            // onClick={() => {
+                            //     showModalDisapproved()
+                            //     setProposalDetail(record)
+                            // }}
                             >
-                                <i class="far fa-trash-alt"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Xóa</span>
+                                <i className="far fa-trash-alt"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Xóa</span>
                             </div>
                         </Space >
                     ),
@@ -307,7 +323,7 @@ function ManagePostsComponent() {
             return <Table
                 rowKey="keyCar"
                 columns={columns}
-                dataSource={data.all}
+                dataSource={key === 'car' ? data.car : key === 'accessory' ? data.accessory : key === 'event' ? data.event : key === 'contest' ? data.contest : null}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -322,33 +338,24 @@ function ManagePostsComponent() {
             />;
         }
     }
-    const Accessory = () => {
-        return (<div></div>)
-    }
-    const Event = () => {
-        return (<div></div>)
-    }
-    const Contest = () => {
-        return (<div></div>)
-    }
     return (
         <div>
             <Button type="primary" shape="round" onClick={createModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2 }}>Tạo bài đăng</span></Button>
-            <Tabs type="card">
-                <TabPane tab="Tất cả" key="all1">
+            <Tabs type="card" onChange={callback}>
+                <TabPane tab="Tất cả" key="all">
                     <All />
                 </TabPane>
-                <TabPane tab="Xe" key="car2">
-                    <Car />
+                <TabPane tab="Xe" key="car">
+                    <GetAll />
                 </TabPane>
-                <TabPane tab="Phụ kiện" key="accessory3">
-                    <Accessory />
+                <TabPane tab="Phụ kiện" key="accessory">
+                    <GetAll />
                 </TabPane>
-                <TabPane tab="Sự kiện" key="event4">
-                    <Event />
+                <TabPane tab="Sự kiện" key="event">
+                    <GetAll />
                 </TabPane>
-                <TabPane tab="Cuộc thi" key="contest5">
-                    <Contest />
+                <TabPane tab="Cuộc thi" key="contest">
+                    <GetAll />
                 </TabPane>
             </Tabs>
         </div>

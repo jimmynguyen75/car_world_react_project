@@ -37,6 +37,7 @@ function App() {
             <Switch>
               {/* Manager */}
               <Route path="/" exact component={ManagerDashboardComponent}></Route>
+              <Route path="/:title" exact component={ManagerDashboardComponent}></Route>
               <Route path="/de-xuat" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/phan-hoi" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>

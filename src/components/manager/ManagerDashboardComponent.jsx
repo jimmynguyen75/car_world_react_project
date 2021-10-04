@@ -14,6 +14,8 @@ import ManagePostsComponent from '../posts/ManagePostsComponent';
 import ProfileComponent from '../profile/ProfileComponent';
 import ManageProposalsComponent from '../proposals/ManageProposalsComponent';
 import ManagerBodyDashboardComponent from './ManagerBodyDashboardComponent';
+import ViewDetailPostComponent from '../posts/ViewDetailPostComponent';
+import removeVietnamese from '../../utils/removeVietnamese'
 
 function ManagerDashboardComponent() {
     const { Title } = Typography;
@@ -23,29 +25,55 @@ function ManagerDashboardComponent() {
     const [user, setUser] = useState("")
     const currentUser = AccountService.getCurrentUser();
     const [title, setTitle] = useState('');
+
+    // const recordPost = location.state != null && removeVietnamese.removeVietnameseTones(location.state.record.Title).replace(/\s+/g, '-').toLowerCase()
+    //dư một space nên ko bằng
+    // console.log("ok:", "/" + recordPost)
+    // console.log("location:" + location.pathname)
+    // useEffect(() => {
+    //     if (location.pathname === "/") {
+    //         setTitle('Trang chủ')
+    //     } else if (location.pathname === "/bai-dang") {
+    //         setTitle('Quản lý bài đăng')
+    //     } else if (location.pathname === "/de-xuat") {
+    //         setTitle('Quản lý đề xuất')
+    //     } else if (location.pathname === "/su-kien") {
+    //         setTitle('Quản lý sự kiện')
+    //     } else if (location.pathname === "/cuoc-thi") {
+    //         setTitle('Quản lý cuộc thi')
+    //     } else if (location.pathname === "/phan-hoi") {
+    //         setTitle('Quản lý phản hồi')
+    //     } else if (location.pathname === "/thong-tin-ca-nhan") {
+    //         setTitle('Thông tin cá nhân')
+    //     } else if (location.pathname === "/tao-bai-dang") {
+    //         setTitle('Tạo bài đăng')
+    //     } 
+    //     document.title = title;
+    // }, [location.pathname, title])
     useEffect(() => {
-        if (location.pathname === "/") {
-            setTitle('Trang chủ')
-        }
-        if (location.pathname === "/bai-dang") {
-            setTitle('Quản lý bài đăng')
-        }
-        if (location.pathname === "/de-xuat") {
-            setTitle('Quản lý đề xuất')
-        }
-        if (location.pathname === "/su-kien") {
-            setTitle('Quản lý sự kiện')
-        }
-        if (location.pathname === "/cuoc-thi") {
-            setTitle('Quản lý cuộc thi')
-        }
-        if (location.pathname === "/phan-hoi") {
-            setTitle('Quản lý phản hồi')
-        }
-        if (location.pathname === "/thong-tin-ca-nhan") {
-            setTitle('Thông tin cá nhân')
-        }
         document.title = title;
+        switch (location.pathname) {
+            case '/':
+                return (setTitle('Trang chủ'))
+            case '/bai-dang':
+                return (setTitle('Quản lý bài đăng'))
+            case '/tao-bai-dang':
+                return (setTitle('Tạo bài đăng'))
+            case '/phan-hoi':
+                return (setTitle('Quản lý phản hồi'))
+            case '/su-kien':
+                return (setTitle('Quản lý sự kiện'))
+            case '/cuoc-thi':
+                return (setTitle('Quản lý cuộc thi'))
+            case '/de-xuat':
+                return (setTitle('Quản lý đề xuất'))
+            case '/thong-tin-ca-nhan':
+                return (setTitle('Thông tin cá nhân'))
+            case (location.pathname):
+                return (setTitle(location.state != null && location.state.record.Title))
+            default:
+                return;
+        }
     }, [location.pathname, title])
 
     function logoutButton() {
@@ -155,6 +183,11 @@ function ManagerDashboardComponent() {
                             case '/thong-tin-ca-nhan':
                                 return (
                                     <ProfileComponent />
+                                )
+                            //để location ở cuối
+                            case (location.pathname):
+                                return (
+                                    <ViewDetailPostComponent record={location.state != null && location.state.record} />
                                 )
                             default:
                                 return (
