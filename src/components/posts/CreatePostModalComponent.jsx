@@ -222,13 +222,13 @@ function CreatePostModalComponent() {
                     <img alt="example" style={{ width: '100%' }} src={previewImage} />
                 </Modal>
                 {/* End Others */}
-                <div>
+                <div >
                     <Form
                         layout="vertical"
                         form={form}
                         name="control-hooks"
                         onFinish={onFinish}
-                        style={{ margin: '0px 50px ' }}
+                        style={{ width: 900, margin: '0 auto' }}
                     >
                         <Form.Item hidden={true} name="createdBy"><Input /></Form.Item>
                         <Form.Item hidden={true} name="modifiedBy"><Input /></Form.Item>
