@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useHistory } from "react-router-dom";
 import storage from "../../services/ImageFirebase";
-import './styles.less';
+import './stylePost.less';
 import AccountService from '../../services/AccountService'
 import PostService from '../../services/PostService'
 function CreatePostModalComponent() {
@@ -236,6 +236,7 @@ function CreatePostModalComponent() {
                             label={<div style={{ letterSpacing: '1px' }}>Ảnh đại diện</div>}
                             name="featuredImage"
                             getValueFromEvent={fearturedImage}
+                            rules={[{ required: true, message: "Ảnh đại diện không được bỏ trống" }]}
                         >
                             <Upload
                                 listType="picture-card"
@@ -256,6 +257,7 @@ function CreatePostModalComponent() {
                                 <Form.Item
                                     name="title"
                                     label={<div style={{ letterSpacing: '1px' }}>Tiêu đề</div>}
+                                    rules={[{ required: true, message: "Tiêu đề không được bỏ trống" }]}
                                 >
                                     <Input.TextArea
                                         size="large"
@@ -270,6 +272,7 @@ function CreatePostModalComponent() {
                                 <Form.Item
                                     label={<div style={{ letterSpacing: '1px' }}>Chuyên mục</div>}
                                     name="type"
+                                    rules={[{ required: true, message: "Chuyên mục không được bỏ trống" }]}
                                 >
                                     <Select
                                         placeholder="Chọn chuyên mục"
@@ -286,11 +289,7 @@ function CreatePostModalComponent() {
                         <Form.Item
                             name="overview"
                             label={<div style={{ letterSpacing: '1px' }}>Mô tả</div>}
-                            rules={[
-                                {
-                                    // required: true,
-                                },
-                            ]}
+                            rules={[{ required: true, message: "Mô tả không được bỏ trống" }]}
                         >
                             <Input.TextArea
                                 size="large"
@@ -304,6 +303,7 @@ function CreatePostModalComponent() {
                             label={<div style={{ letterSpacing: '1px' }}>Nội dung</div>}
                             name="contents"
                             getValueFromEvent={normFile}
+                            rules={[{ required: true, message: "Nội dung không được bỏ trống" }]}
                         >
                             <CKEditor
                                 editor={DecoupledEditor}

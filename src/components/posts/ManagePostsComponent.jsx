@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import './styles.less';
+import './stylePost.less';
 import { Tabs } from 'antd';
-import { Table, Input, Button, Space, Row, Col } from 'antd';
+import { Table, Input, Button, Space, Row, Col, Avatar } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import PostService from '../../services/PostService'
@@ -274,7 +274,8 @@ function ManagePostsComponent() {
                     render: (data) => {
                         return (
                             <Row>
-                                <Col span={24}><div>{data.CreatedBy}</div></Col>
+                                <Avatar alt="" src={data.CreatedByNavigation.Image}></Avatar>
+                                <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data.CreatedByNavigation.FullName}</div>
                             </Row>
                         )
                     }

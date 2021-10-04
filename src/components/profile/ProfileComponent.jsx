@@ -71,6 +71,7 @@ function ProfileComponent() {
                 <Form
                     onFinish={onFinish}
                     form={form}
+                    layout="vertical"
                 >
                     <Form.Item name="roleId" hidden={true}>
                         <Input />
@@ -105,22 +106,20 @@ function ProfileComponent() {
                                 <div className="d-flex justify-content-between align-items-center mb-3">
                                     <h4 className="text-right">Thông Tin Cá Nhân</h4>
                                 </div>
-                                <div className="row mt-2" style={{ marginBottom: -5 }}>
-                                    <div className="col-md-8">
-                                        <label className="labels">Họ và Tên</label>
-                                        <Form.Item name="fullname">
+                                <div className="row mt-2">
+                                    <div className="col-md-8" >
+                                        <Form.Item name="fullname" label="Họ và tên" rules={[{ required: true, message: "Họ và tên không được bỏ trống" }]}>
                                             <Input placeholder="Nhập họ và tên"></Input>
                                         </Form.Item>
                                     </div>
                                     <div className="col-md-4">
-                                        <label className="labels">Vai trò</label>
-                                        <Form.Item name="role">
+                                        <Form.Item name="role" label="Vai trò">
                                             <Input placeholder="vai trò" disabled style={{ backgroundColor: '#FEFBF3', color: '#316B83' }} />
                                         </Form.Item>
                                     </div>
                                 </div>
                                 <div className="row" >
-                                    <div className="col-md-12">
+                                    <div className="col-md-6">
                                         <label className="labels">Email</label>
                                         <Form.Item
                                             name="email"
@@ -129,7 +128,7 @@ function ProfileComponent() {
                                             <Input placeholder="Nhập email"></Input>
                                         </Form.Item>
                                     </div>
-                                    <div className="col-md-12">
+                                    <div className="col-md-6">
                                         <label className="labels">Số điện thoại</label>
                                         <Form.Item name="phone" rules={[{ pattern: new RegExp(/^[0-9]+$/), message: "Nhập đúng định dạng số" }]}>
                                             <Input placeholder="Nhập số điện thoại"></Input>
@@ -144,14 +143,12 @@ function ProfileComponent() {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <label className="labels">Tên đăng nhập</label>
-                                        <Form.Item name="username" >
+                                        <Form.Item name="username" label="Tên đăng nhập">
                                             <Input disabled style={{ backgroundColor: '#FEFBF3', color: '#316B83' }} />
                                         </Form.Item>
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="labels">Mật khẩu</label>
-                                        <Form.Item name="password">
+                                        <Form.Item name="password" label="Mật khẩu" rules={[{ required: true, message: "Mật khẩu không được bỏ trống" }]}>
                                             <Input.Password placeholder="Nhập password"></Input.Password>
                                         </Form.Item>
                                     </div>

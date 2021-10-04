@@ -124,3 +124,29 @@ Preserve the relative scale, though. */
     margin-left: calc(2 * var(--ck-spacing-large));
     margin-right: calc(2 * var(--ck-spacing-large));
 }
+
+#post .ck.ck-editor__editable_inline>:first-child {
+    display: none
+}
+
+#post .ck.ck-editor__editable_inline>:last-child {
+    display: none
+}
+
+#post .ck.ck-toolbar.ck-toolbar_grouping>.ck-toolbar__items {
+    display: none
+}
+
+#post #toolbar-container {
+    display: none
+}
+
+#post .ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-focused {
+    outline: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+#post .ck-content {
+    border: none !important;
+}
