@@ -16,6 +16,7 @@ import ManageProposalsComponent from '../proposals/ManageProposalsComponent';
 import ManagerBodyDashboardComponent from './ManagerBodyDashboardComponent';
 import ViewDetailPostComponent from '../posts/ViewDetailPostComponent';
 import removeVietnamese from '../../utils/removeVietnamese'
+import EditPostComponent from '../posts/EditPostComponent';
 
 function ManagerDashboardComponent() {
     const { Title } = Typography;
@@ -69,6 +70,8 @@ function ManagerDashboardComponent() {
                 return (setTitle('Quản lý đề xuất'))
             case '/thong-tin-ca-nhan':
                 return (setTitle('Thông tin cá nhân'))
+            case '/sua-bai-dang':
+                return (setTitle('Sửa bài đăng'))
             case (location.pathname):
                 return (setTitle(location.state != null && location.state.record.Title))
             default:
@@ -183,6 +186,10 @@ function ManagerDashboardComponent() {
                             case '/thong-tin-ca-nhan':
                                 return (
                                     <ProfileComponent />
+                                )
+                            case '/sua-bai-dang':
+                                return (
+                                    <EditPostComponent record={location.state != null && location.state.record}/>
                                 )
                             //để location ở cuối
                             case (location.pathname):

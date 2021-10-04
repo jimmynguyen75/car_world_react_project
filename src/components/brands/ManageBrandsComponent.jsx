@@ -151,7 +151,6 @@ export default function ManageBrandComponent() {
                     text
                 ),
         });
-
         handleSearch = (selectedKeys, confirm, dataIndex) => {
             confirm();
             this.setState({
@@ -159,12 +158,10 @@ export default function ManageBrandComponent() {
                 searchedColumn: dataIndex,
             });
         };
-
         handleReset = clearFilters => {
             clearFilters();
             this.setState({ searchText: '' });
         };
-
         render() {
             const columns = [
                 {

@@ -12,8 +12,8 @@ class PostService {
     getPostById(id) {
         return axios.get(POST_API_URL + "GetPostById?id=" + id, { headers: authHeader })
     }
-    changePostStatus(id) {
-        return axios.put(POST_API_URL + "ChangePostStatus?id=" + id, { headers: authHeader })
+    changePostStatus(id, status) {
+        return axios.put(POST_API_URL + "ChangePostStatus?id=" + id + "&postStatus=" + status, { headers: authHeader })
     }
     getPostByType(type) {
         return axios.get(POST_API_URL + "GetAllPostsByType?postType=" + type)

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import './stylePost.less';
 import { Tabs } from 'antd';
-import { Table, Input, Button, Space, Row, Col, Avatar } from 'antd';
+import { Table, Input, Button, Space, Row, Col, Avatar, Modal, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import PostService from '../../services/PostService'
@@ -15,6 +15,9 @@ function ManagePostsComponent() {
     const [pageSize, setPageSize] = React.useState(5)
     const [data, setData] = useState({ all: [], car: [], accessory: [], event: [], contest: [] })
     const [key, setKey] = useState("");
+    const [visible, setVisible] = useState(false);
+    const [confirmLoading, setConfirmLoading] = useState(false);
+    const [post, setPost] = useState("");
     const createModal = () => {
         history.push("/tao-bai-dang");
     }
@@ -25,6 +28,30 @@ function ManagePostsComponent() {
         let repo = removeVietnamese.removeVietnameseTones(record.Title)
         history.push(`/${repo.replace(/\s+/g, '-').toLowerCase()}`, { record: record });
     }
+    const editPost = (record) => {
+        history.push('/sua-bai-dang', { record: record });
+    }
+    const handleCancel = () => {
+        console.log('Clicked cancel button');
+        history.push('/bai-dang')
+        setVisible(false);
+    };
+    const handleOk = () => {
+        setConfirmLoading(true);
+        setTimeout(() => {
+            setVisible(false)
+            setConfirmLoading(false)
+        }, 1500)
+        PostService.changePostStatus(post.Id, 2)
+            .then(() => {
+                setTimeout(() => { message.success("Xóa bài thành công") }, 500)
+                setTimeout(() => { window.location.href = "/bai-dang" }, 1500)
+            })
+            .catch((error) => {
+                setTimeout(() => { message.error("Xóa bài không thành công") }, 500)
+                console.log(error)
+            })
+    };
     useEffect(() => {
         const fetchData = async () => {
             const allEvent = await PostService.getPostByType(1);
@@ -244,7 +271,7 @@ function ManagePostsComponent() {
                 {
                     title: 'Tiêu đề',
                     key: 'titleCar',
-                    width: '30%',
+                    width: '40%',
                     ...this.getColumnSearchProps('Title'),
                     render: (data) => {
                         return (
@@ -286,15 +313,6 @@ function ManagePostsComponent() {
                     render: (text, record) => (
                         <Space size="middle">
                             <div className="eventDetailBtn" style={{ color: '#CCCC1B' }}
-                                // onClick={() => {
-                                //     showModalView()
-                                //     setProposalDetail(record)
-                                //     let ex = record.Image.split("|")
-                                //     if (ex.length > 1) {
-                                //         ex.pop()
-                                //     }
-                                //     setProposalImage(ex)
-                                // }}
                                 onClick={() => {
                                     viewPost(record)
                                 }}
@@ -302,18 +320,17 @@ function ManagePostsComponent() {
                                 <i className="fas fa-info"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Chi tiết</span>
                             </div>
                             <div className="approveEventBtn" style={{ color: '#3ECA90' }}
-                            // onClick={() => {
-                            //     showModalApprove()
-                            //     setProposalDetail(record)
-                            // }}
+                                onClick={() => {
+                                    editPost(record)
+                                }}
                             >
                                 <i className="far fa-edit"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Sửa</span>
                             </div>
                             <div className="disapprovedEventBtn" style={{ color: '#FD7E89' }}
-                            // onClick={() => {
-                            //     showModalDisapproved()
-                            //     setProposalDetail(record)
-                            // }}
+                                onClick={() => {
+                                    setVisible(true);
+                                    setPost(record)
+                                }}
                             >
                                 <i className="far fa-trash-alt"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Xóa</span>
                             </div>
@@ -341,6 +358,24 @@ function ManagePostsComponent() {
     }
     return (
         <div>
+            <Modal
+                destroyOnClose={true}
+                title="Xác nhận"
+                visible={visible}
+                onCancel={handleCancel}
+                footer={[
+                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Button onClick={handleCancel}>
+                            Hủy
+                        </Button>
+                        <Button type="primary" loading={confirmLoading} onClick={handleOk}>
+                            Xác nhận
+                        </Button>
+                    </Row>
+                ]}
+            >
+                <div style={{ fontSize: 16 }}> Bạn có muốn xóa bài này không?</div>
+            </Modal>
             <Button type="primary" shape="round" onClick={createModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2 }}>Tạo bài đăng</span></Button>
             <Tabs type="card" onChange={callback}>
                 <TabPane tab="Tất cả" key="all">
