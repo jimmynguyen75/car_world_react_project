@@ -1,31 +1,26 @@
-import { ArrowLeftOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
-import { Button, Form, Input, Modal, Row, Select, Upload, Image, message, Col, Avatar } from 'antd';
-import React, { useState, useEffect } from 'react';
+import { Button, Col, Form, Image, Input, message, Row, Select } from 'antd';
 import parse from 'html-react-parser';
+import React, { useEffect, useState } from 'react';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useHistory } from "react-router-dom";
-import storage from "../../services/ImageFirebase";
-import './stylePost.less';
-import AccountService from '../../services/AccountService'
 import { useStorage } from '../../hook/usePost';
-import PostService from '../../services/PostService'
+import AccountService from '../../services/AccountService';
+import storage from "../../services/ImageFirebase";
+import PostService from '../../services/PostService';
+import './stylePost.less';
 export default function EditPostComponent({ record }) {
     const { Option } = Select;
     const [file, setFile] = useState(null);
     const { url } = useStorage(file)
     const [form] = Form.useForm()
     const history = useHistory();
-    const [visible, setVisible] = useState(false);
-    const [fileList, setFileList] = useState([]);
-    const [imageURL, setImageURL] = useState([]);
-    const [previewImage, setPreviewImage] = useState('');
-    const [previewTitle, setPreviewTitle] = useState('');
-    const handleCancel = () => setVisible(false);
-    const normFile = () => {
-        return data.getData();
+    const normFile = (data) => {
+        form.setFieldsValue({
+            contents: data.getData()
+        })
     };
-    const [data, setData] = useState('');
     class MyUploadAdapter {
         constructor(loader) {
             this.loader = loader;
@@ -91,6 +86,7 @@ export default function EditPostComponent({ record }) {
         createdBy: record.CreatedBy,
         modifiedBy: AccountService.getCurrentUser().Id,
         createdDate: record.CreatedDate,
+        status: record.Status
     })
     DecoupledEditor
         .create(document.querySelector('#editor'), {
@@ -99,6 +95,11 @@ export default function EditPostComponent({ record }) {
         .then(editor => {
             const toolbarContainer = document.querySelector('#toolbar-container');
             toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+            editor.model.document.on('change', () => {
+                window.editor = editor;
+                normFile(editor)
+                console.log("change")
+            });
         })
         .catch(error => {
             console.error(error);
@@ -118,22 +119,6 @@ export default function EditPostComponent({ record }) {
                 message.error("Lỗi server, vui lòng thử lại sau!")
                 console.log(error)
             })
-
-        // console.log(data.getData())
-        // PostService.createNewPost(values)
-        //     .then((finish) => {
-        //         console.log(finish)
-        //         setTimeout(() => {
-        //             message.success("Tạo bài thành công");
-        //         }, 500)
-        //         setTimeout(() => {
-        //             window.location.href = '/bai-dang'
-        //         }, 1500)
-        //     })
-        //     .catch((err) => {
-        //         message.error("Lỗi server hoặc tên không được trùng nhau!")
-        //         console.log(err)
-        //     });
     };
     function handleBack() {
         history.goBack();
@@ -151,17 +136,6 @@ export default function EditPostComponent({ record }) {
             <div className="body123">
                 <div><Button className="buttonBack" onClick={handleBack}><ArrowLeftOutlined /> Trở về</Button></div>
                 <div className="title">Tạo bài đăng</div>
-                {/* Others */}
-                <Modal
-                    animation={false}
-                    visible={visible}
-                    title={previewTitle}
-                    footer={null}
-                    onCancel={handleCancel}
-                >
-                    <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                </Modal>
-                {/* End Others */}
                 <div id="editPost">
                     <Form
                         layout="vertical"
@@ -174,6 +148,7 @@ export default function EditPostComponent({ record }) {
                         <Form.Item hidden={true} name="modifiedBy"><Input /></Form.Item>
                         <Form.Item hidden={true} name="createdDate"><Input /></Form.Item>
                         <Form.Item hidden={true} name="id"><Input /></Form.Item>
+                        <Form.Item hidden={true} name="status"><Input /></Form.Item>
                         <Form.Item
                             label={<div style={{ letterSpacing: '1px' }}>Ảnh đại diện</div>}
                         >
@@ -241,16 +216,6 @@ export default function EditPostComponent({ record }) {
                                 <p>{record !== '' && parse(record.Contents)}</p>
                             </div>
                         </Form.Item>
-                        {/* <Form.Item
-                            name={['publish', 'name']}
-                            label="Publish"
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                            />
-                        </Form.Item> */}
                         <Form.Item>
                             <Row style={{ float: 'right' }}>
                                 <Button style={{ marginBottom: 30 }} onClick={handleBack} >Hủy</Button>
