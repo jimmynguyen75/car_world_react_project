@@ -100,6 +100,13 @@ export default function EditPostComponent({ record }) {
                 normFile(editor)
                 console.log("change")
             });
+            editor.editing.view.change((writer) => {
+                writer.setStyle(
+                    "height",
+                    "600px",
+                    editor.editing.view.document.getRoot()
+                );
+            });
         })
         .catch(error => {
             console.error(error);

@@ -192,7 +192,7 @@ function CreatePostModalComponent() {
         })
         .then(editor => {
             const toolbarContainer = document.querySelector('.document-editor__toolbar');
-
+            
             toolbarContainer.appendChild(editor.ui.view.toolbar.element);
 
             window.editor = editor;
@@ -315,11 +315,12 @@ function CreatePostModalComponent() {
                                     editor.plugins.get("FileRepository").createUploadAdapter = loader => {
                                         return new MyUploadAdapter(loader);
                                     };
+
                                     setData(editor);
                                     editor.editing.view.change((writer) => {
                                         writer.setStyle(
-                                            "min-height",
-                                            "400px",
+                                            "height",
+                                            "600px",
                                             editor.editing.view.document.getRoot()
                                         );
                                     });
