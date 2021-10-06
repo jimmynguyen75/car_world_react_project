@@ -18,6 +18,9 @@ class PostService {
     getPostByType(type) {
         return axios.get(POST_API_URL + "GetAllPostsByType?postType=" + type)
     }
+    getPosts() {
+        return axios.get(POST_API_URL + "GetAllPosts", { headers: authHeader() })
+    }
 }
 
 export default new PostService();

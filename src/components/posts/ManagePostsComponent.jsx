@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import './stylePost.less';
 import { Tabs } from 'antd';
-import { Table, Input, Button, Space, Row, Col, Avatar, Modal, message } from 'antd';
+import { Table, Input, Button, Space, Row, Col, Avatar, Modal, message, Tag, Spin } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import PostService from '../../services/PostService'
@@ -53,13 +53,44 @@ function ManagePostsComponent() {
             })
     };
     useEffect(() => {
+        let all = []
+        let car = []
+        let accessory = []
+        let event = []
+        let contest = []
         const fetchData = async () => {
-            const allEvent = await PostService.getPostByType(1);
+            const allEvent = await PostService.getPosts();
             const cars = await PostService.getPostByType(1);
             const accessories = await PostService.getPostByType(2);
             const events = await PostService.getPostByType(3);
             const contests = await PostService.getPostByType(4);
-            setData({ all: allEvent.data, car: cars.data, accessory: accessories.data, event: events.data, contest: contests.data })
+            allEvent.data.forEach((data) => {
+                if (data.Status === 1) {
+                    all.push(data);
+                }
+            })
+            console.log(allEvent.data)
+            cars.data.forEach((data) => {
+                if (data.Status === 1) {
+                    car.push(data);
+                }
+            })
+            accessories.data.forEach((data) => {
+                if (data.Status === 1) {
+                    accessory.push(data);
+                }
+            })
+            events.data.forEach((data) => {
+                if (data.Status === 1) {
+                    event.push(data);
+                }
+            })
+            contests.data.forEach((data) => {
+                if (data.Status === 1) {
+                    contest.push(data);
+                }
+            })
+            setData({ all: all, car: car, accessory: accessory, event: event, contest: contest })
         }
         fetchData()
     }, [])
@@ -146,26 +177,60 @@ function ManagePostsComponent() {
         render() {
             const columns = [
                 {
-                    title: 'Title',
-                    dataIndex: 'Title',
-                    key: 'titleAll',
-                    width: '30%',
+                    title: 'Tiêu đề',
+                    key: 'titleAllCar',
+                    width: '40%',
                     ...this.getColumnSearchProps('Title'),
+                    render: (data) => {
+                        return (
+                            <Row>
+                                <Col span={3} style={{ height: 50, textAlign: 'center', display: 'flex', alignItems: 'center' }}> <img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }} src={data.FeaturedImage} /></Col>
+                                <Col span={21} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }} className="textOverflow">{data.Title}</div></Col>
+                            </Row>
+                        )
+                    }
                 },
                 {
-                    title: 'Age',
-                    dataIndex: 'Title',
-                    key: 'age',
+                    title: 'Mô tả',
+                    dataIndex: 'Overview',
+                    key: 'AllOverview',
                     width: '20%',
-                    ...this.getColumnSearchProps('age'),
+                    ...this.getColumnSearchProps('Overview'),
+                    render: (data) => {
+                        return <div className="textOverflow" >{data}</div>
+                    }
                 },
                 {
-                    title: 'Address',
-                    dataIndex: 'address',
-                    key: 'address',
-                    ...this.getColumnSearchProps('address'),
-                    sorter: (a, b) => a.address.length - b.address.length,
+                    title: 'Chuyên mục',
+                    dataIndex: 'Type',
+                    key: 'allType1',
+                    sorter: (a, b) => a.Type - b.Type,
                     sortDirections: ['descend', 'ascend'],
+                    render: (data) => {
+                        let color = null
+                        let text = null
+                        if (data === 1) {
+                            color = '#F1CA89'
+                            text = 'Xe'
+                        }
+                        if (data === 2) {
+                            color = '#CE97B0'
+                            text = 'Phụ kiện'
+                        }
+                        if (data === 3) {
+                            color = 'green'
+                            text = 'Sự kiện'
+                        }
+                        if (data === 4) {
+                            color = 'geekblue'
+                            text = 'Cuộc thi'
+                        }
+                        return (
+                            <Tag color={color} key={data}>
+                                {text.toUpperCase()}
+                            </Tag>
+                        )
+                    }
                 },
             ];
             return <Table
@@ -376,24 +441,26 @@ function ManagePostsComponent() {
             >
                 <div style={{ fontSize: 16 }}> Bạn có muốn xóa bài này không?</div>
             </Modal>
-            <Button type="primary" shape="round" onClick={createModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2 }}>Tạo bài đăng</span></Button>
-            <Tabs type="card" onChange={callback}>
-                <TabPane tab="Tất cả" key="all">
-                    <All />
-                </TabPane>
-                <TabPane tab="Xe" key="car">
-                    <GetAll />
-                </TabPane>
-                <TabPane tab="Phụ kiện" key="accessory">
-                    <GetAll />
-                </TabPane>
-                <TabPane tab="Sự kiện" key="event">
-                    <GetAll />
-                </TabPane>
-                <TabPane tab="Cuộc thi" key="contest">
-                    <GetAll />
-                </TabPane>
-            </Tabs>
+            <Spin size="large" spinning={data.all.length === 0 ? true : false}>
+                <Button type="primary" shape="round" onClick={createModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2 }}>Tạo bài đăng</span></Button>
+                <Tabs type="card" onChange={callback}>
+                    <TabPane tab="Tất cả" key="all">
+                        <All />
+                    </TabPane>
+                    <TabPane tab="Xe" key="car">
+                        <GetAll />
+                    </TabPane>
+                    <TabPane tab="Phụ kiện" key="accessory">
+                        <GetAll />
+                    </TabPane>
+                    <TabPane tab="Sự kiện" key="event">
+                        <GetAll />
+                    </TabPane>
+                    <TabPane tab="Cuộc thi" key="contest">
+                        <GetAll />
+                    </TabPane>
+                </Tabs>
+            </Spin>
         </div>
     )
 }

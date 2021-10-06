@@ -178,7 +178,7 @@ function ManageEventsComponent() {
                         return (
                             <Row>
                                 <Col span={5}><img alt="" style={{ height: 50, maxWidth: '100%' }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
-                                <Col span={19}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{data.Title}</div></Col>
+                                <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{data.Title}</div></Col>
                             </Row>
                         )
                     }
