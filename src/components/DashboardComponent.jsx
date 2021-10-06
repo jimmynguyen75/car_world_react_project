@@ -1,98 +1,268 @@
-import { Bar } from '@ant-design/charts';
+import { Bar, Pie } from '@ant-design/charts';
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Spin } from 'antd';
+import { Avatar, Col, Row, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
-import UserService from '../services/UserService';
-
+import AccessoryService from '../services/AccessoryService';
+import AccountService from '../services/AccountService';
+import BrandService from '../services/BrandService';
+import CarService from '../services/CarService';
+import PostService from '../services/PostService'
+import { AnalyticsDashboard } from 'react-analytics-charts';
+// Over ten different commonly used charts are available
+import { SessionsByDateChart, SessionsGeoChart, SessionsByHourChart, SessionsBySourceChart, PageViewsPerPathChart } from 'react-analytics-charts';
 function DashboardComponent() {
-
-    const [totalUsers, setTotalUsers] = useState(null);
-
+    const [users, setUsers] = useState({ user: [], admin: [], manager: [] });
+    const [brands, setBrands] = useState({ car: [], accessory: [] });
+    const [carAccessory, setCarAccessory] = useState({ car: [], accessory: [] });
+    const [posts, setPosts] = useState({ car: [], accessory: [], event: [], contest: [] });
+    const [visible, setVisible] = useState("none")
+    setTimeout(() => {
+        setVisible(true)
+    }, 1500)
+    //user
     useEffect(() => {
-        UserService
-            .getTotalUsers()
-            .then(res => {
-                console.log(res)
-                setTotalUsers(res.data.data.length)
+        const fetchData = async () => {
+            let admin = []
+            let manager = []
+            const user = await AccountService.getAllUser();
+            const repo = await AccountService.getAdminAndManger();
+            repo.data.forEach((data) => {
+                if (data.RoleId === 1) {
+                    admin.push(data)
+                }
+                if (data.RoleId === 2) {
+                    manager.push(data)
+                }
             })
-            .catch(err => {
-                console.log(err)
-            })
-    }, []);
-
-    const data = [
+            setUsers({ user: user.data, admin: admin, manager: manager })
+        }
+        fetchData()
+    }, [])
+    //brand
+    useEffect(() => {
+        const fetchData = async () => {
+            const car = await BrandService.getAllBrand()
+            const accessory = await BrandService.getAllAccessoriesBrand()
+            setBrands({ car: car.data, accessory: accessory.data })
+        }
+        fetchData()
+    }, [])
+    //car accessory
+    useEffect(() => {
+        const fetchData = async () => {
+            const car = await CarService.getCars()
+            const accessory = await AccessoryService.getAccessories()
+            setCarAccessory({ car: car.data, accessory: accessory.data })
+        }
+        fetchData()
+    }, [])
+    //post 
+    useEffect(() => {
+        const fetchData = async () => {
+            const car = await PostService.getPostByType(1)
+            const accessory = await PostService.getPostByType(2)
+            const event = await PostService.getPostByType(3)
+            const contest = await PostService.getPostByType(4)
+            setPosts({ car: car.data, accessory: accessory.data, event: event.data, contest: contest.data })
+        }
+        fetchData()
+    }, [])
+    const accountData = [
         {
-            year: '1951 年',
-            value: 8,
+            name: 'Người dùng',
+            value: users.user.length,
         },
         {
-            year: '1952 年',
-            value: 2,
+            name: 'Quản trị',
+            value: users.admin.length,
         },
         {
-            year: '1956 年',
-            value: 1,
-        },
-        {
-            year: '1957 年',
-            value: 28,
-        },
-        {
-            year: '1958 年',
-            value: 8,
-        },
+            name: 'Quản lý',
+            value: users.manager.length,
+        }
     ];
-
-    const config = {
-        data: data,
+    const carAccessoryData = [
+        {
+            name: 'Xe',
+            value: carAccessory.car.length,
+        },
+        {
+            name: 'Phụ kiện',
+            value: carAccessory.accessory.length,
+        }
+    ];
+    const brandData = [
+        {
+            name: 'Hiệu xe',
+            value: brands.car.length,
+        },
+        {
+            name: 'Hiệu phụ kiện',
+            value: brands.accessory.length,
+        }
+    ];
+    const postData = [
+        {
+            type: 'Xe',
+            value: posts.car.length,
+        },
+        {
+            type: 'Phụ kiện',
+            value: posts.accessory.length,
+        },
+        {
+            type: 'Sự kiện',
+            value: posts.event.length,
+        },
+        {
+            type: 'Cuộc thi',
+            value: posts.contest.length,
+        }
+    ];
+    const configAccount = {
+        data: accountData,
         xField: 'value',
-        yField: 'year',
-        seriesField: 'year',
+        yField: 'name',
+        seriesField: 'name',
         legend: { position: 'top-left' },
         label: {
             position: 'right',
             offset: 4,
         },
     }
-
+    const configCarAccessory = {
+        data: carAccessoryData,
+        xField: 'value',
+        yField: 'name',
+        seriesField: 'name',
+        legend: { position: 'top-left' },
+        label: {
+            position: 'right',
+            offset: 4,
+        },
+    }
+    const configBrand = {
+        data: brandData,
+        xField: 'value',
+        yField: 'name',
+        seriesField: 'name',
+        legend: { position: 'top-left' },
+        label: {
+            position: 'right',
+            offset: 4,
+        },
+    }
+    const configPost = {
+        appendPadding: 10,
+        data: postData,
+        angleField: 'value',
+        colorField: 'type',
+        radius: 0.9,
+        label: {
+            type: 'inner',
+            offset: '-30%',
+            content: function content(_ref) {
+                var percent = _ref.percent;
+                return ''.concat((percent * 100).toFixed(0), '%');
+            },
+            style: {
+                fontSize: 14,
+                textAlign: 'center',
+            },
+        },
+        interactions: [{ type: 'element-active' }],
+    };
+    console.log("user: ", users)
     return (
         <div className="container mw-100">
-            <div className="row" style={{ marginBottom: 20, padding: "30px 10px 30px 10px", backgroundColor: "white", borderRadius: 15 }} >
-                <div className="col col-lg-1">
-                    <div>
-                        <Avatar style={{ backgroundColor: '#FFD000' }} size={80} icon={<UserOutlined />} />
-                    </div>
-                </div>
-                <div className="col col-lg-3">
-                    <div style={{ color: '#646464' }}>Total Users.1</div>
-                    <Spin
-                        size="small"
-                        spinning={totalUsers == null ? true : false}
-                    >
-                        <div style={{ fontWeight: 700, fontSize: 32 }}>
-                            {totalUsers}
-                            <span style={{ fontSize: 18, fontWeight: 400, color: '#646464' }}> People.1</span>
+            <AnalyticsDashboard
+                authOptions={{ clientId: "648894443742-e86e0d35dekp1ljmcc3e0anap53b34ug.apps.googleusercontent.com" }}
+                renderCharts={(gapi, viewId) => {
+                    const chartStyles = {
+                        margin: "15px",
+                        maxWidth: 400,
+                    };
+                    return (
+                        <div style={{ display: "flex", flexWrap: "wrap" }}>
+                            <SessionsByDateChart
+                                gapi={gapi}
+                                viewId={viewId}
+                                style={chartStyles}
+                                showPageViews
+                                showUsers
+                            />
+                            <SessionsGeoChart
+                                gapi={gapi}
+                                viewId={viewId}
+                                style={chartStyles}
+                                showPageViews
+                                options={{ width: 400 }}
+                            />
+                            <SessionsBySourceChart
+                                gapi={gapi}
+                                viewId={viewId}
+                                style={chartStyles}
+                            />
+                            <SessionsByHourChart gapi={gapi} viewId={viewId} style={chartStyles} />
+                            <PageViewsPerPathChart
+                                gapi={gapi}
+                                viewId={viewId}
+                                style={{ margin: "15px" }}
+                            />
                         </div>
-                    </Spin>
-                </div>
-                <div className="col col-lg-1">
-                </div>
-                <div className="col col-lg-3"></div>
-                <div className="col col-lg-1">
-                </div>
-                <div className="col col-lg-3"></div>
-            </div>
-            <div className="row">
-                <div className="col-6" style={{ paddingLeft: 0}}>
-                    <Bar {...config} style={{ padding: 20, backgroundColor: "white", borderRadius: 15 }} />
-                    <div style={{ textAlign: 'center', paddingBottom: 30, paddingTop: 5, fontWeight: 600 }}>'Total of Contests and Events.1</div>
-                </div>
-                <div className="col-6" style={{ paddingRight: 0 }}>
-                    <Bar {...config} style={{ padding: 20, backgroundColor: "white", borderRadius: 15 }} />
-                    <div style={{ textAlign: 'center', paddingBottom: 30, paddingTop: 5, fontWeight: 600 }}>Total of Exchange Cars and Accessories.1</div>
-                </div>
-            </div>
+                    );
+                }}
+            />
+            <Row gutter={15} style={{ marginBottom: 20, padding: "30px 10px 30px 10px", backgroundColor: "white", borderRadius: 15 }}>
+                <Col span={8}>
+                    <Row gutter={5}>
+                        <Avatar size={100} icon={<UserOutlined />} />
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 20 }}>
+                            <div ><br /> <div> Người dùng</div></div>
+                        </div>
+                    </Row>
+                </Col>
+                <Col span={8}>
+                    <Row gutter={5}>
+                        <Avatar size={100} icon={<UserOutlined />} />
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 20 }}>
+                            <div ><br /> <div> Người dùng</div></div>
+                        </div>
+                    </Row>
+                </Col>
+                <Col span={8}>
+                    <Row gutter={5}>
+                        <Avatar size={100} icon={<UserOutlined />} />
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 20 }}>
+                            <div ><br /> <div> Người dùng</div></div>
+                        </div>
+                    </Row>
+                </Col>
+            </Row>
+            <Row gutter={15} style={{ marginLeft: '-15px', marginRight: '-15px', marginBottom: 20, display: visible }}>
+                <Col span={12}>
+                    <Pie {...configPost} style={{ padding: 20, backgroundColor: 'white', borderRadius: 15, height: 250 }} />
+                </Col>
+                <Col span={12}>
+                    <Pie {...configPost} style={{ padding: 20, backgroundColor: 'white', borderRadius: 15, height: 250 }} />
+                </Col>
+            </Row>
+            <Row gutter={15} style={{ marginLeft: '-15px', marginRight: '-15px' }}>
+                <Col span={8}>
+                    <Bar {...configAccount} style={{ padding: 20, backgroundColor: "white", borderRadius: 15, height: 250 }} />
+                    <div style={{ textAlign: 'center', paddingBottom: 30, paddingTop: 5, fontWeight: 500, fontSize: 14 }}>Tổng số tài khoản</div>
+                </Col>
+                <Col span={8}>
+                    <Bar {...configCarAccessory} style={{ padding: 20, backgroundColor: "white", borderRadius: 15, height: 250 }} />
+                    <div style={{ textAlign: 'center', paddingBottom: 30, paddingTop: 5, fontWeight: 500, fontSize: 14 }}>Tổng số xe và phụ kiện</div>
+                </Col>
+                <Col span={8}>
+                    <Bar {...configBrand} style={{ padding: 20, backgroundColor: "white", borderRadius: 15, height: 250 }} />
+                    <div style={{ textAlign: 'center', paddingBottom: 30, paddingTop: 5, fontWeight: 500, fontSize: 14 }}>Tổng số thương hiệu</div>
+                </Col>
+            </Row>
         </div>
+
     )
 }
 

@@ -188,37 +188,26 @@
 //         </div>
 //     )
 // }
-import React, { useState } from 'react';
-import { DatePicker, Button } from 'antd'
-import 'moment/locale/vi';
-import moment from 'moment';
-import './testStyle.less';
-export default function Test() {
-    const { RangePicker } = DatePicker;
-    const dateFormat = 'YYYY/MM/DD';
-    const DateSelect = () => {
-        const [dateRange, setDateRange] = useState([moment(), moment()])
+import React, { useState, useEffect } from 'react';
+import { getToken } from '../services/ImageFirebase'
 
-        return (
-            <div>
-                <Button onClick={() => setDateRange(dateRange.map(d => d.add(1, 'w')))}>Add 7 days
-                </Button>
-                <RangePicker
-                    value={dateRange}
-                    format={dateFormat}
-                    onChange={(v) => {
-                        setDateRange(v)
-                        console.log(v)
-                    }}
-                />
-                <span> {dateRange[0].format(dateFormat)} - {dateRange[1].format(dateFormat)} </span>
-            </div>
-        )
-    }
+export default function Test() {
+    const [isTokenFound, setTokenFound] = useState(false);
+    console.log("Token found", isTokenFound);
+    useEffect(() => {
+        let data;
+        async function tokenFunc() {
+            data = await getToken(setTokenFound);
+            if (data) {
+                console.log("Token is", data);
+            }
+            return data;
+        }
+        tokenFunc();
+    }, [setTokenFound]);
     return (
         <div>
-            <Button >submit</Button>
-            <DateSelect />
+
         </div>
     )
 }

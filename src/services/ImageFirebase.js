@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-
+import 'firebase/messaging'
 const firebaseConfig = {
     apiKey: "AIzaSyCDuA0kQwv0ASOt9HthsqcVQl-iWJ5wrwo",
     authDomain: "car-world-react-project.firebaseapp.com",
@@ -14,3 +14,27 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 var storage = firebase.storage();
 export default storage;
+
+const messaging = firebase.messaging();
+const { REACT_APP_VAPID_KEY } = process.env
+const publicKey = REACT_APP_VAPID_KEY;
+export const getToken = async (setTokenFound) => {
+    let currentToken = '';
+    try {
+        currentToken = await messaging.getToken({ vapidKey: publicKey });
+        if (currentToken) {
+            setTokenFound(true);
+        } else {
+            setTokenFound(false);
+        }
+    } catch (error) {
+        console.log('An error occurred while retrieving token.', error);
+    }
+    return currentToken;
+};
+export const onMessageListener = () =>
+    new Promise((resolve) => {
+        messaging.onMessage((payload) => {
+            resolve(payload);
+        });
+    });

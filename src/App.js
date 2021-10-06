@@ -8,10 +8,29 @@ import Test from './components/Test';
 import AccountService from './services/AccountService';
 import './styles/login.css';
 import CheckLogin from './components/notFound/CheckLogin';
+//noti
+import React, { useState, useEffect } from "react";
+import { onMessageListener } from './services/ImageFirebase'
+import ReactNotificationComponent from './components/ReactNotificationComponent';
+import Fader from 'react-fader'
 function App() {
-
+  //start
+  const [show, setShow] = useState(false);
+  const [notification, setNotification] = useState({ title: "", body: "" })
+  console.log("show:", show)
+  console.log("notification:", notification)
+  onMessageListener()
+    .then((payload) => {
+      setShow(true);
+      setNotification({
+        title: payload.notification.title,
+        body: payload.notification.body,
+      });
+      console.log(payload);
+    })
+    .catch((err) => console.log("failed: ", err));
+  //end
   const role = AccountService.getCurrentUser()
-
   const WebRouter = () => {
     if (role) {
       if (role.RoleId === 1) {
@@ -66,7 +85,12 @@ function App() {
     }
   }
   return (
-    <WebRouter />
+    <>
+      <WebRouter />
+      {show ? (<ReactNotificationComponent title={notification.title} body={notification.body} />) : (<></>)}
+      {/* <Test /> */}
+      {/* <Fader text="Hellu"></Fader> */}
+    </>
   );
 }
 
