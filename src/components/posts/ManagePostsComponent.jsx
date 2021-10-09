@@ -8,7 +8,6 @@ import { SearchOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import PostService from '../../services/PostService'
 import removeVietnamese from '../../utils/removeVietnamese'
 function ManagePostsComponent() {
-    const imageHolder = "https://via.placeholder.com/150";
     const { TabPane } = Tabs;
     const history = useHistory();
     const [page, setPage] = React.useState(1);
@@ -231,6 +230,50 @@ function ManagePostsComponent() {
                             </Tag>
                         )
                     }
+                },
+                {
+                    title: 'Người tạo',
+                    key: 'address',
+                    //sorter: (a, b) => a.CreatedDate - b.CreatedDate,
+                    sortDirections: ['descend', 'ascend'],
+                    render: (data) => {
+                        return (
+                            <Row>
+                                <Avatar alt="" src={data.CreatedByNavigation.Image}></Avatar>
+                                <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data.CreatedByNavigation.FullName}</div>
+                            </Row>
+                        )
+                    }
+                },
+                {
+                    title: 'Các tác vụ',
+                    key: 'action',
+                    render: (text, record) => (
+                        <Space size="middle">
+                            <div className="eventDetailBtn" style={{ color: '#CCCC1B' }}
+                                onClick={() => {
+                                    viewPost(record)
+                                }}
+                            >
+                                <i className="fas fa-info"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Chi tiết</span>
+                            </div>
+                            <div className="approveEventBtn" style={{ color: '#3ECA90' }}
+                                onClick={() => {
+                                    editPost(record)
+                                }}
+                            >
+                                <i className="far fa-edit"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Sửa</span>
+                            </div>
+                            <div className="disapprovedEventBtn" style={{ color: '#FD7E89' }}
+                                onClick={() => {
+                                    setVisible(true);
+                                    setPost(record)
+                                }}
+                            >
+                                <i className="far fa-trash-alt"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Xóa</span>
+                            </div>
+                        </Space >
+                    ),
                 },
             ];
             return <Table

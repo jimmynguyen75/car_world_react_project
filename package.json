@@ -43,6 +43,7 @@
     "react-slick": "^0.28.1",
     "react-toastify": "^8.0.3",
     "slick-carousel": "^1.8.1",
+    "tui-calendar": "^1.14.1",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

@@ -92,7 +92,7 @@ function ManageAccessoryComponent() {
             icon: <ExclamationCircleOutlined />,
             content: (
                 <div>
-                    Bạn có muốn xóa {data.Name} không?
+                    Bạn có muốn xóa phụ kiện này không?
                 </div>
             ),
             okText: "Đồng ý",
@@ -229,10 +229,10 @@ function ManageAccessoryComponent() {
                 footer={[
                     <Row style={{ float: 'right' }}>
                         <Button onClick={handleCancel}>
-                            Cancel
+                            Hủy
                         </Button>
                         <Button form="myForm" type="primary" key="submit" htmlType="submit">
-                            Submit
+                            Cập nhật
                         </Button>
                     </Row>
                 ]}

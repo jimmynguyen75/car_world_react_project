@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
-import CarService from '../../services/CarService'
+import CarService from '../../services/CarService';
+import numberToWord from '../../utils/numberToWord';
 export default function CreateCarBodyModalComponent() {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -289,7 +290,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item label="Giá" name="Giá" rules={[{ required: true, message: "Giá xe không được bỏ trống" }]}>
+                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Giá xe không được bỏ trống" }]}>
                             <NumberFormat
                                 onChange={onPrice}
                                 maxLength={20}

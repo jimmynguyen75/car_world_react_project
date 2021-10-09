@@ -175,7 +175,7 @@ export default function ManageBrandComponent() {
                                 <Col span={6}>
                                     <Avatar style={{ height: 'auto', width: 'auto', margin: 'auto', maxHeight: '50px', maxWidth: '50px' }} size="large" src={data.Image} icon={<UserOutlined />} />
                                 </Col>
-                                <Col span={18}>
+                                <Col span={18} style={{ display: 'flex', alignItems: 'center' }}>
                                     <div style={{ paddingLeft: 10 }}><span style={{ color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.Name}</span></div>
                                 </Col>
                             </Row>
@@ -188,7 +188,7 @@ export default function ManageBrandComponent() {
                     key: 'description',
                     ...this.getColumnSearchProps('Description'),
                     render: (data) => {
-                        return <p className="textOverflow">{data}</p>
+                        return <p className="textOverflow" >{data}</p>
                     }
                 },
                 {
@@ -321,7 +321,7 @@ export default function ManageBrandComponent() {
                                 <Col span={6}>
                                     <Avatar style={{ height: 'auto', width: 'auto', margin: 'auto', maxHeight: '50px', maxWidth: '50px' }} size="large" src={data.Image} icon={<UserOutlined />} />
                                 </Col>
-                                <Col span={18}>
+                                <Col span={18} style={{ display: 'flex', alignItems: 'center' }}>
                                     <div style={{ paddingLeft: 10, paddingTop: 7 }}><span style={{ color: '#035B81', fontWeight: '600', fontSize: 15 }}>{data.Name}</span></div>
                                 </Col>
                             </Row>

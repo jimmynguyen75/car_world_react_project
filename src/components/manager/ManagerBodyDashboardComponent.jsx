@@ -1,10 +1,16 @@
 import React from 'react'
-import { message, Button } from 'antd';
+import './style.less'
+
+import Calendar from 'tui-calendar'; /* ES6 */
+import "tui-calendar/dist/tui-calendar.css";
+
+// If you use the default popups, use this.
+
 
 export default function ManagerBodyDashboardComponent() {
+
     return (
-        <div>
-            <Button onClick={() => message.success("ccc")}>Show</Button>
-        </div>
+        <>
+        </>
     )
 }

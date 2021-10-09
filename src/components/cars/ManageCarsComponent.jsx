@@ -355,10 +355,10 @@ function ManageCarsComponent() {
                 footer={[
                     <Row style={{ float: 'right' }}>
                         <Button onClick={handleCancel}>
-                            Cancel
+                            Hủy 
                         </Button>
                         <Button form="myFormEdit" type="primary" key="submit" htmlType="submit">
-                            Submit
+                            Cập nhật
                         </Button>
                     </Row>
                 ]}

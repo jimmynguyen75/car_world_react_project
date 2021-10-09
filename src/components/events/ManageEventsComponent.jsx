@@ -1,5 +1,5 @@
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Avatar, Calendar, Col, Input, Modal, Row, Space, Spin, Table, Tag } from 'antd';
+import { Avatar, Button, Calendar, Col, Input, Modal, Row, Space, Spin, Table, Tag } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
@@ -7,11 +7,10 @@ import Highlighter from 'react-highlight-words';
 import { useHistory } from "react-router-dom";
 import EventService from '../../services/EventService';
 import ProposalService from '../../services/ProposalService';
+import CreateBySelectComponent from './CreateBySelectComponent';
 import CreateEventsModalComponent from './CreateEventsModalComponent';
 import EditEventComponent from './EditEventComponent';
 import ViewEventComponent from './ViewEventComponent';
-import CreateBySelectComponent from './CreateBySelectComponent';
-import AccountService from '../../services/AccountService'
 function ManageEventsComponent() {
     const [events, setEvents] = useState(null);
     const [proposals, setProposals] = useState(null);
@@ -454,8 +453,9 @@ function ManageEventsComponent() {
                         <Row>
                             <CreateEventsModalComponent />
                             <Row style={{ marginLeft: 'auto', paddingTop: '5px' }}>
-                                <Button className="textEventApproved" style={{ marginRight: 10, borderRadius: 3, backgroundColor: '#37A063' }}><i className="fas fa-spinner"></i>&nbsp;&nbsp;Sự kiện đang diễn ra</Button>
-                                <Button className="textEventApproved" style={{ borderRadius: 3, backgroundColor: '#AC7E92' }}><i className="fas fa-history"></i>&nbsp;&nbsp;Lịch sử</Button>
+                                <Button className="textEventApproved" style={{ marginRight: 10, borderRadius: 3, backgroundColor: '#11324D' }}><i class="far fa-check-square"></i>&nbsp;&nbsp;Sự kiện sắp diễn ra</Button>
+                                <Button className="textEventApproved" style={{ marginRight: 10, borderRadius: 3, backgroundColor: '#3A6351' }}><i className="fas fa-spinner"></i>&nbsp;&nbsp;Sự kiện đang diễn ra</Button>
+                                <Button className="textEventApproved" style={{ borderRadius: 3, backgroundColor: '#5E454B' }}><i className="fas fa-history"></i>&nbsp;&nbsp;Lịch sử</Button>
                             </Row>
                         </Row>
                     </Col>

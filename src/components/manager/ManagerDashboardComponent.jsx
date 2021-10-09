@@ -10,13 +10,12 @@ import ManageContestsComponent from '../contests/ManageContestsComponent';
 import ManageEventsComponent from '../events/ManageEventsComponent';
 import ManageFeedbackComponent from '../feedback/ManageFeedbackComponent';
 import CreatePostModalComponent from '../posts/CreatePostModalComponent';
+import EditPostComponent from '../posts/EditPostComponent';
 import ManagePostsComponent from '../posts/ManagePostsComponent';
+import ViewDetailPostComponent from '../posts/ViewDetailPostComponent';
 import ProfileComponent from '../profile/ProfileComponent';
 import ManageProposalsComponent from '../proposals/ManageProposalsComponent';
 import ManagerBodyDashboardComponent from './ManagerBodyDashboardComponent';
-import ViewDetailPostComponent from '../posts/ViewDetailPostComponent';
-import removeVietnamese from '../../utils/removeVietnamese'
-import EditPostComponent from '../posts/EditPostComponent';
 
 function ManagerDashboardComponent() {
     const { Title } = Typography;
@@ -29,28 +28,7 @@ function ManagerDashboardComponent() {
 
     // const recordPost = location.state != null && removeVietnamese.removeVietnameseTones(location.state.record.Title).replace(/\s+/g, '-').toLowerCase()
     //dư một space nên ko bằng
-    // console.log("ok:", "/" + recordPost)
-    // console.log("location:" + location.pathname)
-    // useEffect(() => {
-    //     if (location.pathname === "/") {
-    //         setTitle('Trang chủ')
-    //     } else if (location.pathname === "/bai-dang") {
-    //         setTitle('Quản lý bài đăng')
-    //     } else if (location.pathname === "/de-xuat") {
-    //         setTitle('Quản lý đề xuất')
-    //     } else if (location.pathname === "/su-kien") {
-    //         setTitle('Quản lý sự kiện')
-    //     } else if (location.pathname === "/cuoc-thi") {
-    //         setTitle('Quản lý cuộc thi')
-    //     } else if (location.pathname === "/phan-hoi") {
-    //         setTitle('Quản lý phản hồi')
-    //     } else if (location.pathname === "/thong-tin-ca-nhan") {
-    //         setTitle('Thông tin cá nhân')
-    //     } else if (location.pathname === "/tao-bai-dang") {
-    //         setTitle('Tạo bài đăng')
-    //     } 
-    //     document.title = title;
-    // }, [location.pathname, title])
+
     useEffect(() => {
         document.title = title;
         switch (location.pathname) {
@@ -77,7 +55,7 @@ function ManagerDashboardComponent() {
             default:
                 return;
         }
-    }, [location.pathname, title])
+    }, [location.pathname, title, location.state])
 
     function logoutButton() {
         AccountService.logOut();
