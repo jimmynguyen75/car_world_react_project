@@ -1,11 +1,11 @@
-var ChuSo = new Array(" không ", " một ", " hai ", " ba ", " bốn ", " năm ", " sáu ", " bảy ", " tám ", " chín ");
-var Tien = new Array("", " nghìn", " triệu", " tỷ", " nghìn tỷ", " triệu tỷ");
+var ChuSo = [ " không ", " một ", " hai ", " ba ", " bốn ", " năm ", " sáu ", " bảy ", " tám ", " chín " ];
+var Tien = [ "", " nghìn", " triệu", " tỷ", " nghìn tỷ", " triệu tỷ" ];
 
 class numberToWord {
 
     DocSo3ChuSo(baso) {
         var tram;
-        var chuc;
+        var chuc ;
         var donvi;
         var KetQua = "";
         tram = parseInt(baso / 100);
@@ -52,7 +52,7 @@ class numberToWord {
         var so = 0;
         var KetQua = "";
         var tmp = "";
-        var ViTri = new Array();
+        var ViTri = [];
         if (SoTien < 0) return "Số tiền âm";
         if (SoTien === 0) return "Không đồng!";
         if (SoTien > 0) {

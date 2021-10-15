@@ -178,7 +178,7 @@ function ManagePostsComponent() {
                 {
                     title: 'Tiêu đề',
                     key: 'titleAllCar',
-                    width: '40%',
+                    width: '35%',
                     ...this.getColumnSearchProps('Title'),
                     render: (data) => {
                         return (

@@ -115,8 +115,8 @@ function ManagerDashboardComponent() {
                 <img src={logo2} className="logo" alt="logo..." />
                 <Menu mode="inline" defaultSelectedKeys={[location.pathname]}>
                     <Menu.Item key="/" icon={<HomeOutlined style={{ fontSize: 18, color: '#316B83', paddingTop: 2 }} />} onClick={dashboard}>Trang chủ</Menu.Item>
-                    <Menu.Item key="/de-xuat" onClick={manageProposal}><i className="far fa-lightbulb" style={{ fontSize: 18, color: '#FF7878', paddingTop: 4 }} />&nbsp;&nbsp;&nbsp;&nbsp;Quản lý đề xuất</Menu.Item>
                     <Menu.Item key="/bai-dang" onClick={managePosts}><i className="far fa-clone" style={{ fontSize: 18, color: '#DBAD68', paddingTop: 4 }} />&nbsp;&nbsp;<span style={{ paddingLeft: 2 }}>Quản lý bài đăng</span></Menu.Item>
+                    <Menu.Item key="/de-xuat" onClick={manageProposal}><i className="far fa-lightbulb" style={{ fontSize: 18, color: '#FF7878', paddingTop: 4 }} />&nbsp;&nbsp;&nbsp;&nbsp;Quản lý đề xuất</Menu.Item>
                     <Menu.Item key="/su-kien" onClick={manageEvents}><i className="fas fa-calendar-alt" style={{ fontSize: 18, color: '#52BCC2' }} />&nbsp;&nbsp;&nbsp;Quản lý sự kiện</Menu.Item>
                     <Menu.Item key="/cuoc-thi" onClick={manageContests}><i className="fas fa-trophy" style={{ fontSize: 18, color: '#BFA2DB', paddingTop: 4 }} />&nbsp;&nbsp;Quản lý cuộc thi</Menu.Item>
                     <Menu.Item key="/phan-hoi" icon={<MessageOutlined style={{ fontSize: 18, color: '#6B7AA1', paddingTop: 2 }} />} onClick={manageFeedback}>Quản lý phản hồi</Menu.Item>
@@ -167,7 +167,7 @@ function ManagerDashboardComponent() {
                                 )
                             case '/sua-bai-dang':
                                 return (
-                                    <EditPostComponent record={location.state != null && location.state.record}/>
+                                    <EditPostComponent record={location.state != null && location.state.record} />
                                 )
                             //để location ở cuối
                             case (location.pathname):

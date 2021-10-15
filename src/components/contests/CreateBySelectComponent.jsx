@@ -1,14 +1,16 @@
-import { Form, Modal, Upload, Image, message, Row, Tooltip, Input, ConfigProvider, DatePicker, Col } from "antd";
-import React, { useState, useEffect } from 'react';
-import storage from '../../services/ImageFirebase';
 import { PlusOutlined } from '@ant-design/icons';
+import { Col, ConfigProvider, DatePicker, Form, Image, Input, message, Modal, Row, Tooltip, Upload } from "antd";
 import locale from 'antd/es/locale-provider/fr_FR';
-import 'moment/locale/vi';
 import moment from 'moment';
-import AccountService from '../../services/AccountService'
+import 'moment/locale/vi';
+import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
-import EventService from "../../services/EventService";
+import AccountService from '../../services/AccountService';
+import ContestService from '../../services/ContestService';
+import storage from '../../services/ImageFirebase';
+import numberToWord from '../../utils/numberToWord';
 export default function CreateBySelectComponent({ record, recordImage }) {
+    const [price, setPrice] = useState(0);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
     const [endRegister, setEndRegister] = useState(null);
@@ -166,14 +168,14 @@ export default function CreateBySelectComponent({ record, recordImage }) {
     //End -----------------------------
     const onFinish = (values) => {
         console.log(values);
-        EventService.createNewEvent(values)
+        ContestService.createNewContest(values)
             .then((result) => {
                 console.log(result);
                 setTimeout(() => {
                     message.success("Cập nhật thành công")
                 }, 500)
                 setTimeout(() => {
-                    window.location.href = '/su-kien'
+                    window.location.href = '/cuoc-thi'
                 }, 1000)
             })
             .catch((err) => {
@@ -234,6 +236,13 @@ export default function CreateBySelectComponent({ record, recordImage }) {
             }
         }
     }
+    const onChangePrice = (e) => {
+        const string = e.target.value;
+        setPrice(string.replace(/\D/g, ''))
+    }
+    form.setFieldsValue({
+        fee: price
+    })
     return (
         <div>
             <Modal
@@ -258,7 +267,8 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                 <Form.Item hidden={true} name="maxParticipants"><Input /></Form.Item>
                 <Form.Item hidden={true} name="currentParticipants"><Input /></Form.Item>
                 <Form.Item hidden={true} name="createdDate"><Input /></Form.Item>
-                <Form.Item label={<div><span style={{ color: 'red', fontFamily: 'SimSun, sans-serif' }}>*</span>&nbsp;Ảnh sự kiện</div>}>
+                <Form.Item hidden={true} name="fee" ><Input></Input> </Form.Item>
+                <Form.Item label={<div><span style={{ color: 'red', fontFamily: 'SimSun, sans-serif' }}>*</span>&nbsp;Ảnh cuộc thi</div>}>
                     <Row>
                         {img.map((object, i) => {
                             return (
@@ -286,9 +296,38 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </div>
                     </Row>
                 </Form.Item>
-                <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
-                    <Input />
-                </Form.Item>
+                <Row gutter={15}>
+                    <Col span={12}>
+                        <Form.Item label="Tên cuộc thi" name="title" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
+                            <Input.TextArea
+                                placeholder="Nhập tên cuộc thi"
+                                showCount maxLength={200}
+                                autoSize={{ minRows: 1, maxRows: 10 }}
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Tiền phụ kiện không được bỏ trống" }]}>
+                            <NumberFormat
+                                onChange={onChangePrice}
+                                placeholder="Nhập giá phụ kiện (vnđ)"
+                                className="currency"
+                                displayType="input"
+                                type="primary"
+                                suffix=" vnđ"
+                                thousandSeparator={'.'}
+                                decimalSeparator={','}
+                                spellCheck="false"
+                                style={{
+                                    width: '100%',
+                                    border: '1px solid #d9d9d9',
+                                    padding: '4px 11px'
+
+                                }}
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
                 <Row gutter={15}>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>
@@ -308,11 +347,11 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                     </Col>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>
-                            <Form.Item name="startFAKE" label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>SỰ KIỆN</span> và kết thúc</div>} rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
+                            <Form.Item name="startFAKE" label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>cuộc thi</span> và kết thúc</div>} rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
                                 <RangePicker
                                     //value={(moment(s[0], "yyyy-MM-DDTHH:mm:ss")._i) === "" ? null : s}
                                     style={{ width: '100%' }}
-                                    placeholder={['Ngày bắt đầu sự kiện', 'Ngày kết thúc sự kiện']}
+                                    placeholder={['Ngày bắt đầu cuộc thi', 'Ngày kết thúc cuộc thi']}
                                     format={"HH:mm - DD/MM/yyyy"}
                                     disabledDate={disabledDateS}
                                     disabledTime={disabledRangeTimeS}
@@ -325,7 +364,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                 </Row>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Tối thiểu người đăng ký" name="min" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Tối thiểu người đăng ký" name="min" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     minRegister(values.value)
@@ -348,7 +387,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Tối đa người đăng ký" name="max" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Tối đa người đăng ký" name="max" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     maxRegister(values.value)
@@ -371,18 +410,18 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
                             <Input.TextArea
-                                placeholder="Nhập tên sự kiện"
+                                placeholder="Nhập tên cuộc thi"
                                 showCount maxLength={200}
                                 autoSize={{ minRows: 1, maxRows: 10 }}
                             />
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item label="Mô tả sự kiện" name="description" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                <Form.Item label="Mô tả cuộc thi" name="description" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
                     <Input.TextArea
-                        placeholder="Mô tả sự kiện"
+                        placeholder="Mô tả cuộc thi"
                         showCount maxLength={2000}
                         autoSize={{ minRows: 4, maxRows: 10 }}
                     />

@@ -1,15 +1,13 @@
 import { Bar, Pie } from '@ant-design/charts';
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Col, Row, Spin } from 'antd';
+import { Avatar, Col, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { AnalyticsDashboard, PageViewsPerPathChart, SessionsByDateChart, SessionsByHourChart, SessionsBySourceChart, SessionsGeoChart } from 'react-analytics-charts';
 import AccessoryService from '../services/AccessoryService';
 import AccountService from '../services/AccountService';
 import BrandService from '../services/BrandService';
 import CarService from '../services/CarService';
-import PostService from '../services/PostService'
-import { AnalyticsDashboard } from 'react-analytics-charts';
-// Over ten different commonly used charts are available
-import { SessionsByDateChart, SessionsGeoChart, SessionsByHourChart, SessionsBySourceChart, PageViewsPerPathChart } from 'react-analytics-charts';
+import PostService from '../services/PostService';
 function DashboardComponent() {
     const [users, setUsers] = useState({ user: [], admin: [], manager: [] });
     const [brands, setBrands] = useState({ car: [], accessory: [] });

@@ -1,15 +1,17 @@
-import { Col, ConfigProvider, DatePicker, Form, Input, Row, Modal, Upload, message } from 'antd';
-import locale from 'antd/es/locale-provider/fr_FR';
-import 'moment/locale/vi';
-import moment from 'moment';
-import NumberFormat from 'react-number-format';
 import { PlusOutlined } from '@ant-design/icons';
+import { Col, ConfigProvider, DatePicker, Form, Input, message, Modal, Row, Upload } from 'antd';
+import locale from 'antd/es/locale-provider/fr_FR';
+import moment from 'moment';
+import 'moment/locale/vi';
 import React, { useState } from 'react';
-import storage from '../../services/ImageFirebase';
-import './styles.less'
-import EventService from '../../services/EventService';
+import NumberFormat from 'react-number-format';
 import AccountService from '../../services/AccountService';
-export default function CreateEventBodyModalComponent() {
+import ContestService from '../../services/ContestService';
+import storage from '../../services/ImageFirebase';
+import numberToWord from '../../utils/numberToWord';
+import '../events/styles.less';
+export default function CreateContestBodyModalComponent() {
+    const [price, setPrice] = useState(0);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
     const [visible, setVisible] = useState(false);
@@ -42,7 +44,7 @@ export default function CreateEventBodyModalComponent() {
         setFileList(fileList);
     };
     const customRequest = ({ file, onSuccess, onError }) => {
-        const uploadTask = storage.ref(`events/${file.name}`).put(file);
+        const uploadTask = storage.ref(`contests/${file.name}`).put(file);
         uploadTask.on(
             "state_changed",
             snapshot => { },
@@ -51,7 +53,7 @@ export default function CreateEventBodyModalComponent() {
             },
             async () => {
                 await storage
-                    .ref("events")
+                    .ref("contests")
                     .child(file.name)
                     .getDownloadURL()
                     .then((urls) => {
@@ -121,14 +123,14 @@ export default function CreateEventBodyModalComponent() {
     })
     const onFinish = (values) => {
         console.log(values)
-        EventService.createNewEvent(values)
+        ContestService.createNewContest(values)
             .then((result) => {
                 console.log(result)
                 setTimeout(() => {
-                    message.success("Tạo sự kiện thành công");
+                    message.success("Tạo cuộc thi thành công");
                 }, 500)
                 setTimeout(() => {
-                    window.location.href = '/su-kien'
+                    window.location.href = '/cuoc-thi'
                 }, 1500)
             })
             .catch((error) => {
@@ -190,6 +192,13 @@ export default function CreateEventBodyModalComponent() {
             }
         }
     }
+    const onChangePrice = (e) => {
+        const string = e.target.value;
+        setPrice(string.replace(/\D/g, ''))
+    }
+    form.setFieldsValue({
+        fee: price
+    })
     return (
         <div>
             <Modal
@@ -216,10 +225,10 @@ export default function CreateEventBodyModalComponent() {
                 <Form.Item hidden={true} name="endRegister"><Input /></Form.Item>
                 <Form.Item hidden={true} name="minParticipants"><Input /></Form.Item>
                 <Form.Item hidden={true} name="maxParticipants"><Input /></Form.Item>
-                
-                <Form.Item label="Ảnh sự kiện" name="image"
+                <Form.Item hidden={true} name="fee" ><Input></Input> </Form.Item>
+                <Form.Item label="Ảnh cuộc thi" name="image"
                     getValueFromEvent={normFile}
-                    rules={[{ required: true, message: "Ảnh sự kiện không được bỏ trống" }]}>
+                    rules={[{ required: true, message: "Ảnh cuộc thi không được bỏ trống" }]}>
                     <Upload
                         name="image"
                         listType="picture-card"
@@ -234,13 +243,38 @@ export default function CreateEventBodyModalComponent() {
                         {fileList.length >= 3 ? null : uploadButton}
                     </Upload>
                 </Form.Item>
-                <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
-                    <Input.TextArea
-                        placeholder="Nhập tên sự kiện"
-                        showCount maxLength={200}
-                        autoSize={{ minRows: 1, maxRows: 10 }}
-                    />
-                </Form.Item>
+                <Row gutter={15}>
+                    <Col span={12}>
+                        <Form.Item label="Tên cuộc thi" name="title" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
+                            <Input.TextArea
+                                placeholder="Nhập tên cuộc thi"
+                                showCount maxLength={200}
+                                autoSize={{ minRows: 1, maxRows: 10 }}
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Tiền phụ kiện không được bỏ trống" }]}>
+                            <NumberFormat
+                                onChange={onChangePrice}
+                                placeholder="Nhập giá phụ kiện (vnđ)"
+                                className="currency"
+                                displayType="input"
+                                type="primary"
+                                suffix=" vnđ"
+                                thousandSeparator={'.'}
+                                decimalSeparator={','}
+                                spellCheck="false"
+                                style={{
+                                    width: '100%',
+                                    border: '1px solid #d9d9d9',
+                                    padding: '4px 11px'
+
+                                }}
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
                 <Row gutter={15}>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>
@@ -259,12 +293,12 @@ export default function CreateEventBodyModalComponent() {
                     </Col>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>
-                            <Form.Item label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>SỰ KIỆN</span> và kết thúc</div>} name="dateEvent" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
+                            <Form.Item label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>CUỘC THI</span> và kết thúc</div>} name="dateEvent" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
                                 <RangePicker
                                     style={{ width: '100%' }}
                                     disabledDate={disabledDateS}
                                     disabledTime={disabledRangeTimeS}
-                                    placeholder={['Ngày bắt đầu sự kiện', 'Ngày kết thúc sự kiện']}
+                                    placeholder={['Ngày bắt đầu cuộc thi', 'Ngày kết thúc cuộc thi']}
                                     format={"HH:mm - DD/MM/yyyy"}
                                     onChange={onChangeDate}
                                     showTime
@@ -275,7 +309,7 @@ export default function CreateEventBodyModalComponent() {
                 </Row>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Tối thiểu người đăng ký" name="min" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Tối thiểu người đăng ký" name="min" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     minRegister(values.value)
@@ -298,7 +332,7 @@ export default function CreateEventBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Tối đa người đăng ký" name="max" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Tối đa người đăng ký" name="max" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     maxRegister(values.value)
@@ -321,18 +355,18 @@ export default function CreateEventBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
                             <Input.TextArea
-                                placeholder="Nhập tên sự kiện"
+                                placeholder="Nhập tên cuộc thi"
                                 showCount maxLength={200}
                                 autoSize={{ minRows: 1, maxRows: 10 }}
                             />
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item label="Mô tả sự kiện" name="description" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                <Form.Item label="Mô tả cuộc thi" name="description" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
                     <Input.TextArea
-                        placeholder="Mô tả sự kiện"
+                        placeholder="Mô tả cuộc thi"
                         showCount maxLength={2000}
                         autoSize={{ minRows: 4, maxRows: 10 }}
                     />
