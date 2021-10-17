@@ -143,45 +143,16 @@ export default function CheckAttendanceComponent() {
                     sorter: (a, b) => a.address.length - b.address.length,
                     sortDirections: ['descend', 'ascend'],
                     render: (data) => {
-                        EventService.getUserJoined(data.Id).then((result) => {
-                            if ((result.data.map((e) => e.User.Status)).indexOf(3) === -1) {
-                                setStatus(1)
-                            } else {
-                                setStatus(2)
-                            }
-                        })
-                        console.log("status:", status)
+                        console.log("okk: ", data.Status)
                         return (
-                            status === 1 ?
-                                <Button onClick={() => {
-                                    setVisibleCheck(true)
-                                    setEventId(data.Id)
-                                }}>Điểm danh</Button> :
-                                <Button onClick={() => {
-                                    setVisibleCheck(true)
-                                    setEventId(data.Id)
-                                }}>Checked</Button>
+                            data.Status === 1 ? <Button onClick={() => {
+                                setVisibleCheck(true)
+                                setEventId(data.Id)
+                            }}>Điểm danh</Button> : <Button onClick={() => {
+                                setVisibleCheck(true)
+                                setEventId(data.Id)
+                            }}>Sửa điểm danh</Button>
                         )
-                        // if (result.data.map((e) => e.User.Status).indexOf(1) === -1) {
-                        //     <Button onClick={() => {
-                        //         setVisibleCheck(true)
-                        //         setEventId(data.Id)
-                        //     }}>Checked</Button>
-                        // } else {
-                        //     <Button onClick={() => {
-                        //         setVisibleCheck(true)
-                        //         setEventId(data.Id)
-                        //     }}>Not yet</Button>
-                        // }
-                        // if ()
-                        // }).indexOf(1) === -1) {
-                        //     <Button onClick={() => {
-                        //         setVisibleCheck(true)
-                        //         setEventId(data.Id)
-                        //     }}>Checked</Button>
-                        // } else {
-                        //     
-                        // }
                     }
                 },
             ];

@@ -1,5 +1,5 @@
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Input, Modal, Row, Space, Spin, Table, Tabs, Tag } from 'antd';
+import { Avatar, Button, Col, Input, Modal, Row, Space, Spin, Table, Tabs, Tag, message } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
@@ -22,6 +22,7 @@ function ManageEventsComponent() {
     const [visibleEdit, setVisibleEdit] = useState(false);
     const [visibleSelect, setVisibleSelect] = useState(false);
     const [visibleCheck, setVisibleCheck] = useState(false);
+    const [visibleCancel, setVisibleCancel] = useState(false);
     const [loadingButton, setLoadingButton] = React.useState(false)
     const history = useHistory();
     const [record, setRecord] = useState(null)
@@ -30,6 +31,7 @@ function ManageEventsComponent() {
     const [recordImagePro, setRecordImagePro] = useState(null)
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = React.useState(5)
+    const [cancelEventId, setCancelEventId] = React.useState(null)
     const [readyEvent, setReadyEvent] = useState(null)
     const [loadingEvent, setLoadingEvent] = useState(null)
     const [historyEvent, setHistoryEvent] = useState(null)
@@ -40,15 +42,18 @@ function ManageEventsComponent() {
     const showModalEdit = () => {
         setVisibleEdit(true);
     };
+    const showModalCancel = () => {
+        setVisibleCancel(true);
+    };
     const showModalSelect = () => {
         setVisibleSelect(true);
     };
     const showModalConfirm = () => {
         setModalConfirm(true)
-    }
+    };
     const showModalCheck = () => {
         setVisibleCheck(true)
-    }
+    };
     const handleOk = () => {
         setLoadingButton(true);
         setTimeout(() => {
@@ -63,7 +68,26 @@ function ManageEventsComponent() {
         setVisibleEdit(false);
         setVisibleSelect(false);
         setVisibleCheck(false)
+        setVisibleCancel(false);
         history.push('/su-kien');
+    };
+    const handleCancelEvent = (id) => {
+        setLoadingButton(true);
+        EventService.cancelEvent(id)
+            .then(() => {
+                setTimeout(() => {
+                    message.success("Hủy sự kiện thành công")
+                }, 500)
+                setTimeout(() => {
+                    setLoadingButton(false);
+                }, 1000);
+                setTimeout(() => {
+                    window.location.href = '/su-kien'
+                }, 800)
+            })
+            .catch(() => {
+                message.error("Hủy sự kiện không thành công")
+            })
     };
     //register
     useEffect(() => {
@@ -263,26 +287,6 @@ function ManageEventsComponent() {
                         )
                     }
                 },
-                // {
-                //     title: 'Số lượng',
-                //     key: 'min',
-                //     sorter: (a, b) => a.MinParticipants - b.MinParticipants,
-                //     sortDirections: ['descend', 'ascend'],
-                //     render: (data) => {
-                //         let color = '#4CBE9A';
-                //         if (data.MinParticipants > 20) {
-                //             color = '#EBA3A4'
-                //         }
-                //         if (data.MinParticipants > 50) {
-                //             color = '#9DAD7F'
-                //         }
-                //         return (
-                //             <Tag style={{ fontSize: 15 }} color={color} key={data}>
-                //                 <i className="fas fa-users"></i>&nbsp;&nbsp;{data.MinParticipants} - {data.MaxParticipants}
-                //             </Tag>
-                //         )
-                //     }
-                // },
                 {
                     title: 'Thời hạn đăng ký',
                     key: 'deadline',
@@ -325,6 +329,11 @@ function ManageEventsComponent() {
                                     }
                                     setRecordImage(ex);
                                 }} className="fas fa-cog fa-2x" style={{ color: '#6155A6', cursor: 'alias' }}></i>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <i onClick={() => {
+                                    showModalCancel()
+                                    setCancelEventId(record)
+                                }} className="far fa-times-circle fa-2x" style={{ color: '#FF7878', cursor: 'alias' }}></i>
                             </div>
                         )
                     }
@@ -1209,6 +1218,21 @@ function ManageEventsComponent() {
                     }
                 >
                     <ViewEventComponent record={record} recordImage={recordImage} />
+                </Modal>
+                {/* Modal Cancel */}
+                <Modal
+                    title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
+                    centered
+                    icon={<ExclamationCircleOutlined />}
+                    visible={visibleCancel}
+                    onCancel={() => handleCancel()}
+                    footer={[
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button onClick={() => handleCancel()}>Không </Button>
+                            <Button loading={loadingButton} onClick={() => handleCancelEvent(cancelEventId !== null && cancelEventId.Id)} type="primary">Có</Button>
+                        </Row>
+                    ]}
+                > <div>Bạn có muốn hủy "{cancelEventId !== null && cancelEventId.Title}" không?</div>
                 </Modal>
                 {/* Modal check attendence */}
                 <Modal
