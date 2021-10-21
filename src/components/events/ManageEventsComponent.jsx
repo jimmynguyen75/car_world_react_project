@@ -515,6 +515,11 @@ function ManageEventsComponent() {
                                     }
                                     setRecordImage(ex);
                                 }} className="fas fa-cog fa-2x" style={{ color: '#6155A6', cursor: 'alias' }}></i>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <i onClick={() => {
+                                    showModalCancel()
+                                    setCancelEventId(record)
+                                }} className="far fa-times-circle fa-2x" style={{ color: '#FF7878', cursor: 'alias' }}></i>
                             </div>
                         )
                     }

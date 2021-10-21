@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CreateContestsModalComponent from './CreateContestsModalComponent';
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Input, Modal, Row, Space, Spin, Table, Tabs, Tag } from 'antd';
+import { Avatar, Button, Col, Input, Modal, Row, Space, Spin, Table, Tabs, Tag, message } from 'antd';
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import CreateBySelectComponent from './CreateBySelectComponent';
@@ -31,13 +31,19 @@ function ManageContestsComponent() {
     const [readyContest, setReadyContest] = useState(null)
     const [loadingContest, setLoadingContest] = useState(null)
     const [historyContest, setHistoryContest] = useState(null)
+    const [cancelContest, setCancelContest] = useState(null)
     const [proposals, setProposals] = useState(null)
+    const [cancelContestId, setCancelContestId] = React.useState(null)
+    const [visibleCancel, setVisibleCancel] = useState(false);
     //show
     const showModalView = () => {
         setVisibleView(true);
     };
     const showModalEdit = () => {
         setVisibleEdit(true);
+    };
+    const showModalCancel = () => {
+        setVisibleCancel(true);
     };
     const showModalSelect = () => {
         setVisibleSelect(true);
@@ -61,8 +67,27 @@ function ManageContestsComponent() {
         setVisibleView(false);
         setVisibleEdit(false);
         setVisibleSelect(false);
-        setVisibleCheck(false)
+        setVisibleCheck(false);
+        setVisibleCancel(false);
         history.push('/cuoc-thi');
+    };
+    const handleCancelContest = (id) => {
+        setLoadingButton(true);
+        ContestService.cancelEvent(id)
+            .then(() => {
+                setTimeout(() => {
+                    message.success("Hủy sự kiện thành công")
+                }, 500)
+                setTimeout(() => {
+                    setLoadingButton(false);
+                }, 1000);
+                setTimeout(() => {
+                    window.location.href = '/su-kien'
+                }, 800)
+            })
+            .catch(() => {
+                message.error("Hủy sự kiện không thành công")
+            })
     };
     //Effect
     // register
@@ -100,6 +125,16 @@ function ManageContestsComponent() {
         ContestService.getFinishedContests()
             .then((response) => {
                 setHistoryContest(response.data)
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }, [])
+    //cancal 
+    useEffect(() => {
+        ContestService.getCanceledContest()
+            .then((response) => {
+                setCancelContest(response.data)
             })
             .catch((err) => {
                 console.log(err);
@@ -295,6 +330,11 @@ function ManageContestsComponent() {
                                     }
                                     setRecordImage(ex);
                                 }} className="fas fa-cog fa-2x" style={{ color: '#6155A6', cursor: 'alias' }}></i>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <i onClick={() => {
+                                    showModalCancel()
+                                    setCancelContestId(record)
+                                }} className="far fa-times-circle fa-2x" style={{ color: '#FF7878', cursor: 'alias' }}></i>
                             </div>
                         )
                     }
@@ -476,6 +516,15 @@ function ManageContestsComponent() {
                                     }
                                     setRecordImage(ex);
                                 }} className="fas fa-cog fa-2x" style={{ color: '#6155A6', cursor: 'alias' }}></i>
+                                <i onClick={() => {
+                                    showModalCancel()
+                                    setCancelContestId(record)
+                                }} className="far fa-times-circle fa-2x" style={{ color: '#FF7878', cursor: 'alias' }}></i>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <i onClick={() => {
+                                    showModalCancel()
+                                    setCancelContestId(record)
+                                }} className="far fa-times-circle fa-2x" style={{ color: '#FF7878', cursor: 'alias' }}></i>
                             </div>
                         )
                     }
@@ -861,6 +910,187 @@ function ManageContestsComponent() {
             />;
         }
     }
+    class Cancel extends React.Component {
+        state = {
+            searchText: '',
+            searchedColumn: '',
+        };
+        getColumnSearchProps = dataIndex => ({
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+                <div style={{ padding: 8 }}>
+                    <Input
+                        ref={node => {
+                            this.searchInput = node;
+                        }}
+                        placeholder={`Search ${dataIndex}`}
+                        value={selectedKeys[0]}
+                        onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                        onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                        style={{ marginBottom: 8, display: 'block' }}
+                    />
+                    <Space>
+                        <Button
+                            type="primary"
+                            onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                            icon={<SearchOutlined />}
+                            size="small"
+                            style={{ width: 90 }}
+                        >
+                            Search
+                        </Button>
+                        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+                            Reset
+                        </Button>
+                        <Button
+                            type="link"
+                            size="small"
+                            onClick={() => {
+                                confirm({ closeDropdown: false });
+                                this.setState({
+                                    searchText: selectedKeys[0],
+                                    searchedColumn: dataIndex,
+                                });
+                            }}
+                        >
+                            Filter
+                        </Button>
+                    </Space>
+                </div>
+            ),
+            filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+            onFilter: (value, record) =>
+                record[dataIndex]
+                    ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+                    : '',
+            onFilterDropdownVisibleChange: visible => {
+                if (visible) {
+                    setTimeout(() => this.searchInput.select(), 100);
+                }
+            },
+            render: text =>
+                this.state.searchedColumn === dataIndex ? (
+                    <Highlighter
+                        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                        searchWords={[this.state.searchText]}
+                        autoEscape
+                        textToHighlight={text ? text.toString() : ''}
+                    />
+                ) : (
+                    text
+                ),
+        });
+        handleSearch = (selectedKeys, confirm, dataIndex) => {
+            confirm();
+            this.setState({
+                searchText: selectedKeys[0],
+                searchedColumn: dataIndex,
+            });
+        };
+        handleReset = clearFilters => {
+            clearFilters();
+            this.setState({ searchText: '' });
+        };
+        render() {
+            const columns = [
+                {
+                    title: 'Tên sự kiện',
+                    key: 'name',
+                    width: '30%',
+                    ...this.getColumnSearchProps('Title'),
+                    render: (data) => {
+                        return (
+                            <Row>
+                                <Col span={5}><img alt="" style={{ height: 50, maxWidth: '100%', objectFit: 'cover' }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
+                                <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{data.Title}</div></Col>
+                            </Row>
+                        )
+                    }
+                },
+                {
+                    title: 'Ngày diễn ra',
+                    key: 'age',
+                    width: '28%',
+                    ...this.getColumnSearchProps('age'),
+                    render: (data) => {
+                        return (
+                            <Row>
+                                <div style={{ paddingTop: 15, width: '40px', fontSize: '0.5rem' }}><i className="far fa-clock fa-3x" style={{ color: '#F29191' }} /></div>
+                                <div>
+                                    <div style={{ marginBottom: 5 }}>Bắt đầu:&nbsp;{moment(data.StartDate).format('LT')} - {moment(data.StartDate).format('L')}</div>
+                                    <div>Kết thúc:&nbsp;{moment(data.EndDate).format('LT')} - {moment(data.EndDate).format('L')}</div>
+                                </div>
+                            </Row>
+                        )
+                    }
+                },
+                {
+                    title: 'Đã tham gia',
+                    key: 'join',
+                    sorter: (a, b) => a.CurrentParticipants - b.CurrentParticipants,
+                    sortDirections: ['descend', 'ascend'],
+                    render: (data) => {
+                        let color = '#4CBE9A';
+                        if (data.CurrentParticipants > 10) {
+                            color = '#EBA3A4'
+                        }
+                        if (data.CurrentParticipants > 20) {
+                            color = '#9DAD7F'
+                        }
+                        return (
+                            <Tag style={{ fontSize: 15 }} color={color} key={data}>
+                                <i className="fas fa-users"></i>&nbsp;&nbsp;{data.CurrentParticipants}
+                            </Tag>
+                        )
+                    }
+                },
+                {
+                    title: 'Tác vụ',
+                    key: 'action',
+                    render: (record) => {
+                        return (
+                            <div style={{ textAlign: 'center', fontSize: '0.6rem' }}>
+                                <i onClick={() => {
+                                    showModalView()
+                                    setRecord(record)
+                                    let ex = record.Image.split("|")
+                                    if (ex.length > 1) {
+                                        ex.pop();
+                                    }
+                                    setRecordImage(ex);
+                                }} className="far fa-eye fa-2x" style={{ color: '#5AA469', cursor: 'zoom-in' }}></i>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <i onClick={() => {
+                                    showModalEdit()
+                                    setRecord(record)
+                                    let ex = record.Image.split("|")
+                                    if (ex.length > 1) {
+                                        ex.pop();
+                                    }
+                                    setRecordImage(ex);
+                                }} className="fas fa-cog fa-2x" style={{ color: '#6155A6', cursor: 'alias' }}></i>
+                            </div>
+                        )
+                    }
+                },
+            ];
+            return <Table
+                rowKey="eventKey2"
+                columns={columns}
+                dataSource={cancelContest}
+                pagination={{
+                    current: page,
+                    pageSize: pageSize,
+                    onChange: (page, pageSize) => {
+                        setPage(page)
+                        setPageSize(pageSize)
+                    },
+                    pageSizeOptions: ['5', '10', '15', '20'],
+                    showSizeChanger: true,
+                    locale: { items_per_page: "/ trang" },
+                }}
+            />;
+        }
+    }
     const Proposal = () => {
         const columns = [
             {
@@ -999,6 +1229,21 @@ function ManageContestsComponent() {
                 >
                     <ViewContestComponent record={record} recordImage={recordImage} />
                 </Modal>
+                {/* Modal cancel */}
+                <Modal
+                    title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
+                    centered
+                    icon={<ExclamationCircleOutlined />}
+                    visible={visibleCancel}
+                    onCancel={() => handleCancel()}
+                    footer={[
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button onClick={() => handleCancel()}>Không </Button>
+                            <Button loading={loadingButton} onClick={() => handleCancelContest(cancelContestId !== null && cancelContestId.Id)} type="primary">Có</Button>
+                        </Row>
+                    ]}
+                > <div>Bạn có muốn hủy "{cancelContestId !== null && cancelContestId.Title}" không?</div>
+                </Modal>
                 {/* Modal check attendence */}
                 {/* end */}
                 <Row>
@@ -1019,6 +1264,9 @@ function ManageContestsComponent() {
                             </TabPane>
                             <TabPane tab={<div><i className="fas fa-history" ></i>&nbsp;&nbsp;Lịch sử</div>} key="4" >
                                 <History />
+                            </TabPane>
+                            <TabPane tab={<div><i class="far fa-times-circle"></i>&nbsp;&nbsp;Đã hủy</div>} key="5" >
+                                <Cancel />
                             </TabPane>
                         </Tabs>
                     </Col>

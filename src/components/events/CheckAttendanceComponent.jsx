@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import axios from "axios";
 import { Table, Input, Button, Space, Row, Col, Modal, Radio, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
@@ -8,30 +9,16 @@ export default function CheckAttendanceComponent() {
     const [visibleCheck, setVisibleCheck] = useState(false);
     const [eventId, setEventId] = useState(0)
     const [record, setRecord] = useState(null)
-    const [status, setStatus] = useState(0)
-    const [test, setTest] = useState([])
     const check = []
     useEffect(() => {
         EventService.getUserJoined(eventId).then((result) => {
-            // let data = result.data.map((e) => e.User)
             setRecord(result.data)
         })
             .catch((error) => console.log(error))
     }, [eventId])
-    // console.log("record: ", record.map((e) => e.User))
     useEffect(() => {
         EventService.getOngoingEvents().then((response) => { setEvents(response.data) }).catch((error) => console.log(error))
     }, [])
-    useEffect(() => {
-        events !== null && events.map((event) => {
-            EventService.getUserJoined(event.Id).then((e) => {
-                setTest(prevState => [...prevState, e.data])
-            })
-        })
-    }, [events])
-    test !== null && test.map((event) => {
-        console.log("event: ", event.length)
-    })
     class App extends React.Component {
         state = {
             searchText: '',
@@ -143,7 +130,6 @@ export default function CheckAttendanceComponent() {
                     sorter: (a, b) => a.address.length - b.address.length,
                     sortDirections: ['descend', 'ascend'],
                     render: (data) => {
-                        console.log("okk: ", data.Status)
                         return (
                             data.Status === 1 ? <Button onClick={() => {
                                 setVisibleCheck(true)
@@ -160,33 +146,50 @@ export default function CheckAttendanceComponent() {
         }
     }
     const handleRadioYes = (data) => {
-        if (check.indexOf(data.User.Id) === -1) {
-            check.push(data.User.Id)
+        const event = {
+            contestEventId: eventId,
+            userId: data.User.Id,
+            type: 2
         }
-        console.log("check: ", check)
-    }
-    const handleRadioNo = (data) => {
-        if (check.indexOf(data.User.Id) !== -1) {
+        const array = check.findIndex(i => i.userId === data.User.Id)
+        if (array !== -1) {
             var index = check.indexOf(data.User.Id);
-            console.log(index)
             check.splice(index, 1);
         }
         else {
-            check.push(data.User.Id)
+            check.push(event)
         }
-        console.log("check: ", check)
+    }
+    const handleRadioNo = (data) => {
+        const event = {
+            contestEventId: eventId,
+            userId: data.User.Id,
+            type: 3
+        }
+        const array = check.findIndex(i => i.userId === data.User.Id)
+        if (array !== -1) {
+            var index = check.indexOf(data.User.Id);
+            check.splice(index, 1);
+        }
+        else {
+            check.push(event)
+        }
     }
     const handleSubmitCheck = () => {
-        check.map((value) => {
-            const event = {
-                eventId: eventId,
-                userId: value
-            }
-            console.log(event)
-            return (
-                EventService.checkUser(event).then(() => { message.success("Điểm danh thành công") }).catch(() => { message.error("Không thành công") })
-            )
-        })
+        return (
+            axios.all([check.map((userId) => {
+                EventService.checkUser(userId.type, userId)
+            })])
+                .then(axios.spread(() => {
+                    setTimeout(() => {
+                        message.success("Điểm danh thành công")
+                    }, 500)
+                    setTimeout(() => {
+                        window.location.href = '/su-kien'
+                    }, 1000)
+                }))
+                .catch(() => { message.error("Điểm danh không thành công") })
+        )
     }
     const baseColumns = [
         {
@@ -214,7 +217,7 @@ export default function CheckAttendanceComponent() {
             render: (data) => {
                 return (
                     <Radio.Group
-                        defaultValue={data.Status === 1 ? "no" : "yes"}
+                        defaultValue={data.Status === 2 ? "yes" : "no"}
                     >
                         <Radio value="yes" onClick={() => handleRadioYes(data)}>Có</Radio>
                         <Radio value="no" onClick={() => handleRadioNo(data)}>Không</Radio>

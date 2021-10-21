@@ -116,6 +116,7 @@ export default function CreateEventBodyModalComponent() {
         startRegister: startRegister,
         endRegister: endRegister,
         createdBy: AccountService.getCurrentUser().Id,
+        type: 1,
         proposalId: null,
         modifiedBy: null
     })
@@ -207,6 +208,7 @@ export default function CreateEventBodyModalComponent() {
                 onFinish={onFinish}
                 form={form}
             >
+                <Form.Item hidden={true} name="type"><Input /></Form.Item>
                 <Form.Item hidden={true} name="createdBy"><Input /></Form.Item>
                 <Form.Item hidden={true} name="modifiedBy"><Input /></Form.Item>
                 <Form.Item hidden={true} name="proposalId"><Input /></Form.Item>

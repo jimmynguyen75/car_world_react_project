@@ -119,7 +119,8 @@ export default function CreateContestBodyModalComponent() {
         endRegister: endRegister,
         createdBy: AccountService.getCurrentUser().Id,
         proposalId: null,
-        modifiedBy: null
+        modifiedBy: null,
+        type: 2
     })
     const onFinish = (values) => {
         console.log(values)
@@ -216,6 +217,7 @@ export default function CreateContestBodyModalComponent() {
                 onFinish={onFinish}
                 form={form}
             >
+                <Form.Item hidden={true} name="type"><Input /></Form.Item>
                 <Form.Item hidden={true} name="createdBy"><Input /></Form.Item>
                 <Form.Item hidden={true} name="modifiedBy"><Input /></Form.Item>
                 <Form.Item hidden={true} name="proposalId"><Input /></Form.Item>

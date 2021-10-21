@@ -133,13 +133,15 @@ export default function EditEventComponent({ record, recordImage }) {
             description: record.Description,
             venue: record.Venue,
             proposalId: null,
-            modifiedBy: null,
-            createdBy: AccountService.getCurrentUser().Id,
+            modifiedBy: AccountService.getCurrentUser().Id,
+            createdBy: record.CreatedByNavigation.Id,
             min: record.MinParticipants,
             max: record.MaxParticipants,
             id: record.Id,
             createdDate: record.CreatedDate,
             currentParticipants: record.CurrentParticipants,
+            type: 1,
+            status: 1
             //fake           
         })
     }, [form, record])
@@ -246,7 +248,9 @@ export default function EditEventComponent({ record, recordImage }) {
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
             <Form onFinish={onFinish} layout="vertical" id="editEvent" form={form}>
+                <Form.Item hidden={true} name="type"><Input /></Form.Item>
                 <Form.Item hidden={true} name="id"><Input></Input></Form.Item>
+                <Form.Item hidden={true} name="status"><Input></Input></Form.Item>
                 <Form.Item hidden={true} name="image"><Input></Input></Form.Item>
                 <Form.Item hidden={true} name="createdBy"><Input /></Form.Item>
                 <Form.Item hidden={true} name="modifiedBy"><Input /></Form.Item>
