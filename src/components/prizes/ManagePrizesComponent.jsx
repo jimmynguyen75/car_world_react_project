@@ -65,7 +65,15 @@ export default function ManagePrizesComponent() {
         }, 1000);
     };
     const onFinish = (values) => {
-
+        console.log(values);
+        PrizeService.updatePrize(values.id, values)
+            .then(() => {
+                message.success("Cập nhật thành công")
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500)
+            })
+            .catch(() => { message.error("Cập nhật không thành công") })
     }
     class PrizeContest extends React.Component {
         state = {
@@ -183,7 +191,7 @@ export default function ManagePrizesComponent() {
                         )
                     }
                 },
-                 {
+                {
                     title: 'Người tạo',
                     key: 'created',
                     render: (data) => {
@@ -348,6 +356,19 @@ export default function ManagePrizesComponent() {
                 }
             ];
             return <Table
+                onRow={(record) => {
+                    return {
+                        onClick: () => {
+                            console.log(record)
+                            form.setFieldsValue({
+                                name: record.Name,
+                                description: record.Description,
+                                image: record.Image,
+                                id: record.Id
+                            })
+                        }, // click row
+                    };
+                }}
                 rowKey="eventKey2"
                 columns={columns}
                 dataSource={prizes}

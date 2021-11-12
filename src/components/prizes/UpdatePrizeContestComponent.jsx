@@ -43,6 +43,10 @@ export default function ViewEventComponent({ record, recordImage }) {
         console.log(prize);
         setVisibleEdit(true);
     };
+    async function convertUserIdToName(userId) {
+        const user = await AccountService.getUserById(userId);
+        return user.data;
+    }
     function convertPrizeName(prize) {
         if (prize === '1') {
             return "Giải nhất"
@@ -54,14 +58,6 @@ export default function ViewEventComponent({ record, recordImage }) {
             return "Giải khuyến khích"
         }
     }
-    async function convertUserIdToName(id) {
-        AccountService.getUserById(id)
-            .then(response => {
-                return response.data.FullName;  
-            })
-            .catch(error => {console.log(error)})
-    }
-    console.log(convertUserIdToName(17))
     function onSelect(value, data) {
         const option = {
             id: data.prizeId,
@@ -125,7 +121,7 @@ export default function ViewEventComponent({ record, recordImage }) {
         <div>
             <Modal
                 destroyOnClose={true}
-                title={"Tạo giải thưởng cuộc thi"}
+                title={"Cập nhật giải thưởng cuộc thi"}
                 visible={visibleEdit}
                 onCancel={handleCancel}
                 width={600}
@@ -175,6 +171,20 @@ export default function ViewEventComponent({ record, recordImage }) {
                         >
                             {prizeList.map(prizes => (
                                 <Option key={prizes.Id} value={prizes.Id}>{prizes.Name}</Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item label="Chọn giải thưởng" name="userId">
+                        <Select
+                            defaultValue={data.UserId}
+                            showSearch
+                            style={{ width: '100%' }}
+                            placeholder="Chọn người tham gia"
+                            onSelect={onSelect}
+                            onChange={onDeselect}
+                        >
+                            {users.map(users => (
+                                <Option key={users.Id} value={users.Id} prizeId={data.Id}><Avatar icon={<UserOutlined />} src={users.Image} size={18} style={{ marginBottom: 4 }} />&nbsp;{users.FullName}</Option>
                             ))}
                         </Select>
                     </Form.Item>
@@ -265,25 +275,11 @@ export default function ViewEventComponent({ record, recordImage }) {
                                 <Descriptions.Item label={convertPrizeName(prize.PrizeOrder)}>
                                     <Row gutter={15}>
                                         <Col span={21}>
-                                            <Row>
-                                                <div>{prize.Prize.Name}</div>:&nbsp;
-                                                <div>{convertUserIdToName(17)}</div>
+                                            <Row gutter={15}>
+                                                <Col span={12}><div>{prize.Prize.Name}</div></Col>
+                                                <Col span={12}><div>{prize.User.FullName}</div></Col>
                                             </Row>
                                         </Col>
-                                        {/* <Col span={12}>
-                                            <Select
-                                                defaultValue={prize.UserId}
-                                                showSearch
-                                                style={{ width: '100%' }}
-                                                placeholder="Tìm kiếm người tham gia"
-                                                onSelect={onSelect}
-                                                onChange={onDeselect}
-                                            >
-                                                {users.map(users => (
-                                                    <Option key={users.Id} value={users.Id} prizeId={prize.Id}><Avatar icon={<UserOutlined />} src={users.Image} size={18} style={{ marginBottom: 4 }} />&nbsp;{users.FullName}</Option>
-                                                ))}
-                                            </Select>
-                                        </Col> */}
                                         <Col span={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             <Row gutter={10}>
                                                 <div onClick={() => showModalEdit(prize)}> Sửa </div>

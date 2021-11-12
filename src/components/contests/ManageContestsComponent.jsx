@@ -696,16 +696,6 @@ function ManageContestsComponent() {
                                     }
                                     setRecordImage(ex);
                                 }} className="far fa-eye fa-2x" style={{ color: '#5AA469', cursor: 'zoom-in' }}></i>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <i onClick={() => {
-                                    showModalEdit()
-                                    setRecord(record)
-                                    let ex = record.Image.split("|")
-                                    if (ex.length > 1) {
-                                        ex.pop();
-                                    }
-                                    setRecordImage(ex);
-                                }} className="fas fa-cog fa-2x" style={{ color: '#6155A6', cursor: 'alias' }}></i>
                             </div>
                         )
                     }
@@ -877,16 +867,6 @@ function ManageContestsComponent() {
                                     }
                                     setRecordImage(ex);
                                 }} className="far fa-eye fa-2x" style={{ color: '#5AA469', cursor: 'zoom-in' }}></i>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <i onClick={() => {
-                                    showModalEdit()
-                                    setRecord(record)
-                                    let ex = record.Image.split("|")
-                                    if (ex.length > 1) {
-                                        ex.pop();
-                                    }
-                                    setRecordImage(ex);
-                                }} className="fas fa-cog fa-2x" style={{ color: '#6155A6', cursor: 'alias' }}></i>
                             </div>
                         )
                     }

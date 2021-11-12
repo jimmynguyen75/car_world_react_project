@@ -22,7 +22,7 @@ class PrizeService {
     createPrizeContest(prizeContest) {
         return axios.post(PRIZE_CONTEST_URL + "CreatePrizeForContest", prizeContest, { headers: authHeader() })
     }
-    getPrizeContestById(id) {
+     getPrizeContestById(id) {
         return axios.get(PRIZE_CONTEST_URL + "GetPrizesByContestId?contestId=" + id, { headers: authHeader() })
     }
     updatePrizeContest(id, prizeContest) {
