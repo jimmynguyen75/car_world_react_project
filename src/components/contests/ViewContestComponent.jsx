@@ -41,7 +41,7 @@ export default function ViewEventComponent({ record, recordImage }) {
                                 <i class="fas fa-clock" style={{ color: '#BB5A5A' }}></i>&nbsp;{moment(record.EndRegister).format('LT')} &nbsp;<MinusOutlined />&nbsp; <i class="far fa-calendar-check" style={{ color: '#BB5A5A' }}></i>&nbsp;{moment(record.EndRegister).format('L')}
                             </Descriptions.Item>
                         </Descriptions>
-                        <div style={{ marginTop: 12, marginBottom: 7, fontWeight: '450', fontSize: 14, letterSpacing: 1 }}>Thời gian diễn ra <span style={{ color: '#7BC0A3', fontWeight: 500 }}>cuộc thi</span></div>
+                        <div style={{ marginTop: 12, marginBottom: 7, fontWeight: '450', fontSize: 14, letterSpacing: 1 }}>Thời gian diễn ra <span style={{ color: '#7BC0A3', fontWeight: 500 }}>CUỘC THI</span></div>
                         <Descriptions
                             bordered
                             column={1}

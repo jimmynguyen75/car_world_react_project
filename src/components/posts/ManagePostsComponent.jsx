@@ -233,7 +233,7 @@ function ManagePostsComponent() {
                 },
                 {
                     title: 'Người tạo',
-                    key: 'address',
+                    key: 'created',
                     //sorter: (a, b) => a.CreatedDate - b.CreatedDate,
                     sortDirections: ['descend', 'ascend'],
                     render: (data) => {

@@ -325,7 +325,7 @@ export default function CreateEventBodyModalComponent() {
                     <Col span={12}>
                         <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
                             <Input.TextArea
-                                placeholder="Nhập tên sự kiện"
+                                placeholder="Địa chỉ tổ chức"
                                 showCount maxLength={200}
                                 autoSize={{ minRows: 1, maxRows: 10 }}
                             />

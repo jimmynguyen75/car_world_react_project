@@ -13,6 +13,7 @@ import CreatePostModalComponent from '../posts/CreatePostModalComponent';
 import EditPostComponent from '../posts/EditPostComponent';
 import ManagePostsComponent from '../posts/ManagePostsComponent';
 import ViewDetailPostComponent from '../posts/ViewDetailPostComponent';
+import ManagePrizesComponent from '../prizes/ManagePrizesComponent';
 import ProfileComponent from '../profile/ProfileComponent';
 import ManageProposalsComponent from '../proposals/ManageProposalsComponent';
 import ManagerBodyDashboardComponent from './ManagerBodyDashboardComponent';
@@ -25,7 +26,7 @@ function ManagerDashboardComponent() {
     const [user, setUser] = useState("")
     const currentUser = AccountService.getCurrentUser();
     const [title, setTitle] = useState('');
-
+    const { SubMenu } = Menu;
     // const recordPost = location.state != null && removeVietnamese.removeVietnameseTones(location.state.record.Title).replace(/\s+/g, '-').toLowerCase()
     //dư một space nên ko bằng
 
@@ -44,6 +45,8 @@ function ManagerDashboardComponent() {
                 return (setTitle('Quản lý sự kiện'))
             case '/cuoc-thi':
                 return (setTitle('Quản lý cuộc thi'))
+            case '/giai-thuong':
+                return (setTitle('Quản lý giải thưởng'))
             case '/de-xuat':
                 return (setTitle('Quản lý đề xuất'))
             case '/thong-tin-ca-nhan':
@@ -78,6 +81,9 @@ function ManagerDashboardComponent() {
     }
     function manageContests() {
         history.push('/cuoc-thi')
+    }
+    function managePrizes() {
+        history.push('/giai-thuong')
     }
     function profile() {
         history.push('/thong-tin-ca-nhan')
@@ -118,7 +124,10 @@ function ManagerDashboardComponent() {
                     <Menu.Item key="/bai-dang" onClick={managePosts}><i className="far fa-clone" style={{ fontSize: 18, color: '#DBAD68', paddingTop: 4 }} />&nbsp;&nbsp;<span style={{ paddingLeft: 2 }}>Quản lý bài đăng</span></Menu.Item>
                     <Menu.Item key="/de-xuat" onClick={manageProposal}><i className="far fa-lightbulb" style={{ fontSize: 18, color: '#FF7878', paddingTop: 4 }} />&nbsp;&nbsp;&nbsp;&nbsp;Quản lý đề xuất</Menu.Item>
                     <Menu.Item key="/su-kien" onClick={manageEvents}><i className="fas fa-calendar-alt" style={{ fontSize: 18, color: '#52BCC2' }} />&nbsp;&nbsp;&nbsp;Quản lý sự kiện</Menu.Item>
-                    <Menu.Item key="/cuoc-thi" onClick={manageContests}><i className="fas fa-trophy" style={{ fontSize: 18, color: '#BFA2DB', paddingTop: 4 }} />&nbsp;&nbsp;Quản lý cuộc thi</Menu.Item>
+                    <SubMenu key="/cuoc-thi" icon={<i className="fas fa-trophy" style={{ fontSize: 18, color: '#BFA2DB', paddingTop: 4 }} />} title="Quản lý cuộc thi">
+                        <Menu.Item key="1" onClick={manageContests}>Quản lý</Menu.Item>
+                        <Menu.Item key="2" onClick={managePrizes}>Giải thưởng</Menu.Item>
+                    </SubMenu>
                     <Menu.Item key="/phan-hoi" icon={<MessageOutlined style={{ fontSize: 18, color: '#6B7AA1', paddingTop: 2 }} />} onClick={manageFeedback}>Quản lý phản hồi</Menu.Item>
                     <Menu.Item key="/thong-tin-ca-nhan" icon={<UserOutlined style={{ fontSize: 18, color: '#9E7777' }} />} onClick={profile}>Thông tin cá nhân</Menu.Item>
                     <Menu.Item key="/dang-xuat" onClick={confirmLogout} icon={<LogoutOutlined style={{ fontSize: 18, color: '#E9BEBE', paddingTop: 2 }} />}>Đăng xuất</Menu.Item>
@@ -156,6 +165,10 @@ function ManagerDashboardComponent() {
                             case '/cuoc-thi':
                                 return (
                                     <ManageContestsComponent />
+                                )
+                            case '/giai-thuong':
+                                return (
+                                    <ManagePrizesComponent />
                                 )
                             case '/de-xuat':
                                 return (

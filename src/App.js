@@ -61,6 +61,7 @@ function App() {
               <Route path="/bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/su-kien" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/cuoc-thi" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
+              <Route path="/giai-thuong" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/tao-bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/sua-bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/thong-tin-ca-nhan" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>

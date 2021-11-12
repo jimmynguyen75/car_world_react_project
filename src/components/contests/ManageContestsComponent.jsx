@@ -306,7 +306,7 @@ function ManageContestsComponent() {
                 },
                 {
                     title: 'Tác vụ',
-                    width: '11%',
+                    width: '15%',
                     key: 'action',
                     render: (record) => {
                         return (
