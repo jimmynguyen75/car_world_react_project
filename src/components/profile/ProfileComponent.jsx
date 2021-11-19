@@ -127,7 +127,7 @@ function ProfileComponent() {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <Form.Item name="yearOfBirth" label="Ngày tháng năm sinh" rules={[{ required: true, message: "Mật khẩu không được bỏ trống" }]}>
+                                        <Form.Item name="gender" label="Giới tính" rules={[{ required: true, message: "Mật khẩu không được bỏ trống" }]}>
                                             <Radio.Group>
                                                 <Radio value={0}>Nam</Radio>
                                                 <Radio value={1}>Nữ</Radio>
