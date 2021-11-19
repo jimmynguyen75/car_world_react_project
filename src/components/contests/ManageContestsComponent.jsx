@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CreateContestsModalComponent from './CreateContestsModalComponent';
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Input, Modal, Row, Space, Spin, Table, Tabs, Tag, message } from 'antd';
+import { Avatar, Button, Col, Input, Modal, Row, Space, Spin, Table, Tabs, Tag, message, Rate } from 'antd';
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import CreateBySelectComponent from './CreateBySelectComponent';
@@ -849,6 +849,15 @@ function ManageContestsComponent() {
                             <Tag style={{ fontSize: 15 }} color={color} key={data}>
                                 <i className="fas fa-users"></i>&nbsp;&nbsp;{data.CurrentParticipants}
                             </Tag>
+                        )
+                    }
+                },
+                {
+                    title: 'Đánh giá',
+                    key: 'rate',
+                    render: (data) => {
+                        return (
+                            <Rate allowHalf defaultValue={data.Rating} />
                         )
                     }
                 },

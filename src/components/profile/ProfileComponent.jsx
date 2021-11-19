@@ -29,6 +29,8 @@ function ProfileComponent() {
                     image: res.data.Image,
                     status: res.data.Status,
                     createdDate: res.data.CreatedDate,
+                    gender: res.data.Gender,
+                    yearOfBirth: res.data.YearOfBirth,
                 })
                 setData(res.data)
                 setFullname(res.data.FullName)
@@ -118,6 +120,18 @@ function ProfileComponent() {
                                         </Form.Item>
                                     </div>
                                 </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <Form.Item name="gender" label="Giới tính">
+                                            <Input />
+                                        </Form.Item>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <Form.Item name="yearOfBirth" label="Ngày tháng năm sinh" rules={[{ required: true, message: "Mật khẩu không được bỏ trống" }]}>
+                                            <Input />
+                                        </Form.Item>
+                                    </div>
+                                </div>
                                 <div className="row" >
                                     <div className="col-md-6">
                                         <label className="labels">Email</label>
@@ -141,7 +155,7 @@ function ProfileComponent() {
                                         </Form.Item>
                                     </div>
                                 </div>
-                                <div className="row">
+                                {/* <div className="row">
                                     <div className="col-md-6">
                                         <Form.Item name="username" label="Tên đăng nhập">
                                             <Input disabled style={{ backgroundColor: '#FEFBF3', color: '#316B83' }} />
@@ -152,7 +166,7 @@ function ProfileComponent() {
                                             <Input.Password placeholder="Nhập password"></Input.Password>
                                         </Form.Item>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className="mt-2 text-center">
                                     <Form.Item>
                                         <Button htmlType="submit" type="primary">Xong</Button>
