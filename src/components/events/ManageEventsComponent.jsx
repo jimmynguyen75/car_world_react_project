@@ -852,7 +852,11 @@ function ManageEventsComponent() {
                     key: 'join',
                     render: (data) => {
                         return (
+<<<<<<< Updated upstream
                             <Rate allowHalf defaultValue={data.Rating} />
+=======
+                            <Rate allowHalf defaultValue={data.Rating} disabled/>
+>>>>>>> Stashed changes
                         )
                     }
                 },
