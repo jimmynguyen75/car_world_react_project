@@ -43,3 +43,15 @@
   margin-bottom: 5px;
 }
 
+.ant-empty-description {
+  text-indent: -9999px;
+  line-height: 0;
+}
+
+.ant-empty-description::after {
+  content: 'Không có dữ liệu';
+  display: block;
+  text-indent: 0;
+  line-height: initial;
+}
+

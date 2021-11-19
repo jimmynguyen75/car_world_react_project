@@ -3,7 +3,6 @@ import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { Button, Form, Input, Modal, Row, Select, Upload, message, Col } from 'antd';
 import React, { useState } from 'react';
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useHistory } from "react-router-dom";
 import storage from "../../services/ImageFirebase";
 import './stylePost.less';

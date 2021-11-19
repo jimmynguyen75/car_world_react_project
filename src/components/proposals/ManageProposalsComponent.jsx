@@ -1,4 +1,5 @@
-import { Button, Col, Form, Input, Modal, Row, Space, Spin, Table, Tag, message } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Avatar, Button, Col, Form, Input, message, Modal, Row, Space, Spin, Table, Tag } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
@@ -7,6 +8,7 @@ import AccountService from '../../services/AccountService';
 import ProposalService from '../../services/ProposalService';
 import './style.less';
 import ViewProposalComponent from './ViewProposalComponent';
+import CreateBySelectComponent from '../events/CreateBySelectComponent';
 export default function ManageProposalsComponent() {
     const history = useHistory();
     const [form] = Form.useForm();
@@ -21,6 +23,11 @@ export default function ManageProposalsComponent() {
     const [visibleDisapproved, setVisibleDisapproved] = useState(false);
     const [visibleView, setVisibleView] = React.useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
+    const [visibleSelect, setVisibleSelect] = useState(false);
+    const [loadingButton, setLoadingButton] = React.useState(false)
+    const [recordPro, setRecordPro] = useState(null)
+    const [recordImagePro, setRecordImagePro] = useState(null)
+    const [modalConfirm, setModalConfirm] = useState(false);
     const imageHolder = "https://via.placeholder.com/150";
     useEffect(() => {
         let result = [];
@@ -61,14 +68,29 @@ export default function ManageProposalsComponent() {
     const showModalView = () => {
         setVisibleView(true);
     };
+    const showModalSelect = () => {
+        setVisibleSelect(true);
+    };
     const showModalApprove = () => {
         setVisibleApprove(true);
     };
+    const showModalConfirm = () => {
+        setModalConfirm(true)
+    };
     const showModalDisapproved = () => {
         setVisibleDisapproved(true);
-    }
+    };
     const handleOk = () => {
         setConfirmLoading(true);
+    };
+    const handleOkEvent = () => {
+        setLoadingButton(true);
+        setTimeout(() => {
+            setModalConfirm(false)
+        }, 1000);
+        setTimeout(() => {
+            setLoadingButton(false);
+        }, 1000);
     };
     const handleCancel = () => {
         console.log('Clicked cancel button');
@@ -77,6 +99,7 @@ export default function ManageProposalsComponent() {
         setVisibleView(false);
         setVisibleApprove(false);
         setVisibleDisapproved(false);
+        setVisibleSelect(false);
     };
     const Proposal = () => {
         const columns = [
@@ -133,6 +156,7 @@ export default function ManageProposalsComponent() {
             {
                 title: 'Số lượng',
                 key: 'join',
+                width: '7%',
                 render: (data) => {
                     let color = null
                     return (
@@ -214,6 +238,7 @@ export default function ManageProposalsComponent() {
             {
                 title: 'Loại đề xuất',
                 dataIndex: 'Type',
+                width: '20%',
                 key: 'age',
                 render: (data) => {
                     let color = null;
@@ -236,12 +261,29 @@ export default function ManageProposalsComponent() {
             {
                 title: 'Tác vụ',
                 key: 'action',
-                width: '10%',
-                render: (text, record) => (
-                    <Space size="middle">
-                        <div>Chon</div>
-                    </Space>
-                ),
+                width: '15%',
+                render: (data) => {
+                    if (data.Type === 1) {
+
+                    }
+                    if (data.Type === 2) {
+                        return (
+                            <div style={{ textAlign: 'center', cursor: 'copy' }}>
+                                <span style={{ backgroundColor: '#FF7171', padding: '3px 12px', color: 'white', borderRadius: 5 }}
+                                    onClick={() => {
+                                        showModalSelect()
+                                        setRecordPro(data)
+                                        let ex = data.Image.split("|")
+                                        if (ex.length > 1) {
+                                            ex.pop();
+                                        }
+                                        setRecordImagePro(ex);
+                                    }}>
+                                    Chọn</span>
+                            </div>
+                        )
+                    }
+                }
             },
         ]
         return (
@@ -257,9 +299,9 @@ export default function ManageProposalsComponent() {
         return (
             <Form layout="vertical" form={form} onFinish={onFinishApprove} id="approveProposal" style={{ marginTop: '-10px', marginBottom: '-20px' }}>
                 <div><span style={{ letterSpacing: 1, color: '#52524E' }}>Tên đề xuất:</span> &nbsp;<span style={{ fontWeight: 500, fontSize: 15, letterSpacing: 1 }}>{proposalDetail !== null && proposalDetail.Title}</span></div>
-                <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Loại đề xuất:</span> &nbsp;{proposalDetail !== null && proposalDetail.Type === 1 ?
+                <div style={{ paddingTop: '10px', paddingBottom: '20px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Loại đề xuất:</span> &nbsp;{proposalDetail !== null && proposalDetail.Type === 1 ?
                     <Tag color='geekblue' key={proposalDetail !== null && proposalDetail.Type}> CUỘC THI </Tag> : <Tag color='green' key={proposalDetail !== null && proposalDetail.Type}> SỰ KIỆN </Tag>}</div>
-                <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Thông báo <span style={{ color: 'green' }}>DUYỆT</span> đến người đề xuất:</span></div>
+                {/* <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Thông báo <span style={{ color: 'green' }}>DUYỆT</span> đến người đề xuất:</span></div>
                 <Form.Item hidden={true} name='id'>
                     <Input></Input>
                 </Form.Item>
@@ -273,7 +315,7 @@ export default function ManageProposalsComponent() {
                         spellCheck={false}
                         autoSize={{ minRows: 3, maxRows: 10 }}
                     />
-                </Form.Item>
+                </Form.Item> */}
             </Form>
         )
     }
@@ -294,6 +336,7 @@ export default function ManageProposalsComponent() {
             {
                 title: 'Loại đề xuất',
                 dataIndex: 'Type',
+                width: '20%',
                 key: 'age',
                 render: (data) => {
                     let color = null;
@@ -316,10 +359,21 @@ export default function ManageProposalsComponent() {
             {
                 title: 'Tác vụ',
                 key: 'action',
-                width: '11%',
+                width: '15%',
                 render: (text, record) => (
                     <Space size="middle">
-                        <a href="/#">Chi tiết</a>
+                        <div className="eventDetailBtn" style={{ color: '#CCCC1B' }}
+                            onClick={() => {
+                                showModalView()
+                                setProposalDetail(record)
+                                let ex = record.Image.split("|")
+                                if (ex.length > 1) {
+                                    ex.pop()
+                                }
+                                setProposalImage(ex)
+                            }}>
+                            <i class="fas fa-info"></i>&nbsp;<span style={{ textDecoration: 'underline' }}>Chi tiết</span>
+                        </div>
                     </Space>
                 ),
             },
@@ -452,10 +506,50 @@ export default function ManageProposalsComponent() {
             >
                 <DisapprovedBodyModal />
             </Modal>
+            {/* Select Event Modal */}
+            <Modal
+                destroyOnClose={true}
+                title={
+                    <Row>
+                        <Space size="middle"><div>Đề xuất bởi </div></Space>
+                        <Avatar src={recordPro !== null ? recordPro.Manager.Image : null} style={{ marginLeft: 5 }}></Avatar>
+                        <Space size="middle"><div style={{ fontWeight: '500', fontSize: 14, color: '#2A528A', marginLeft: 5 }}>{recordPro !== null ? recordPro.Manager.FullName : null}</div></Space>
+                    </Row>
+                }
+                visible={visibleSelect}
+                onCancel={handleCancel}
+                width={1000}
+                footer={
+                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Button onClick={handleCancel}>
+                            Hủy
+                        </Button>
+                        <Button type="primary" onClick={showModalConfirm}>
+                            Hoàn tất
+                        </Button>
+                    </Row>
+                }
+            >
+                <CreateBySelectComponent record={recordPro} recordImage={recordImagePro} />
+            </Modal>
+            <Modal
+                title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
+                centered
+                icon={<ExclamationCircleOutlined />}
+                visible={modalConfirm}
+                onCancel={() => setModalConfirm(false)}
+                footer={[
+                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Button onClick={() => setModalConfirm(false)}>Hủy </Button>
+                        <Button form="editEvent" loading={loadingButton} onClick={handleOkEvent} type="primary" key="submit" htmlType="submit">Có</Button>
+                    </Row>
+                ]}
+            ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn tạo sự kiện này không?</span>
+            </Modal>
             <div>
                 <div><span className="proposalTitle">Các đề xuất</span></div>
                 <div className="proposal" > <Spin size="middle" spinning={proposal === null ? true : false}><Proposal /></Spin></div>
-                <Row gutter={30}>
+                <Row gutter={30} style={{ marginBottom: 30 }}>
                     <Col span="12">
                         <div><span className="proposalTitle">Đã được duyệt</span></div>
                         <div className="proposal" ><Spin size="middle" spinning={approved === null ? true : false} ><Approved /></Spin></div>

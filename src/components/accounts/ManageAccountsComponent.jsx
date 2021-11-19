@@ -170,33 +170,16 @@ function ManageAccountsComponent() {
                     sortDirections: ['descend', 'ascend'],
                     render: (role) => {
                         return <div style={{ cursor: 'pointer' }}>
-
                             {role.RoleId === 1 ?
                                 <div><span>
-                                    <Dropdown overlay={
-                                        <Menu>
-                                            <Menu.Item onClick={() => handleManager(role.Id)}>
-                                                <span style={{ fontWeight: 500, color: '#F5CA81' }}>Quản lý</span>
-                                            </Menu.Item>
-                                        </Menu>
-                                    } trigger={['click']} disabled={currentUser.Id === role.Id ? true : false}>
-                                        <Button style={{ background: '#6B7AA1', color: 'white', height: 28, borderRadius: 6, border: 'none', fontWeight: 600 }} size="small">
-                                            Quản trị<DownOutlined />
-                                        </Button>
-                                    </Dropdown>
+                                    <Button style={{ padding: '0px 10px',background: '#6B7AA1', color: 'white', height: 28, borderRadius: 6, border: 'none', fontWeight: 600 }} size="small">
+                                        Quản trị
+                                    </Button>
                                 </span></div>
                                 : null || role.RoleId === 2 ? <div><span>
-                                    <Dropdown overlay={
-                                        <Menu>
-                                            <Menu.Item onClick={() => handleAdmin(role.Id)}>
-                                                <span style={{ fontWeight: 500, color: '#6B7AA1' }}>Quản trị</span>
-                                            </Menu.Item>
-                                        </Menu>
-                                    } trigger={['click']} disabled={currentUser.Id === role.Id ? true : false}>
-                                        <Button style={{ background: '#F5CA81', color: 'white', height: 28, borderRadius: 6, border: 'none', fontWeight: 600 }} size="small">
-                                            Quản lý<DownOutlined />
-                                        </Button>
-                                    </Dropdown>
+                                    <Button style={{ padding: '0px 10px',background: '#F5CA81', color: 'white', height: 28, borderRadius: 6, border: 'none', fontWeight: 600 }} size="small">
+                                        Quản lý
+                                    </Button>
                                 </span></div> : null
                             }
                         </div>

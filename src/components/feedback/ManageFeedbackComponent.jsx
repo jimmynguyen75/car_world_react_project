@@ -1,151 +1,226 @@
-import React from 'react'
-import { Table, Input, Button, Space } from 'antd';
-import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
-
+import { Col, Row, Spin, Table, Avatar, Modal, Button, Form, Input, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import AccountService from '../../services/AccountService';
+import FeebackService from '../../services/FeebackService';
+import { useHistory } from "react-router-dom";
+import moment from 'moment';
+import 'moment/locale/vi';
 function ManageFeedbackComponent() {
-    const data = [
+    const [data, setData] = useState({ CE: [], Exchange: [], ExchangeResponse: [] })
+    const [form] = Form.useForm();
+    const [user, setUser] = useState([])
+    const [pageSize, setPageSize] = React.useState(5)
+    const [page, setPage] = React.useState(1)
+    const [dt, setDt] = useState(null)
+    const [visible, setVisible] = React.useState(false);
+    const history = useHistory();
+    const handleCancel = () => {
+        setVisible(false);
+        history.push('/phan-hoi')
+    };
+    //Effect
+    useEffect(() => {
+        const fetchData = async () => {
+            const CE = await FeebackService.getCE();
+            const Exchange = await FeebackService.getExchange();
+            const ExchangeResponse = await FeebackService.getExchangeResponse();
+            setData({ CE: CE.data, Exchange: Exchange.data, ExchangeResponse: ExchangeResponse.data })
+        }
+        fetchData()
+    }, [])
+    const onFinish = (values) => {
+        console.log(values)
+        FeebackService.replyFeedback(values.id, values)
+        .then(() => {
+            message.success("Gửi thành công")
+            setTimeout(() => {
+                window.location.reload()
+            }, 500)
+        })
+        .catch(() => {
+            message.error("Gửi không thành công")
+        })
+    }
+    // useEffect(() => {
+    //     data.CE.map((event) => {
+    //         AccountService.getUserById(event.FeedbackUserId).then((response) => (setUser(response.data))).catch((error) => console.log(error))
+    //     })
+    // }, [data])
+    // console.log("user: ", user)
+    const columns = [
         {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
+            title: 'Tên',
+            key: 'name',
+            width: '65%',
+            render: (data) => {
+                return (
+                    <Row>
+                        <Avatar alt="" size="small" src={data !== null && data.FeedbackUser.Image}></Avatar>
+                        <div style={{ marginLeft: 7 }}>{data.FeedbackUser.FullName}</div>
+                    </Row>
+                )
+            }
         },
         {
-            key: '2',
-            name: 'Joe Black',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-        },
-        {
-            key: '3',
-            name: 'Jim Green',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
-        },
-        {
-            key: '4',
-            name: 'Jim Red',
-            age: 32,
-            address: 'London No. 2 Lake Park',
+            title: 'Ngày gửi',
+            key: 'date',
+            render: (data) => {
+                return (
+                    <div>{moment(data.FeedbackDate).format('LT')} - {moment(data.FeedbackDate).format('L')}</div>
+                )
+            }
         },
     ];
-
-    class App extends React.Component {
-        state = {
-            searchText: '',
-            searchedColumn: '',
-        };
-
-        getColumnSearchProps = dataIndex => ({
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-                <div style={{ padding: 8 }}>
-                    <Input
-                        ref={node => {
-                            this.searchInput = node;
-                        }}
-                        placeholder={`Search ${dataIndex}`}
-                        value={selectedKeys[0]}
-                        onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                        onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-                        style={{ marginBottom: 8, display: 'block' }}
-                    />
-                    <Space>
-                        <Button
-                            type="primary"
-                            onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-                            icon={<SearchOutlined />}
-                            size="small"
-                            style={{ width: 90 }}
-                        >
-                            Search
-                        </Button>
-                        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
-                        </Button>
-                    </Space>
-                </div>
-            ),
-            filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-            onFilter: (value, record) =>
-                record[dataIndex]
-                    ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-                    : '',
-            onFilterDropdownVisibleChange: visible => {
-                if (visible) {
-                    setTimeout(() => this.searchInput.select(), 100);
-                }
-            },
-            render: text =>
-                this.state.searchedColumn === dataIndex ? (
-                    <Highlighter
-                        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                        searchWords={[this.state.searchText]}
-                        autoEscape
-                        textToHighlight={text ? text.toString() : ''}
-                    />
-                ) : (
-                    text
-                ),
-        });
-
-        handleSearch = (selectedKeys, confirm, dataIndex) => {
-            confirm();
-            this.setState({
-                searchText: selectedKeys[0],
-                searchedColumn: dataIndex,
-            });
-        };
-
-        handleReset = clearFilters => {
-            clearFilters();
-            this.setState({ searchText: '' });
-        };
-
-        render() {
-            const columns = [
-                {
-                    title: 'Name',
-                    dataIndex: 'name',
-                    key: 'name',
-                    width: '30%',
-                    ...this.getColumnSearchProps('name'),
-                },
-                {
-                    title: 'Age',
-                    dataIndex: 'age',
-                    key: 'age',
-                    width: '20%',
-                    ...this.getColumnSearchProps('age'),
-                },
-                {
-                    title: 'Address',
-                    dataIndex: 'address',
-                    key: 'address',
-                    ...this.getColumnSearchProps('address'),
-                    sorter: (a, b) => a.address.length - b.address.length,
-                    sortDirections: ['descend', 'ascend'],
-                },
-            ];
-            return <Table columns={columns} dataSource={data} />;
-        }
-    }
-
+    form.setFieldsValue({
+        replyUserId: dt !== null && dt.FeedbackUserId,
+        id: dt !== null && dt.Id,
+        replyContent: dt !== null && dt.ReplyContent
+    })
     return (
-        <App />
+        <>
+            <Modal
+                title={"Trả lời phản hồi"}
+                visible={visible}
+                onCancel={handleCancel}
+                width={600}
+                okText="Hoàn tất"
+                cancelText="Hủy"
+                footer={[
+                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Button onClick={handleCancel}>
+                            Hủy
+                        </Button>
+                        <Button type="primary" form="respone" key="submit" htmlType="submit" >
+                            Gửi
+                        </Button>
+                    </Row>
+                ]}
+            >
+
+                {/* {dt !== null && <div><span style={{ letterSpacing: 1, color: '#52524E' }}>Trả lời:</span> &nbsp;
+                    {dt.ReplyContent}
+                </div>} */}
+                <Form layout="vertical" form={form} onFinish={onFinish} id="respone" style={{ marginTop: '-10px', marginBottom: '-20px' }}>
+                    <Form.Item hidden={true} name='id'>
+                        <Input></Input>
+                    </Form.Item>
+                    <Form.Item hidden={true} name='replyUserId'>
+                        <Input></Input>
+                    </Form.Item>
+                    {dt !== null && <div>
+                        <Row style={{ paddingBottom: 7 }}>
+                            <span style={{ letterSpacing: 1, color: '#52524E' }}>Tên người gửi:</span> &nbsp; &nbsp;
+                            <Avatar alt="" size="small" src={dt.FeedbackUser.Image}></Avatar>
+                            <div style={{ marginLeft: 7 }}>{dt.FeedbackUser.FullName}</div>
+                        </Row>
+                    </div>}
+
+                    {dt !== null && <div style={{paddingBottom: 7}}><span style={{ letterSpacing: 1, color: '#52524E' }}>Nội dung:</span> &nbsp;
+                        {dt.FeedbackContent}
+                    </div>}
+
+                    <span style={{ letterSpacing: 1, color: '#52524E' }}>Trả lời:</span> &nbsp;
+                    {dt !== null && (dt.ReplyContent === null ?
+                        <Form.Item name="replyContent" style={{ paddingTop: '5px' }}>
+                            <Input.TextArea
+                                placeholder="Nhập phản hồi"
+                                showCount maxLength={200}
+                                spellCheck={false}
+                                autoSize={{ minRows: 3, maxRows: 10 }}
+                            />
+                        </Form.Item> : dt.ReplyContent)}
+                </Form>
+            </Modal>
+            <Row gutter={15}>
+                <Col span={8}>
+                    <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#52BCC2', padding: '4px 7px 4px 7px', color: 'white' }}><i className="fas fa-calendar-alt " ></i>&nbsp;&nbsp;Sự kiện, Cuộc thi</span></div>
+                    <Spin size="small" spinning={data.CE.length !== 0 ? false : true}>
+                        <Table
+                            onRow={(record) => {
+                                return {
+                                    onClick: () => {
+                                        console.log(record)
+                                        setVisible(true)
+                                        setDt(record)
+                                    }, // click row
+                                };
+                            }}
+                            columns={columns}
+                            dataSource={data.CE}
+                            pagination={{
+                                current: page,
+                                pageSize: pageSize,
+                                onChange: (page, pageSize) => {
+                                    setPage(page)
+                                    setPageSize(pageSize)
+                                },
+                                pageSizeOptions: ['5', '10', '15', '20'],
+                                showSizeChanger: true,
+                                locale: { items_per_page: "/ trang" },
+                            }}
+                        />
+                    </Spin>
+                </Col>
+                <Col span={8}>
+                    <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#BFA2DB', padding: '4px 7px 4px 7px', color: 'white' }}><i className="fas fa-trophy" ></i>&nbsp;&nbsp;Trao đổi</span></div>
+                    <Spin size="small" spinning={data.Exchange.length !== 0 ? false : true}>
+                        <Table
+                            onRow={(record) => {
+                                return {
+                                    onClick: () => {
+                                        console.log(record)
+                                        setVisible(true)
+                                        setDt(record)
+                                    }, // click row
+                                };
+                            }}
+                            columns={columns}
+                            dataSource={data.Exchange}
+                            pagination={{
+                                current: page,
+                                pageSize: pageSize,
+                                onChange: (page, pageSize) => {
+                                    setPage(page)
+                                    setPageSize(pageSize)
+                                },
+                                pageSizeOptions: ['5', '10', '15', '20'],
+                                showSizeChanger: true,
+                                locale: { items_per_page: "/ trang" },
+                            }}
+                        />
+                    </Spin>
+                </Col>
+                <Col span={8}>
+                    <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#9E7777', padding: '4px 7px 4px 7px', color: 'white' }}><i class="fas fa-car"></i>&nbsp;&nbsp;Phản hồi trao đổi</span></div>
+                    <Spin size="small" spinning={data.ExchangeResponse.length !== 0 ? false : true}>
+                        <Table
+                            onRow={(record) => {
+                                return {
+                                    onClick: () => {
+                                        console.log(record)
+                                        setVisible(true)
+                                        setDt(record)
+                                    }, // click row
+                                };
+                            }}
+                            columns={columns}
+                            dataSource={data.ExchangeResponse}
+                            pagination={{
+                                current: page,
+                                pageSize: pageSize,
+                                onChange: (page, pageSize) => {
+                                    setPage(page)
+                                    setPageSize(pageSize)
+                                },
+                                pageSizeOptions: ['5', '10', '15', '20'],
+                                showSizeChanger: true,
+                                locale: { items_per_page: "/ trang" },
+                            }}
+                        />
+                    </Spin>
+                </Col>
+            </Row>
+        </>
     )
 }
 

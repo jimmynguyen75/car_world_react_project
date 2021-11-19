@@ -3,7 +3,6 @@ import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { Button, Col, Form, Image, Input, message, Row, Select } from 'antd';
 import parse from 'html-react-parser';
 import React, { useEffect, useState } from 'react';
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useHistory } from "react-router-dom";
 import { useStorage } from '../../hook/usePost';
 import AccountService from '../../services/AccountService';

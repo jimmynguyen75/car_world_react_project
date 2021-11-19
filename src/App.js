@@ -1,18 +1,17 @@
+//noti
+import React, { useState } from "react";
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import './App.less';
 import AdminDashboardComponent from './components/AdminDashboardComponent';
 import LoginComponent from './components/LoginComponent';
 import ManagerDashboardComponent from './components/manager/ManagerDashboardComponent';
+import CheckLogin from './components/notFound/CheckLogin';
 import NotFound404Component from './components/notFound/NotFound404Component';
+import ReactNotificationComponent from './components/ReactNotificationComponent';
 import Test from './components/Test';
 import AccountService from './services/AccountService';
+import { onMessageListener } from './services/ImageFirebase';
 import './styles/login.css';
-import CheckLogin from './components/notFound/CheckLogin';
-//noti
-import React, { useState, useEffect } from "react";
-import { onMessageListener } from './services/ImageFirebase'
-import ReactNotificationComponent from './components/ReactNotificationComponent';
-import Fader from 'react-fader'
 function App() {
   //start
   const [show, setShow] = useState(false);
@@ -62,6 +61,7 @@ function App() {
               <Route path="/bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/su-kien" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/cuoc-thi" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
+              <Route path="/giai-thuong" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/tao-bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/sua-bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/thong-tin-ca-nhan" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>

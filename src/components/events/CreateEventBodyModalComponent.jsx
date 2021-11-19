@@ -116,6 +116,7 @@ export default function CreateEventBodyModalComponent() {
         startRegister: startRegister,
         endRegister: endRegister,
         createdBy: AccountService.getCurrentUser().Id,
+        type: 1,
         proposalId: null,
         modifiedBy: null
     })
@@ -155,7 +156,7 @@ export default function CreateEventBodyModalComponent() {
             if (type === 'start') {
                 return {
                     disabledHours: () => range(0, 60).splice(0, moment().format('H')),
-                    disabledMinutes: () => range(0, 60).splice(0, moment().format('mm')),
+                    disabledMinutes: () => range(0, 60).splice(0, moment(_._d).format('HH') === moment().format('HH') ? moment().format('mm') : 0),
                     disabledSeconds: () => [55, 56],
                 };
             }
@@ -164,7 +165,7 @@ export default function CreateEventBodyModalComponent() {
             if (type === 'end') {
                 return {
                     disabledHours: () => range(0, 60).splice(0, moment().format('H')),
-                    disabledMinutes: () => range(0, 60).splice(0, moment().format('mm')),
+                    disabledMinutes: () => range(0, 60).splice(0, moment(_._d).format('HH') === moment().format('HH') ? moment().format('mm') : 0),
                     disabledSeconds: () => [55, 56],
                 };
             }
@@ -207,6 +208,7 @@ export default function CreateEventBodyModalComponent() {
                 onFinish={onFinish}
                 form={form}
             >
+                <Form.Item hidden={true} name="type"><Input /></Form.Item>
                 <Form.Item hidden={true} name="createdBy"><Input /></Form.Item>
                 <Form.Item hidden={true} name="modifiedBy"><Input /></Form.Item>
                 <Form.Item hidden={true} name="proposalId"><Input /></Form.Item>
@@ -323,7 +325,7 @@ export default function CreateEventBodyModalComponent() {
                     <Col span={12}>
                         <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
                             <Input.TextArea
-                                placeholder="Nhập tên sự kiện"
+                                placeholder="Địa chỉ tổ chức"
                                 showCount maxLength={200}
                                 autoSize={{ minRows: 1, maxRows: 10 }}
                             />

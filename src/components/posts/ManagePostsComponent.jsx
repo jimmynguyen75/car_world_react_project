@@ -178,7 +178,7 @@ function ManagePostsComponent() {
                 {
                     title: 'Tiêu đề',
                     key: 'titleAllCar',
-                    width: '40%',
+                    width: '35%',
                     ...this.getColumnSearchProps('Title'),
                     render: (data) => {
                         return (
@@ -233,7 +233,7 @@ function ManagePostsComponent() {
                 },
                 {
                     title: 'Người tạo',
-                    key: 'address',
+                    key: 'created',
                     //sorter: (a, b) => a.CreatedDate - b.CreatedDate,
                     sortDirections: ['descend', 'ascend'],
                     render: (data) => {
