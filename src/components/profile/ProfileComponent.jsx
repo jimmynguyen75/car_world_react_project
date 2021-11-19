@@ -34,11 +34,7 @@ function ProfileComponent() {
                     status: res.data.Status,
                     createdDate: res.data.CreatedDate,
                     gender: res.data.Gender,
-<<<<<<< Updated upstream
-                    yearOfBirth: res.data.YearOfBirth,
-=======
                     yearOfBirth: moment(res.data.YearOfBirth, 'yyyy-MM-DDTHH:mm:ss').format("yyyy-MM-DD"),
->>>>>>> Stashed changes
                 })
                 setData(res.data)
                 setFullname(res.data.FullName)
@@ -131,14 +127,7 @@ function ProfileComponent() {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <Form.Item name="gender" label="Giới tính">
-<<<<<<< Updated upstream
-                                            <Input />
-                                        </Form.Item>
-                                    </div>
-                                    <div className="col-md-6">
                                         <Form.Item name="yearOfBirth" label="Ngày tháng năm sinh" rules={[{ required: true, message: "Mật khẩu không được bỏ trống" }]}>
-=======
                                             <Radio.Group>
                                                 <Radio value={0}>Nam</Radio>
                                                 <Radio value={1}>Nữ</Radio>
@@ -148,7 +137,6 @@ function ProfileComponent() {
                                     </div>
                                     <div className="col-md-6">
                                         <Form.Item name="yearOfBirth" label="Ngày tháng năm sinh">
->>>>>>> Stashed changes
                                             <Input />
                                         </Form.Item>
                                     </div>
