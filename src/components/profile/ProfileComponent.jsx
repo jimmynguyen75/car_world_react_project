@@ -1,8 +1,11 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Form, Input, Popover, Spin, message } from 'antd';
+import { Avatar, Button, Form, Input, Popover, Spin, message, Radio, DatePicker, ConfigProvider } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useStorage } from '../../hook/useStorage';
 import AccountService from '../../services/AccountService';
+import locale from 'antd/es/locale-provider/fr_FR';
+import moment from 'moment';
+import 'moment/locale/vi';
 import './style.css';
 function ProfileComponent() {
     const currentUser = AccountService.getCurrentUser();
@@ -11,6 +14,7 @@ function ProfileComponent() {
     const [fullname, setFullname] = useState(null);
     const [email, setEmail] = useState(null);
     const [image, setImage] = useState(null);
+    const [DoB, setDoB] = useState(null);
     const [file, setFile] = useState(null);
     const { url } = useStorage(file)
     useEffect(() => {
@@ -30,12 +34,17 @@ function ProfileComponent() {
                     status: res.data.Status,
                     createdDate: res.data.CreatedDate,
                     gender: res.data.Gender,
+<<<<<<< Updated upstream
                     yearOfBirth: res.data.YearOfBirth,
+=======
+                    yearOfBirth: moment(res.data.YearOfBirth, 'yyyy-MM-DDTHH:mm:ss').format("yyyy-MM-DD"),
+>>>>>>> Stashed changes
                 })
                 setData(res.data)
                 setFullname(res.data.FullName)
                 setEmail(res.data.Email)
                 setImage(res.data.Image)
+                setDoB(res.data.YearOfBirth)
             })
             .catch(err => {
                 console.log(err);
@@ -123,11 +132,23 @@ function ProfileComponent() {
                                 <div className="row">
                                     <div className="col-md-6">
                                         <Form.Item name="gender" label="Giới tính">
+<<<<<<< Updated upstream
                                             <Input />
                                         </Form.Item>
                                     </div>
                                     <div className="col-md-6">
                                         <Form.Item name="yearOfBirth" label="Ngày tháng năm sinh" rules={[{ required: true, message: "Mật khẩu không được bỏ trống" }]}>
+=======
+                                            <Radio.Group>
+                                                <Radio value={0}>Nam</Radio>
+                                                <Radio value={1}>Nữ</Radio>
+                                                <Radio value={2}>Khác</Radio>
+                                            </Radio.Group>
+                                        </Form.Item>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <Form.Item name="yearOfBirth" label="Ngày tháng năm sinh">
+>>>>>>> Stashed changes
                                             <Input />
                                         </Form.Item>
                                     </div>
