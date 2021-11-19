@@ -4,23 +4,20 @@ import authHeader from './AuthHeader'
 const FEEDBACK_URL = 'https://carworld.cosplane.asia/api/feedback/'
 
 class FeedbackService {
-    getContests() {
+    getCE() {
         return axios.get(FEEDBACK_URL + 'GetFeedbacksByType?type=1', { headers: authHeader() })
     }
-    getEvents() {
+    getExchange() {
         return axios.get(FEEDBACK_URL + 'GetFeedbacksByType?type=2', { headers: authHeader() })
     }
-    getExchangeCars() {
-        return axios.get(FEEDBACK_URL + 'GetFeedbacksByType?type=3', { headers: authHeader() })
-    }
-    getExchangeAccessories() {
-        return axios.get(FEEDBACK_URL + 'GetFeedbacksByType?type=4', { headers: authHeader() })
-    }
     getExchangeResponse() {
-        return axios.get(FEEDBACK_URL + 'GetFeedbacksByType?type=5', { headers: authHeader() })
+        return axios.get(FEEDBACK_URL + 'GetFeedbacksByType?type=3', { headers: authHeader() })
     }
     getFeedbackById(id) {
         return axios.get(FEEDBACK_URL + 'GetFeedbackById?id=' + id, { headers: authHeader() })
+    }
+    replyFeedback(id, content) {
+        return axios.put(FEEDBACK_URL + 'ReplyFeedback?id=' + id, content, { headers: authHeader() })
     }
 }
 export default new FeedbackService()

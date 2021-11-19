@@ -277,7 +277,10 @@ export default function ViewEventComponent({ record, recordImage }) {
                                         <Col span={21}>
                                             <Row gutter={15}>
                                                 <Col span={12}><div>{prize.Prize.Name}</div></Col>
-                                                <Col span={12}><div>{prize.User.FullName}</div></Col>
+                                                <Col span={12}>
+                                                    
+                                                    <div>{prize.User.FullName}</div>
+                                                    </Col>
                                             </Row>
                                         </Col>
                                         <Col span={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

@@ -30,7 +30,19 @@ export default function ManagePrizesComponent() {
     const [form] = Form.useForm();
     useEffect(() => { ContestService.getOngoingContests().then((result) => { setContests(result.data) }).catch(() => { console.log("Error") }) }, [])
     useEffect(() => { ContestService.getFinishedContests().then((result) => { setContestHistory(result.data) }).catch(() => { console.log("Error") }) }, [])
-    useEffect(() => { PrizeService.getPrizes().then((result) => { setPrizes(result.data) }).catch(() => { console.log("Error") }) }, [])
+    useEffect(() => {
+        const data = []
+        PrizeService.getPrizes()
+            .then((result) => {
+                result.data.forEach((filter) => {
+                    if (filter.IsDeleted === false) {
+                        data.push(filter)
+                    }
+                })
+                setPrizes(data)
+            })
+            .catch(() => { console.log("Error") })
+    }, [])
     function callback(key) {
         setKey(key)
     }
@@ -74,6 +86,25 @@ export default function ManagePrizesComponent() {
                 }, 500)
             })
             .catch(() => { message.error("Cập nhật không thành công") })
+    }
+    function confirm(id) {
+        Modal.confirm({
+            title: 'Bạn có muốn xóa hiệu này không?',
+            icon: <ExclamationCircleOutlined />,
+            okText: 'Có',
+            cancelText: 'Không',
+            onOk: () => {
+                PrizeService.removePrizeById(id)
+                    .then(() => {
+                        console.log('Deleted')
+                        message.success("Xóa giải thưởng thành công")
+                        setTimeout(() => {
+                            window.location.href = '/giai-thuong'
+                        }, 500)
+                    })
+                    .catch(() => { message.error(id); })
+            }
+        });
     }
     class PrizeContest extends React.Component {
         state = {
@@ -336,13 +367,13 @@ export default function ManagePrizesComponent() {
                 {
                     title: 'Tên giải thưởng',
                     key: 'name',
-                    width: '30%',
+                    width: '40%',
                     ...this.getColumnSearchProps('Title'),
                     render: (data) => {
                         return (
                             <Row>
-                                <Col span={5}><img alt="" style={{ height: 50, maxWidth: '100%', objectFit: 'cover' }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
-                                <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{data.Name}</div></Col>
+                                <Col span={6}><img alt="" style={{ height: 50, maxWidth: '100%', objectFit: 'cover' }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
+                                <Col span={18} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{data.Name}</div></Col>
                             </Row>
                         )
                     }
@@ -352,6 +383,18 @@ export default function ManagePrizesComponent() {
                     key: 'join',
                     render: (data) => {
                         return (<div>{data.Description}</div>)
+                    }
+                },
+                {
+                    title: <div style={{ textAlign: 'center' }}>Xóa</div>,
+                    key: 'delete',
+                    width: '10%',
+                    render: (data) => {
+                        return (
+                            <Tooltip title="Xóa giải thưởng" onClick={() => confirm(data.Id)} color="#FF7878" placement="topLeft">
+                                <div style={{ textAlign: 'center', color: '#FF7878' }}><i className="far fa-trash-alt fa-lg"></i></div>
+                            </Tooltip>
+                        )
                     }
                 }
             ];
