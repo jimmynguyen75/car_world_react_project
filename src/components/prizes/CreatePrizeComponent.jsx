@@ -123,7 +123,7 @@ export default function CreatePrizeComponent() {
                     onFinish={onFinish}
                     form={form}
                 >
-                    <Form.Item label="Ảnh sự kiện" name="image"
+                    <Form.Item label="Ảnh giải thưởng" name="image"
                         getValueFromEvent={normFile}>
                         <Upload
                             name="image"
@@ -138,14 +138,14 @@ export default function CreatePrizeComponent() {
                             {fileList.length >= 1 ? null : uploadButton}
                         </Upload>
                     </Form.Item>
-                    <Form.Item label="Tên" name="name" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                    <Form.Item label="Tên giải thưởng" name="name" rules={[{ required: true, message: "Tên giải thưởng không được bỏ trống" }]}>
                         <Input
-                            placeholder="Tên"
+                            placeholder="Tên giải thưởng"
                         />
                     </Form.Item>
-                    <Form.Item label="Mô tả" name="description">
+                    <Form.Item label="Mô tả giải thưởng" name="description">
                         <Input.TextArea
-                            placeholder="Mô tả"
+                            placeholder="Mô tả giải thưởng"
                             showCount maxLength={200}
                             autoSize={{ minRows: 4, maxRows: 10 }}
                         />

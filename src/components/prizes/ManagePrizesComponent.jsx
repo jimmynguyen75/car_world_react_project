@@ -89,7 +89,7 @@ export default function ManagePrizesComponent() {
     }
     function confirm(id) {
         Modal.confirm({
-            title: 'Bạn có muốn xóa hiệu này không?',
+            title: 'Bạn có muốn xóa giải thưởng này không?',
             icon: <ExclamationCircleOutlined />,
             okText: 'Có',
             cancelText: 'Không',

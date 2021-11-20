@@ -474,10 +474,10 @@ function ManagePostsComponent() {
                 footer={[
                     <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
                         <Button onClick={handleCancel}>
-                            Hủy
+                            Không
                         </Button>
                         <Button type="primary" loading={confirmLoading} onClick={handleOk}>
-                            Xác nhận
+                            Có
                         </Button>
                     </Row>
                 ]}
