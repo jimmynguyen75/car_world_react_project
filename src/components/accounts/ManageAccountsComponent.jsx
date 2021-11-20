@@ -1,5 +1,5 @@
 import { DownOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Dropdown, Form, Input, Menu, Row, Space, Table, Tabs, Tooltip, Spin } from 'antd';
+import { Avatar, Button, Col, Dropdown, Form, Input, Menu, Row, Space, Table, Tabs, Tooltip, Spin, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import AccountService from '../../services/AccountService';
@@ -39,18 +39,26 @@ function ManageAccountsComponent() {
     function handleUnLock(id) {
         AccountService.changeAccountStatus(id, '1')
             .then((response) => {
-                window.location.reload();
+                message.success("Cập nhật thành công")
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500)
             })
             .catch((err) => {
+                message.error("Cập nhật không thành công")
                 console.log(err)
             })
     }
     function handleLock(id) {
         AccountService.changeAccountStatus(id, '2')
             .then((response) => {
-                window.location.reload();
+                message.success("Cập nhật thành công")
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500)
             })
             .catch((err) => {
+                message.error("Cập nhật không thành công")
                 console.log(err)
             })
     }
@@ -172,12 +180,12 @@ function ManageAccountsComponent() {
                         return <div style={{ cursor: 'pointer' }}>
                             {role.RoleId === 1 ?
                                 <div><span>
-                                    <Button style={{ padding: '0px 10px',background: '#6B7AA1', color: 'white', height: 28, borderRadius: 6, border: 'none', fontWeight: 600 }} size="small">
+                                    <Button style={{ padding: '0px 10px', background: '#6B7AA1', color: 'white', height: 28, borderRadius: 6, border: 'none', fontWeight: 600 }} size="small">
                                         Quản trị
                                     </Button>
                                 </span></div>
                                 : null || role.RoleId === 2 ? <div><span>
-                                    <Button style={{ padding: '0px 10px',background: '#F5CA81', color: 'white', height: 28, borderRadius: 6, border: 'none', fontWeight: 600 }} size="small">
+                                    <Button style={{ padding: '0px 10px', background: '#F5CA81', color: 'white', height: 28, borderRadius: 6, border: 'none', fontWeight: 600 }} size="small">
                                         Quản lý
                                     </Button>
                                 </span></div> : null

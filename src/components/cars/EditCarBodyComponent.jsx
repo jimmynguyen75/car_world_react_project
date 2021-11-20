@@ -295,7 +295,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                 </Form.Item>
                 <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Thông số chính</div>
                 <Form.Item
-                    name="image" label="Ảnh phụ kiện"
+                    name="image" label="Ảnh xe"
                     rules={[{ required: true, message: "Ảnh xe không được bỏ trống" }]}
                 >
                     <Row>

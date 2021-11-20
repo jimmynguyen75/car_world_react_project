@@ -46,10 +46,10 @@ export default function CreateBrandModalComponent() {
                 footer={[
                     <Row style={{ float: 'right', marginRight: '8px' }}>
                         <Button onClick={handleCancel}>
-                            Cancel
+                            Hủy
                         </Button>
                         <Button form="myForm" type="primary" onClick={showModal} key="submit" htmlType="submit">
-                            Submit
+                            Hoàn tất
                         </Button>
                     </Row>
                 ]}
@@ -64,7 +64,7 @@ export default function CreateBrandModalComponent() {
                     <Form.Item name="image" hidden={true} >
                         <Input />
                     </Form.Item>
-                    <Form.Item label={<div><span style={{ color: "#ff4d4f", lineHeight: 1, fontSize: 14, fontFamily: ' SimSun, sans-serif' }}>*</span> Ảnh</div>} style={{ textAlign: "center" }}
+                    <Form.Item label={<div><span style={{ color: "#ff4d4f", lineHeight: 1, fontSize: 14, fontFamily: ' SimSun, sans-serif' }}>*</span> Ảnh thương hiệu</div>} style={{ textAlign: "center" }}
                     >
                         <Avatar size={64} width="150px" alt="" icon={<UserOutlined />} src={url} /> <br />
                         <label className="upload" htmlFor="upload-photoCreateBand" ><i className="fas fa-plus-circle fa-1x"><span style={{ marginLeft: 3 }}>Chọn ảnh</span></i></label>
@@ -75,7 +75,11 @@ export default function CreateBrandModalComponent() {
                         name="name"
                         rules={[{ required: true, message: "Tên thương hiệu không được bỏ trống!" }]}
                     >
-                        <Input placeholder="Nhập họ và tên" />
+                        <Input.TextArea
+                            placeholder="Nhập tên thương hiệu"
+                            showCount maxLength={50}
+                            autoSize={{ minRows: 1, maxRows: 10 }}
+                        />
                     </Form.Item>
                     <Form.Item label="Loại thương hiệu" name="type"
                         rules={[{ required: true, message: "Loại thương hiệu không được bỏ trống!" }]}

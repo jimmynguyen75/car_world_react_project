@@ -168,7 +168,7 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
                     <Input></Input>
                 </Form.Item>
                 <Form.Item
-                    label="Ảnh sự kiện"
+                    label="Ảnh phụ kiện "
                 >
                     <Row>
                         {img.map((object, i) => {

@@ -32,22 +32,25 @@ export default function CreateAccountModalComponent() {
             })
         console.log(values)
     }
+    form.setFieldsValue({
+        role: 1
+    })
     return (
         <div>
             <Tooltip key="Id" title="Chỉ được tạo tài khoản dành cho quản trị và quản lý" color='#6F4C5B'>
                 <Button type="primary" onClick={showModal} shape="round" style={{ height: 36, marginBottom: 5 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2.5 }}>Tạo tài khoản</span></Button>
             </Tooltip>
             <Modal
-                title="Tạo mới tài khoản"
+                title="Tạo tài khoản"
                 visible={isModalVisible}
                 onCancel={handleCancel}
                 footer={[
                     <Row style={{ float: 'right', marginRight: '8px' }}>
                         <Button onClick={handleCancel}>
-                            Cancel
+                            Hủy
                         </Button>
                         <Button form="myForm" type="primary" onClick={showModal} key="submit" htmlType="submit">
-                            Submit
+                            Hoàn tất
                         </Button>
                     </Row>
                 ]}
@@ -59,24 +62,24 @@ export default function CreateAccountModalComponent() {
                     layout="vertical"
                     form={form}
                 >
+                    <Form.Item hidden={true} name="role"><Input></Input></Form.Item>
                     <Form.Item label="Họ và tên" name="fullName" rules={[{ required: true, message: "Tên không được bỏ trống" }]}>
-                        <Input placeholder="Nhập họ và tên" />
+                        <Input.TextArea
+                            placeholder="Nhập họ và tên"
+                            showCount maxLength={100}
+                            autoSize={{ minRows: 1, maxRows: 10 }}
+                        />
                     </Form.Item>
                     <Form.Item label="Tên đăng nhập" name="username" rules={[{ required: true, message: "Tên đăng nhập không được bỏ trống" }]}>
-                        <Input placeholder="Nhập tên đăng nhập" />
+                        <Input.TextArea
+                            placeholder="Nhập tên đăng nhập"
+                            showCount maxLength={50}
+                            autoSize={{ minRows: 1, maxRows: 10 }}
+                        />
                     </Form.Item>
                     <Form.Item label="Mật khẩu" name="password" rules={[{ required: true, message: "Mật khẩu không được bỏ trống" }]}>
                         <Input.Password placeholder="Nhập mật khẩu" />
                     </Form.Item>
-                    <Form.Item label="Vai trò" name="roleId" rules={[{ required: true, message: "Vai trò không được bỏ trống" }]}>
-                        <Select
-                            showSearch
-                            placeholder="Chọn vai trò"
-                        >
-                            <Option value="1">Quản trị</Option>
-                            <Option value="2">Quản lý</Option>
-                        </Select>
-                    </Form.Item >
                 </Form>
             </Modal>
         </div>

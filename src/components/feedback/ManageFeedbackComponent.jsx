@@ -7,6 +7,7 @@ import moment from 'moment';
 import 'moment/locale/vi';
 function ManageFeedbackComponent() {
     const [data, setData] = useState({ CE: [], Exchange: [], ExchangeResponse: [] })
+    const [CE, setCE] = useState({ event: [], contest: [] })
     const [form] = Form.useForm();
     const [user, setUser] = useState([])
     const [pageSize, setPageSize] = React.useState(5)
@@ -18,6 +19,7 @@ function ManageFeedbackComponent() {
         setVisible(false);
         history.push('/phan-hoi')
     };
+
     //Effect
     useEffect(() => {
         const fetchData = async () => {
@@ -28,18 +30,41 @@ function ManageFeedbackComponent() {
         }
         fetchData()
     }, [])
+    useEffect(() => {
+        let event = []
+        let contest = []
+        FeebackService.getCE()
+            .then((result) => {
+                result.data.forEach((data) => {
+                    data.ContestEventRegisters.forEach((data) => {
+                        FeebackService.getCEById(data.ContestEventId)
+                            .then((result) => {
+                                if (result.data.Type === 1) {
+                                    event.push(result.data)
+                                    console.log("event ", result.data)
+                                }
+                                if (result.data.Type === 2) {
+                                    console.log("contest ", result.data)
+                                    contest.push(result.data)
+                                }
+                                setCE({ event: event, contest: contest })
+                            })
+                    })
+                })
+            })
+    }, [])
     const onFinish = (values) => {
         console.log(values)
         FeebackService.replyFeedback(values.id, values)
-        .then(() => {
-            message.success("Gửi thành công")
-            setTimeout(() => {
-                window.location.reload()
-            }, 500)
-        })
-        .catch(() => {
-            message.error("Gửi không thành công")
-        })
+            .then(() => {
+                message.success("Gửi thành công")
+                setTimeout(() => {
+                    window.location.reload()
+                }, 500)
+            })
+            .catch(() => {
+                message.error("Gửi không thành công")
+            })
     }
     // useEffect(() => {
     //     data.CE.map((event) => {
@@ -56,7 +81,7 @@ function ManageFeedbackComponent() {
                 return (
                     <Row>
                         <Avatar alt="" size="small" src={data !== null && data.FeedbackUser.Image}></Avatar>
-                        <div style={{ marginLeft: 7 }}>{data.FeedbackUser.FullName}</div>
+                        <div style={{ marginLeft: 7 }}>{data !== null && data.FeedbackUser.FullName}</div>
                     </Row>
                 )
             }
@@ -66,7 +91,7 @@ function ManageFeedbackComponent() {
             key: 'date',
             render: (data) => {
                 return (
-                    <div>{moment(data.FeedbackDate).format('LT')} - {moment(data.FeedbackDate).format('L')}</div>
+                    <div>{moment(data !== null && data.FeedbackDate).format('LT')} - {moment(data !== null && data.FeedbackDate).format('L')}</div>
                 )
             }
         },
@@ -110,13 +135,13 @@ function ManageFeedbackComponent() {
                     {dt !== null && <div>
                         <Row style={{ paddingBottom: 7 }}>
                             <span style={{ letterSpacing: 1, color: '#52524E' }}>Tên người gửi:</span> &nbsp; &nbsp;
-                            <Avatar alt="" size="small" src={dt.FeedbackUser.Image}></Avatar>
-                            <div style={{ marginLeft: 7 }}>{dt.FeedbackUser.FullName}</div>
+                            <Avatar alt="" size="small" src={dt !== null && dt.FeedbackUser.Image}></Avatar>
+                            <div style={{ marginLeft: 7 }}>{dt !== null && dt.FeedbackUser.FullName}</div>
                         </Row>
                     </div>}
 
-                    {dt !== null && <div style={{paddingBottom: 7}}><span style={{ letterSpacing: 1, color: '#52524E' }}>Nội dung:</span> &nbsp;
-                        {dt.FeedbackContent}
+                    {dt !== null && <div style={{ paddingBottom: 7 }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Nội dung:</span> &nbsp;
+                        {dt !== null && dt.FeedbackContent}
                     </div>}
 
                     <span style={{ letterSpacing: 1, color: '#52524E' }}>Trả lời:</span> &nbsp;

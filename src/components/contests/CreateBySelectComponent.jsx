@@ -1,4 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons';
+    import { PlusOutlined } from '@ant-design/icons';
 import { Col, ConfigProvider, DatePicker, Form, Image, Input, message, Modal, Row, Tooltip, Upload } from "antd";
 import locale from 'antd/es/locale-provider/fr_FR';
 import moment from 'moment';

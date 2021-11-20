@@ -2,6 +2,7 @@ import axios from "axios";
 import authHeader from './AuthHeader'
 
 const FEEDBACK_URL = 'https://carworld.cosplane.asia/api/feedback/'
+const CE = 'https://carworld.cosplane.asia/api/contestEvent/'
 
 class FeedbackService {
     getCE() {
@@ -18,6 +19,9 @@ class FeedbackService {
     }
     replyFeedback(id, content) {
         return axios.put(FEEDBACK_URL + 'ReplyFeedback?id=' + id, content, { headers: authHeader() })
+    }
+    getCEById(id) {
+        return axios.get(CE + 'GetCEById?id=' + id, { headers: authHeader() })
     }
 }
 export default new FeedbackService()

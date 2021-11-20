@@ -95,7 +95,7 @@ function ManageAccessoryComponent() {
                     Bạn có muốn xóa phụ kiện này không?
                 </div>
             ),
-            okText: "Đồng ý",
+            okText: "Có",
             onOk() {
                 console.log(data.Id)
                 AccessoryService.deleteAccessoryById(data.Id)
@@ -220,7 +220,7 @@ function ManageAccessoryComponent() {
         <div>
             <Modal
                 destroyOnClose={true}
-                title={"Chỉnh sửa phụ kiện"}
+                title={"Cập nhật phụ kiện"}
                 visible={visible}
                 onOk={handleOk}
                 confirmLoading={confirmLoading}

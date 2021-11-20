@@ -241,7 +241,7 @@ export default function CreateCarBodyModalComponent() {
                 </Form.Item>
                 <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Thông số chính</div>
                 <Form.Item
-                    name="image" label="Ảnh phụ kiện"
+                    name="image" label="Ảnh xe"
                     getValueFromEvent={normFile}
                     rules={[{ required: true, message: "Ảnh xe không được bỏ trống" }]}
                 >
@@ -259,14 +259,14 @@ export default function CreateCarBodyModalComponent() {
                         {fileList.length >= 8 ? null : uploadButton}
                     </Upload>
                 </Form.Item>
-                <Form.Item label="Tên xe" name="name" rules={[{ required: true, message: "Tên xe không được bỏ trống" }]}>
+                <Form.Item label="Tên xe" name="name" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                     <Input.TextArea
                         placeholder="Nhập tên xe"
                         showCount maxLength={200}
                         autoSize={{ minRows: 1, maxRows: 10 }}
                     />
                 </Form.Item>
-                <Form.Item label="Kiểu dáng" name="bodyType" rules={[{ required: true, message: "Kiểu dáng xe không được bỏ trống" }]}>
+                <Form.Item label="Kiểu dáng" name="bodyType" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                     <Input.TextArea placeholder="Nhập kiểu dáng xe"
                         showCount maxLength={50}
                         autoSize={{ minRows: 1, maxRows: 10 }}
@@ -274,7 +274,7 @@ export default function CreateCarBodyModalComponent() {
                 </Form.Item>
                 <Row gutter={15}>
                     <Col span={8}>
-                        <Form.Item label="Hãng xe" name="brandName" rules={[{ required: true, message: "Hãng xe không được bỏ trống" }]}>
+                        <Form.Item label="Hãng xe" name="brandName" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Select
                                 showSearch
                                 placeholder="Chọn hãng xe"
@@ -290,7 +290,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Giá xe không được bỏ trống" }]}>
+                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 onChange={onPrice}
                                 maxLength={20}
@@ -311,7 +311,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item label="Hộp số" name="gearBox" rules={[{ required: true, message: "Hộp số xe không được bỏ trống" }]}>
+                        <Form.Item label="Hộp số" name="gearBox" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Input.TextArea placeholder="Nhập hộp số"
                                 showCount maxLength={50}
                                 autoSize={{ minRows: 1, maxRows: 10 }}
@@ -321,7 +321,7 @@ export default function CreateCarBodyModalComponent() {
                 </Row>
                 <Row gutter={15}>
                     <Col span={8}>
-                        <Form.Item label="Chỗ ngồi" name="ngoi" rules={[{ required: true, message: "Chỗ ngồi xe không được bỏ trống" }]}>
+                        <Form.Item label="Chỗ ngồi" name="ngoi" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 onChange={onSeat}
                                 maxLength={6}
@@ -340,7 +340,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item label="Năm sản xuất" name="yearOf" rules={[{ required: true, message: "Năm sản xuất xe không được bỏ trống" }]}>
+                        <Form.Item label="Năm sản xuất" name="yearOf" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 onChange={onYearOfManuFactor}
                                 maxLength={4}
@@ -359,7 +359,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item label="Xuất xứ" name="origin" rules={[{ required: true, message: "Xuất xứ xe không được bỏ trống" }]}>
+                        <Form.Item label="Xuất xứ" name="origin" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Input.TextArea placeholder="Nhập xuất xứ"
                                 showCount maxLength={50}
                                 autoSize={{ minRows: 1, maxRows: 10 }}
@@ -370,7 +370,7 @@ export default function CreateCarBodyModalComponent() {
                 <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Thông số cơ bản</div>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Chiều dài" name="dai" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Chiều dài" name="dai" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 onChange={onLength}
                                 maxLength={9}
@@ -392,7 +392,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Chiều rộng" name="rong" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Chiều rộng" name="rong" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 onChange={onWidth}
                                 maxLength={9}
@@ -414,7 +414,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Chiều cao" name="cao" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Chiều cao" name="cao" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 onChange={onHeight}
                                 maxLength={9}
@@ -436,7 +436,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Dung tích" name="Dung tích" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Dung tích" name="Dung tích" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 onChange={onDisplacement}
                                 maxLength={9}
@@ -460,28 +460,28 @@ export default function CreateCarBodyModalComponent() {
                 </Row>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Động cơ" name="engineType" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Động cơ" name="engineType" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Input.TextArea placeholder="Nhập động cơ xe"
                                 showCount maxLength={50}
                                 autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Công suất cực đại" name="maxPower" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Công suất cực đại" name="maxPower" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Input.TextArea placeholder="Nhập công xuất cực đại (Hp)"
                                 showCount maxLength={50}
                                 autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Mô-men xoắn cực đại" name="maxTorque" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Mô-men xoắn cực đại" name="maxTorque" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Input.TextArea placeholder="Nhập mô-men xoắn cực đại"
                                 showCount maxLength={50}
                                 autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Khoảng cách gầm xe" name="kho" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Khoảng cách gầm xe" name="kho" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 onChange={onGroundClearance}
                                 maxLength={9}
@@ -505,7 +505,7 @@ export default function CreateCarBodyModalComponent() {
                 </Row>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Bán kính quay xe" name="turningRadius" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Bán kính quay xe" name="turningRadius" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 maxLength={9}
                                 placeholder="Nhập bán kính quay (m)"
@@ -526,7 +526,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Tiêu hao nhiên liệu" name="nhien" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Tiêu hao nhiên liệu" name="nhien" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 onChange={onFuelConsumption}
                                 maxLength={14}
@@ -551,7 +551,7 @@ export default function CreateCarBodyModalComponent() {
                 <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Thông số kĩ thuật</div>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Trọng lượng khô" name="tr" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Trọng lượng khô" name="tr" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 onChange={onKerbWeight}
                                 maxLength={10}
@@ -573,7 +573,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Dung tích bình xăng" name="dung" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Dung tích bình xăng" name="dung" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 onChange={onFuelCapacity}
                                 maxLength={7}
@@ -595,7 +595,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Kích thước mâm xe" name="wheel" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Kích thước mâm xe" name="wheel" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
                                 onChange={onWheelSize}
                                 maxLength={10}
@@ -617,7 +617,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Thông số lốp" name="tyreSize" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Thông số lốp" name="tyreSize" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Input.TextArea placeholder="Nhập thông số lốp"
                                 showCount maxLength={50}
                                 autoSize={{ minRows: 1, maxRows: 10 }}
@@ -627,7 +627,7 @@ export default function CreateCarBodyModalComponent() {
                 </Row>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Hệ thống treo trước" name="frontSuspension" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Hệ thống treo trước" name="frontSuspension" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Input.TextArea placeholder="Nhập hệ thống treo trước"
                                 showCount maxLength={50}
                                 autoSize={{ minRows: 1, maxRows: 10 }}
@@ -635,7 +635,7 @@ export default function CreateCarBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Hệ thống treo sau" name="rearSuspension" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Hệ thống treo sau" name="rearSuspension" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Input.TextArea placeholder="Nhập hệ thống treo sau"
                                 showCount maxLength={50}
                                 autoSize={{ minRows: 1, maxRows: 10 }} />
@@ -645,28 +645,28 @@ export default function CreateCarBodyModalComponent() {
                 <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Nội thất và ngoại thất</div>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Chất liệu nội thất" name="interiorMaterial" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Form.Item label="Chất liệu nội thất" name="interiorMaterial" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Input.TextArea placeholder="Nhập chất liệu nội thất"
                                 showCount maxLength={50}
                                 autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Cụm đèn trước" name="headLights" rules={[{ required: true, message: "Đèn không được bỏ trống" }]}>
+                        <Form.Item label="Cụm đèn trước" name="headLights" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Input.TextArea placeholder="Nhập cụm đèn trước"
                                 showCount maxLength={50}
                                 autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Cụm đèn sau" name="tailLights" rules={[{ required: true, message: "Đèn không được bỏ trống" }]}>
+                        <Form.Item label="Cụm đèn sau" name="tailLights" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Input.TextArea placeholder="Nhập cụm đèn sau"
                                 showCount maxLength={50}
                                 autoSize={{ minRows: 1, maxRows: 10 }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Đèn sương mù" name="fogLamps" rules={[{ required: true, message: "Đèn không được bỏ trống" }]}>
+                        <Form.Item label="Đèn sương mù" name="fogLamps" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Input.TextArea placeholder="Nhập đèn sương mù"
                                 showCount maxLength={50}
                                 autoSize={{ minRows: 1, maxRows: 10 }} />

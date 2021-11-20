@@ -328,7 +328,7 @@ function ManageCarsComponent() {
             </Modal>
             <Modal
                 destroyOnClose={true}
-                title="Xem chi tiết xe"
+                title="Chi tiết xe"
                 visible={visibleDetail}
                 onOk={handleOkDetail}
                 confirmLoading={confirmLoading}
@@ -346,7 +346,7 @@ function ManageCarsComponent() {
             </Modal>
             <Modal
                 destroyOnClose={true}
-                title={"Chỉnh sửa phụ kiện"}
+                title={"Cập nhật xe"}
                 visible={visible}
                 onOk={handleOk}
                 confirmLoading={confirmLoading}

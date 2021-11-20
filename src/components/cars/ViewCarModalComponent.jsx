@@ -74,7 +74,7 @@ function ViewCarModalComponent({ record, recordImage }) {
                 </Row>
                 <br />
                 <Row gutter={15}>
-                    <Col span={8}>
+                    <Col span={12}>
                         <Descriptions
                             bordered
                             column={1}
@@ -144,7 +144,7 @@ function ViewCarModalComponent({ record, recordImage }) {
                             </Descriptions.Item>
                         </Descriptions>
                     </Col>
-                    <Col span={8}>
+                    <Col span={12}>
                         <Descriptions
                             bordered
                             column={1}
@@ -186,16 +186,6 @@ function ViewCarModalComponent({ record, recordImage }) {
                             <Descriptions.Item label="Hệ thống treo sau">
                                 {record.RearSuspension}
                             </Descriptions.Item>
-                        </Descriptions>
-                    </Col>
-                    <Col span={8}>
-                        <Descriptions
-                            bordered
-                            column={1}
-                            labelStyle={{ fontWeight: '600', fontSize: 16, width: 185 }}
-                            size="small"
-                            title={<div style={{ textDecoration: 'underline' }}>Nội thất và ngoại thất</div>}
-                        >
                             <Descriptions.Item label="Chất liệu nội thất">
                                 {record.InteriorMaterial}
                             </Descriptions.Item>
@@ -209,7 +199,6 @@ function ViewCarModalComponent({ record, recordImage }) {
                                 {record.FogLamps}
                             </Descriptions.Item>
                         </Descriptions>
-
                     </Col>
                 </Row>
                 <br />

@@ -3,6 +3,7 @@ import authHeader from './AuthHeader'
 const PRIZE_API_URL = "https://carworld.cosplane.asia/api/prize/"
 const PRIZE_CONTEST_URL = "https://carworld.cosplane.asia/api/contestPrize/"
 class PrizeService {
+    ///alll
     createPrize(prize) {
         return axios.post(PRIZE_API_URL + "CreateNewPrize", prize, { headers: authHeader() })
     }

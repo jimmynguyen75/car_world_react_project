@@ -9,6 +9,7 @@ import ProposalService from '../../services/ProposalService';
 import './style.less';
 import ViewProposalComponent from './ViewProposalComponent';
 import CreateBySelectComponent from '../events/CreateBySelectComponent';
+import CreateBySelectComponentContest from '../contests/CreateBySelectComponent';
 export default function ManageProposalsComponent() {
     const history = useHistory();
     const [form] = Form.useForm();
@@ -24,6 +25,7 @@ export default function ManageProposalsComponent() {
     const [visibleView, setVisibleView] = React.useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [visibleSelect, setVisibleSelect] = useState(false);
+    const [visibleSelectContest, setVisibleSelectContest] = useState(false);
     const [loadingButton, setLoadingButton] = React.useState(false)
     const [recordPro, setRecordPro] = useState(null)
     const [recordImagePro, setRecordImagePro] = useState(null)
@@ -71,6 +73,9 @@ export default function ManageProposalsComponent() {
     const showModalSelect = () => {
         setVisibleSelect(true);
     };
+    const showModalSelectContest = () => {
+        setVisibleSelectContest(true);
+    };
     const showModalApprove = () => {
         setVisibleApprove(true);
     };
@@ -100,6 +105,7 @@ export default function ManageProposalsComponent() {
         setVisibleApprove(false);
         setVisibleDisapproved(false);
         setVisibleSelect(false);
+        setVisibleSelectContest(false);
     };
     const Proposal = () => {
         const columns = [
@@ -264,12 +270,26 @@ export default function ManageProposalsComponent() {
                 width: '15%',
                 render: (data) => {
                     if (data.Type === 1) {
-
+                        return (
+                            <div style={{ textAlign: 'center', cursor: 'copy' }}>
+                                <span style={{ backgroundColor: '#A685E2', padding: '3px 12px', color: 'white', borderRadius: 5 }}
+                                    onClick={() => {
+                                        showModalSelectContest()
+                                        setRecordPro(data)
+                                        let ex = data.Image.split("|")
+                                        if (ex.length > 1) {
+                                            ex.pop();
+                                        }
+                                        setRecordImagePro(ex);
+                                    }}>
+                                    Chọn</span>
+                            </div>
+                        )
                     }
                     if (data.Type === 2) {
                         return (
                             <div style={{ textAlign: 'center', cursor: 'copy' }}>
-                                <span style={{ backgroundColor: '#FF7171', padding: '3px 12px', color: 'white', borderRadius: 5 }}
+                                <span style={{ backgroundColor: '#5AA469', padding: '3px 12px', color: 'white', borderRadius: 5 }}
                                     onClick={() => {
                                         showModalSelect()
                                         setRecordPro(data)
@@ -505,6 +525,32 @@ export default function ManageProposalsComponent() {
                 ]}
             >
                 <DisapprovedBodyModal />
+            </Modal>
+            {/* Select Contest Modal */}
+            <Modal
+                destroyOnClose={true}
+                title={
+                    <Row>
+                        <Space size="middle"><div>Đề xuất bởi </div></Space>
+                        <Avatar src={recordPro !== null ? recordPro.Manager.Image : null} style={{ marginLeft: 5 }}></Avatar>
+                        <Space size="middle"><div style={{ fontWeight: '500', fontSize: 14, color: '#2A528A', marginLeft: 5 }}>{recordPro !== null ? recordPro.Manager.FullName : null}</div></Space>
+                    </Row>
+                }
+                visible={visibleSelectContest}
+                onCancel={handleCancel}
+                width={1000}
+                footer={
+                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Button onClick={handleCancel}>
+                            Hủy
+                        </Button>
+                        <Button type="primary" onClick={showModalConfirm}>
+                            Hoàn tất
+                        </Button>
+                    </Row>
+                }
+            >
+                <CreateBySelectComponentContest record={recordPro} recordImage={recordImagePro} />
             </Modal>
             {/* Select Event Modal */}
             <Modal
