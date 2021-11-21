@@ -292,6 +292,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={8}>
                         <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onPrice}
                                 maxLength={20}
                                 placeholder="Nhập giá xe (vnđ)"
@@ -323,6 +324,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={8}>
                         <Form.Item label="Chỗ ngồi" name="ngoi" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onSeat}
                                 maxLength={6}
                                 placeholder="Nhập chỗ ngồi"
@@ -342,6 +344,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={8}>
                         <Form.Item label="Năm sản xuất" name="yearOf" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onYearOfManuFactor}
                                 maxLength={4}
                                 placeholder="Nhập năm sản xuất"
@@ -372,6 +375,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Chiều dài" name="dai" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onLength}
                                 maxLength={9}
                                 placeholder="Nhập chiều dài (mm)"
@@ -394,6 +398,8 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Chiều rộng" name="rong" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
+                                allowNegative={false}
                                 onChange={onWidth}
                                 maxLength={9}
                                 placeholder="Nhập chiều rộng (mm)"
@@ -416,6 +422,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Chiều cao" name="cao" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onHeight}
                                 maxLength={9}
                                 placeholder="Nhập chiều cao (mm)"
@@ -438,6 +445,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Dung tích" name="Dung tích" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onDisplacement}
                                 maxLength={9}
                                 placeholder="Nhập dung tích (cc)"
@@ -483,6 +491,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Khoảng cách gầm xe" name="kho" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onGroundClearance}
                                 maxLength={9}
                                 placeholder="Nhập khoảng cách gầm xe (mm)"
@@ -507,6 +516,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Bán kính quay xe" name="turningRadius" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 maxLength={9}
                                 placeholder="Nhập bán kính quay (m)"
                                 className="currency"
@@ -528,6 +538,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Tiêu hao nhiên liệu" name="nhien" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onFuelConsumption}
                                 maxLength={14}
                                 placeholder="Nhập mức tiêu hao nhiên liệu (lít/100km)"
@@ -553,6 +564,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Trọng lượng khô" name="tr" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onKerbWeight}
                                 maxLength={10}
                                 placeholder="Nhập trọng lượng thô (kg)"
@@ -575,6 +587,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Dung tích bình xăng" name="dung" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onFuelCapacity}
                                 maxLength={7}
                                 placeholder="Nhập dung tích bình xăng (lít)"
@@ -597,6 +610,7 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Kích thước mâm xe" name="wheel" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onWheelSize}
                                 maxLength={10}
                                 placeholder="Nhập kích thước mâm xe (inch)"

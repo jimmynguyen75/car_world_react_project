@@ -30,29 +30,50 @@ function ManageFeedbackComponent() {
         }
         fetchData()
     }, [])
+    // useEffect(() => {
+    //     let event = []
+    //     let contest = []
+    //     FeebackService.getCE()
+    //         .then((result) => {
+    //             result.data.forEach((data) => {
+    //                 data.ContestEventRegisters.forEach((data) => {
+    //                     FeebackService.getCEById(data.ContestEventId)
+    //                         .then((result) => {
+    //                             if (result.data.Type === 1) {
+    //                                 event.push(result.data)
+    //                                 console.log("event ", result.data[0]    )
+    //                             }
+    //                             if (result.data.Type === 2) {
+    //                                 console.log("contest ", result.data.ContestEventRegisters[0].ContestEventId)
+    //                                 contest.push(result.data)
+    //                             }
+    //                             setCE({ event: event, contest: contest })
+    //                         })
+    //                 })
+    //             })
+    //         })
+    // }, [])
     useEffect(() => {
-        let event = []
-        let contest = []
+        let contests = []
+        let events = []
         FeebackService.getCE()
             .then((result) => {
-                result.data.forEach((data) => {
-                    data.ContestEventRegisters.forEach((data) => {
-                        FeebackService.getCEById(data.ContestEventId)
-                            .then((result) => {
-                                if (result.data.Type === 1) {
-                                    event.push(result.data)
-                                    console.log("event ", result.data)
-                                }
-                                if (result.data.Type === 2) {
-                                    console.log("contest ", result.data)
-                                    contest.push(result.data)
-                                }
-                                setCE({ event: event, contest: contest })
-                            })
+                result.data.forEach((data1) => {
+                    data1.ContestEventRegisters.map((data) => {
+                        FeebackService.getCEById(data.ContestEventId).then((result) => {
+                            if (result.data.Type === 1) {
+                                events.push(data1)
+                            }
+                            if (result.data.Type === 2) {
+                                contests.push(data1)
+                            }
+                        })
                     })
                 })
+                setTimeout(() => { setCE({ event: events, contest: contests }) }, 500)
             })
     }, [])
+    console.log(CE)
     const onFinish = (values) => {
         console.log(values)
         FeebackService.replyFeedback(values.id, values)
@@ -159,7 +180,7 @@ function ManageFeedbackComponent() {
             <Row gutter={15}>
                 <Col span={8}>
                     <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#52BCC2', padding: '4px 7px 4px 7px', color: 'white' }}><i className="fas fa-calendar-alt " ></i>&nbsp;&nbsp;Sự kiện, Cuộc thi</span></div>
-                    <Spin size="small" spinning={data.CE.length !== 0 ? false : true}>
+                    <Spin size="small" spinning={CE.event.length !== 0 ? false : true}>
                         <Table
                             onRow={(record) => {
                                 return {
@@ -171,7 +192,7 @@ function ManageFeedbackComponent() {
                                 };
                             }}
                             columns={columns}
-                            dataSource={data.CE}
+                            dataSource={CE.event}
                             pagination={{
                                 current: page,
                                 pageSize: pageSize,
@@ -188,7 +209,7 @@ function ManageFeedbackComponent() {
                 </Col>
                 <Col span={8}>
                     <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#BFA2DB', padding: '4px 7px 4px 7px', color: 'white' }}><i className="fas fa-trophy" ></i>&nbsp;&nbsp;Trao đổi</span></div>
-                    <Spin size="small" spinning={data.Exchange.length !== 0 ? false : true}>
+                    <Spin size="small" spinning={CE.contest.length !== 0 ? false : true}>
                         <Table
                             onRow={(record) => {
                                 return {
@@ -200,7 +221,7 @@ function ManageFeedbackComponent() {
                                 };
                             }}
                             columns={columns}
-                            dataSource={data.Exchange}
+                            dataSource={CE.contest}
                             pagination={{
                                 current: page,
                                 pageSize: pageSize,

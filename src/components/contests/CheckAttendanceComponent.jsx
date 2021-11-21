@@ -3,7 +3,7 @@ import axios from "axios";
 import { Table, Input, Button, Space, Row, Col, Modal, Radio, message, Spin } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
-import EventService from '../../services/EventService';
+import ContestService from '../../services/ContestService';
 export default function CheckAttendanceComponent() {
     const [events, setEvents] = useState(null)
     const [visibleCheck, setVisibleCheck] = useState(false);
@@ -11,13 +11,13 @@ export default function CheckAttendanceComponent() {
     const [record, setRecord] = useState(null)
     const check = []
     useEffect(() => {
-        EventService.getUserJoined(eventId).then((result) => {
+        ContestService.getUserJoined(eventId).then((result) => {
             setRecord(result.data)
         })
             .catch((error) => console.log(error))
     }, [eventId])
     useEffect(() => {
-        EventService.getOngoingEvents().then((response) => { setEvents(response.data) }).catch((error) => console.log(error))
+        ContestService.getOngoingContests().then((response) => { setEvents(response.data) }).catch((error) => console.log(error))
     }, [])
     class App extends React.Component {
         state = {
@@ -174,7 +174,7 @@ export default function CheckAttendanceComponent() {
     const handleSubmitCheck = () => {
         return (
             axios.all([check.map((userId) => {
-                EventService.checkUser(userId.type, userId)
+                ContestService.checkUser(userId.type, userId)
             })])
                 .then(axios.spread(() => {
                     setTimeout(() => {

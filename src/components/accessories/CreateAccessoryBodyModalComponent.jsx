@@ -166,8 +166,9 @@ export default function CreateAccessoryBodyModalComponent() {
 
                 <Row gutter={15}>
                     <Col span={12}>
-                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068'}}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Tiền phụ kiện không được bỏ trống" }]}>
+                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068'}}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onChangePrice}
                                 placeholder="Nhập giá phụ kiện (vnđ)"
                                 className="currency"

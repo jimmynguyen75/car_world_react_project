@@ -467,6 +467,7 @@ function ManagePostsComponent() {
     return (
         <div>
             <Modal
+                maskClosable={false}
                 destroyOnClose={true}
                 title="Xác nhận"
                 visible={visible}

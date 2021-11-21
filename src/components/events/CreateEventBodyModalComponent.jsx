@@ -277,11 +277,12 @@ export default function CreateEventBodyModalComponent() {
                 </Row>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Tối thiểu người đăng ký" name="min" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Tối thiểu người đăng ký" name="min" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     minRegister(values.value)
                                 }}
+                                allowNegative={false}
                                 maxLength={20}
                                 placeholder="Nhập số lượng tối thiểu"
                                 className="currency"
@@ -300,11 +301,12 @@ export default function CreateEventBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Tối đa người đăng ký" name="max" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Tối đa người đăng ký" name="max" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     maxRegister(values.value)
                                 }}
+                                allowNegative={false}
                                 maxLength={20}
                                 placeholder="Nhập số lượng tối đa"
                                 className="currency"

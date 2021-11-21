@@ -309,6 +309,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                     <Col span={12}>
                         <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Tiền phụ kiện không được bỏ trống" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onChange={onChangePrice}
                                 placeholder="Nhập giá phụ kiện (vnđ)"
                                 className="currency"
@@ -364,8 +365,9 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                 </Row>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Tối thiểu người đăng ký" name="min" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
+                        <Form.Item label="Tối thiểu người đăng ký" name="min" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onValueChange={(values) => {
                                     minRegister(values.value)
                                 }}
@@ -387,8 +389,9 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Tối đa người đăng ký" name="max" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
+                        <Form.Item label="Tối đa người đăng ký" name="max" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
+                                allowNegative={false}
                                 onValueChange={(values) => {
                                     maxRegister(values.value)
                                 }}

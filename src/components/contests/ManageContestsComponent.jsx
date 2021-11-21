@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 import EditContestComponent from './EditContestComponent';
 import ViewContestComponent from './ViewContestComponent';
 import ContestService from '../../services/ContestService';
+import CheckAttendanceComponent from './CheckAttendanceComponent';
 import ProposalService from '../../services/ProposalService';
 function ManageContestsComponent() {
     const [contests, setContests] = useState(null)
@@ -1234,6 +1235,22 @@ function ManageContestsComponent() {
                 > <div>Bạn có muốn hủy "{cancelContestId !== null && cancelContestId.Title}" không?</div>
                 </Modal>
                 {/* Modal check attendence */}
+                <Modal
+                    destroyOnClose={true}
+                    title="Điểm danh sự kiện"
+                    visible={visibleCheck}
+                    onCancel={handleCancel}
+                    width={800}
+                    footer={
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button type="primary" onClick={handleCancel}>
+                                Xong
+                            </Button>
+                        </Row>
+                    }
+                >
+                    <CheckAttendanceComponent />
+                </Modal>
                 {/* end */}
                 <Row>
                     <CreateContestsModalComponent />
