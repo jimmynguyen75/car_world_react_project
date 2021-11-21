@@ -158,7 +158,7 @@ export default function CreateAccessoryBodyModalComponent() {
                 </Form.Item>
                 <Form.Item label="Name" name="name" rules={[{ required: true, message: "Tên phụ kiện không được bỏ trống" }]}>
                     <Input.TextArea
-                        placeholder="Nhập phụ kiện"
+                        placeholder="Nhập tên phụ kiện"
                         showCount maxLength={200}
                         autoSize={{ minRows: 1, maxRows: 10 }}
                     />

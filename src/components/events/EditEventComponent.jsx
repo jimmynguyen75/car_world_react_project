@@ -292,7 +292,11 @@ export default function EditEventComponent({ record, recordImage }) {
                     </Row>
                 </Form.Item>
                 <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
-                    <Input />
+                    <Input.TextArea
+                        placeholder="Nhập tên sự kiện"
+                        showCount maxLength={200}
+                        autoSize={{ minRows: 1, maxRows: 10 }}
+                    />
                 </Form.Item>
                 <Row gutter={15}>
                     <Col span={12}>

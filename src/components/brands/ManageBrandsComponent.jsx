@@ -417,7 +417,12 @@ export default function ManageBrandComponent() {
                                     </Form.Item>
                                     <Tooltip title="Tên thương hiệu" color="#6B7AA1" placement="topLeft">
                                         <Form.Item label={<i className="fas fa-car fa-lg" style={{ color: '#6B7AA1' }} />} name="name">
-                                            <Input id="brandCarName" style={{ marginLeft: 7, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#050505' }} placeholder="Tên thương hiệu" />
+                                            <Input.TextArea
+                                                id="brandCarName" style={{ marginLeft: 7, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#050505' }}
+                                                placeholder="Tên thương hiệu"
+                                                showCount maxLength={200}
+                                                autoSize={{ minRows: 1, maxRows: 10 }}
+                                            />
                                         </Form.Item>
                                     </Tooltip>
                                     <Tooltip title="Mô tả" color="#B97A95" placement="topLeft">
@@ -425,7 +430,7 @@ export default function ManageBrandComponent() {
                                             <Input.TextArea
                                                 style={{ marginLeft: 9, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }}
                                                 placeholder="Mô tả"
-                                                showCount maxLength={200}
+                                                showCount maxLength={50}
                                                 autoSize={{ minRows: 3, maxRows: 10 }}
                                             />
                                         </Form.Item>
@@ -475,8 +480,12 @@ export default function ManageBrandComponent() {
                                     </Form.Item>
                                     <Tooltip title="Tên thương hiệu" color="#6B7AA1" placement="topLeft">
                                         <Form.Item label={<i className="fas fa-car fa-lg" style={{ color: '#6B7AA1' }} />} name="name">
-                                            <Input style={{ marginLeft: 7, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#050505' }} placeholder="Tên thương hiệu" />
-                                        </Form.Item>
+                                            <Input.TextArea
+                                                style={{ marginLeft: 9, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }}
+                                                placeholder="Mô tả"
+                                                showCount maxLength={50}
+                                                autoSize={{ minRows: 3, maxRows: 10 }}
+                                            />                                        </Form.Item>
                                     </Tooltip>
                                     <Tooltip title="Mô tả" color="#B97A95" placement="topLeft">
                                         <Form.Item label={<i className="fas fa-sticky-note fa-lg" style={{ color: '#B97A95' }}></i>} name="description">

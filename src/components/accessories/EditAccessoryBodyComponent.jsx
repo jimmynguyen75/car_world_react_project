@@ -200,7 +200,11 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
                     </Row>
                 </Form.Item>
                 <Form.Item label="Name" name="name" rules={[{ required: true, message: "Tên phụ kiện không được bỏ trống" }]}>
-                    <Input placeholder="Nhập tên phụ kiện" />
+                    <Input.TextArea
+                        placeholder="Nhập tên phụ kiện"
+                        showCount maxLength={200}
+                        autoSize={{ minRows: 1, maxRows: 10 }}
+                    />
                 </Form.Item>
                 <Row gutter={15}>
                     <Col span={12}>
