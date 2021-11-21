@@ -15,6 +15,8 @@ export default function CreatePrizeContestComponent() {
     const history = useHistory();
     const [contests, setContests] = useState([]);
     const [prizes, setPrizes] = useState([]);
+    const [checkPrize, setCheckPrize] = useState("");
+    const [ckPrize, setCkPrize] = useState([]);
     const showModal = () => {
         setVisible(true);
     };
@@ -22,10 +24,29 @@ export default function CreatePrizeContestComponent() {
         setVisible(false);
         history.push('/giai-thuong')
     };
-    useEffect(() => { ContestService.getAllContests().then((result) => { setContests(result.data) }).catch(() => { console.log("Error") }) }, [])
+    function onChange(value) {
+        console.log(`selected ${value}`);
+        setCheckPrize(value);
+    }
+    useEffect(() => {
+        PrizeService.getPrizeContestById(checkPrize)
+            .then((result) => {
+                setCkPrize(result.data);
+            })
+            .catch((error) => { console.log(error); })
+    }, [checkPrize])
+    ckPrize.forEach(n => console.log(n.PrizeOrder))
+    useEffect(() => { ContestService.getAllContestPrize().then((result) => { setContests(result.data) }).catch(() => { console.log("Error") }) }, [])
     useEffect(() => { PrizeService.getPrizes().then((result) => { setPrizes(result.data) }).catch(() => { console.log("Error") }) }, [])
     const onFinish = (value) => {
-        PrizeService.createPrizeContest(value).then(() => message.success("Tạo giải thưởng cuộc thi thành công")).catch(() => { message.error("Tạo không thành công") })
+        PrizeService.createPrizeContest(value)
+            .then(() => {
+                message.success("Tạo giải thưởng cuộc thi thành công")
+                setTimeout(() => {
+                    window.location.href = '/giai-thuong'
+                }, 500)
+            })
+            .catch(() => { message.error("Tạo không thành công") })
     }
     form.setFieldsValue({
         managerId: AccountService.getCurrentUser().Id,
@@ -59,11 +80,12 @@ export default function CreatePrizeContestComponent() {
                     form={form}
                 >
                     <Form.Item hidden={true} name="managerId"><Input /></Form.Item>
-                    <Form.Item label="Chọn cuộc thi" name="contestId" rules={[{ required: true, message: "Hãng phụ kiện không được bỏ trống" }]}>
+                    <Form.Item label="Chọn cuộc thi" name="contestId" rules={[{ required: true, message: "Cuộc thi không được bỏ trống" }]}>
                         <Select
                             showSearch
                             placeholder="Chọn cuộc thi"
                             optionFilterProp="children"
+                            onChange={onChange}
                             filterOption={(input, option) =>
                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
@@ -73,7 +95,7 @@ export default function CreatePrizeContestComponent() {
                             ))}
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Chọn giải thưởng" name="prizeId" rules={[{ required: true, message: "Hãng phụ kiện không được bỏ trống" }]}>
+                    <Form.Item label="Chọn giải thưởng" name="prizeId" rules={[{ required: true, message: "Giải thưởng không được bỏ trống" }]}>
                         <Select
                             showSearch
                             placeholder="Chọn giải thưởng"
@@ -87,7 +109,7 @@ export default function CreatePrizeContestComponent() {
                             ))}
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Hạng" name="prizeOrder" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                    <Form.Item label="Hạng" name="prizeOrder" rules={[{ required: true, message: "Hạng không được bỏ trống" }]}>
                         <Select
                             showSearch
                             placeholder="Chọn hạng"

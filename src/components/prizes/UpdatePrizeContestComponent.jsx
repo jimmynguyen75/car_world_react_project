@@ -1,5 +1,5 @@
 import axios from "axios";
-import { MinusOutlined, UserOutlined } from '@ant-design/icons';
+import { MinusOutlined, UserOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Carousel, Col, Descriptions, Button, Image, Row, Spin, Input, Select, Avatar, Form, message, Modal } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
@@ -43,6 +43,28 @@ export default function ViewEventComponent({ record, recordImage }) {
         console.log(prize);
         setVisibleEdit(true);
     };
+    function confirm(id) {
+        console.log(id)
+        Modal.confirm({
+            title: 'Bạn có muốn giải thưởng này không?',
+            icon: <ExclamationCircleOutlined />,
+            okText: 'Có',
+            cancelText: 'Không',
+            onOk: () => {
+                PrizeService.removePrizeContest(id)
+                    .then(() => {
+                        console.log('Deleted')
+                        setTimeout(() => {
+                            message.success("Xóa giải thưởng thành công");
+                        }, 200)
+                        setTimeout(() => {
+                            window.location.href = '/giai-thuong'
+                        }, 500)
+                    })
+                    .catch(() => { message.error("Xóa không thành công"); })
+            }
+        });
+    }
     async function convertUserIdToName(userId) {
         const user = await AccountService.getUserById(userId);
         return user.data;
@@ -168,13 +190,14 @@ export default function ViewEventComponent({ record, recordImage }) {
                             filterOption={(input, option) =>
                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
+                            disabled={record.CurrentParticipants !== 0 ? true : false}
                         >
                             {prizeList.map(prizes => (
                                 <Option key={prizes.Id} value={prizes.Id}>{prizes.Name}</Option>
                             ))}
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Chọn giải thưởng" name="userId">
+                    <Form.Item label="Chọn người tham gia" name="userId">
                         <Select
                             defaultValue={data.UserId}
                             showSearch
@@ -184,7 +207,8 @@ export default function ViewEventComponent({ record, recordImage }) {
                             onChange={onDeselect}
                         >
                             {users.map(users => (
-                                <Option key={users.Id} value={users.Id} prizeId={data.Id}><Avatar icon={<UserOutlined />} src={users.Image} size={18} style={{ marginBottom: 4 }} />&nbsp;{users.FullName}</Option>
+                                <Option key={users.Id} value={users.Id} prizeId={data.Id}>
+                                    <Avatar icon={<UserOutlined />} src={users.Image} size={18} style={{ marginBottom: 4 }} />&nbsp;{users.FullName}</Option>
                             ))}
                         </Select>
                     </Form.Item>
@@ -224,18 +248,14 @@ export default function ViewEventComponent({ record, recordImage }) {
                         </Descriptions>
                         <br />
                         <Row gutter={15}>
-                            <Col span={6}>
+                            {/* <Col span={6}>
                                 <div className='viewEventText'>Đã tham gia</div>
                                 <i style={{ color: '#50C9BA' }} class="fas fa-user-check"></i>&nbsp;&nbsp;{record.CurrentParticipants}
-                            </Col>
+                            </Col> */}
                             {/* <Col span={8}>
                                 <div className='viewEventText'>Số lượng giới hạn</div>
                                 <i style={{ color: '#E36387' }} class="fas fa-users"></i>&nbsp;&nbsp;{record.MinParticipants} - {record.MaxParticipants}
                             </Col> */}
-                            <Col span={6}>
-                                <div className='viewEventText'>Địa chỉ</div>
-                                <i style={{ color: '#726A95' }} class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;{record.Venue}
-                            </Col>
                             <Col span={12}>
                                 <div className='viewEventText'>Người tạo</div>
                                 <Row>
@@ -243,6 +263,11 @@ export default function ViewEventComponent({ record, recordImage }) {
                                     <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{record !== null && record.CreatedByNavigation.FullName}</div>
                                 </Row>
                             </Col>
+                            <Col span={12}>
+                                <div className='viewEventText'>Địa chỉ</div>
+                                <i style={{ color: '#726A95' }} class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;{record.Venue}
+                            </Col>
+
                         </Row>
                     </Col>
                     <Col span={12}>
@@ -278,15 +303,14 @@ export default function ViewEventComponent({ record, recordImage }) {
                                             <Row gutter={15}>
                                                 <Col span={12}><div>{prize.Prize.Name}</div></Col>
                                                 <Col span={12}>
-                                                    
-                                                    <div>{prize.User.FullName}</div>
-                                                    </Col>
+                                                    <div><Avatar icon={<UserOutlined />} src={prize.User !== null && prize.User.Image} size={26} style={{ marginBottom: 4 }} />&nbsp;&nbsp;{prize.User !== null && prize.User.FullName}</div>
+                                                </Col>
                                             </Row>
                                         </Col>
                                         <Col span={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             <Row gutter={10}>
-                                                <div onClick={() => showModalEdit(prize)}> Sửa </div>
-                                                <div onClick={() => showModalEdit(prize)} style={{ paddingLeft: 10 }}> Xóa </div>
+                                                <div onClick={() => showModalEdit(prize)}> <span style={{ color: '#3A6351', textDecoration: 'underline', cursor: 'pointer' }}>Sửa</span> </div>
+                                                <div onClick={() => confirm(prize.Id)} style={{ paddingLeft: 10 }}><span style={{ color: '#F38BA0', textDecoration: 'underline', cursor: 'pointer' }}>Xóa</span>  </div>
                                             </Row>
                                         </Col>
                                     </Row>

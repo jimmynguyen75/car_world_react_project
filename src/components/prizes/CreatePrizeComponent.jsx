@@ -85,7 +85,12 @@ export default function CreatePrizeComponent() {
     );
     const onFinish = (value) => {
         console.log(value);
-        PrizeService.createPrize(value).then(() => { message.success("Tạo giải thưởng thành công") }).catch(() => { message.error("Tạo không thành công") })
+        PrizeService.createPrize(value)
+            .then(() => { 
+                message.success("Tạo giải thưởng thành công") 
+                setTimeout(() => {window.location.href = "/giai-thuong"}, 500)
+            })
+            .catch(() => { message.error("Tạo không thành công") })
     }
     return (
         <div>
@@ -122,6 +127,7 @@ export default function CreatePrizeComponent() {
                     id="prize"
                     onFinish={onFinish}
                     form={form}
+                    destroyOnClose={true}
                 >
                     <Form.Item label="Ảnh giải thưởng" name="image"
                         getValueFromEvent={normFile}>
@@ -138,9 +144,11 @@ export default function CreatePrizeComponent() {
                             {fileList.length >= 1 ? null : uploadButton}
                         </Upload>
                     </Form.Item>
-                    <Form.Item label="Tên giải thưởng" name="name" rules={[{ required: true, message: "Tên giải thưởng không được bỏ trống" }]}>
-                        <Input
+                    <Form.Item label="Tên giải thưởng" name="name" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
+                        <Input.TextArea
                             placeholder="Tên giải thưởng"
+                            showCount maxLength={50}
+                            autoSize={{ minRows: 1, maxRows: 10 }}
                         />
                     </Form.Item>
                     <Form.Item label="Mô tả giải thưởng" name="description">

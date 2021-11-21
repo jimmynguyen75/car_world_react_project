@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { Tabs } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ExclamationCircleOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { Table, Input, Button, Space, Row, Col, Avatar, Modal, message, Tag, Spin, Tooltip, Form } from 'antd';
+import { Table, Input, Button, Space, Row, Col, Avatar, Modal, message, Tag, Spin, Tooltip, Form, Image } from 'antd';
 import { useHistory } from "react-router-dom";
 import CreatePrizeComponent from './CreatePrizeComponent';
 import ContestService from '../../services/ContestService';
 import PrizeService from '../../services/PrizeService';
 import CreatePrizeContestComponent from './CreatePrizeContestComponent';
 import UpdatePrizeContestComponent from './UpdatePrizeContestComponent';
+import { useStorage } from '../../hook/useBrand';
+import displayImageP from '../../images/write.gif'
 export default function ManagePrizesComponent() {
     const [modalConfirm, setModalConfirm] = useState(false);
     const [record, setRecord] = useState(null)
@@ -26,9 +28,12 @@ export default function ManagePrizesComponent() {
     const [visibleEdit, setVisibleEdit] = useState(false);
     const [visibleCancel, setVisibleCancel] = useState(false);
     const [loadingButton, setLoadingButton] = React.useState(false)
+    const [editPrize, setEditPrize] = useState("none")
+    const [displayImage, setDisplayImage] = useState("true")
     const imgPlacehoder = 'https://via.placeholder.com/120';
     const [form] = Form.useForm();
-    useEffect(() => { ContestService.getOngoingContests().then((result) => { setContests(result.data) }).catch(() => { console.log("Error") }) }, [])
+    const { url } = useStorage(file)
+    useEffect(() => { ContestService.getAllContestPrize().then((result) => { setContests(result.data) }).catch(() => { console.log("Error") }) }, [])
     useEffect(() => { ContestService.getFinishedContests().then((result) => { setContestHistory(result.data) }).catch(() => { console.log("Error") }) }, [])
     useEffect(() => {
         const data = []
@@ -43,8 +48,17 @@ export default function ManagePrizesComponent() {
             })
             .catch(() => { console.log("Error") })
     }, [])
+    useEffect(() => {
+        form.setFieldsValue({
+            image: url
+        })
+    }, [url, form])
     function callback(key) {
         setKey(key)
+    }
+    const hideDisplayImage = () => {
+        setDisplayImage("none")
+        setEditPrize(true)
     }
     const handleCancel = () => {
         setVisibleView(false);
@@ -409,6 +423,7 @@ export default function ManagePrizesComponent() {
                                 image: record.Image,
                                 id: record.Id
                             })
+                            hideDisplayImage()
                         }, // click row
                     };
                 }}
@@ -450,11 +465,11 @@ export default function ManagePrizesComponent() {
                         <input type="file" onChange={changeImage} name="photo" id="upload-photo" />
                     </Form.Item>
                     <Form.Item label="Tên giải thưởng" name="name">
-                        <Input placeholder="Tên giải thưởng" />
+                        <Input placeholder="Nhập tên giải thưởng" />
                     </Form.Item>
                     <Form.Item label="Mô tả" name="description">
                         <Input.TextArea
-                            placeholder="Mô tả"
+                            placeholder="Nhập mô tả"
                             showCount maxLength={200}
                             autoSize={{ minRows: 3, maxRows: 10 }}
                         />
@@ -583,13 +598,34 @@ export default function ManagePrizesComponent() {
                     }
                 },
                 {
+                    title: 'Người tạo',
+                    key: 'created',
+                    render: (data) => {
+                        return (
+                            <Row>
+                                <Avatar alt="" src={data.CreatedByNavigation.Image}></Avatar>
+                                <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data.CreatedByNavigation.FullName}</div>
+                            </Row>
+                        )
+                    }
+                },
+                {
+                    title: 'Địa điểm',
+                    key: 'location',
+                    render: (data) => {
+                        return (
+                            <div>{data.Venue}</div>
+                        )
+                    }
+                },
+                {
                     title: 'Tác vụ',
                     width: '15%',
                     key: 'action',
                     render: (record) => {
                         return (
                             <div style={{ textAlign: 'center', fontSize: '0.6rem' }}>
-                                <i onClick={() => {
+                                {/* <i onClick={() => {
                                     showModalView()
                                     setRecord(record)
                                     let ex = record.Image.split("|")
@@ -598,7 +634,7 @@ export default function ManagePrizesComponent() {
                                     }
                                     setRecordImage(ex);
                                 }} className="far fa-eye fa-2x" style={{ color: '#5AA469', cursor: 'zoom-in' }}></i>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp; */}
                                 <i onClick={() => {
                                     showModalEdit()
                                     setRecord(record)
@@ -608,10 +644,6 @@ export default function ManagePrizesComponent() {
                                     }
                                     setRecordImage(ex);
                                 }} className="fas fa-cog fa-2x" style={{ color: '#6155A6', cursor: 'alias' }}></i>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <i onClick={() => {
-                                    showModalCancel()
-                                }} className="far fa-times-circle fa-2x" style={{ color: '#FF7878', cursor: 'alias' }}></i>
                             </div>
                         )
                     }
@@ -676,15 +708,24 @@ export default function ManagePrizesComponent() {
             </Row>
             <Tabs type="card" onChange={callback}>
                 <TabPane tab="Cuộc thi" key="1">
-                    <PrizeContest />
+                    <Spin spinning={contests === null ? true : false}>
+                        <PrizeContest />
+                    </Spin>
                 </TabPane>
                 <TabPane tab="Giải thưởng" key="2">
                     <Row gutter={15}>
                         <Col span={12}>
-                            <Prize />
+                            <Spin spinning={prizes === null ? true : false}>
+                                <Prize />
+                            </Spin>
                         </Col>
-                        <Col span={12}>
+                        <Col span={12} style={{ display: editPrize }}>
                             <UpdatePrize />
+                        </Col>
+                        <Col span={12} style={{ display: displayImage }}>
+                            <div>
+                                <Image style={{ height: '518px', margin: 'auto', textAlign: 'center' }} src={displayImageP} preview={false}></Image>
+                            </div>
                         </Col>
                     </Row>
                 </TabPane>

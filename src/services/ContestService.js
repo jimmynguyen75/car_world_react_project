@@ -37,6 +37,10 @@ class ContestService {
     checkUser(user) {
         return axios.put(USERCONTEST_API_URL + "CheckInUser?status=", user, { headers: authHeader() })
     }
+    //beforeFinished
+    getAllContestPrize() {
+        return axios.get(CONTEST_API_URL + "GetAllContestPrizes?now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
+    }
 }
 
 export default new ContestService();
