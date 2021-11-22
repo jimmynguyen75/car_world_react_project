@@ -360,6 +360,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={8}>
                         <Form.Item label="Giá" name="priceWithoutAny" rules={[{ required: true, message: "Giá xe không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     onPrice(values.value)
@@ -394,6 +395,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={8}>
                         <Form.Item label="Chỗ ngồi" name="seatsWithoutAny" rules={[{ required: true, message: "Chỗ ngồi xe không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     onSeat(values.value)
@@ -416,6 +418,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={8}>
                         <Form.Item label="Năm sản xuất" name="yearOfManufactorWithoutAny" rules={[{ required: true, message: "Năm sản xuất xe không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     onYearOfManufactor(values.value)
@@ -449,6 +452,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={6}>
                         <Form.Item label="Chiều dài" name="lengthWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     onLength(values.value)
@@ -474,6 +478,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={6}>
                         <Form.Item label="Chiều rộng" name="widthWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     onWidth(values.value)
@@ -499,6 +504,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={6}>
                         <Form.Item label="Chiều cao" name="heightWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     onHeight(values.value)
@@ -524,6 +530,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={6}>
                         <Form.Item label="Dung tích" name="displacementWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     onDisplacement(values.value)
@@ -572,6 +579,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={6}>
                         <Form.Item label="Khoảng cách gầm xe" name="groundClearanceWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     onGroundClearance(values.value)
@@ -599,6 +607,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={6}>
                         <Form.Item label="Bán kính quay xe" name="turningRadius" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 maxLength={9}
                                 placeholder="Nhập bán kính quay (m)"
@@ -621,6 +630,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={6}>
                         <Form.Item label="Tiêu hao nhiên liệu" name="fuelConsumptionWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     onFuelConsumption(values.value)
@@ -649,6 +659,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={6}>
                         <Form.Item label="Trọng lượng khô" name="kerbWeightWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     onKerbWeight(values.value)
@@ -674,6 +685,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={6}>
                         <Form.Item label="Dung tích bình xăng" name="fuelCapacityWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     onFuelCapacity(values.value)
@@ -699,6 +711,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                     <Col span={6}>
                         <Form.Item label="Kích thước mâm xe" name="wheelSizeWithoutAny" rules={[{ required: true, message: "Không được bỏ trống" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     onWheelSize(values.value)

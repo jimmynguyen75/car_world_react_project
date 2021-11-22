@@ -210,6 +210,7 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
                     <Col span={12}>
                         <Form.Item label="Giá" name="pricewithoutany" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
+                                decimalScale={0}
                                 allowNegative={false}
                                 onValueChange={(values) => {
                                     // formattedValue, floatValue

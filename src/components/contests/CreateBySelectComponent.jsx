@@ -307,9 +307,10 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Tiền phụ kiện không được bỏ trống" }]}>
+                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
                                 allowNegative={false}
+                                decimalScale={0}
                                 onChange={onChangePrice}
                                 placeholder="Nhập giá phụ kiện (vnđ)"
                                 className="currency"
@@ -332,7 +333,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                 <Row gutter={15}>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>
-                            <Form.Item name="registerFAKE" label={<div>Ngày bắt đầu <span style={{ color: 'red' }}>ĐĂNG KÝ</span> và kết thúc</div>} rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
+                            <Form.Item name="registerFAKE" label={<div>Ngày bắt đầu <span style={{ color: 'red' }}>ĐĂNG KÝ</span> và kết thúc</div>} rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                                 <RangePicker
                                     //value={(moment(r[0], "yyyy-MM-DDTHH:mm:ss")._i) === "" ? null : r}
                                     style={{ width: '100%' }}
@@ -348,7 +349,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                     </Col>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>
-                            <Form.Item name="startFAKE" label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>cuộc thi</span> và kết thúc</div>} rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
+                            <Form.Item name="startFAKE" label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>cuộc thi</span> và kết thúc</div>} rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                                 <RangePicker
                                     //value={(moment(s[0], "yyyy-MM-DDTHH:mm:ss")._i) === "" ? null : s}
                                     style={{ width: '100%' }}
@@ -368,6 +369,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         <Form.Item label="Tối thiểu người đăng ký" name="min" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
                                 allowNegative={false}
+                                decimalScale={0}
                                 onValueChange={(values) => {
                                     minRegister(values.value)
                                 }}
@@ -392,6 +394,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         <Form.Item label="Tối đa người đăng ký" name="max" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
                                 allowNegative={false}
+                                decimalScale={0}
                                 onValueChange={(values) => {
                                     maxRegister(values.value)
                                 }}
@@ -413,7 +416,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
+                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <Input.TextArea
                                 placeholder="Nhập tên cuộc thi"
                                 showCount maxLength={200}
@@ -422,7 +425,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item label="Mô tả cuộc thi" name="description" rules={[{ required: true, message: "Tên cuộc thi không được bỏ trống" }]}>
+                <Form.Item label="Mô tả cuộc thi" name="description" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                     <Input.TextArea
                         placeholder="Mô tả cuộc thi"
                         showCount maxLength={2000}

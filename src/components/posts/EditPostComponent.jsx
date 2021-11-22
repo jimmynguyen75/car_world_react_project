@@ -141,7 +141,7 @@ export default function EditPostComponent({ record }) {
         <>
             <div className="body123">
                 <div><Button className="buttonBack" onClick={handleBack}><ArrowLeftOutlined /> Trở về</Button></div>
-                <div className="title">Tạo bài đăng</div>
+                <div className="title">Sửa bài đăng</div>
                 <div id="editPost">
                     <Form
                         layout="vertical"

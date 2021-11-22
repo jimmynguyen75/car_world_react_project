@@ -1,10 +1,12 @@
-import { Avatar, Button, Col, Form, Input, message, Modal, Row, Spin, Table, Tabs } from 'antd';
+import { Avatar, Button, Col, Form, Input, message, Modal, Row, Spin, Table, Tabs, Tag } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import FeebackService from '../../services/FeebackService';
+import ExchangeService from '../../services/ExchangeService';
 function ManageFeedbackComponent() {
+    const imgPlacehoder = 'https://via.placeholder.com/120';
     const { TabPane } = Tabs;
     const [data, setData] = useState({ CE: [], Exchange: [], ExchangeResponse: [] })
     const [CE, setCE] = useState({ event: [], contest: [] })
@@ -14,52 +16,59 @@ function ManageFeedbackComponent() {
     const [dt, setDt] = useState(null)
     const [visible, setVisible] = React.useState(false);
     const history = useHistory();
+    const [test, setTest] = useState([])
+    const [testEx, setTestEx] = useState([])
+    const [car, setCar] = useState([])
+    const [accessory, setAccessory] = useState([])
     const handleCancel = () => {
         setVisible(false);
         history.push('/phan-hoi')
     };
-
     //Effect
     useEffect(() => {
         const fetchData = async () => {
+            let car = []
+            let accessory = []
             const CE = await FeebackService.getCE();
             const Exchange = await FeebackService.getExchange();
             const ExchangeResponse = await FeebackService.getExchangeResponse();
+            Exchange.data.forEach((filter) => {
+                if (filter.Exchanges[0].Type === 1) {
+                    car.push(filter)
+                }
+                if (filter.Exchanges[0].Type === 2) {
+                    accessory.push(filter)
+                }
+            })
+            setCar(car)
+            setAccessory(accessory)
             setData({ CE: CE.data, Exchange: Exchange.data, ExchangeResponse: ExchangeResponse.data })
         }
         fetchData()
     }, [])
-    // useEffect(() => {
-    //     let event = []
-    //     let contest = []
-    //     FeebackService.getCE()
-    //         .then((result) => {
-    //             result.data.forEach((data) => {
-    //                 data.ContestEventRegisters.forEach((data) => {
-    //                     FeebackService.getCEById(data.ContestEventId)
-    //                         .then((result) => {
-    //                             if (result.data.Type === 1) {
-    //                                 event.push(result.data)
-    //                                 console.log("event ", result.data[0]    )
-    //                             }
-    //                             if (result.data.Type === 2) {
-    //                                 console.log("contest ", result.data.ContestEventRegisters[0].ContestEventId)
-    //                                 contest.push(result.data)
-    //                             }
-    //                             setCE({ event: event, contest: contest })
-    //                         })
-    //                 })
-    //             })
-    //         })
-    // }, [])
+    useEffect(() => {
+        let exchange = []
+        FeebackService.getExchangeResponse().then((response) => {
+            response.data.forEach((filter) => {
+                filter.ExchangeResponses.map((data) => {
+                    ExchangeService.getExchangeById(data.ExchangeId).then((result) => {
+                        exchange.push(result.data)
+                    })
+                })
+            })
+            setTestEx(exchange)
+        })
+    }, [])
     useEffect(() => {
         let contests = []
         let events = []
+        let test = []
         FeebackService.getCE()
-            .then((result) => {
-                result.data.forEach((data1) => {
+            .then((result1) => {
+                result1.data.forEach((data1) => {
                     data1.ContestEventRegisters.map((data) => {
                         FeebackService.getCEById(data.ContestEventId).then((result) => {
+                            test.push(result.data)
                             if (result.data.Type === 1) {
                                 events.push(data1)
                             }
@@ -70,15 +79,10 @@ function ManageFeedbackComponent() {
                     })
                 })
                 setTimeout(() => { setCE({ event: events, contest: contests }) }, 500)
+                setTest(test)
             })
     }, [])
-    console.log(CE)
-    // async function axiosID(id) {
-    //     const response = await FeebackService.getCEById(id)
-    //     return response.data.Title
-    // }
     const onFinish = (values) => {
-        console.log(values)
         FeebackService.replyFeedback(values.id, values)
             .then(() => {
                 message.success("Gửi thành công")
@@ -90,48 +94,273 @@ function ManageFeedbackComponent() {
                 message.error("Gửi không thành công")
             })
     }
-    // useEffect(() => {
-    //     data.CE.map((event) => {
-    //         AccountService.getUserById(event.FeedbackUserId).then((response) => (setUser(response.data))).catch((error) => console.log(error))
-    //     })
-    // }, [data])
-    // console.log("user: ", user)
-    // let ok = [0]
-    // axiosID(data.ContestEventRegisters[0].ContestEventId)
-    //     .then(a => {
-    //         ok.push('ok')
-    //     })
-    //     .catch(err => console.log(err))
-    // console.log('Data: ', ok[0])
-    const columns = [
+    const columnsE = [
         {
-            title: 'Tên',
+            title: 'Tên người gửi',
             key: 'name',
-            width: '65%',
+            width: '25%',
             render: (data) => {
                 return (
                     <Row>
-                        <Avatar alt="" size="small" src={data !== null && data.FeedbackUser.Image}></Avatar>
-                        <div style={{ marginLeft: 7 }}>{data !== null && data.FeedbackUser.FullName}</div>
+                        <Avatar alt="" size="middle" src={data !== null && data.FeedbackUser.Image}></Avatar>
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data !== null && data.FeedbackUser.FullName}</div>
                     </Row>
                 )
             }
         },
         {
-            title: 'Loại',
+            title: 'Tên sự kiện',
+            key: 'date',
+            render: (data1) => {
+                let ok = ''
+                test.map((data) => {
+                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
+                        ok = data
+                    }
+                })
+                return (
+                    <Row>
+                        <Col span={5}><img alt="" style={{ height: 50, maxWidth: '100%', objectFit: 'cover' }} src={ok.Image === "string" ? imgPlacehoder : ok.Image} /></Col>
+                        <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{ok.Title}</div></Col>
+                    </Row>
+                )
+            }
+        },
+        {
+            title: 'Ngày diễn ra',
+            key: 'da',
+            width: '25%',
+            render: (data) => {
+                let ok = ''
+                test.map((dataT) => {
+                    if (dataT.Id === data.ContestEventRegisters[0].ContestEventId) {
+                        ok = dataT
+                    }
+                })
+                return (
+                    <Row>
+                        <div style={{ paddingTop: 15, width: '40px', fontSize: '0.5rem' }}><i className="far fa-clock fa-3x" style={{ color: '#F29191' }} /></div>
+                        <div>
+                            <div style={{ marginBottom: 5 }}>Bắt đầu:&nbsp;{moment(ok.StartDate).format('LT')} - {moment(ok.StartDate).format('L')}</div>
+                            <div>Kết thúc:&nbsp;{moment(ok.EndDate).format('LT')} - {moment(ok.EndDate).format('L')}</div>
+                        </div>
+                    </Row>
+                )
+            }
+        },
+        {
+            title: 'Địa điểm diễn ra',
+            key: 'date',
+            render: (data1) => {
+                let ok = ''
+                test.map((data) => {
+                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
+                        ok = data
+                    }
+                })
+                return (
+                    <div>{ok.Venue}</div>
+                )
+            }
+        },
+        {
+            title: 'Ngày gửi',
             key: 'date',
             render: (data) => {
-                FeebackService.getCEById(data.ContestEventRegisters[0].ContestEventId)
-                    .then((result) => {
-                        console.log(result.data.Title)
-                        return (result.data.Title)
-
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    })
+                return (
+                    <div>{moment(data !== null && data.FeedbackDate).format('LT')} - {moment(data !== null && data.FeedbackDate).format('L')}</div>
+                )
             }
-
+        },
+    ];
+    const columnsC = [
+        {
+            title: 'Tên người gửi',
+            key: 'name',
+            width: '25%',
+            render: (data) => {
+                return (
+                    <Row>
+                        <Avatar alt="" size="middle" src={data !== null && data.FeedbackUser.Image}></Avatar>
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data !== null && data.FeedbackUser.FullName}</div>
+                    </Row>
+                )
+            }
+        },
+        {
+            title: 'Tên cuộc thi',
+            key: 'date',
+            render: (data1) => {
+                let ok = ''
+                test.map((data) => {
+                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
+                        ok = data
+                    }
+                })
+                return (
+                    <Row>
+                        <Col span={5}><img alt="" style={{ height: 50, maxWidth: '100%', objectFit: 'cover' }} src={ok.Image === "string" ? imgPlacehoder : ok.Image} /></Col>
+                        <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{ok.Title}</div></Col>
+                    </Row>
+                )
+            }
+        },
+        {
+            title: 'Ngày diễn ra',
+            key: 'da',
+            width: '25%',
+            render: (data) => {
+                let ok = ''
+                test.map((dataT) => {
+                    if (dataT.Id === data.ContestEventRegisters[0].ContestEventId) {
+                        ok = dataT
+                    }
+                })
+                return (
+                    <Row>
+                        <div style={{ paddingTop: 15, width: '40px', fontSize: '0.5rem' }}><i className="far fa-clock fa-3x" style={{ color: '#F29191' }} /></div>
+                        <div>
+                            <div style={{ marginBottom: 5 }}>Bắt đầu:&nbsp;{moment(ok.StartDate).format('LT')} - {moment(ok.StartDate).format('L')}</div>
+                            <div>Kết thúc:&nbsp;{moment(ok.EndDate).format('LT')} - {moment(ok.EndDate).format('L')}</div>
+                        </div>
+                    </Row>
+                )
+            }
+        },
+        {
+            title: 'Địa điểm diễn ra',
+            key: 'date',
+            render: (data1) => {
+                let ok = ''
+                test.map((data) => {
+                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
+                        ok = data
+                    }
+                })
+                return (
+                    <div>{ok.Venue}</div>
+                )
+            }
+        },
+        {
+            title: 'Ngày gửi',
+            key: 'date',
+            render: (data) => {
+                return (
+                    <div>{moment(data !== null && data.FeedbackDate).format('LT')} - {moment(data !== null && data.FeedbackDate).format('L')}</div>
+                )
+            }
+        },
+    ];
+    const columns1 = [
+        {
+            title: 'Tên người gửi',
+            key: 'name',
+            width: '30%',
+            render: (data) => {
+                return (
+                    <Row>
+                        <Avatar alt="" size="middle" src={data !== null && data.FeedbackUser.Image}></Avatar>
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data !== null && data.FeedbackUser.FullName}</div>
+                    </Row>
+                )
+            }
+        },
+        {
+            title: 'Tên giao dịch',
+            key: 'nameEx',
+            render: (data) => {
+                return (
+                    <div>{data.Exchanges[0].Title}</div>
+                )
+            }
+        },
+        {
+            title: 'Loại giao dịch',
+            key: 'nameEx',
+            render: (data) => {
+                function convertFeedbackIDToName(id) {
+                    console.log("id: ", id)
+                    if (id === 1) {
+                        return <Tag color={'geekblue'} key={data}>
+                            XE
+                        </Tag>
+                    } else if (id === 2) {
+                        return <Tag color={'green'} key={data}>
+                            PHỤ KIỆN
+                        </Tag>
+                    }
+                }
+                return (
+                    <div>{convertFeedbackIDToName(data.Exchanges[0].Type)}</div>
+                )
+            }
+        },
+        {
+            title: 'Ngày gửi',
+            key: 'date',
+            render: (data) => {
+                return (
+                    <div>{moment(data !== null && data.FeedbackDate).format('LT')} - {moment(data !== null && data.FeedbackDate).format('L')}</div>
+                )
+            }
+        },
+    ];
+    const columns2 = [
+        {
+            title: 'Tên người gửi',
+            key: 'name',
+            width: '30%',
+            render: (data) => {
+                return (
+                    <Row>
+                        <Avatar alt="" size="middle" src={data !== null && data.FeedbackUser.Image}></Avatar>
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data !== null && data.FeedbackUser.FullName}</div>
+                    </Row>
+                )
+            }
+        },
+        {
+            title: 'Tên giao dịch',
+            key: 'nameEx',
+            render: (data) => {
+                let ok = ''
+                testEx.map((data1) => {
+                    if (data1.Id === data.ExchangeResponses[0].ExchangeId) {
+                        ok = data1
+                    }
+                })
+                return (
+                    <div>{ok.Title}</div>
+                )
+            }
+        },
+        {
+            title: 'Loại giao dịch',
+            key: 'nameEx',
+            render: (data) => {
+                let ok = ''
+                testEx.map((data1) => {
+                    if (data1.Id === data.ExchangeResponses[0].ExchangeId) {
+                        ok = data1
+                    }
+                })
+                function convertFeedbackIDToName(id) {
+                    console.log("id: ", id)
+                    if (id === 1) {
+                        return <Tag color={'geekblue'} key={data}>
+                            XE
+                        </Tag>
+                    } else if (id === 2) {
+                        return <Tag color={'green'} key={data}>
+                            PHỤ KIỆN
+                        </Tag>
+                    }
+                }
+                return (
+                    <div>{convertFeedbackIDToName(ok.Type)}</div>
+                )
+            }
         },
         {
             title: 'Ngày gửi',
@@ -209,13 +438,12 @@ function ManageFeedbackComponent() {
                             onRow={(record) => {
                                 return {
                                     onClick: () => {
-                                        console.log(record)
                                         setVisible(true)
                                         setDt(record)
                                     }, // click row
                                 };
                             }}
-                            columns={columns}
+                            columns={columnsE}
                             dataSource={CE.event}
                             pagination={{
                                 current: page,
@@ -237,13 +465,12 @@ function ManageFeedbackComponent() {
                             onRow={(record) => {
                                 return {
                                     onClick: () => {
-                                        console.log(record)
                                         setVisible(true)
                                         setDt(record)
                                     }, // click row
                                 };
                             }}
-                            columns={columns}
+                            columns={columnsC}
                             dataSource={CE.contest}
                             pagination={{
                                 current: page,
@@ -259,23 +486,22 @@ function ManageFeedbackComponent() {
                         />
                     </Spin>
                 </TabPane>
-                <TabPane tab={<div><i class="fa fa-exchange" ></i>&nbsp;&nbsp;Trao đổi</div>} key="3" >
+                <TabPane tab={<div><i class="fa fa-exchange" ></i>&nbsp;&nbsp;Giao dịch</div>} key="3" >
                     <Row gutter={15}>
                         <Col span={12}>
-                            <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#9E7777', padding: '4px 7px 4px 7px', color: 'white' }}><i class="fas fa-car"></i>&nbsp;&nbsp;Trao đổi xe</span></div>
+                            <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#9E7777', padding: '4px 7px 4px 7px', color: 'white' }}><i class="fas fa-car"></i>&nbsp;&nbsp;Người bán</span></div>
                             <Spin size="small" spinning={data.ExchangeResponse.length !== 0 ? false : true}>
                                 <Table
                                     onRow={(record) => {
                                         return {
                                             onClick: () => {
-                                                console.log(record)
                                                 setVisible(true)
                                                 setDt(record)
                                             }, // click row
                                         };
                                     }}
-                                    columns={columns}
-                                    dataSource={data.ExchangeResponse}
+                                    columns={columns1}
+                                    dataSource={data.Exchange}
                                     pagination={{
                                         current: page,
                                         pageSize: pageSize,
@@ -291,19 +517,18 @@ function ManageFeedbackComponent() {
                             </Spin>
                         </Col>
                         <Col span={12}>
-                            <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#87AAAA', padding: '4px 7px 4px 7px', color: 'white' }}><i class="far fa-life-ring"></i>&nbsp;&nbsp;Trao phụ kiện</span></div>
+                            <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#87AAAA', padding: '4px 7px 4px 7px', color: 'white' }}><i class="far fa-life-ring"></i>&nbsp;&nbsp;Người mua</span></div>
                             <Spin size="small" spinning={data.ExchangeResponse.length !== 0 ? false : true}>
                                 <Table
                                     onRow={(record) => {
                                         return {
                                             onClick: () => {
-                                                console.log(record)
                                                 setVisible(true)
                                                 setDt(record)
                                             }, // click row
                                         };
                                     }}
-                                    columns={columns}
+                                    columns={columns2}
                                     dataSource={data.ExchangeResponse}
                                     pagination={{
                                         current: page,
