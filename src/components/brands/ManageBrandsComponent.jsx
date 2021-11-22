@@ -420,7 +420,7 @@ export default function ManageBrandComponent() {
                                             <Input.TextArea
                                                 id="brandCarName" style={{ marginLeft: 7, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#050505' }}
                                                 placeholder="Tên thương hiệu"
-                                                showCount maxLength={200}
+                                                showCount maxLength={50}
                                                 autoSize={{ minRows: 1, maxRows: 10 }}
                                             />
                                         </Form.Item>
@@ -430,7 +430,7 @@ export default function ManageBrandComponent() {
                                             <Input.TextArea
                                                 style={{ marginLeft: 9, width: '-webkit-fill-available', backgroundColor: '#FFFFFF', color: '#316B83' }}
                                                 placeholder="Mô tả"
-                                                showCount maxLength={50}
+                                                showCount maxLength={200}
                                                 autoSize={{ minRows: 3, maxRows: 10 }}
                                             />
                                         </Form.Item>

@@ -1,15 +1,14 @@
-import { Col, Row, Spin, Table, Avatar, Modal, Button, Form, Input, message } from 'antd';
-import React, { useEffect, useState } from 'react';
-import AccountService from '../../services/AccountService';
-import FeebackService from '../../services/FeebackService';
-import { useHistory } from "react-router-dom";
+import { Avatar, Button, Col, Form, Input, message, Modal, Row, Spin, Table, Tabs } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from "react-router-dom";
+import FeebackService from '../../services/FeebackService';
 function ManageFeedbackComponent() {
+    const { TabPane } = Tabs;
     const [data, setData] = useState({ CE: [], Exchange: [], ExchangeResponse: [] })
     const [CE, setCE] = useState({ event: [], contest: [] })
     const [form] = Form.useForm();
-    const [user, setUser] = useState([])
     const [pageSize, setPageSize] = React.useState(5)
     const [page, setPage] = React.useState(1)
     const [dt, setDt] = useState(null)
@@ -74,6 +73,10 @@ function ManageFeedbackComponent() {
             })
     }, [])
     console.log(CE)
+    // async function axiosID(id) {
+    //     const response = await FeebackService.getCEById(id)
+    //     return response.data.Title
+    // }
     const onFinish = (values) => {
         console.log(values)
         FeebackService.replyFeedback(values.id, values)
@@ -93,6 +96,13 @@ function ManageFeedbackComponent() {
     //     })
     // }, [data])
     // console.log("user: ", user)
+    // let ok = [0]
+    // axiosID(data.ContestEventRegisters[0].ContestEventId)
+    //     .then(a => {
+    //         ok.push('ok')
+    //     })
+    //     .catch(err => console.log(err))
+    // console.log('Data: ', ok[0])
     const columns = [
         {
             title: 'Tên',
@@ -106,6 +116,22 @@ function ManageFeedbackComponent() {
                     </Row>
                 )
             }
+        },
+        {
+            title: 'Loại',
+            key: 'date',
+            render: (data) => {
+                FeebackService.getCEById(data.ContestEventRegisters[0].ContestEventId)
+                    .then((result) => {
+                        console.log(result.data.Title)
+                        return (result.data.Title)
+
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    })
+            }
+
         },
         {
             title: 'Ngày gửi',
@@ -142,7 +168,6 @@ function ManageFeedbackComponent() {
                     </Row>
                 ]}
             >
-
                 {/* {dt !== null && <div><span style={{ letterSpacing: 1, color: '#52524E' }}>Trả lời:</span> &nbsp;
                     {dt.ReplyContent}
                 </div>} */}
@@ -177,9 +202,8 @@ function ManageFeedbackComponent() {
                         </Form.Item> : dt.ReplyContent)}
                 </Form>
             </Modal>
-            <Row gutter={15}>
-                <Col span={8}>
-                    <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#52BCC2', padding: '4px 7px 4px 7px', color: 'white' }}><i className="fas fa-calendar-alt " ></i>&nbsp;&nbsp;Sự kiện, Cuộc thi</span></div>
+            <Tabs type="card">
+                <TabPane tab={<div><i class="fas fa-calendar-alt" ></i>&nbsp;&nbsp;Sự kiện</div>} key="1" >
                     <Spin size="small" spinning={CE.event.length !== 0 ? false : true}>
                         <Table
                             onRow={(record) => {
@@ -206,9 +230,8 @@ function ManageFeedbackComponent() {
                             }}
                         />
                     </Spin>
-                </Col>
-                <Col span={8}>
-                    <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#BFA2DB', padding: '4px 7px 4px 7px', color: 'white' }}><i className="fas fa-trophy" ></i>&nbsp;&nbsp;Trao đổi</span></div>
+                </TabPane>
+                <TabPane tab={<div><i class="fas fa-trophy" ></i>&nbsp;&nbsp;Cuộc thi</div>} key="2" >
                     <Spin size="small" spinning={CE.contest.length !== 0 ? false : true}>
                         <Table
                             onRow={(record) => {
@@ -235,37 +258,70 @@ function ManageFeedbackComponent() {
                             }}
                         />
                     </Spin>
-                </Col>
-                <Col span={8}>
-                    <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#9E7777', padding: '4px 7px 4px 7px', color: 'white' }}><i class="fas fa-car"></i>&nbsp;&nbsp;Phản hồi trao đổi</span></div>
-                    <Spin size="small" spinning={data.ExchangeResponse.length !== 0 ? false : true}>
-                        <Table
-                            onRow={(record) => {
-                                return {
-                                    onClick: () => {
-                                        console.log(record)
-                                        setVisible(true)
-                                        setDt(record)
-                                    }, // click row
-                                };
-                            }}
-                            columns={columns}
-                            dataSource={data.ExchangeResponse}
-                            pagination={{
-                                current: page,
-                                pageSize: pageSize,
-                                onChange: (page, pageSize) => {
-                                    setPage(page)
-                                    setPageSize(pageSize)
-                                },
-                                pageSizeOptions: ['5', '10', '15', '20'],
-                                showSizeChanger: true,
-                                locale: { items_per_page: "/ trang" },
-                            }}
-                        />
-                    </Spin>
-                </Col>
-            </Row>
+                </TabPane>
+                <TabPane tab={<div><i class="fa fa-exchange" ></i>&nbsp;&nbsp;Trao đổi</div>} key="3" >
+                    <Row gutter={15}>
+                        <Col span={12}>
+                            <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#9E7777', padding: '4px 7px 4px 7px', color: 'white' }}><i class="fas fa-car"></i>&nbsp;&nbsp;Trao đổi xe</span></div>
+                            <Spin size="small" spinning={data.ExchangeResponse.length !== 0 ? false : true}>
+                                <Table
+                                    onRow={(record) => {
+                                        return {
+                                            onClick: () => {
+                                                console.log(record)
+                                                setVisible(true)
+                                                setDt(record)
+                                            }, // click row
+                                        };
+                                    }}
+                                    columns={columns}
+                                    dataSource={data.ExchangeResponse}
+                                    pagination={{
+                                        current: page,
+                                        pageSize: pageSize,
+                                        onChange: (page, pageSize) => {
+                                            setPage(page)
+                                            setPageSize(pageSize)
+                                        },
+                                        pageSizeOptions: ['5', '10', '15', '20'],
+                                        showSizeChanger: true,
+                                        locale: { items_per_page: "/ trang" },
+                                    }}
+                                />
+                            </Spin>
+                        </Col>
+                        <Col span={12}>
+                            <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#87AAAA', padding: '4px 7px 4px 7px', color: 'white' }}><i class="far fa-life-ring"></i>&nbsp;&nbsp;Trao phụ kiện</span></div>
+                            <Spin size="small" spinning={data.ExchangeResponse.length !== 0 ? false : true}>
+                                <Table
+                                    onRow={(record) => {
+                                        return {
+                                            onClick: () => {
+                                                console.log(record)
+                                                setVisible(true)
+                                                setDt(record)
+                                            }, // click row
+                                        };
+                                    }}
+                                    columns={columns}
+                                    dataSource={data.ExchangeResponse}
+                                    pagination={{
+                                        current: page,
+                                        pageSize: pageSize,
+                                        onChange: (page, pageSize) => {
+                                            setPage(page)
+                                            setPageSize(pageSize)
+                                        },
+                                        pageSizeOptions: ['5', '10', '15', '20'],
+                                        showSizeChanger: true,
+                                        locale: { items_per_page: "/ trang" },
+                                    }}
+                                />
+                            </Spin>
+                        </Col>
+                    </Row>
+                </TabPane>
+            </Tabs>
         </>
     )
 }
