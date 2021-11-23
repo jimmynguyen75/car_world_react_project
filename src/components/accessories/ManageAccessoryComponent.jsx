@@ -15,6 +15,8 @@ function ManageAccessoryComponent() {
     const [visible, setVisible] = React.useState(false);
     const [confirmLoading, setConfirmLoading] = React.useState(false);
     const [setSuccess] = React.useState(false);
+    const [pageSize, setPageSize] = React.useState(5);
+    const [page, setPage] = React.useState(1);
     const [detail, setDetail] = React.useState(false);
     const [dataToChild, setDataToChild] = React.useState(null);
     const [dataToChildFixingImage, setDataToChildFixingImage] = React.useState([]);
@@ -119,7 +121,7 @@ function ManageAccessoryComponent() {
                         return (
                             <div>
                                 <Row>
-                                    <Col span={3} style={{ height: 50, textAlign: 'center', display: 'flex', alignItems: 'center' }}> <img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }}  src={record.Image} /></Col>
+                                    <Col span={3} style={{ height: 50, textAlign: 'center', display: 'flex', alignItems: 'center' }}> <img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }} src={record.Image} /></Col>
                                     <Col span={21} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15, width: '100%' }} class="textOverflow">{record.Name}</div></Col>
                                 </Row>
                             </div>
@@ -212,7 +214,17 @@ function ManageAccessoryComponent() {
                 columns={columns}
                 dataSource={accessories}
                 rowKey="Id"
-                pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15', '20'] }}
+                pagination={{
+                    current: page,
+                    pageSize: pageSize,
+                    onChange: (page, pageSize) => {
+                        setPage(page)
+                        setPageSize(pageSize)
+                    },
+                    pageSizeOptions: ['5', '10', '15', '20'],
+                    showSizeChanger: true,
+                    locale: { items_per_page: "/ trang" },
+                }}
             />;
         }
     }

@@ -1,5 +1,7 @@
 import axios from "axios";
 import authHeader from './AuthHeader'
+import moment from 'moment';
+import 'moment/locale/vi';
 const PROPOSAL_API_URL = "https://carworld.cosplane.asia/api/proposal/"
 
 class ProposalService {
@@ -15,7 +17,9 @@ class ProposalService {
     disapproveProposal(proposal) {
         return axios.put(PROPOSAL_API_URL + "DisApprovedProposal", proposal, { headers: authHeader() })
     }
-
+    getProposalByMonth() {
+        return axios.get(PROPOSAL_API_URL + "CountProposalsByMonth?date=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
+    }
 }
 
 export default new ProposalService();

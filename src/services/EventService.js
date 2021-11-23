@@ -30,6 +30,9 @@ class EventService {
     cancelEvent(id) {
         return axios.put(EVENT_API_URL + "CancelCE?id=" + id, { headers: authHeader() })
     }
+    getEventByMonth() {
+        return axios.get(EVENT_API_URL + "CountCEsByMonth?type=1&date=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
+    }
     getUserJoined(id) {
         return axios.get(USEREVENT_API_URL + "GetUsersInCE?contestEventId=" + id, { headers: authHeader() })
     }

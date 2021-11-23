@@ -21,6 +21,9 @@ class PostService {
     getPosts() {
         return axios.get(POST_API_URL + "GetAllPosts", { headers: authHeader() })
     }
+    getPostByMonth() {
+        return axios.get(POST_API_URL + "CountPostsByMonth?date=2021-10-23T07:51:08", { headers: authHeader() })
+    }
 }
 
 export default new PostService();

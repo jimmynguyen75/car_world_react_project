@@ -19,7 +19,8 @@ function ManageCarsComponent() {
     const [setSuccess] = React.useState(false);
     const [record, setRecord] = React.useState(null);
     const [recordImage, setRecordImage] = React.useState(null);
-
+    const [pageSize, setPageSize] = React.useState(5)
+    const [page, setPage] = React.useState(1)
     const contentDelete = (
         <div>
             <p>Bạn sẽ xóa chiếc xe này khi nhấn vào!</p>
@@ -306,9 +307,15 @@ function ManageCarsComponent() {
                     document.documentElement.scrollTop = 0;
                 }}
                 pagination={{
-                    defaultPageSize: 5,
+                    current: page,
+                    pageSize: pageSize,
+                    onChange: (page, pageSize) => {
+                        setPage(page)
+                        setPageSize(pageSize)
+                    },
+                    pageSizeOptions: ['5', '10', '15', '20'],
                     showSizeChanger: true,
-                    pageSizeOptions: ['5', '10', '15', '20']
+                    locale: { items_per_page: "/ trang" },
                 }}
             />;
         }

@@ -10,6 +10,8 @@ function ManageAccountsComponent() {
     const [allUser, setAllUser] = useState([]);
     const [form] = Form.useForm();
     const currentUser = AccountService.getCurrentUser();
+    const [pageSize, setPageSize] = React.useState(5)
+    const [page, setPage] = React.useState(1)
     useEffect(() => {
         let result = []
         AccountService.getAdminAndManger()
@@ -272,8 +274,17 @@ function ManageAccountsComponent() {
                 rowKey="Id"
                 columns={columns}
                 dataSource={user}
-                pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15', '20'] }}
-            />;
+                pagination={{
+                    current: page,
+                    pageSize: pageSize,
+                    onChange: (page, pageSize) => {
+                        setPage(page)
+                        setPageSize(pageSize)
+                    },
+                    pageSizeOptions: ['5', '10', '15', '20'],
+                    showSizeChanger: true,
+                    locale: { items_per_page: "/ trang" },
+                }}            />;
         }
     }
     class User extends React.PureComponent {
@@ -446,8 +457,17 @@ function ManageAccountsComponent() {
                 columns={columns}
                 dataSource={allUser}
                 rowKey="Id"
-                pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15', '20'] }}
-            />;
+                pagination={{
+                    current: page,
+                    pageSize: pageSize,
+                    onChange: (page, pageSize) => {
+                        setPage(page)
+                        setPageSize(pageSize)
+                    },
+                    pageSizeOptions: ['5', '10', '15', '20'],
+                    showSizeChanger: true,
+                    locale: { items_per_page: "/ trang" },
+                }}            />;
         }
     }
     const { TabPane } = Tabs;
