@@ -6,6 +6,8 @@ import { useHistory } from "react-router-dom";
 import FeebackService from '../../services/FeebackService';
 import ExchangeService from '../../services/ExchangeService';
 import AccountService from '../../services/AccountService'
+import { CheckCircleOutlined } from '@ant-design/icons';
+
 function ManageFeedbackComponent() {
     const imgPlacehoder = 'https://via.placeholder.com/120';
     const { TabPane } = Tabs;
@@ -21,6 +23,7 @@ function ManageFeedbackComponent() {
     const [testEx, setTestEx] = useState([])
     const [car, setCar] = useState([])
     const [accessory, setAccessory] = useState([])
+    const [exC, setExC] = useState('')
     const handleCancel = () => {
         setVisible(false);
         history.push('/phan-hoi')
@@ -33,14 +36,14 @@ function ManageFeedbackComponent() {
             const CE = await FeebackService.getCE();
             const Exchange = await FeebackService.getExchange();
             const ExchangeResponse = await FeebackService.getExchangeResponse();
-            Exchange.data.forEach((filter) => {
-                if (filter.Exchanges.Type === 1) {
-                    car.push(filter)
-                }
-                if (filter.Exchanges.Type === 2) {
-                    accessory.push(filter)
-                }
-            })
+            // Exchange.data.forEach((filter) => {
+            //     if (filter.Exchanges.Type === 1) {
+            //         car.push(filter)
+            //     }
+            //     if (filter.Exchanges.Type === 2) {
+            //         accessory.push(filter)
+            //     }
+            // })
             setCar(car)
             setAccessory(accessory)
             setData({ CE: CE.data, Exchange: Exchange.data, ExchangeResponse: ExchangeResponse.data })
@@ -116,7 +119,7 @@ function ManageFeedbackComponent() {
             render: (data1) => {
                 let ok = ''
                 test.map((data) => {
-                    if (data.Id === data1.ContestEventRegisters.ContestEventId) {
+                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
                         ok = data
                     }
                 })
@@ -128,6 +131,7 @@ function ManageFeedbackComponent() {
                 )
             }
         },
+
         {
             title: 'Ngày diễn ra',
             key: 'da',
@@ -135,7 +139,7 @@ function ManageFeedbackComponent() {
             render: (data) => {
                 let ok = ''
                 test.map((dataT) => {
-                    if (dataT.Id === data.ContestEventRegisters.ContestEventId) {
+                    if (dataT.Id === data.ContestEventRegisters[0].ContestEventId) {
                         ok = dataT
                     }
                 })
@@ -156,7 +160,7 @@ function ManageFeedbackComponent() {
             render: (data1) => {
                 let ok = ''
                 test.map((data) => {
-                    if (data.Id === data1.ContestEventRegisters.ContestEventId) {
+                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
                         ok = data
                     }
                 })
@@ -166,11 +170,24 @@ function ManageFeedbackComponent() {
             }
         },
         {
-            title: 'Ngày gửi',
-            key: 'date',
+            title: 'Trạng thái',
+            key: 'status',
             render: (data) => {
                 return (
-                    <div>{moment(data !== null && data.FeedbackDate).format('LT')} - {moment(data !== null && data.FeedbackDate).format('L')}</div>
+                    data.ReplyUser !== null ? <div style={{ textAlign: 'center' }}><CheckCircleOutlined style={{ fontSize: 24, color: 'green' }} /></div> :
+                        <div style={{ textAlign: 'center' }}><CheckCircleOutlined style={{ fontSize: 24, color: 'red' }} /></div>
+                )
+            }
+        },
+        {
+            title: 'Ngày gửi',
+            key: 'date',
+            dataIndex: 'FeedbackDate',
+            sorter: (a, b) => a.FeedbackDate.localeCompare(b.FeedbackDate),
+            defaultSortOrder: 'descend',
+            render: (data) => {
+                return (
+                    <div>{moment(data !== null && data).format('LT')} - {moment(data !== null && data).format('L')}</div>
                 )
             }
         },
@@ -195,7 +212,7 @@ function ManageFeedbackComponent() {
             render: (data1) => {
                 let ok = ''
                 test.map((data) => {
-                    if (data.Id === data1.ContestEventRegisters.ContestEventId) {
+                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
                         ok = data
                     }
                 })
@@ -214,7 +231,7 @@ function ManageFeedbackComponent() {
             render: (data) => {
                 let ok = ''
                 test.map((dataT) => {
-                    if (dataT.Id === data.ContestEventRegisters.ContestEventId) {
+                    if (dataT.Id === data.ContestEventRegisters[0].ContestEventId) {
                         ok = dataT
                     }
                 })
@@ -235,7 +252,7 @@ function ManageFeedbackComponent() {
             render: (data1) => {
                 let ok = ''
                 test.map((data) => {
-                    if (data.Id === data1.ContestEventRegisters.ContestEventId) {
+                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
                         ok = data
                     }
                 })
@@ -245,11 +262,24 @@ function ManageFeedbackComponent() {
             }
         },
         {
-            title: 'Ngày gửi',
-            key: 'date',
+            title: 'Trạng thái',
+            key: 'status',
             render: (data) => {
                 return (
-                    <div>{moment(data !== null && data.FeedbackDate).format('LT')} - {moment(data !== null && data.FeedbackDate).format('L')}</div>
+                    data.ReplyUser !== null ? <div style={{ textAlign: 'center' }}><CheckCircleOutlined style={{ fontSize: 24, color: 'green' }} /></div> :
+                        <div style={{ textAlign: 'center' }}><CheckCircleOutlined style={{ fontSize: 24, color: 'red' }} /></div>
+                )
+            }
+        },
+        {
+            title: 'Ngày gửi',
+            key: 'date',
+            dataIndex: 'FeedbackDate',
+            sorter: (a, b) => a.FeedbackDate.localeCompare(b.FeedbackDate),
+            defaultSortOrder: 'descend',
+            render: (data) => {
+                return (
+                    <div>{moment(data !== null && data).format('LT')} - {moment(data !== null && data).format('L')}</div>
                 )
             }
         },
@@ -270,10 +300,13 @@ function ManageFeedbackComponent() {
         },
         {
             title: 'Tên giao dịch',
-            key: 'nameEx',
+            key: 'nameEx123',
             render: (data) => {
+
+                // setExC(data.Exchanges[0])
+                // console.log("tt: ", exC !== null && exC.Title)
                 return (
-                    <div>{data.Exchanges.Title}</div>
+                    <div>{data.Exchanges[0].Title}</div>
                 )
             }
         },
@@ -293,7 +326,17 @@ function ManageFeedbackComponent() {
                     }
                 }
                 return (
-                    <div>{convertFeedbackIDToName(data.Exchanges.Type)}</div>
+                    <div>{convertFeedbackIDToName(data !== null && data.Exchanges[0].Type)}</div>
+                )
+            }
+        },
+        {
+            title: 'Trạng thái',
+            key: 'status',
+            render: (data) => {
+                return (
+                    data.ReplyUser !== null ? <div style={{ textAlign: 'center' }}><CheckCircleOutlined style={{ fontSize: 18, color: 'green' }} /></div> :
+                        <div style={{ textAlign: 'center' }}><CheckCircleOutlined style={{ fontSize: 18, color: 'red' }} /></div>
                 )
             }
         },
@@ -327,7 +370,7 @@ function ManageFeedbackComponent() {
             render: (data) => {
                 let ok = ''
                 testEx.map((data1) => {
-                    if (data1.Id === data.ExchangeResponses.ExchangeId) {
+                    if (data1.Id === data.ExchangeResponses[0].ExchangeId) {
                         ok = data1
                     }
                 })
@@ -342,7 +385,7 @@ function ManageFeedbackComponent() {
             render: (data) => {
                 let ok = ''
                 testEx.map((data1) => {
-                    if (data1.Id === data.ExchangeResponses.ExchangeId) {
+                    if (data1.Id === data.ExchangeResponses[0].ExchangeId) {
                         ok = data1
                     }
                 })
@@ -359,6 +402,16 @@ function ManageFeedbackComponent() {
                 }
                 return (
                     <div>{convertFeedbackIDToName(ok.Type)}</div>
+                )
+            }
+        },
+        {
+            title: 'Trạng thái',
+            key: 'status',
+            render: (data) => {
+                return (
+                    data.ReplyUser !== null ? <div style={{ textAlign: 'center' }}><CheckCircleOutlined style={{ fontSize: 18, color: 'green' }} /></div> :
+                        <div style={{ textAlign: 'center' }}><CheckCircleOutlined style={{ fontSize: 18, color: 'red' }} /></div>
                 )
             }
         },
@@ -421,7 +474,17 @@ function ManageFeedbackComponent() {
                     {dt !== null && <div style={{ paddingBottom: 7 }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Nội dung:</span> &nbsp;
                         {dt !== null && dt.FeedbackContent}
                     </div>}
-
+                    {dt !== null && (dt.ReplyUser !== null && (
+                        <div style={{ paddingBottom: 7 }}>
+                            <Row>
+                                Tên quản lý phản hồi: &nbsp; &nbsp;{dt !== null && (dt.ReplyUser !== null && (
+                                    <Row>
+                                        <Avatar alt="" size="small" src={dt.ReplyUser.Image}></Avatar>
+                                        <div style={{ marginLeft: 7 }}>{dt.ReplyUser.FullName}</div>
+                                    </Row>
+                                ))}
+                            </Row>
+                        </div>))}
                     <span style={{ letterSpacing: 1, color: '#52524E' }}>Trả lời:</span> &nbsp;
                     {dt !== null && (dt.ReplyContent === null ?
                         <Form.Item name="replyContent" style={{ paddingTop: '5px' }} rules={[{ required: true, message: "Trả lời phản hồi không được bỏ trống" }]}>
@@ -443,9 +506,11 @@ function ManageFeedbackComponent() {
                                     onClick: () => {
                                         setVisible(true)
                                         setDt(record)
+                                        console.log(record)
                                     }, // click row
                                 };
                             }}
+                            rowKey="Id1"
                             columns={columnsE}
                             dataSource={CE.event}
                             pagination={{
@@ -470,9 +535,11 @@ function ManageFeedbackComponent() {
                                     onClick: () => {
                                         setVisible(true)
                                         setDt(record)
+                                        console.log(record)
                                     }, // click row
                                 };
                             }}
+                            rowKey="Id2"
                             columns={columnsC}
                             dataSource={CE.contest}
                             pagination={{
@@ -500,9 +567,11 @@ function ManageFeedbackComponent() {
                                             onClick: () => {
                                                 setVisible(true)
                                                 setDt(record)
+                                                console.log(record)
                                             }, // click row
                                         };
                                     }}
+                                    rowKey="Id3"
                                     columns={columns1}
                                     dataSource={data.Exchange}
                                     pagination={{
@@ -528,9 +597,11 @@ function ManageFeedbackComponent() {
                                             onClick: () => {
                                                 setVisible(true)
                                                 setDt(record)
+                                                console.log(record)
                                             }, // click row
                                         };
                                     }}
+                                    rowKey="Id4"
                                     columns={columns2}
                                     dataSource={data.ExchangeResponse}
                                     pagination={{
