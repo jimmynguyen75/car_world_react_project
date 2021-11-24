@@ -79,7 +79,7 @@ function ManageFeedbackComponent() {
                         })
                     })
                 })
-                setTimeout(() => { setCE({ event: events, contest: contests }) }, 500)
+                setTimeout(() => { setCE({ event: events, contest: contests }) }, 1000)
                 setTest(test)
             })
     }, [])
