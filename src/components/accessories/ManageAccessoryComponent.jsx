@@ -101,7 +101,14 @@ function ManageAccessoryComponent() {
             onOk() {
                 console.log(data.Id)
                 AccessoryService.deleteAccessoryById(data.Id)
-                    .then(() => window.location.reload(), console.log("Delete successfuly!"))
+                    .then(() => {
+                        setTimeout(() => {
+                            message.success("Xóa phụ kiện thành công");
+                        }, 500)
+                        setTimeout(() => {
+                            window.location.href = '/phu-kien'
+                        }, 1500)
+                    })
                     .catch((err) => console.log(err))
             },
             cancelText: "Không"

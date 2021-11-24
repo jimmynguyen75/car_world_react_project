@@ -1,6 +1,6 @@
 import axios from "axios";
 import { MinusOutlined, UserOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Carousel, Col, Descriptions, Button, Image, Row, Spin, Input, Select, Avatar, Form, message, Modal } from 'antd';
+import { Carousel, Col, Descriptions, Button, Image, Row, Spin, Input, Select, Avatar, Form, message, Modal, Tag } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
 import { useHistory } from "react-router-dom";
@@ -55,13 +55,13 @@ export default function ViewEventComponent({ record, recordImage }) {
                     .then(() => {
                         console.log('Deleted')
                         setTimeout(() => {
-                            message.success("Xóa giải thưởng thành công");
+                            message.success("Xóa giải thưởng cuộc thi thành công");
                         }, 200)
                         setTimeout(() => {
                             window.location.href = '/giai-thuong'
                         }, 500)
                     })
-                    .catch(() => { message.error("Xóa không thành công"); })
+                    .catch(() => { message.error("Xóa giải thưởng cuộc thi không thành công"); })
             }
         });
     }
@@ -136,7 +136,7 @@ export default function ViewEventComponent({ record, recordImage }) {
                     window.location.href = '/giai-thuong'
                 }, 1000)
             })
-            .catch(() => { message.error("Cập nhật không thành công") })
+            .catch(() => { message.error("Cập nhật giải thưởng không thành công") })
         console.log(value)
     }
     return (
@@ -303,13 +303,15 @@ export default function ViewEventComponent({ record, recordImage }) {
                                             <Row gutter={15}>
                                                 <Col span={12}><div>{prize.Prize.Name}</div></Col>
                                                 <Col span={12}>
-                                                    <div><Avatar icon={<UserOutlined />} src={prize.User !== null && prize.User.Image} size={26} style={{ marginBottom: 4 }} />&nbsp;&nbsp;{prize.User !== null && prize.User.FullName}</div>
+                                                    <div>
+                                                        <Avatar icon={<UserOutlined />} src={prize.User !== null && prize.User.Image} size={26} style={{ marginBottom: 4 }} />&nbsp;&nbsp;
+                                                        {prize.User !== null ? prize.User.FullName : <Tag color="green">Vui lòng chọn người tham gia</Tag>}</div>
                                                 </Col>
                                             </Row>
                                         </Col>
                                         <Col span={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             <Row gutter={10}>
-                                                <div onClick={() => showModalEdit(prize)}> <span style={{ color: '#3A6351', textDecoration: 'underline', cursor: 'pointer' }}>Sửa</span> </div>
+                                                <div onClick={() => showModalEdit(prize)}> <span style={{ color: '#5AA469', textDecoration: 'underline', cursor: 'pointer' }}>Sửa</span> </div>
                                                 <div onClick={() => confirm(prize.Id)} style={{ paddingLeft: 10 }}><span style={{ color: '#F38BA0', textDecoration: 'underline', cursor: 'pointer' }}>Xóa</span>  </div>
                                             </Row>
                                         </Col>

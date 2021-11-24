@@ -77,7 +77,7 @@ function ManageContestsComponent() {
         ContestService.cancelEvent(id)
             .then(() => {
                 setTimeout(() => {
-                    message.success("Hủy sự kiện thành công")
+                    message.success("Hủy cuộc thi thành công")
                 }, 500)
                 setTimeout(() => {
                     setLoadingButton(false);
@@ -87,7 +87,7 @@ function ManageContestsComponent() {
                 }, 800)
             })
             .catch(() => {
-                message.error("Hủy sự kiện không thành công")
+                message.error("Hủy cuộc thi không thành công")
             })
     };
     //Effect

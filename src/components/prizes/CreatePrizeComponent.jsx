@@ -90,7 +90,7 @@ export default function CreatePrizeComponent() {
                 message.success("Tạo giải thưởng thành công") 
                 setTimeout(() => {window.location.href = "/giai-thuong"}, 500)
             })
-            .catch(() => { message.error("Tạo không thành công") })
+            .catch(() => { message.error("Tạo giải thưởng không thành công") })
     }
     return (
         <div>
@@ -144,7 +144,7 @@ export default function CreatePrizeComponent() {
                             {fileList.length >= 1 ? null : uploadButton}
                         </Upload>
                     </Form.Item>
-                    <Form.Item label="Tên giải thưởng" name="name" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
+                    <Form.Item label="Tên giải thưởng" name="name" rules={[{ required: true, message: "Tên giải thưởng không được bỏ trống" }]}>
                         <Input.TextArea
                             placeholder="Tên giải thưởng"
                             showCount maxLength={50}

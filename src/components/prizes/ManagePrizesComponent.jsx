@@ -94,12 +94,12 @@ export default function ManagePrizesComponent() {
         console.log(values);
         PrizeService.updatePrize(values.id, values)
             .then(() => {
-                message.success("Cập nhật thành công")
+                message.success("Cập nhật giải thưởng thành công")
                 setTimeout(() => {
                     window.location.reload();
                 }, 500)
             })
-            .catch(() => { message.error("Cập nhật không thành công") })
+            .catch(() => { message.error("Cập nhật giải thưởng không thành công") })
     }
     function confirm(id) {
         Modal.confirm({
@@ -116,7 +116,7 @@ export default function ManagePrizesComponent() {
                             window.location.href = '/giai-thuong'
                         }, 500)
                     })
-                    .catch(() => { message.error(id); })
+                    .catch(() => { message.error("Xóa giải thưởng không thành công"); })
             }
         });
     }
@@ -677,11 +677,8 @@ export default function ManagePrizesComponent() {
                 width={1000}
                 footer={
                     <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                        <Button onClick={handleCancel}>
-                            Hủy
-                        </Button>
-                        <Button form="updatePrizeContest" loading={loadingButton} type="primary" key="submit" htmlType="submit">
-                            Hoàn tất
+                        <Button type="primary" onClick={handleCancel}>
+                            Xong
                         </Button>
                     </Row>
                 }

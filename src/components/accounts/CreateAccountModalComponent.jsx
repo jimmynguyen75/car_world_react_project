@@ -19,7 +19,7 @@ export default function CreateAccountModalComponent() {
         AccountService.createAccount(values)
             .then((res) => {
                 setTimeout(() => {
-                    message.success("Tạo thành công")
+                    message.success("Tạo tài khoản thành công")
                 }, 200);
                 setTimeout(() => {
                     window.location.reload();
@@ -27,7 +27,7 @@ export default function CreateAccountModalComponent() {
                 }, [500])
             })
             .catch((err) => {
-                message.error("Tạo không thành công")
+                message.error("Tạo tài khoản không thành công")
                 console.log(err)
             })
         console.log(values)

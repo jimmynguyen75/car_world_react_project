@@ -115,14 +115,14 @@ export default function EditPostComponent({ record }) {
         PostService.updatePost(values.id, values)
             .then(() => {
                 setTimeout(() => {
-                    message.success("Cập nhật thành công");
+                    message.success("Cập nhật bài đăng thành công");
                 }, 500)
                 setTimeout(() => {
                     window.location.href = '/bai-dang'
                 }, 1500)
             })
             .catch((error) => {
-                message.error("Lỗi server, vui lòng thử lại sau!")
+                message.error("Cập nhật bài đăng không thành công")
                 console.log(error)
             })
     };

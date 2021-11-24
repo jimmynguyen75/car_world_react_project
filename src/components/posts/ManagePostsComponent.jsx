@@ -43,11 +43,11 @@ function ManagePostsComponent() {
         }, 1500)
         PostService.changePostStatus(post.Id, 2)
             .then(() => {
-                setTimeout(() => { message.success("Xóa bài thành công") }, 500)
+                setTimeout(() => { message.success("Xóa bài đăng thành công") }, 500)
                 setTimeout(() => { window.location.href = "/bai-dang" }, 1500)
             })
             .catch((error) => {
-                setTimeout(() => { message.error("Xóa bài không thành công") }, 500)
+                setTimeout(() => { message.error("Xóa bài đăng không thành công") }, 500)
                 console.log(error)
             })
     };

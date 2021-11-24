@@ -135,7 +135,7 @@ export default function CreateContestBodyModalComponent() {
                 }, 1500)
             })
             .catch((error) => {
-                message.error("Lỗi server hoặc tên không được trùng nhau!")
+                message.error("Tạo cuộc thi không thành công")
                 console.log(error)
             })
     }
@@ -282,7 +282,7 @@ export default function CreateContestBodyModalComponent() {
                 <Row gutter={15}>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>
-                            <Form.Item label={<div>Ngày bắt đầu <span style={{ color: 'red' }}>ĐĂNG KÝ</span> và kết thúc</div>} name="dateRegister" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
+                            <Form.Item label={<div>Ngày bắt đầu <span style={{ color: 'red' }}>ĐĂNG KÝ</span> và kết thúc</div>} name="dateRegister" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
                                 <RangePicker
                                     style={{ width: '100%' }}
                                     disabledDate={disabledDateR}
@@ -297,7 +297,7 @@ export default function CreateContestBodyModalComponent() {
                     </Col>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>
-                            <Form.Item label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>CUỘC THI</span> và kết thúc</div>} name="dateEvent" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
+                            <Form.Item label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>CUỘC THI</span> và kết thúc</div>} name="dateEvent" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
                                 <RangePicker
                                     style={{ width: '100%' }}
                                     disabledDate={disabledDateS}
@@ -363,7 +363,7 @@ export default function CreateContestBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
+                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Địa chỉ cuộc thi không được bỏ trống" }]}>
                             <Input.TextArea
                                 placeholder="Nhập tên cuộc thi"
                                 showCount maxLength={200}
@@ -372,7 +372,7 @@ export default function CreateContestBodyModalComponent() {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item label="Mô tả cuộc thi" name="description" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
+                <Form.Item label="Mô tả cuộc thi" name="description" rules={[{ required: true, message: "Mô tả cuộc thi không được bỏ trống" }]}>
                     <Input.TextArea
                         placeholder="Mô tả cuộc thi"
                         showCount maxLength={2000}

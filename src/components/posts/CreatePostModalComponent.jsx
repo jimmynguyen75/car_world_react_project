@@ -28,14 +28,14 @@ function CreatePostModalComponent() {
             .then((finish) => {
                 console.log(finish)
                 setTimeout(() => {
-                    message.success("Tạo bài thành công");
+                    message.success("Tạo bài đăng thành công");
                 }, 500)
                 setTimeout(() => {
                     window.location.href = '/bai-dang'
                 }, 1500)
             })
             .catch((err) => {
-                message.error("Lỗi server hoặc tên không được trùng nhau!")
+                message.error("Tạo bài đăng không thành công")
                 console.log(err)
             });
     };

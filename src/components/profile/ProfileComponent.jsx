@@ -178,7 +178,7 @@ function ProfileComponent() {
                                 </div> */}
                                 <div className="mt-2 text-center">
                                     <Form.Item>
-                                        <Button htmlType="submit" type="primary">Xong</Button>
+                                        <Button htmlType="submit" type="primary">Cập nhật</Button>
                                     </Form.Item>
                                 </div>
                             </div></div>

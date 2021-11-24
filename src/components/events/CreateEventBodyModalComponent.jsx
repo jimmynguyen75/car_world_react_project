@@ -218,7 +218,7 @@ export default function CreateEventBodyModalComponent() {
                 <Form.Item hidden={true} name="endRegister"><Input /></Form.Item>
                 <Form.Item hidden={true} name="minParticipants"><Input /></Form.Item>
                 <Form.Item hidden={true} name="maxParticipants"><Input /></Form.Item>
-                
+
                 <Form.Item label="Ảnh sự kiện" name="image"
                     getValueFromEvent={normFile}
                     rules={[{ required: true, message: "Ảnh sự kiện không được bỏ trống" }]}>
@@ -325,7 +325,7 @@ export default function CreateEventBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Địa chỉ sự kiện được bỏ trống" }]}>
                             <Input.TextArea
                                 placeholder="Địa chỉ tổ chức"
                                 showCount maxLength={200}
@@ -334,7 +334,7 @@ export default function CreateEventBodyModalComponent() {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item label="Mô tả sự kiện" name="description" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                <Form.Item label="Mô tả sự kiện" name="description" rules={[{ required: true, message: "Mô tả sự kiện được bỏ trống" }]}>
                     <Input.TextArea
                         placeholder="Mô tả sự kiện"
                         showCount maxLength={2000}

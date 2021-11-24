@@ -20,6 +20,7 @@ export default function CreateBrandModalComponent() {
     const onFinish = (values) => {
         BrandService.createNewBrand(values)
             .then(() => {
+                message.success("Tạo thương hiệu thành công")
                 window.location.href = '/thuong-hieu';
                 console.log("Okkk")
             })

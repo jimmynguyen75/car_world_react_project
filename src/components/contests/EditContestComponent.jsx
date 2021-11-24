@@ -175,7 +175,7 @@ export default function EditContestComponent({ record, recordImage }) {
             .then((result) => {
                 console.log(result);
                 setTimeout(() => {
-                    message.success("Cập nhật thành công")
+                    message.success("Cập nhật cuộc thi thành công")
                 }, 500)
                 setTimeout(() => {
                     window.location.href = '/cuoc-thi'
@@ -183,7 +183,7 @@ export default function EditContestComponent({ record, recordImage }) {
             })
             .catch((err) => {
                 console.log(err);
-                message.error('Cập nhật không thành công')
+                message.error('Cập nhật cuộc thi không thành công')
             })
     }
     function disabledDateR(current) {

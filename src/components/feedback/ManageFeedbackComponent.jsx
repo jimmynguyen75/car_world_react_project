@@ -388,12 +388,16 @@ function ManageFeedbackComponent() {
                 cancelText="Hủy"
                 footer={[
                     <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                        <Button onClick={handleCancel}>
-                            Hủy
-                        </Button>
-                        <Button type="primary" form="respone" key="submit" htmlType="submit" >
-                            Gửi
-                        </Button>
+
+                        {dt !== null && (dt.ReplyContent === null ?
+                            <div><Button onClick={handleCancel}>
+                                Hủy
+                            </Button>
+                                <Button type="primary" form="respone" key="submit" htmlType="submit" >
+                                    Gửi
+                                </Button></div> : <Button type="primary" onClick={handleCancel}>
+                                Xong
+                            </Button>)}
                     </Row>
                 ]}
             >
@@ -421,7 +425,7 @@ function ManageFeedbackComponent() {
 
                     <span style={{ letterSpacing: 1, color: '#52524E' }}>Trả lời:</span> &nbsp;
                     {dt !== null && (dt.ReplyContent === null ?
-                        <Form.Item name="replyContent" style={{ paddingTop: '5px' }}>
+                        <Form.Item name="replyContent" style={{ paddingTop: '5px' }} rules={[{ required: true, message: "Trả lời phản hồi không được bỏ trống" }]}>
                             <Input.TextArea
                                 placeholder="Nhập phản hồi"
                                 showCount maxLength={200}

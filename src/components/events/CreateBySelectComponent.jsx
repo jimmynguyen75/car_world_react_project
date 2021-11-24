@@ -286,7 +286,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </div>
                     </Row>
                 </Form.Item>
-                <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
+                <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
                     <Input.TextArea
                         placeholder="Nhập tên sự kiện"
                         showCount maxLength={200}
@@ -377,7 +377,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Địa chỉ sự kiện không được bỏ trống" }]}>
                             <Input.TextArea
                                 placeholder="Nhập tên sự kiện"
                                 showCount maxLength={200}
@@ -386,7 +386,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item label="Mô tả sự kiện" name="description" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                <Form.Item label="Mô tả sự kiện" name="description" rules={[{ required: true, message: "Mô tả sự kiện không được bỏ trống" }]}>
                     <Input.TextArea
                         placeholder="Mô tả sự kiện"
                         showCount maxLength={2000}

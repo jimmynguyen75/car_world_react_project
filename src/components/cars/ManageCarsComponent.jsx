@@ -60,7 +60,7 @@ function ManageCarsComponent() {
             content: 'Bạn có muốn xóa chiếc xe này không?',
             okText: 'Có',
             cancelText: 'Không',
-            onOk: () => {
+            onOk: () => { 
                 CarService.deleteCar(id)
                     .then(() => {
                         setTimeout(() => {

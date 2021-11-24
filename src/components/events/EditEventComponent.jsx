@@ -171,7 +171,7 @@ export default function EditEventComponent({ record, recordImage }) {
             .then((result) => {
                 console.log(result);
                 setTimeout(() => {
-                    message.success("Cập nhật thành công")
+                    message.success("Cập nhật sự kiện thành công")
                 }, 500)
                 setTimeout(() => {
                     window.location.href = '/su-kien'
@@ -179,7 +179,7 @@ export default function EditEventComponent({ record, recordImage }) {
             })
             .catch((err) => {
                 console.log(err);
-                message.error('Cập nhật không thành công')
+                message.error('Cập nhật sự kiện không thành công')
             })
     }
     function disabledDateR(current) {
@@ -334,7 +334,7 @@ export default function EditEventComponent({ record, recordImage }) {
                 </Row>
                 <Row gutter={15}>
                     <Col span={6}>
-                        <Form.Item label="Tối thiểu người đăng ký" name="min" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Tối thiểu người đăng ký" name="min" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     minRegister(values.value)
@@ -357,7 +357,7 @@ export default function EditEventComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                     <Col span={6}>
-                        <Form.Item label="Tối đa người đăng ký" name="max" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Tối đa người đăng ký" name="max" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
                                 onValueChange={(values) => {
                                     maxRegister(values.value)
@@ -380,7 +380,7 @@ export default function EditEventComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                        <Form.Item label="Địa chỉ tổ chức" name="venue" rules={[{ required: true, message: "Địa chỉ sự kiện không được bỏ trống" }]}>
                             <Input.TextArea
                                 placeholder="Nhập tên sự kiện"
                                 showCount maxLength={200}
@@ -389,7 +389,7 @@ export default function EditEventComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item label="Mô tả sự kiện" name="description" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                <Form.Item label="Mô tả sự kiện" name="description" rules={[{ required: true, message: "Mô tả sự kiện không được bỏ trống" }]}>
                     <Input.TextArea
                         placeholder="Mô tả sự kiện"
                         showCount maxLength={2000}

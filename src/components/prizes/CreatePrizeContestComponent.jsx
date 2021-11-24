@@ -17,6 +17,10 @@ export default function CreatePrizeContestComponent() {
     const [prizes, setPrizes] = useState([]);
     const [checkPrize, setCheckPrize] = useState("");
     const [ckPrize, setCkPrize] = useState([]);
+    const [o1, setO1] = useState(false);
+    const [o2, setO2] = useState(false);
+    const [o3, setO3] = useState(false);
+    const [o4, setO4] = useState(false);
     const showModal = () => {
         setVisible(true);
     };
@@ -26,7 +30,13 @@ export default function CreatePrizeContestComponent() {
     };
     function onChange(value) {
         console.log(`selected ${value}`);
-        setCheckPrize(value);
+        setO1(false);
+        setO2(false);
+        setO3(false);
+        setO4(false);
+        setTimeout(() => {
+            setCheckPrize(value);
+        }, 500)
     }
     useEffect(() => {
         PrizeService.getPrizeContestById(checkPrize)
@@ -35,8 +45,20 @@ export default function CreatePrizeContestComponent() {
             })
             .catch((error) => { console.log(error); })
     }, [checkPrize])
-    ckPrize.forEach(n => console.log(n.PrizeOrder))
-    useEffect(() => { ContestService.getAllContestPrize().then((result) => { setContests(result.data) }).catch(() => { console.log("Error") }) }, [])
+    useEffect(() => {
+        let current = []
+        ContestService.getAllContestPrize()
+            .then((result) => {
+                result.data.forEach((filter) => {
+                    if (filter.CurrentParticipants === 0) {
+                        current.push(filter)
+                    }
+                })
+                setContests(current)
+                console.log("ct: ", contests)
+            })
+            .catch(() => { console.log("Error") })
+    }, [])
     useEffect(() => { PrizeService.getPrizes().then((result) => { setPrizes(result.data) }).catch(() => { console.log("Error") }) }, [])
     const onFinish = (value) => {
         PrizeService.createPrizeContest(value)
@@ -46,8 +68,16 @@ export default function CreatePrizeContestComponent() {
                     window.location.href = '/giai-thuong'
                 }, 500)
             })
-            .catch(() => { message.error("Tạo không thành công") })
+            .catch(() => { message.error("Tạo giải thưởng cuộc thi không thành công") })
     }
+    useEffect(() => {
+        ckPrize !== null && ckPrize.forEach((n) => {
+            n.PrizeOrder === '1' && setO1(true)
+            n.PrizeOrder === '2' && setO2(true)
+            n.PrizeOrder === '3' && setO3(true)
+            n.PrizeOrder === '4' && setO4(true)
+        })
+    }, [ckPrize])
     form.setFieldsValue({
         managerId: AccountService.getCurrentUser().Id,
     })
@@ -118,10 +148,10 @@ export default function CreatePrizeContestComponent() {
                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
                         >
-                            <Option key={prizes.Id} value="1">Giải nhất</Option>
-                            <Option key={prizes.Id} value="2">Giải nhì</Option>
-                            <Option key={prizes.Id} value="3">Giải ba</Option>
-                            <Option key={prizes.Id} value="4">Giải khuyến khích</Option>
+                            <Option key={prizes.Id} disabled={o1} value="1">Giải nhất</Option>
+                            <Option key={prizes.Id} disabled={o2} value="2">Giải nhì</Option>
+                            <Option key={prizes.Id} disabled={o3} value="3">Giải ba</Option>
+                            <Option key={prizes.Id} disabled={o4} value="4">Giải khuyến khích</Option>
                         </Select>
                     </Form.Item>
                 </Form>

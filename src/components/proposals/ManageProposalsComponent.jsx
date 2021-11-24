@@ -444,7 +444,7 @@ export default function ManageProposalsComponent() {
                 }, 1500);
             })
             .catch((err) => {
-                message.error("Lỗi server, duyệt đề xuất không thành công")
+                message.error("Duyệt đề xuất không thành công")
                 console.log(err)
             })
     }
@@ -461,7 +461,7 @@ export default function ManageProposalsComponent() {
                 }, 1500);
             })
             .catch((err) => {
-                message.error("Lỗi server, duyệt đề xuất không thành công")
+                message.error("Không duyệt đề xuất không thành công")
                 console.log(err)
             })
     }

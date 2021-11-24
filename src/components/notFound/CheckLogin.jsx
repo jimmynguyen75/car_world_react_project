@@ -12,7 +12,7 @@ export default function CheckLogin() {
             <Result
                 icon={<SmileOutlined />}
                 title="Chậm lại, đăng nhập để vào Car World nhé!"
-                extra={<Button type="primary" onClick={goBack}>Đăng nhập</Button>}
+                extra={<Button type="primary" onClick={goBack}>Trở lại</Button>}
             />
         </div>
     )

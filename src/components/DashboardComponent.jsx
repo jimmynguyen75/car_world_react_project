@@ -200,7 +200,7 @@ function DashboardComponent() {
                             <Row gutter={5}>
                                 <Col span={15}>
                                     <div style={{ color: 'white', letterSpacing: 2 }}>
-                                        <div style={{ fontSize: '14px' }}>Tổng số<br /> <span style={{ fontWeight: 'bold' }}>XE</span></div>
+                                        <div style={{ fontSize: '16px' }}>Tổng số<br /> <span style={{ fontWeight: 'bold' }}>XE</span></div>
                                         <div style={{ fontSize: 50 }}>{carAccessory.car.length}</div>
                                     </div>
                                 </Col>
@@ -213,7 +213,7 @@ function DashboardComponent() {
                             <Row gutter={5}>
                                 <Col span={15}>
                                     <div style={{ color: 'white', letterSpacing: 2 }}>
-                                        <div style={{ fontSize: '14px' }}>Tổng số<br /> <span style={{ fontWeight: 'bold' }}>PHỤ KIỆN</span></div>
+                                        <div style={{ fontSize: '16px' }}>Tổng số<br /> <span style={{ fontWeight: 'bold' }}>PHỤ KIỆN</span></div>
                                         <div style={{ fontSize: 50 }}>{carAccessory.accessory.length}</div>
                                     </div>
                                 </Col>
@@ -226,7 +226,7 @@ function DashboardComponent() {
                             <Row gutter={5}>
                                 <Col span={15}>
                                     <div style={{ color: 'white', letterSpacing: 2 }}>
-                                        <div style={{ fontSize: '14px' }}>Tổng số<br /> <span style={{ fontWeight: 'bold' }}>BÀI ĐĂNG</span></div>
+                                        <div style={{ fontSize: '16px' }}>Tổng số<br /> <span style={{ fontWeight: 'bold' }}>BÀI ĐĂNG</span></div>
                                         <div style={{ fontSize: 50 }}>{post.length}</div>
                                     </div>
                                 </Col>
@@ -254,7 +254,7 @@ function DashboardComponent() {
                             <Row gutter={15}>
                                 <Col span={8} style={{ height: 250 }}>
                                     <div className="exchangeC" style={{ backgroundColor: "#e9c46a", borderRadius: 20, padding: 10, height: '92%' }}>
-                                        <span style={{ color: 'white', letterSpacing: 1, fontWeight: 500, fontSize: 14 }}>Trao đổi xe THÁNG {moment().format('MM')}</span>
+                                        <span style={{ color: 'white', letterSpacing: 1, fontWeight: 500, fontSize: 15 }}>Trao đổi xe THÁNG {moment().format('MM')}</span>
                                         <div style={{ textAlign: 'center', marginTop: 10  }}>
                                             <img alt="" src={car} style={{ height: '131px', width: '100%' }} />
                                             <span style={{ color: 'white', fontWeight: 700, fontSize: '30px' }}>{data.exchangeCar} <span style={{ letterSpacing: 2, fontSize: 18 }}>giao dịch</span></span>
@@ -263,7 +263,7 @@ function DashboardComponent() {
                                 </Col>
                                 <Col span={8}>
                                     <div className="exchangeE" style={{ backgroundColor: "#e9c46a", borderRadius: 20, padding: 10 }}>
-                                        <span style={{ color: 'white', letterSpacing: 1, fontWeight: 500, fontSize: 14 }}>Trao đổi phụ kiện THÁNG {moment().format('MM')}</span>
+                                        <span style={{ color: 'white', letterSpacing: 1, fontWeight: 500, fontSize: 15 }}>Trao đổi phụ kiện THÁNG {moment().format('MM')}</span>
                                         <div style={{ textAlign: 'center', marginTop: 10 }}>
                                             <img src={accessory} alt="" style={{ maxHeight: '131px', maxWidth: '100%' }} />
                                             <div><span style={{ color: 'white', fontWeight: 700, fontSize: '30px' }}>{data.exchangeAccessory} <span style={{ letterSpacing: 2, fontSize: 18 }}>giao dịch</span></span></div>
@@ -272,7 +272,7 @@ function DashboardComponent() {
                                 </Col>
                                 <Col span={8}>
                                     <div className="exchangeEx" style={{ backgroundColor: "#e9c46a", borderRadius: 20, padding: 10, height: '92%' }}>
-                                        <span style={{ color: 'white', letterSpacing: 1, fontWeight: 500, fontSize: 14 }}>Hiệu nổi bật THÁNG {moment().format('MM')}</span>
+                                        <span style={{ color: 'white', letterSpacing: 1, fontWeight: 500, fontSize: 15 }}>Hiệu nổi bật THÁNG {moment().format('MM')}</span>
                                         <div style={{ marginTop: 10, color: 'white', fontSize: 18, letterSpacing: 1 }}>
                                             <div>{data.topExchange.length !== 0 && (data.topExchange[0] !== undefined && <div><img alt="" src={number1} style={{ height: '28px', marginTop: '-3px' }} />&nbsp;{data.topExchange[0].BrandName}</div>)}</div>
                                             <div>{data.topExchange.length !== 0 && (data.topExchange[1] !== undefined && <div style={{ marginTop: 2 }}><img alt="" src={number2} style={{ height: '28px', marginTop: '-3px' }} />&nbsp;{data.topExchange[1].BrandName}</div>)}</div>
