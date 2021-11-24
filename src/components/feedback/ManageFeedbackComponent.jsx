@@ -86,13 +86,13 @@ function ManageFeedbackComponent() {
     const onFinish = (values) => {
         FeebackService.replyFeedback(values.id, values)
             .then(() => {
-                message.success("Gửi thành công")
+                message.success("Gửi phản hồi thành công")
                 setTimeout(() => {
                     window.location.reload()
                 }, 500)
             })
             .catch(() => {
-                message.error("Gửi không thành công")
+                message.error("Gửi phản hồi không thành công")
             })
         console.log("value: ", values)
     }
