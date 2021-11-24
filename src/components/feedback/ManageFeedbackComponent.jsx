@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import FeebackService from '../../services/FeebackService';
 import ExchangeService from '../../services/ExchangeService';
+import AccountService from '../../services/AccountService'
 function ManageFeedbackComponent() {
     const imgPlacehoder = 'https://via.placeholder.com/120';
     const { TabPane } = Tabs;
@@ -33,10 +34,10 @@ function ManageFeedbackComponent() {
             const Exchange = await FeebackService.getExchange();
             const ExchangeResponse = await FeebackService.getExchangeResponse();
             Exchange.data.forEach((filter) => {
-                if (filter.Exchanges[0].Type === 1) {
+                if (filter.Exchanges.Type === 1) {
                     car.push(filter)
                 }
-                if (filter.Exchanges[0].Type === 2) {
+                if (filter.Exchanges.Type === 2) {
                     accessory.push(filter)
                 }
             })
@@ -93,6 +94,7 @@ function ManageFeedbackComponent() {
             .catch(() => {
                 message.error("Gửi không thành công")
             })
+        console.log("value: ", values)
     }
     const columnsE = [
         {
@@ -114,7 +116,7 @@ function ManageFeedbackComponent() {
             render: (data1) => {
                 let ok = ''
                 test.map((data) => {
-                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
+                    if (data.Id === data1.ContestEventRegisters.ContestEventId) {
                         ok = data
                     }
                 })
@@ -133,7 +135,7 @@ function ManageFeedbackComponent() {
             render: (data) => {
                 let ok = ''
                 test.map((dataT) => {
-                    if (dataT.Id === data.ContestEventRegisters[0].ContestEventId) {
+                    if (dataT.Id === data.ContestEventRegisters.ContestEventId) {
                         ok = dataT
                     }
                 })
@@ -154,7 +156,7 @@ function ManageFeedbackComponent() {
             render: (data1) => {
                 let ok = ''
                 test.map((data) => {
-                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
+                    if (data.Id === data1.ContestEventRegisters.ContestEventId) {
                         ok = data
                     }
                 })
@@ -193,7 +195,7 @@ function ManageFeedbackComponent() {
             render: (data1) => {
                 let ok = ''
                 test.map((data) => {
-                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
+                    if (data.Id === data1.ContestEventRegisters.ContestEventId) {
                         ok = data
                     }
                 })
@@ -212,7 +214,7 @@ function ManageFeedbackComponent() {
             render: (data) => {
                 let ok = ''
                 test.map((dataT) => {
-                    if (dataT.Id === data.ContestEventRegisters[0].ContestEventId) {
+                    if (dataT.Id === data.ContestEventRegisters.ContestEventId) {
                         ok = dataT
                     }
                 })
@@ -233,7 +235,7 @@ function ManageFeedbackComponent() {
             render: (data1) => {
                 let ok = ''
                 test.map((data) => {
-                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
+                    if (data.Id === data1.ContestEventRegisters.ContestEventId) {
                         ok = data
                     }
                 })
@@ -271,7 +273,7 @@ function ManageFeedbackComponent() {
             key: 'nameEx',
             render: (data) => {
                 return (
-                    <div>{data.Exchanges[0].Title}</div>
+                    <div>{data.Exchanges.Title}</div>
                 )
             }
         },
@@ -280,7 +282,6 @@ function ManageFeedbackComponent() {
             key: 'nameEx',
             render: (data) => {
                 function convertFeedbackIDToName(id) {
-                    console.log("id: ", id)
                     if (id === 1) {
                         return <Tag color={'geekblue'} key={data}>
                             XE
@@ -292,7 +293,7 @@ function ManageFeedbackComponent() {
                     }
                 }
                 return (
-                    <div>{convertFeedbackIDToName(data.Exchanges[0].Type)}</div>
+                    <div>{convertFeedbackIDToName(data.Exchanges.Type)}</div>
                 )
             }
         },
@@ -326,7 +327,7 @@ function ManageFeedbackComponent() {
             render: (data) => {
                 let ok = ''
                 testEx.map((data1) => {
-                    if (data1.Id === data.ExchangeResponses[0].ExchangeId) {
+                    if (data1.Id === data.ExchangeResponses.ExchangeId) {
                         ok = data1
                     }
                 })
@@ -341,12 +342,11 @@ function ManageFeedbackComponent() {
             render: (data) => {
                 let ok = ''
                 testEx.map((data1) => {
-                    if (data1.Id === data.ExchangeResponses[0].ExchangeId) {
+                    if (data1.Id === data.ExchangeResponses.ExchangeId) {
                         ok = data1
                     }
                 })
                 function convertFeedbackIDToName(id) {
-                    console.log("id: ", id)
                     if (id === 1) {
                         return <Tag color={'geekblue'} key={data}>
                             XE
@@ -373,7 +373,7 @@ function ManageFeedbackComponent() {
         },
     ];
     form.setFieldsValue({
-        replyUserId: dt !== null && dt.FeedbackUserId,
+        replyUserId: AccountService.getCurrentUser().Id,
         id: dt !== null && dt.Id,
         replyContent: dt !== null && dt.ReplyContent
     })
@@ -388,7 +388,6 @@ function ManageFeedbackComponent() {
                 cancelText="Hủy"
                 footer={[
                     <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-
                         {dt !== null && (dt.ReplyContent === null ?
                             <div><Button onClick={handleCancel}>
                                 Hủy
