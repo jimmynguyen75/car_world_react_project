@@ -20,7 +20,7 @@ class ContestService {
         return axios.get(CONTEST_API_URL + "GetPreparedCEs?type=2&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
     getOngoingContests() {
-        return axios.get(CONTEST_API_URL + "GetOngoingCEs?type=2&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
+        return axios.get(CONTEST_API_URL + "GetOngoingCEsWeb?type=2&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
     getFinishedContests() {
         return axios.get(CONTEST_API_URL + "GetFinishedCEs?type=2&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })

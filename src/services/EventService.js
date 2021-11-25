@@ -19,7 +19,7 @@ class EventService {
         return axios.get(EVENT_API_URL + "GetPreparedCEs?type=1&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
     getOngoingEvents() {
-        return axios.get(EVENT_API_URL + "GetOngoingCEs?type=1&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
+        return axios.get(EVENT_API_URL + "GetOngoingCEsWeb?type=1&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
     getFinishedEvents() {
         return axios.get(EVENT_API_URL + "GetFinishedCEs?type=1&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
