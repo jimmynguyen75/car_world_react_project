@@ -221,7 +221,7 @@ export default function CreateEventBodyModalComponent() {
 
                 <Form.Item label="Ảnh sự kiện" name="image"
                     getValueFromEvent={normFile}
-                    rules={[{ required: true, message: "Ảnh sự kiện không được bỏ trống" }]}>
+                    rules={[{ required: true, message: "Đảng tải..." }]}>
                     <Upload
                         name="image"
                         listType="picture-card"

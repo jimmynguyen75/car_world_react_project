@@ -125,7 +125,7 @@ function ManageFeedbackComponent() {
                 })
                 return (
                     <Row>
-                        <Col span={5}><img alt="" style={{ height: 50, maxWidth: '100%', objectFit: 'cover' }} src={ok.Image === "string" ? imgPlacehoder : ok.Image} /></Col>
+                        <Col span={5}><img alt="" style={{ height: 40, maxWidth: '100%', objectFit: 'cover', width: 'auto'}} src={ok.Image === "string" ? imgPlacehoder : ok.Image} /></Col>
                         <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{ok.Title}</div></Col>
                     </Row>
                 )
@@ -200,7 +200,7 @@ function ManageFeedbackComponent() {
             render: (data) => {
                 return (
                     <Row>
-                        <Avatar alt="" size="middle" src={data !== null && data.FeedbackUser.Image}></Avatar>
+                        <Avatar alt=""  size="middle" src={data !== null && data.FeedbackUser.Image}></Avatar>
                         <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data !== null && data.FeedbackUser.FullName}</div>
                     </Row>
                 )
@@ -218,7 +218,7 @@ function ManageFeedbackComponent() {
                 })
                 return (
                     <Row>
-                        <Col span={5}><img alt="" style={{ height: 50, maxWidth: '100%', objectFit: 'cover' }} src={ok.Image === "string" ? imgPlacehoder : ok.Image} /></Col>
+                        <Col span={5}><img alt="" style={{ height: 40, maxWidth: '100%', objectFit: 'cover', width: 'auto' }} src={ok.Image === "string" ? imgPlacehoder : ok.Image} /></Col>
                         <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{ok.Title}</div></Col>
                     </Row>
                 )

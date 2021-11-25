@@ -230,7 +230,7 @@ export default function CreateContestBodyModalComponent() {
                 <Form.Item hidden={true} name="fee" ><Input></Input> </Form.Item>
                 <Form.Item label="Ảnh cuộc thi" name="image"
                     getValueFromEvent={normFile}
-                    rules={[{ required: true, message: "Ảnh cuộc thi không được bỏ trống" }]}>
+                    rules={[{ required: true, message: "Đảng tải..." }]}>
                     <Upload
                         name="image"
                         listType="picture-card"
@@ -256,7 +256,7 @@ export default function CreateContestBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
+                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" >
                             <NumberFormat
                                 allowNegative={false}
                                 decimalScale={0}

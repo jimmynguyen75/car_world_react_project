@@ -1,7 +1,8 @@
 import { MinusOutlined } from '@ant-design/icons';
-import { Carousel, Col, Descriptions, Image, Row, Spin } from 'antd';
+import { Carousel, Col, Descriptions, Image, Row, Spin, Input } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
+import NumberFormat from 'react-number-format';
 import React, { useState } from 'react';
 export default function ViewEventComponent({ record, recordImage }) {
     console.log("record: ", record);
@@ -74,21 +75,34 @@ export default function ViewEventComponent({ record, recordImage }) {
                 </Row>
                 <br />
                 <Row gutter={15}>
-                    <Col span={6}>
+                    <Col span={4}>
                         <div className='viewEventText'>Đã tham gia</div>
                         <i style={{ color: '#50C9BA' }} class="fas fa-user-check"></i>&nbsp;&nbsp;{record.CurrentParticipants}
                     </Col>
-                    <Col span={6}>
+                    <Col span={4}>
                         <div className='viewEventText'>Số lượng giới hạn</div>
                         <i style={{ color: '#E36387' }} class="fas fa-users"></i>&nbsp;&nbsp;{record.MinParticipants} - {record.MaxParticipants}
                     </Col>
-                    <Col span={6}>
+                    <Col span={4}>
+                        <div className='viewEventText'>Lệ phí</div>
+                        <i style={{ color: '#87A8A4' }} class="fas fa-money-bill"></i>&nbsp;&nbsp;{record.Fee === 0 ? "Miễn phí" :
+                            <NumberFormat
+                                value={record.Fee}
+                                displayType="text"
+                                type="text"
+                                suffix=" vnđ"
+                                thousandSeparator={'.'}
+                                decimalSeparator={','}
+                            />
+                            }
+                    </Col>
+                    <Col span={12}>
                         <div className='viewEventText'>Địa chỉ</div>
                         <i style={{ color: '#726A95' }} class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;{record.Venue}
                     </Col>
                 </Row>
                 <div className='viewEventText' style={{ marginTop: 10 }}>Mô tả cuộc thi</div>
-                <div>{record.Description}</div>
+                <Input.TextArea style={{ color: 'black', backgroundColor: 'white', cursor: 'auto' }} autoSize={{ maxRows: 30 }} disabled value={record.Description}></Input.TextArea>
             </>
         )
     }

@@ -36,6 +36,7 @@ function ManageEventsComponent() {
     const [loadingEvent, setLoadingEvent] = useState(null)
     const [historyEvent, setHistoryEvent] = useState(null)
     const [cancelEvent, setCancelEvent] = useState(null)
+    const [modalConfirmSelect, setModalConfirmSelect] = useState(false)
     const showModalView = () => {
         setVisibleView(true);
     };
@@ -51,6 +52,9 @@ function ManageEventsComponent() {
     const showModalConfirm = () => {
         setModalConfirm(true)
     };
+    const showModalConfirmSelect = () => {
+        setModalConfirmSelect(true)
+    };
     const showModalCheck = () => {
         setVisibleCheck(true)
     };
@@ -58,6 +62,7 @@ function ManageEventsComponent() {
         setLoadingButton(true);
         setTimeout(() => {
             setModalConfirm(false)
+            setModalConfirmSelect(false)
         }, 1000);
         setTimeout(() => {
             setLoadingButton(false);
@@ -244,7 +249,7 @@ function ManageEventsComponent() {
                     render: (data) => {
                         return (
                             <Row>
-                                <Col span={5}><img alt="" style={{ height: 50, maxWidth: '100%', objectFit: 'cover' }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
+                                <Col span={5}><img alt="" style={{ height: '50px', width: 'auto', maxWidth: '100%', maxHeight: '50px',objectFit: 'cover', margin: 'auto' }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
                                 <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{data.Title}</div></Col>
                             </Row>
                         )
@@ -298,7 +303,7 @@ function ManageEventsComponent() {
                         return (
                             <div>
                                 {/* <Countdown value={countdown} onFinish={onFinish} /> */}
-                                {result} ngày còn lại
+                                {result !== 0 ? result + ' ngày còn lại' : 'Sắp hết hạn'}
                             </div>
                         )
                     }
@@ -1137,7 +1142,7 @@ function ManageEventsComponent() {
                             <Button onClick={handleCancel}>
                                 Hủy
                             </Button>
-                            <Button type="primary" onClick={showModalConfirm}>
+                            <Button type="primary" onClick={showModalConfirmSelect}>
                                 Hoàn tất
                             </Button>
                         </Row>
@@ -1149,11 +1154,11 @@ function ManageEventsComponent() {
                     title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
                     centered
                     icon={<ExclamationCircleOutlined />}
-                    visible={modalConfirm}
-                    onCancel={() => setModalConfirm(false)}
+                    visible={modalConfirmSelect}
+                    onCancel={() => setModalConfirmSelect(false)}
                     footer={[
                         <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                            <Button onClick={() => setModalConfirm(false)}>Hủy </Button>
+                            <Button onClick={() => setModalConfirmSelect(false)}>Hủy </Button>
                             <Button form="editEvent" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
                         </Row>
                     ]}
@@ -1191,7 +1196,7 @@ function ManageEventsComponent() {
                             <Button form="editEvent" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
                         </Row>
                     ]}
-                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn tạo sự kiện này không?</span>
+                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn cập nhật sự kiện này không?</span>
                 </Modal>
                 {/* Modal View */}
                 <Modal

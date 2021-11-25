@@ -307,7 +307,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
+                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" >
                             <NumberFormat
                                 allowNegative={false}
                                 decimalScale={0}

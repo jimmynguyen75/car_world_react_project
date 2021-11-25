@@ -106,7 +106,7 @@ export default function CheckAttendanceComponent() {
                     key: 'name',
                     render: (data) => {
                         return (
-                            <Row gutter={5}>
+                            <Row gutter={15}>
                                 <Col span={6}><img alt="" style={{ height: 50, width: '100%', objectFit: 'cover' }} src={data.Image} /></Col>
                                 <Col span={18} style={{ display: 'flex', alignItems: 'center' }}><div>{data.Title}</div></Col>
                             </Row>
@@ -127,7 +127,7 @@ export default function CheckAttendanceComponent() {
                     key: 'address',
                     render: (data) => {
                         return (
-                            data.Status === 1 ? <Button onClick={() => {
+                            data.Status === 1 ? <Button type="primary" onClick={() => {
                                 setVisibleCheck(true)
                                 setEventId(data.Id)
                             }}>Điểm danh</Button> : <Button onClick={() => {
@@ -196,7 +196,7 @@ export default function CheckAttendanceComponent() {
             key: 'name',
             render: (data) => {
                 return (
-                    <Row gutter={5}>
+                    <Row gutter={15}>
                         <Col span={6}><img alt="" style={{ height: 50, width: '100%', objectFit: 'cover' }} src={data.User.Image} /></Col>
                         <Col span={18} style={{ display: 'flex', alignItems: 'center' }}><div>{data.User.FullName}</div></Col>
                     </Row>
@@ -252,7 +252,7 @@ export default function CheckAttendanceComponent() {
                 <div>
                     <Input.Search
                         className="inputSearchCheck"
-                        style={{ marginBottom: 5 }}
+                        style={{ marginBottom: 15 }}
                         placeholder="Tìm kiếm..."
                         enterButton
                         onSearch={this.search}

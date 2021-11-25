@@ -17,6 +17,7 @@ function ManageContestsComponent() {
     const { TabPane } = Tabs;
     const imgPlacehoder = 'https://via.placeholder.com/120';
     const [modalConfirm, setModalConfirm] = useState(false);
+    const [modalConfirmSelect, setModalConfirmSelect] = useState(false);
     const [visibleView, setVisibleView] = React.useState(false);
     const [visibleEdit, setVisibleEdit] = useState(false);
     const [visibleSelect, setVisibleSelect] = useState(false);
@@ -52,6 +53,9 @@ function ManageContestsComponent() {
     const showModalConfirm = () => {
         setModalConfirm(true)
     }
+    const showModalConfirmSelect = () => {
+        setModalConfirmSelect(true)
+    }
     const showModalCheck = () => {
         setVisibleCheck(true)
     }
@@ -59,6 +63,7 @@ function ManageContestsComponent() {
         setLoadingButton(true);
         setTimeout(() => {
             setModalConfirm(false)
+            setModalConfirmSelect(false)
         }, 1000);
         setTimeout(() => {
             setLoadingButton(false);
@@ -1154,7 +1159,7 @@ function ManageContestsComponent() {
                             <Button onClick={handleCancel}>
                                 Hủy
                             </Button>
-                            <Button type="primary" onClick={showModalConfirm}>
+                            <Button type="primary" onClick={showModalConfirmSelect}>
                                 Hoàn tất
                             </Button>
                         </Row>
@@ -1166,11 +1171,11 @@ function ManageContestsComponent() {
                     title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
                     centered
                     icon={<ExclamationCircleOutlined />}
-                    visible={modalConfirm}
-                    onCancel={() => setModalConfirm(false)}
+                    visible={modalConfirmSelect}
+                    onCancel={() => setModalConfirmSelect(false)}
                     footer={[
                         <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                            <Button onClick={() => setModalConfirm(false)}>Hủy </Button>
+                            <Button onClick={() => setModalConfirmSelect(false)}>Hủy </Button>
                             <Button form="editEvent" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
                         </Row>
                     ]}
@@ -1208,7 +1213,7 @@ function ManageContestsComponent() {
                             <Button form="editEvent" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
                         </Row>
                     ]}
-                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn tạo cuộc thi này không?</span>
+                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn cập nhật cuộc thi này không?</span>
                 </Modal>
                 {/* Modal View */}
                 <Modal

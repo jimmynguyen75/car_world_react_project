@@ -116,8 +116,8 @@ export default function ManageProposalsComponent() {
                 render: (data) => {
                     return (
                         <Row>
-                            <Col span={3}> <div style={{ textAlign: 'center' }}> <img alt="" style={{ height: 'auto', width: 'auto', margin: 'auto', maxWidth: '60px', maxHeight: '50px' }} src={data.Image === 'string' ? imageHolder : data.Image} /></div></Col>
-                            <Col span={21} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{data.Title}</div></Col>
+                            <Col span={5}> <div style={{ textAlign: 'center' }}> <img alt="" style={{ height: 'auto', width: 'auto', margin: 'auto', maxWidth: '100%', maxHeight: '50px' }} src={data.Image === 'string' ? imageHolder : data.Image} /></div></Col>
+                            <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{data.Title}</div></Col>
                         </Row>
                     )
                 }

@@ -259,7 +259,7 @@ export default function ManagePrizesComponent() {
                 },
                 {
                     title: 'Tác vụ',
-                    width: '15%',
+                    width: '5%',
                     key: 'action',
                     render: (record) => {
                         return (
@@ -620,7 +620,7 @@ export default function ManagePrizesComponent() {
                 },
                 {
                     title: 'Tác vụ',
-                    width: '15%',
+                    width: '5%',
                     key: 'action',
                     render: (record) => {
                         return (
