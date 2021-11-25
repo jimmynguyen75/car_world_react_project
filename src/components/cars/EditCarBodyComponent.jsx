@@ -1,9 +1,10 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Col, Form, Image, Input, message, Modal, Row, Select, Tooltip, Upload } from "antd";
+import { PlusOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Col, Form, Image, Input, message, Modal, Row, Select, Tooltip, Upload, Tag } from "antd";
 import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
+import { useHistory, useLocation } from "react-router-dom";
 import CarService from '../../services/CarService'
 export default function EditCarBodyComponent({ record, recordImage }) {
     const [previewImage, setPreviewImage] = useState('');
@@ -16,8 +17,13 @@ export default function EditCarBodyComponent({ record, recordImage }) {
     const { Option } = Select;
     const [img, setImg] = useState([]);
     const [images, setImages] = useState([]);
+    const history = useHistory();
     //--------//
     //***
+    const handleAddBrand = () => {
+        console.log('ok')
+        window.location.href = '/thuong-hieu'
+    }
     console.log("record: ", record);
     const onPrice = (price) => {
         console.log("price: ", price)
@@ -296,7 +302,7 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                 <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Thông số chính</div>
                 <Form.Item
                     name="image" label="Ảnh xe"
-                    rules={[{ required: true, message: "Ảnh xe không được bỏ trống" }]}
+                    rules={[{ required: true, message: "Đang tải..." }]}
                 >
                     <Row>
                         {img.map((object, i) => {
@@ -342,7 +348,9 @@ export default function EditCarBodyComponent({ record, recordImage }) {
                 </Form.Item>
                 <Row gutter={15}>
                     <Col span={8}>
-                        <Form.Item label="Hãng xe" name="brandName" rules={[{ required: true, message: "Hãng xe không được bỏ trống" }]}>
+                        <Form.Item label={<div>Hãng xe <Tag icon={<PlusCircleOutlined />} onClick={handleAddBrand} color="success">
+                            Thêm hãng
+                        </Tag></div>} name="brandName" rules={[{ required: true, message: "Hãng xe không được bỏ trống" }]}>
                             <Select
                                 showSearch
                                 placeholder="Chọn hãng xe"

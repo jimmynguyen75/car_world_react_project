@@ -1,10 +1,11 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Col, Form, Input, message, Modal, Row, Select, Upload } from "antd";
+import { PlusOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Col, Form, Input, message, Modal, Row, Select, Upload, Tag } from "antd";
 import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import AccessoryService from '../../services/AccessoryService';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
+import { useHistory, useLocation } from "react-router-dom";
 import numberToWord from '../../utils/numberToWord';
 import './styles.less';
 export default function CreateAccessoryBodyModalComponent() {
@@ -16,7 +17,12 @@ export default function CreateAccessoryBodyModalComponent() {
     const [form] = Form.useForm();
     const [brands, setBrands] = useState([]);
     const { Option } = Select;
+    const history = useHistory();
     const [price, setPrice] = useState(0);
+    const handleAddBrand = () => {
+        console.log('ok')
+        window.location.href = '/thuong-hieu'
+    }
     const uploadButton = (
         <div>
             <PlusOutlined />
@@ -140,7 +146,7 @@ export default function CreateAccessoryBodyModalComponent() {
                 <Form.Item
                     name="image" label="Ảnh phụ kiện"
                     getValueFromEvent={normFile}
-                    rules={[{ required: true, message: "Ảnh phụ kiện không được bỏ trống" }]}
+                    rules={[{ required: true, message: "Đang tải..." }]}
                 >
                     <Upload
                         name="image"
@@ -189,7 +195,9 @@ export default function CreateAccessoryBodyModalComponent() {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Hãng phụ kiện" name="brandName" rules={[{ required: true, message: "Hãng phụ kiện không được bỏ trống" }]}>
+                        <Form.Item label={<div>Hãng phụ kiện <Tag icon={<PlusCircleOutlined />} onClick={handleAddBrand} color="processing">
+                            Thêm hãng
+                        </Tag></div>} name="brandName" rules={[{ required: true, message: "Hãng phụ kiện không được bỏ trống" }]}>
                             <Select
                                 showSearch
                                 placeholder="Chọn hãng phụ kiện"

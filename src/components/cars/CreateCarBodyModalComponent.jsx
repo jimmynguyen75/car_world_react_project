@@ -1,11 +1,12 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Col, Form, Input, message, Modal, Row, Select, Upload } from "antd";
+import { PlusOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Col, Form, Input, message, Modal, Row, Select, Upload, Tag } from "antd";
 import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
 import CarService from '../../services/CarService';
 import numberToWord from '../../utils/numberToWord';
+import { useHistory, useLocation } from "react-router-dom";
 export default function CreateCarBodyModalComponent() {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -15,6 +16,7 @@ export default function CreateCarBodyModalComponent() {
     const [form] = Form.useForm();
     const [brands, setBrands] = useState([]);
     const { Option } = Select;
+    const history = useHistory();
     //--------//
     const [price, setPrice] = useState(0);
     const [seats, setSeat] = useState(0);
@@ -29,6 +31,10 @@ export default function CreateCarBodyModalComponent() {
     const [wheelSize, setWheelSize] = useState(0);
     const [yearOfManufactor, setYearOfManufactor] = useState(0);
     //***
+    const handleAddBrand = () => {
+        console.log('ok')
+        window.location.href = '/thuong-hieu'
+    }
     const onPrice = (e) => {
         const string = e.target.value;
         setPrice(string.replace(/\D/g, ''))
@@ -243,7 +249,7 @@ export default function CreateCarBodyModalComponent() {
                 <Form.Item
                     name="image" label="Ảnh xe"
                     getValueFromEvent={normFile}
-                    rules={[{ required: true, message: "Ảnh xe không được bỏ trống" }]}
+                    rules={[{ required: true, message: "Đang tải..." }]}
                 >
                     <Upload
                         name="image"
@@ -274,7 +280,9 @@ export default function CreateCarBodyModalComponent() {
                 </Form.Item>
                 <Row gutter={15}>
                     <Col span={8}>
-                        <Form.Item label="Hãng xe" name="brandName" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                        <Form.Item label={<div>Hãng xe <Tag icon={<PlusCircleOutlined />} onClick={handleAddBrand} color="success">
+                            Thêm hãng
+                        </Tag></div>} name="brandName" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <Select
                                 showSearch
                                 placeholder="Chọn hãng xe"

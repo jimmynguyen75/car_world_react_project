@@ -1,5 +1,5 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Col, Form, Image, Input, message, Modal, Row, Select, Tooltip, Upload } from "antd";
+import { PlusOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Col, Form, Image, Input, message, Modal, Row, Select, Tooltip, Upload, Tag } from "antd";
 import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
@@ -17,6 +17,10 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
     const { Option } = Select;
     const [img, setImg] = useState([]);
     const [images, setImages] = useState([]);
+    const handleAddBrand = () => {
+        console.log('ok')
+        window.location.href = '/thuong-hieu'
+    }
     const uploadButton = (
         <div>
             <PlusOutlined />
@@ -234,7 +238,9 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Hãng phụ kiện" name="brandName">
+                        <Form.Item label={<div>Hãng phụ kiện <Tag icon={<PlusCircleOutlined />} onClick={handleAddBrand} color="processing">
+                            Thêm hãng
+                        </Tag></div>} name="brandName">
                             <Select
                                 name="brandName"
                                 defaultValue={setDataToChild.Brand.Name}
