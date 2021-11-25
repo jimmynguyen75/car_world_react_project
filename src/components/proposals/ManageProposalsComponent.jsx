@@ -320,22 +320,23 @@ export default function ManageProposalsComponent() {
             <Form layout="vertical" form={form} onFinish={onFinishApprove} id="approveProposal" style={{ marginTop: '-10px', marginBottom: '-20px' }}>
                 <div><span style={{ letterSpacing: 1, color: '#52524E' }}>Tên đề xuất:</span> &nbsp;<span style={{ fontWeight: 500, fontSize: 15, letterSpacing: 1 }}>{proposalDetail !== null && proposalDetail.Title}</span></div>
                 <div style={{ paddingTop: '10px', paddingBottom: '20px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Loại đề xuất:</span> &nbsp;{proposalDetail !== null && proposalDetail.Type === 1 ?
-                    <Tag color='geekblue' key={proposalDetail !== null && proposalDetail.Type}> CUỘC THI </Tag> : <Tag color='green' key={proposalDetail !== null && proposalDetail.Type}> SỰ KIỆN </Tag>}</div>
-                {/* <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Thông báo <span style={{ color: 'green' }}>DUYỆT</span> đến người đề xuất:</span></div>
+                    <Tag color='geekblue' key={proposalDetail !== null && proposalDetail.Type}> CUỘC THI </Tag> : <Tag color='green' key={proposalDetail !== null && proposalDetail.Type}> SỰ KIỆN </Tag>}
+                </div>
+                {/* <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Thông báo <span style={{ color: 'green' }}>DUYỆT</span> đến người đề xuất:</span></div> */}
                 <Form.Item hidden={true} name='id'>
                     <Input></Input>
                 </Form.Item>
                 <Form.Item hidden={true} name='managerId'>
                     <Input></Input>
                 </Form.Item>
-                <Form.Item name="reason" style={{ paddingTop: '5px' }}>
+                <Form.Item name="reason" hidden={true} style={{ paddingTop: '5px' }}>
                     <Input.TextArea
                         placeholder="Nhập thông báo"
                         showCount maxLength={200}
                         spellCheck={false}
                         autoSize={{ minRows: 3, maxRows: 10 }}
                     />
-                </Form.Item> */}
+                </Form.Item>
             </Form>
         )
     }
@@ -409,7 +410,7 @@ export default function ManageProposalsComponent() {
     }
     const DisapprovedBodyModal = () => {
         return (
-            <Form layout="vertical" form={form} onFinish={onFinishDisapproved} id="approveProposal" style={{ marginTop: '-10px', marginBottom: '-20px' }}>
+            <Form layout="vertical" form={form} onFinish={onFinishDisapproved} id="disApproveProposal" style={{ marginTop: '-10px', marginBottom: '-20px' }}>
                 <div><span style={{ letterSpacing: 1, color: '#52524E' }}>Tên đề xuất:</span> &nbsp;<span style={{ fontWeight: 500, fontSize: 15, letterSpacing: 1 }}>{proposalDetail !== null && proposalDetail.Title}</span></div>
                 <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Loại đề xuất:</span> &nbsp;{proposalDetail !== null && proposalDetail.Type === 1 ?
                     <Tag color='geekblue' key={proposalDetail !== null && proposalDetail.Type}> CUỘC THI </Tag> : <Tag color='green' key={proposalDetail !== null && proposalDetail.Type}> SỰ KIỆN </Tag>}</div>
@@ -518,7 +519,7 @@ export default function ManageProposalsComponent() {
                         <Button onClick={handleCancel}>
                             Hủy
                         </Button>
-                        <Button form="approveProposal" loading={confirmLoading} onClick={handleOk} type="primary" key="submit" htmlType="submit">
+                        <Button form="disApproveProposal" loading={confirmLoading} onClick={handleOk} type="primary" key="submit" htmlType="submit">
                             Xác nhận
                         </Button>
                     </Row>

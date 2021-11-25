@@ -1,5 +1,5 @@
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Input, Modal, Row, Space, Spin, Table, Tabs, Tag, message, Rate  } from 'antd';
+import { Avatar, Button, Col, Input, Modal, Row, Space, Spin, Table, Tabs, Tag, message, Rate, Tooltip } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
@@ -320,15 +320,22 @@ function ManageEventsComponent() {
                                     setRecordImage(ex);
                                 }} className="far fa-eye fa-2x" style={{ color: '#5AA469', cursor: 'zoom-in' }}></i>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
-                                <i onClick={() => {
-                                    showModalEdit()
-                                    setRecord(record)
-                                    let ex = record.Image.split("|")
-                                    if (ex.length > 1) {
-                                        ex.pop();
-                                    }
-                                    setRecordImage(ex);
-                                }} className="fas fa-cog fa-2x" style={{ color: '#6155A6', cursor: 'alias' }}></i>
+                                {record.CurrentParticipants !== 0 ?
+                                    <Tooltip title="Đã có người dùng đăng ký" color='purple' key='purple'>
+                                        <i className="fas fa-cog fa-2x" style={{ color: '#E5890A', cursor: 'alias' }}>
+                                        </i>
+                                    </Tooltip> :
+                                    <i onClick={() => {
+                                        showModalEdit()
+                                        setRecord(record)
+                                        let ex = record.Image.split("|")
+                                        if (ex.length > 1) {
+                                            ex.pop();
+                                        }
+                                        setRecordImage(ex);
+                                    }} className="fas fa-cog fa-2x" style={{ color: '#6155A6', cursor: 'alias' }}>
+                                    </i>
+                                }
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <i onClick={() => {
                                     showModalCancel()
@@ -506,7 +513,7 @@ function ManageEventsComponent() {
                                     setRecordImage(ex);
                                 }} className="far fa-eye fa-2x" style={{ color: '#5AA469', cursor: 'zoom-in' }}></i>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
-                                <i onClick={() => {
+                                {/* <i onClick={() => {
                                     showModalEdit()
                                     setRecord(record)
                                     let ex = record.Image.split("|")
@@ -515,7 +522,7 @@ function ManageEventsComponent() {
                                     }
                                     setRecordImage(ex);
                                 }} className="fas fa-cog fa-2x" style={{ color: '#6155A6', cursor: 'alias' }}></i>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp; */}
                                 <i onClick={() => {
                                     showModalCancel()
                                     setCancelEventId(record)
