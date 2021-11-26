@@ -125,20 +125,6 @@ export default function CreatePrizeContestComponent() {
                             ))}
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Chọn giải thưởng" name="prizeId" rules={[{ required: true, message: "Giải thưởng không được bỏ trống" }]}>
-                        <Select
-                            showSearch
-                            placeholder="Chọn giải thưởng"
-                            optionFilterProp="children"
-                            filterOption={(input, option) =>
-                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                            }
-                        >
-                            {prizes.map(prizes => (
-                                <Option key={prizes.Id} value={prizes.Id}>{prizes.Name}</Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
                     <Form.Item label="Hạng" name="prizeOrder" rules={[{ required: true, message: "Hạng không được bỏ trống" }]}>
                         <Select
                             showSearch
@@ -152,6 +138,20 @@ export default function CreatePrizeContestComponent() {
                             <Option key={prizes.Id} disabled={o2} value="2">Giải nhì</Option>
                             <Option key={prizes.Id} disabled={o3} value="3">Giải ba</Option>
                             <Option key={prizes.Id} disabled={o4} value="4">Giải khuyến khích</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item label="Chọn giải thưởng" name="prizeId" rules={[{ required: true, message: "Giải thưởng không được bỏ trống" }]}>
+                        <Select
+                            showSearch
+                            placeholder="Chọn giải thưởng"
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                        >
+                            {prizes.map(prizes => (
+                                <Option key={prizes.Id} value={prizes.Id}>{prizes.Name}</Option>
+                            ))}
                         </Select>
                     </Form.Item>
                 </Form>

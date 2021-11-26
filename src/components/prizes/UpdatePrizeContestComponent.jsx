@@ -256,14 +256,14 @@ export default function ViewEventComponent({ record, recordImage }) {
                                 <div className='viewEventText'>Số lượng giới hạn</div>
                                 <i style={{ color: '#E36387' }} class="fas fa-users"></i>&nbsp;&nbsp;{record.MinParticipants} - {record.MaxParticipants}
                             </Col> */}
-                            <Col span={12}>
+                            <Col span={10}>
                                 <div className='viewEventText'>Người tạo</div>
                                 <Row>
                                     <Avatar alt="" size="small" src={record !== null && record.CreatedByNavigation.Image}></Avatar>
                                     <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{record !== null && record.CreatedByNavigation.FullName}</div>
                                 </Row>
                             </Col>
-                            <Col span={12}>
+                            <Col span={14}>
                                 <div className='viewEventText'>Địa chỉ</div>
                                 <i style={{ color: '#726A95' }} class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;{record.Venue}
                             </Col>

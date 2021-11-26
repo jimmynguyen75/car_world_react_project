@@ -237,6 +237,15 @@ export default function ManagePrizesComponent() {
                     }
                 },
                 {
+                    title: 'Địa điểm',
+                    key: 'location',
+                    render: (data) => {
+                        return (
+                            <div>{data.Venue}</div>
+                        )
+                    }
+                },
+                {
                     title: 'Người tạo',
                     key: 'created',
                     render: (data) => {
@@ -245,15 +254,6 @@ export default function ManagePrizesComponent() {
                                 <Avatar alt="" src={data.CreatedByNavigation.Image}></Avatar>
                                 <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data.CreatedByNavigation.FullName}</div>
                             </Row>
-                        )
-                    }
-                },
-                {
-                    title: 'Địa điểm',
-                    key: 'location',
-                    render: (data) => {
-                        return (
-                            <div>{data.Venue}</div>
                         )
                     }
                 },
@@ -598,6 +598,15 @@ export default function ManagePrizesComponent() {
                     }
                 },
                 {
+                    title: 'Địa điểm',
+                    key: 'location',
+                    render: (data) => {
+                        return (
+                            <div>{data.Venue}</div>
+                        )
+                    }
+                },
+                {
                     title: 'Người tạo',
                     key: 'created',
                     render: (data) => {
@@ -606,15 +615,6 @@ export default function ManagePrizesComponent() {
                                 <Avatar alt="" src={data.CreatedByNavigation.Image}></Avatar>
                                 <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data.CreatedByNavigation.FullName}</div>
                             </Row>
-                        )
-                    }
-                },
-                {
-                    title: 'Địa điểm',
-                    key: 'location',
-                    render: (data) => {
-                        return (
-                            <div>{data.Venue}</div>
                         )
                     }
                 },

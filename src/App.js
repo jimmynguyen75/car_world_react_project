@@ -43,7 +43,7 @@ function App() {
               <Route path="/phu-kien" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/thong-tin-ca-nhan" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/thuong-hieu" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
-              <Route path="/test" exact component={Test}></Route>
+              <Route path="/test" exact component={AdminDashboardComponent}></Route>
               {/* Not Found - Must End */}
               <Route path="*" exact component={NotFound404Component}></Route>
             </Switch>
@@ -65,7 +65,7 @@ function App() {
               <Route path="/tao-bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/sua-bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/thong-tin-ca-nhan" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
-              <Route path="/test" exact component={Test}></Route>
+              <Route path="/test" exact component={ManagerDashboardComponent}></Route>
               {/* Not Found - Must End */}
               <Route path="*" exact component={NotFound404Component}></Route>
             </Switch>
@@ -87,8 +87,8 @@ function App() {
   return (
     <>
       <WebRouter />
-      {show ? (<ReactNotificationComponent title={notification.title} body={notification.body} />) : (<></>)}
-      {/* <Test /> */}
+      {show && (notification.title !== "" && (<ReactNotificationComponent title={notification.title} body={notification.body} />)) }
+      <Test />
       {/* <Fader text="Hellu"></Fader> */}
     </>
   );
