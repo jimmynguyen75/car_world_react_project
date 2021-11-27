@@ -15,7 +15,7 @@ export default function ViewEventComponent({ record, recordImage }) {
     const [prizes, setPrizes] = useState([])
     const [prizeList, setPrizeList] = useState([])
     const [visibleEdit, setVisibleEdit] = useState(false);
-    const [loadingButton, setLoadingButton] = React.useState(false)
+    // const [loadingButton, setLoadingButton] = React.useState(false)
     const [data, setData] = useState("")
     const [form] = Form.useForm();
     useEffect(() => {
@@ -28,9 +28,9 @@ export default function ViewEventComponent({ record, recordImage }) {
                 setUsers(result)
             })
             .catch((error) => console.log(error));
-    }, [])
+    }, [record])
     useEffect(() => { PrizeService.getPrizes().then((result) => { setPrizeList(result.data) }).catch(() => { console.log("Error") }) }, [])
-    useEffect(() => { PrizeService.getPrizeContestById(record.Id).then((result) => { setPrizes(result.data) }).catch((error) => console.log(error)) }, [])
+    useEffect(() => { PrizeService.getPrizeContestById(record.Id).then((result) => { setPrizes(result.data) }).catch((error) => console.log(error)) }, [record])
     const [visible, setVisible] = useState("none")
     const [loading, setLoading] = useState("0")
     const priz = []
@@ -65,10 +65,10 @@ export default function ViewEventComponent({ record, recordImage }) {
             }
         });
     }
-    async function convertUserIdToName(userId) {
-        const user = await AccountService.getUserById(userId);
-        return user.data;
-    }
+    // async function convertUserIdToName(userId) {
+    //     const user = await AccountService.getUserById(userId);
+    //     return user.data;
+    // }
     function convertPrizeName(prize) {
         if (prize === '1') {
             return "Giải nhất"
@@ -115,9 +115,9 @@ export default function ViewEventComponent({ record, recordImage }) {
     const onFinish = (value) => {
         // PrizeService.createPrizeContest(value).then(() => message.success("Tạo giải thưởng cuộc thi thành công")).catch(() => { message.error("Tạo không thành công") })
         console.log("value: ", value)
-        axios.all([priz.map((data) => {
+        axios.all([priz.map((data) => (
             PrizeService.givePrizeToUser(data.id, data.userId)
-        })])
+        ))])
             .then(axios.spread(() => {
                 setTimeout(() => {
                     message.success("Trao giải thưởng thành công")
@@ -154,7 +154,7 @@ export default function ViewEventComponent({ record, recordImage }) {
                         <Button onClick={handleCancel}>
                             Hủy
                         </Button>
-                        <Button type="primary" form="prizeContest" key="submit" htmlType="submit" loading={loadingButton} >
+                        <Button type="primary" form="prizeContest" key="submit" htmlType="submit">
                             Hoàn tất
                         </Button>
                     </Row>
@@ -192,7 +192,7 @@ export default function ViewEventComponent({ record, recordImage }) {
                             }
                             disabled={record.CurrentParticipants !== 0 ? true : false}
                         >
-                            {prizeList.map(prizes => (
+                            {prizeList.map((prizes) => (
                                 <Option key={prizes.Id} value={prizes.Id}>{prizes.Name}</Option>
                             ))}
                         </Select>
@@ -206,7 +206,7 @@ export default function ViewEventComponent({ record, recordImage }) {
                             onSelect={onSelect}
                             onChange={onDeselect}
                         >
-                            {users.map(users => (
+                            {users.map((users) => (
                                 <Option key={users.Id} value={users.Id} prizeId={data.Id}>
                                     <Avatar icon={<UserOutlined />} src={users.Image} size={18} style={{ marginBottom: 4 }} />&nbsp;{users.FullName}</Option>
                             ))}
@@ -290,7 +290,7 @@ export default function ViewEventComponent({ record, recordImage }) {
                 <Row >
                     <Col span={24}>
                         <div className='viewEventText'>Giải thưởng cuộc thi</div>
-                        {prizes.map(prize => (
+                        {prizes.map((prize) => (
                             <Descriptions
                                 bordered
                                 column={1}

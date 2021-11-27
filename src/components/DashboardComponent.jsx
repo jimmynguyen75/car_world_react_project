@@ -1,23 +1,23 @@
 import { Bar, Column } from '@ant-design/charts';
-import { UserOutlined, CarOutlined, TagsOutlined, UserSwitchOutlined } from '@ant-design/icons';
-import { Avatar, Col, Row, Spin } from 'antd';
+import { CarOutlined } from '@ant-design/icons';
+import { Col, Row, Spin } from 'antd';
+import moment from 'moment';
+import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
+import car from '../images/car.png';
+import number2 from '../images/number2.png';
+import number3 from '../images/number3.png';
+import number1 from '../images/number_1.png';
+import accessory from '../images/wheel.png';
 import AccessoryService from '../services/AccessoryService';
 import AccountService from '../services/AccountService';
 import BrandService from '../services/BrandService';
 import CarService from '../services/CarService';
-import EventService from '../services/EventService';
 import ContestService from '../services/ContestService';
+import EventService from '../services/EventService';
+import ExchangeService from '../services/ExchangeService';
 import PostService from '../services/PostService';
 import ProposalService from '../services/ProposalService';
-import ExchangeService from '../services/ExchangeService';
-import moment from 'moment';
-import 'moment/locale/vi';
-import car from '../images/car.png'
-import accessory from '../images/wheel.png'
-import number1 from '../images/number_1.png'
-import number2 from '../images/number2.png'
-import number3 from '../images/number3.png'
 import './testStyle.less';
 function DashboardComponent() {
     const [post, setPost] = useState([])
@@ -97,17 +97,6 @@ function DashboardComponent() {
             value: users.admin.length,
         }
     ];
-    const carAccessoryData = [
-
-        {
-            name: 'Phụ kiện',
-            value: carAccessory.accessory.length,
-        },
-        {
-            name: 'Xe',
-            value: carAccessory.car.length,
-        },
-    ];
     const brandData = [
         {
             name: 'Hiệu xe',
@@ -134,17 +123,6 @@ function DashboardComponent() {
     ]
     const configAccount = {
         data: accountData,
-        xField: 'value',
-        yField: 'name',
-        seriesField: 'name',
-        legend: { position: 'top-left' },
-        label: {
-            position: 'right',
-            offset: 4,
-        },
-    }
-    const configCarAccessory = {
-        data: carAccessoryData,
         xField: 'value',
         yField: 'name',
         seriesField: 'name',

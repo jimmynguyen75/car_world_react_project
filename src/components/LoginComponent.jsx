@@ -42,7 +42,7 @@ function LoginComponent() {
             .catch((error) => {
                 setPassword("")
                 setIncorrect("")
-                console.log(error)
+                // console.log(error)
                 setTimeout(() => {
                     message.error("Đăng nhập không thành công")
                 }, 1000)

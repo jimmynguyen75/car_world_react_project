@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Modal, Row, Col, message, Form, Upload, Input } from 'antd';
-import { PlusCircleOutlined, ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Form, Input, message, Modal, Row, Upload } from 'antd';
+import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import storage from '../../services/ImageFirebase';
 import PrizeService from '../../services/PrizeService';
 
 export default function CreatePrizeComponent() {
-    const [loadingButton, setLoadingButton] = React.useState(false)
+    // const [loadingButton, setLoadingButton] = React.useState(false)
     const history = useHistory();
     const [visible, setVisible] = React.useState(false);
     const [form] = Form.useForm();
@@ -116,7 +116,7 @@ export default function CreatePrizeComponent() {
                         <Button onClick={handleCancel}>
                             Hủy
                         </Button>
-                        <Button type="primary" form="prize" key="submit" htmlType="submit" loading={loadingButton} >
+                        <Button type="primary" form="prize" key="submit" htmlType="submit"  >
                             Hoàn tất
                         </Button>
                     </Row>

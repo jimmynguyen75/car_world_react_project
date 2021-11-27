@@ -1,5 +1,5 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Modal, Row, Select, Tooltip, message } from 'antd';
+import { Button, Form, Input, Modal, Row, Tooltip, message } from 'antd';
 import React, { useState } from 'react';
 import AccountService from '../../services/AccountService'
 import './style.less';
@@ -9,8 +9,6 @@ export default function CreateAccountModalComponent() {
     const showModal = () => {
         setIsModalVisible(true);
     };
-    const { Option } = Select;
-
     const handleCancel = () => {
         setIsModalVisible(false);
         form.resetFields();

@@ -5,7 +5,6 @@ import NumberFormat from 'react-number-format';
 import AccessoryService from '../../services/AccessoryService';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
-import { useHistory, useLocation } from "react-router-dom";
 import numberToWord from '../../utils/numberToWord';
 import './styles.less';
 export default function CreateAccessoryBodyModalComponent() {
@@ -17,7 +16,6 @@ export default function CreateAccessoryBodyModalComponent() {
     const [form] = Form.useForm();
     const [brands, setBrands] = useState([]);
     const { Option } = Select;
-    const history = useHistory();
     const [price, setPrice] = useState(0);
     const handleAddBrand = () => {
         console.log('ok')

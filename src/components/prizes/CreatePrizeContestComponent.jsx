@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Modal, Row, Col, message, Form, Upload, Input, Select } from 'antd';
-import ContestService from '../../services/ContestService';
-import { PlusCircleOutlined, ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
+import { Button, Form, Input, message, Modal, Row, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import storage from '../../services/ImageFirebase';
-import PrizeService from '../../services/PrizeService';
 import AccountService from '../../services/AccountService';
+import ContestService from '../../services/ContestService';
+import PrizeService from '../../services/PrizeService';
 export default function CreatePrizeContestComponent() {
-    const [loadingButton, setLoadingButton] = React.useState(false)
+    // const [loadingButton, setLoadingButton] = React.useState(false)
     const { Option } = Select;
     const [visible, setVisible] = React.useState(false);
-    const [modalConfirm, setModalConfirm] = useState(false);
+    // const [modalConfirm, setModalConfirm] = useState(false);
     const [form] = Form.useForm();
     const history = useHistory();
     const [contests, setContests] = useState([]);
@@ -55,7 +54,6 @@ export default function CreatePrizeContestComponent() {
                     }
                 })
                 setContests(current)
-                console.log("ct: ", contests)
             })
             .catch(() => { console.log("Error") })
     }, [])
@@ -97,7 +95,7 @@ export default function CreatePrizeContestComponent() {
                         <Button onClick={handleCancel}>
                             Hủy
                         </Button>
-                        <Button type="primary" form="prizeContest" key="submit" htmlType="submit" loading={loadingButton} >
+                        <Button type="primary" form="prizeContest" key="submit" htmlType="submit">
                             Hoàn tất
                         </Button>
                     </Row>

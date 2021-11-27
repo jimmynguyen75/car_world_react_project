@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
-import { useHistory, useLocation } from "react-router-dom";
 import CarService from '../../services/CarService'
 export default function EditCarBodyComponent({ record, recordImage }) {
     const [previewImage, setPreviewImage] = useState('');
@@ -17,7 +16,6 @@ export default function EditCarBodyComponent({ record, recordImage }) {
     const { Option } = Select;
     const [img, setImg] = useState([]);
     const [images, setImages] = useState([]);
-    const history = useHistory();
     //--------//
     //***
     const handleAddBrand = () => {

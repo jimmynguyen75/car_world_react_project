@@ -64,24 +64,24 @@ function ManageAccountsComponent() {
                 console.log(err)
             })
     }
-    function handleManager(id) {
-        AccountService.updateRole(id, '2')
-            .then((response) => {
-                window.location.reload();
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-    function handleAdmin(id) {
-        AccountService.updateRole(id, '1')
-            .then((response) => {
-                window.location.reload();
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+    // function handleManager(id) {
+    //     AccountService.updateRole(id, '2')
+    //         .then((response) => {
+    //             window.location.reload();
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //         })
+    // }
+    // function handleAdmin(id) {
+    //     AccountService.updateRole(id, '1')
+    //         .then((response) => {
+    //             window.location.reload();
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //         })
+    // }
     const sorter = (a, b) => (isNaN(a) && isNaN(b) ? (a || '').localeCompare(b || '') : a - b);
     class AdminAndManager extends React.Component {
         state = {

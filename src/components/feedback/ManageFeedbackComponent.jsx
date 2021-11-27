@@ -21,9 +21,9 @@ function ManageFeedbackComponent() {
     const history = useHistory();
     const [test, setTest] = useState([])
     const [testEx, setTestEx] = useState([])
-    const [car, setCar] = useState([])
-    const [accessory, setAccessory] = useState([])
-    const [exC, setExC] = useState('')
+    // const [car, setCar] = useState([])
+    // const [accessory, setAccessory] = useState([])
+    // const [exC, setExC] = useState('')
     const handleCancel = () => {
         setVisible(false);
         history.push('/phan-hoi')
@@ -31,8 +31,8 @@ function ManageFeedbackComponent() {
     //Effect
     useEffect(() => {
         const fetchData = async () => {
-            let car = []
-            let accessory = []
+            // let car = []
+            // let accessory = []
             const CE = await FeebackService.getCE();
             const Exchange = await FeebackService.getExchange();
             const ExchangeResponse = await FeebackService.getExchangeResponse();
@@ -44,8 +44,8 @@ function ManageFeedbackComponent() {
             //         accessory.push(filter)
             //     }
             // })
-            setCar(car)
-            setAccessory(accessory)
+            // setCar(car)
+            // setAccessory(accessory)
             setData({ CE: CE.data, Exchange: Exchange.data, ExchangeResponse: ExchangeResponse.data })
         }
         fetchData()
@@ -54,11 +54,11 @@ function ManageFeedbackComponent() {
         let exchange = []
         FeebackService.getExchangeResponse().then((response) => {
             response.data.forEach((filter) => {
-                filter.ExchangeResponses.map((data) => {
+                filter.ExchangeResponses.map((data) => (
                     ExchangeService.getExchangeById(data.ExchangeId).then((result) => {
                         exchange.push(result.data)
                     })
-                })
+                ))
             })
             setTestEx(exchange)
         })
@@ -70,7 +70,7 @@ function ManageFeedbackComponent() {
         FeebackService.getCE()
             .then((result1) => {
                 result1.data.forEach((data1) => {
-                    data1.ContestEventRegisters.map((data) => {
+                    data1.ContestEventRegisters.map((data) => (
                         FeebackService.getCEById(data.ContestEventId).then((result) => {
                             test.push(result.data)
                             if (result.data.Type === 1) {
@@ -80,7 +80,7 @@ function ManageFeedbackComponent() {
                                 contests.push(data1)
                             }
                         })
-                    })
+                    ))
                 })
                 setTimeout(() => { setCE({ event: events, contest: contests }) }, 1000)
                 setTest(test)
@@ -118,14 +118,14 @@ function ManageFeedbackComponent() {
             key: 'date',
             render: (data1) => {
                 let ok = ''
-                test.map((data) => {
+                test.forEach((data) => {
                     if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
                         ok = data
                     }
                 })
                 return (
                     <Row>
-                        <Col span={5}><img alt="" style={{ height: 40, maxWidth: '100%', objectFit: 'cover', width: 'auto'}} src={ok.Image === "string" ? imgPlacehoder : ok.Image} /></Col>
+                        <Col span={5}><img alt="" style={{ height: 40, maxWidth: '100%', objectFit: 'cover', width: 'auto' }} src={ok.Image === "string" ? imgPlacehoder : ok.Image} /></Col>
                         <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{ok.Title}</div></Col>
                     </Row>
                 )
@@ -138,7 +138,7 @@ function ManageFeedbackComponent() {
             width: '25%',
             render: (data) => {
                 let ok = ''
-                test.map((dataT) => {
+                test.forEach((dataT) => {
                     if (dataT.Id === data.ContestEventRegisters[0].ContestEventId) {
                         ok = dataT
                     }
@@ -159,7 +159,7 @@ function ManageFeedbackComponent() {
             key: 'date',
             render: (data1) => {
                 let ok = ''
-                test.map((data) => {
+                test.forEach((data) => {
                     if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
                         ok = data
                     }
@@ -200,7 +200,7 @@ function ManageFeedbackComponent() {
             render: (data) => {
                 return (
                     <Row>
-                        <Avatar alt=""  size="middle" src={data !== null && data.FeedbackUser.Image}></Avatar>
+                        <Avatar alt="" size="middle" src={data !== null && data.FeedbackUser.Image}></Avatar>
                         <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data !== null && data.FeedbackUser.FullName}</div>
                     </Row>
                 )
@@ -211,7 +211,7 @@ function ManageFeedbackComponent() {
             key: 'date',
             render: (data1) => {
                 let ok = ''
-                test.map((data) => {
+                test.forEach((data) => {
                     if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
                         ok = data
                     }
@@ -230,7 +230,7 @@ function ManageFeedbackComponent() {
             width: '25%',
             render: (data) => {
                 let ok = ''
-                test.map((dataT) => {
+                test.forEach((dataT) => {
                     if (dataT.Id === data.ContestEventRegisters[0].ContestEventId) {
                         ok = dataT
                     }
@@ -251,7 +251,7 @@ function ManageFeedbackComponent() {
             key: 'date',
             render: (data1) => {
                 let ok = ''
-                test.map((data) => {
+                test.forEach((data) => {
                     if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
                         ok = data
                     }
@@ -369,7 +369,7 @@ function ManageFeedbackComponent() {
             key: 'nameEx',
             render: (data) => {
                 let ok = ''
-                testEx.map((data1) => {
+                testEx.forEach((data1) => {
                     if (data1.Id === data.ExchangeResponses[0].ExchangeId) {
                         ok = data1
                     }
@@ -384,7 +384,7 @@ function ManageFeedbackComponent() {
             key: 'nameEx',
             render: (data) => {
                 let ok = ''
-                testEx.map((data1) => {
+                testEx.forEach((data1) => {
                     if (data1.Id === data.ExchangeResponses[0].ExchangeId) {
                         ok = data1
                     }

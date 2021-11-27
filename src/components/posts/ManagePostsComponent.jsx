@@ -68,7 +68,7 @@ function ManagePostsComponent() {
                     all.push(data);
                 }
             })
-            console.log(allEvent.data)
+            // console.log(allEvent.data)
             cars.data.forEach((data) => {
                 if (data.Status === 1) {
                     car.push(data);

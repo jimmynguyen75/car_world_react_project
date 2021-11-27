@@ -1,15 +1,14 @@
-import { Form, Modal, Upload, Image, message, Row, Tooltip, Input, ConfigProvider, DatePicker, Col } from "antd";
-import React, { useState, useEffect } from 'react';
-import storage from '../../services/ImageFirebase';
 import { PlusOutlined } from '@ant-design/icons';
+import { Col, ConfigProvider, DatePicker, Form, Image, Input, message, Modal, Row, Tooltip, Upload } from "antd";
 import locale from 'antd/es/locale-provider/fr_FR';
-import 'moment/locale/vi';
 import moment from 'moment';
-import AccountService from '../../services/AccountService'
+import 'moment/locale/vi';
+import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
-import numberToWord from '../../utils/numberToWord';
+import AccountService from '../../services/AccountService';
 import ContestService from '../../services/ContestService';
-import EventService from "../../services/EventService";
+import storage from '../../services/ImageFirebase';
+import numberToWord from '../../utils/numberToWord';
 export default function EditContestComponent({ record, recordImage }) {
     const [price, setPrice] = useState(0);
     const [previewImage, setPreviewImage] = useState('');

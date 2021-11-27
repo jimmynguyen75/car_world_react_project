@@ -12,22 +12,22 @@ import UpdatePrizeContestComponent from './UpdatePrizeContestComponent';
 import { useStorage } from '../../hook/useBrand';
 import displayImageP from '../../images/write.gif'
 export default function ManagePrizesComponent() {
-    const [modalConfirm, setModalConfirm] = useState(false);
+    // const [modalConfirm, setModalConfirm] = useState(false);
     const [record, setRecord] = useState(null)
     const [file, setFile] = useState(null);
     const { TabPane } = Tabs;
     const history = useHistory();
     const [page, setPage] = React.useState(1);
-    const [key, setKey] = useState("");
+    // const [key, setKey] = useState("");
     const [pageSize, setPageSize] = React.useState(5)
     const [recordImage, setRecordImage] = useState(null)
     const [prizes, setPrizes] = useState([]);
     const [contests, setContests] = useState(null)
     const [contestHistory, setContestHistory] = useState(null)
-    const [visibleView, setVisibleView] = React.useState(false);
+    // const [visibleView, setVisibleView] = React.useState(false);
     const [visibleEdit, setVisibleEdit] = useState(false);
-    const [visibleCancel, setVisibleCancel] = useState(false);
-    const [loadingButton, setLoadingButton] = React.useState(false)
+    // const [visibleCancel, setVisibleCancel] = useState(false);
+    // const [loadingButton, setLoadingButton] = React.useState(false)
     const [editPrize, setEditPrize] = useState("none")
     const [displayImage, setDisplayImage] = useState("true")
     const imgPlacehoder = 'https://via.placeholder.com/120';
@@ -53,43 +53,43 @@ export default function ManagePrizesComponent() {
             image: url
         })
     }, [url, form])
-    function callback(key) {
-        setKey(key)
-    }
+    // function callback(key) {
+    //     setKey(key)
+    // }
     const hideDisplayImage = () => {
         setDisplayImage("none")
         setEditPrize(true)
     }
     const handleCancel = () => {
-        setVisibleView(false);
+        // setVisibleView(false);
         setVisibleEdit(false);
         history.push('/giai-thuong');
     };
-    const showModalConfirm = (e) => {
-        e.preventDefault();
-        setModalConfirm(true)
-    }
+    // const showModalConfirm = (e) => {
+    //     e.preventDefault();
+    //     setModalConfirm(true)
+    // }
     const showModalEdit = () => {
         setVisibleEdit(true);
     };
-    const showModalCancel = () => {
-        setVisibleCancel(true);
-    };
-    const showModalView = () => {
-        setVisibleView(true);
-    };
+    // const showModalCancel = () => {
+    //     setVisibleCancel(true);
+    // };
+    // const showModalView = () => {
+    //     setVisibleView(true);
+    // };
     const changeImage = (e) => {
         setFile(e.target.files[0])
     }
-    const handleOk = () => {
-        setLoadingButton(true);
-        setTimeout(() => {
-            setModalConfirm(false)
-        }, 1000);
-        setTimeout(() => {
-            setLoadingButton(false);
-        }, 1000);
-    };
+    // const handleOk = () => {
+    //     setLoadingButton(true);
+    //     setTimeout(() => {
+    //         setModalConfirm(false)
+    //     }, 1000);
+    //     setTimeout(() => {
+    //         setLoadingButton(false);
+    //     }, 1000);
+    // };
     const onFinish = (values) => {
         console.log(values);
         PrizeService.updatePrize(values.id, values)
@@ -703,7 +703,7 @@ export default function ManagePrizesComponent() {
                 <CreatePrizeContestComponent />
                 <CreatePrizeComponent />
             </Row>
-            <Tabs type="card" onChange={callback}>
+            <Tabs type="card">
                 <TabPane tab="Cuộc thi" key="1">
                     <Spin spinning={contests === null ? true : false}>
                         <PrizeContest />

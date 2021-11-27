@@ -173,9 +173,9 @@ export default function CheckAttendanceComponent() {
     }
     const handleSubmitCheck = () => {
         return (
-            axios.all([check.map((userId) => {
+            axios.all([check.map((userId) => (
                 ContestService.checkUser(userId.type, userId)
-            })])
+            ))])
                 .then(axios.spread(() => {
                     setTimeout(() => {
                         message.success("Điểm danh thành công")

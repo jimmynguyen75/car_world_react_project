@@ -13,7 +13,7 @@ import ViewEventComponent from '../events/ViewEventComponent';
 import ViewContestComponent from '../contests/ViewContestComponent';
 export default function ManagerBodyDashboardComponent() {
     const history = useHistory();
-    const [attendance, setAttendace] = useState(null)
+    // const [attendance, setAttendace] = useState(null)
     const imgPlacehoder = 'https://via.placeholder.com/120';
     const [record, setRecord] = useState(null)
     const [visibleViewE, setVisibleViewE] = React.useState(false);

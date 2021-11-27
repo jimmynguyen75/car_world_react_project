@@ -1,11 +1,10 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Form, Input, Popover, Spin, message, Radio, DatePicker, ConfigProvider } from 'antd';
+import { Avatar, Button, Form, Input, message, Popover, Radio, Spin } from 'antd';
+import moment from 'moment';
+import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
 import { useStorage } from '../../hook/useStorage';
 import AccountService from '../../services/AccountService';
-import locale from 'antd/es/locale-provider/fr_FR';
-import moment from 'moment';
-import 'moment/locale/vi';
 import './style.css';
 function ProfileComponent() {
     const currentUser = AccountService.getCurrentUser();
@@ -14,7 +13,7 @@ function ProfileComponent() {
     const [fullname, setFullname] = useState(null);
     const [email, setEmail] = useState(null);
     const [image, setImage] = useState(null);
-    const [DoB, setDoB] = useState(null);
+    // const [DoB, setDoB] = useState(null);
     const [file, setFile] = useState(null);
     const { url } = useStorage(file)
     useEffect(() => {
@@ -40,7 +39,7 @@ function ProfileComponent() {
                 setFullname(res.data.FullName)
                 setEmail(res.data.Email)
                 setImage(res.data.Image)
-                setDoB(res.data.YearOfBirth)
+                // setDoB(res.data.YearOfBirth)
             })
             .catch(err => {
                 console.log(err);

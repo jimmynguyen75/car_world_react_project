@@ -6,7 +6,6 @@ import BrandService from '../../services/BrandService';
 import storage from '../../services/ImageFirebase';
 import CarService from '../../services/CarService';
 import numberToWord from '../../utils/numberToWord';
-import { useHistory, useLocation } from "react-router-dom";
 export default function CreateCarBodyModalComponent() {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -16,7 +15,6 @@ export default function CreateCarBodyModalComponent() {
     const [form] = Form.useForm();
     const [brands, setBrands] = useState([]);
     const { Option } = Select;
-    const history = useHistory();
     //--------//
     const [price, setPrice] = useState(0);
     const [seats, setSeat] = useState(0);

@@ -16,8 +16,8 @@ function App() {
   //start
   const [show, setShow] = useState(false);
   const [notification, setNotification] = useState({ title: "", body: "" })
-  console.log("show:", show)
-  console.log("notification:", notification)
+  // console.log("show:", show)
+  // console.log("notification:", notification)
   onMessageListener()
     .then((payload) => {
       setShow(true);
