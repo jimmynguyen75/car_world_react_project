@@ -1,12 +1,90 @@
 import { MinusOutlined } from '@ant-design/icons';
-import { Carousel, Col, Descriptions, Image, Row, Spin, Input } from 'antd';
+import { Carousel, Col, Descriptions, Image, Row, Spin, Input, Table, Modal, Button } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
 import NumberFormat from 'react-number-format';
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
+import ContestService from '../../services/ContestService';
 export default function ViewEventComponent({ record, recordImage }) {
-    console.log("record: ", record);
-    console.log("recordImage: ", recordImage);
+    const [visibleCheck, setVisibleCheck] = useState(false);
+    const [userList, setUserList] = useState([])
+    const handleCancel = () => {
+        setVisibleCheck(false);
+    }
+    useEffect(() => {
+        ContestService.getUserJoined(record.Id)
+            .then((user) => {
+                setUserList(user.data)
+            })
+            .catch((error) => { console.log(error) })
+    }, [record.Id])
+    const baseColumns = [
+        {
+            title: 'Họ và tên',
+            key: 'name',
+            render: (data) => {
+                return (
+                    <Row gutter={15}>
+                        <Col span={4} style={{ textAlign: 'center' }}><img alt="" style={{ height: 'auto', maxHeight: '50px', width: 'auto' }} src={data.User.Image} /></Col>
+                        <Col span={20} style={{ display: 'flex', alignItems: 'center' }}><div>{data.User.FullName}</div></Col>
+                    </Row>
+                )
+            }
+        },
+        {
+            title: 'Số điện thoại',
+            key: 'phone',
+            width: '20%',
+            render: (data) => {
+                return (
+                    <div>{data.User.Phone}</div>
+                )
+            }
+        },
+        {
+            title: 'Địa chỉ',
+            key: 'phone',
+            width: '30%',
+            render: (data) => {
+                return (
+                    <div>{data.User.Address}</div>
+                )
+            }
+        }
+    ];
+    class Check extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = { filterTable: null, columns: baseColumns, baseData: userList };
+        }
+        search = value => {
+            const { baseData } = this.state;
+            console.log("PASS", { value });
+            const filterTable = baseData.filter(o =>
+                Object.keys(o.User).some(k =>
+                    String(o.User[k])
+                        .toLowerCase()
+                        .includes(value.toLowerCase())
+                )
+            );
+            this.setState({ filterTable });
+        }
+        render() {
+            const { filterTable, columns, baseData } = this.state;
+            return (
+                <div>
+                    <Input.Search
+                        className="inputSearchCheck"
+                        style={{ marginBottom: 15 }}
+                        placeholder="Tìm kiếm..."
+                        enterButton
+                        onSearch={this.search}
+                    />
+                    <Table columns={columns} dataSource={filterTable === null ? baseData : filterTable} pagination={false} />
+                </div>
+            )
+        }
+    }
     const ModalBodyView = () => {
         const [visible, setVisible] = useState("none")
         const [loading, setLoading] = useState("0")
@@ -16,6 +94,25 @@ export default function ViewEventComponent({ record, recordImage }) {
         }, 800)
         return (
             <>
+                <Modal
+                    maskClosable={false}
+                    destroyOnClose={true}
+                    title="Danh sách tham gia"
+                    visible={visibleCheck}
+                    onCancel={() => { setVisibleCheck(false) }}
+                    width={800}
+                    footer={
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button type="primary" onClick={handleCancel}>
+                                Xong
+                            </Button>
+                        </Row>
+                    }
+                >
+                    <Spin spinning={userList === null ? true : false}>
+                        <Check />
+                    </Spin>
+                </Modal>
                 <Row gutter={15}>
                     <Col span={12}>
                         <Descriptions
@@ -77,7 +174,7 @@ export default function ViewEventComponent({ record, recordImage }) {
                 <Row gutter={15}>
                     <Col span={4}>
                         <div className='viewEventText'>Đã tham gia</div>
-                        <i style={{ color: '#50C9BA' }} class="fas fa-user-check"></i>&nbsp;&nbsp;{record.CurrentParticipants}
+                        <i style={{ color: '#50C9BA' }} class="fas fa-user-check"></i>&nbsp;&nbsp;{record.CurrentParticipants} - <span style={{ cursor: 'pointer' }} onClick={() => setVisibleCheck(true)}><i class="fas fa-list-ol"></i> <span style={{ color: '#562349', fontWeight: '500' }}>Xem</span></span>
                     </Col>
                     <Col span={4}>
                         <div className='viewEventText'>Số lượng giới hạn</div>
