@@ -27,7 +27,6 @@ function LoginComponent() {
         AccountService.login(username, password)
             .then(() => {
                 message.destroy()
-                // console.log(AccountService.getCurrentUser().RoleId);
                 if (AccountService.getCurrentUser().RoleId === 1) {
                     message.success({ content: 'Đăng nhập thành công', duration: 2 });
                     window.location.href = "/"
@@ -39,10 +38,11 @@ function LoginComponent() {
             .catch((error) => {
                 setPassword("")
                 setIncorrect("")
-                // console.log(error)
+                if (error.response && error.response.status === 400) {
+                    console.clear();
+                }
                 message.destroy()
                 message.error("Đăng nhập không thành công")
-
             })
     }
 
@@ -100,8 +100,6 @@ function LoginComponent() {
                                             backgroundColor: '#FF7643'
                                         }}>
                                             <img src={login} className="photo" alt="logging..." />
-                                            {/* <i className="bi bi-bootstrap"></i>
-                                            <h2 className="fs-1">Welcome To Car World</h2> */}
                                         </div>
                                     </div>
                                 </div>
