@@ -21,31 +21,28 @@ function LoginComponent() {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        setTimeout(() => {
-            message.loading({ content: 'Đang tải...', duration: 2 });
-        }, 10)
+
+        message.loading({ content: 'Đang tải...', duration: 2 });
+
         AccountService.login(username, password)
             .then(() => {
-                console.log(AccountService.getCurrentUser().RoleId);
+                message.destroy()
+                // console.log(AccountService.getCurrentUser().RoleId);
                 if (AccountService.getCurrentUser().RoleId === 1) {
-                    setTimeout(() => {
-                        message.success({ content: 'Đăng nhập thành công', duration: 2 });
-                    }, 1000);
-                    setTimeout(() => { window.location.href = "/" }, 2000)
+                    message.success({ content: 'Đăng nhập thành công', duration: 2 });
+                    window.location.href = "/"
                 } else {
-                    setTimeout(() => {
-                        message.success({ content: 'Đăng nhập thành công', duration: 2 });
-                    }, 1000);
-                    setTimeout(() => { window.location.href = "/" }, 2000)
+                    message.success({ content: 'Đăng nhập thành công', duration: 2 });
+                    window.location.href = "/"
                 }
             })
             .catch((error) => {
                 setPassword("")
                 setIncorrect("")
                 // console.log(error)
-                setTimeout(() => {
-                    message.error("Đăng nhập không thành công")
-                }, 1000)
+                message.destroy()
+                message.error("Đăng nhập không thành công")
+
             })
     }
 
