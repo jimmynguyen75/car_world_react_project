@@ -307,12 +307,12 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" >
+                        <Form.Item label={<div>Lệ phí:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" >
                             <NumberFormat
                                 allowNegative={false}
                                 decimalScale={0}
                                 onChange={onChangePrice}
-                                placeholder="Nhập giá phụ kiện (vnđ)"
+                                placeholder="Nhập lệ phí (vnđ)"
                                 className="currency"
                                 displayType="input"
                                 type="primary"

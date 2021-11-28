@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CreateContestsModalComponent from './CreateContestsModalComponent';
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Input, Modal, Row, Tooltip,Space, Spin, Table, Tabs, Tag, message, Rate } from 'antd';
+import { Avatar, Button, Col, Input, Modal, Row, Tooltip, Space, Spin, Table, Tabs, Tag, message, Rate } from 'antd';
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import CreateBySelectComponent from './CreateBySelectComponent';
@@ -261,7 +261,6 @@ function ManageContestsComponent() {
                     title: 'Ngày diễn ra',
                     key: 'age',
                     width: '28%',
-                    ...this.getColumnSearchProps('age'),
                     render: (data) => {
                         return (
                             <Row>
@@ -304,8 +303,7 @@ function ManageContestsComponent() {
                         const result = (Math.round(diff / 86400) / 1000).toFixed()
                         return (
                             <div>
-                                {/* <Countdown value={countdown} onFinish={onFinish} /> */}
-                                {result} ngày còn lại
+                                {result !== 0 ? result + ' ngày còn lại' : 'Sắp hết hạn'}
                             </div>
                         )
                     }
@@ -472,7 +470,6 @@ function ManageContestsComponent() {
                     title: 'Ngày diễn ra',
                     key: 'age',
                     width: '28%',
-                    ...this.getColumnSearchProps('age'),
                     render: (data) => {
                         return (
                             <Row>
@@ -662,7 +659,6 @@ function ManageContestsComponent() {
                     title: 'Ngày diễn ra',
                     key: 'age',
                     width: '28%',
-                    ...this.getColumnSearchProps('age'),
                     render: (data) => {
                         return (
                             <Row>
@@ -833,7 +829,6 @@ function ManageContestsComponent() {
                     title: 'Ngày diễn ra',
                     key: 'age',
                     width: '28%',
-                    ...this.getColumnSearchProps('age'),
                     render: (data) => {
                         return (
                             <Row>
@@ -870,8 +865,10 @@ function ManageContestsComponent() {
                     title: 'Đánh giá',
                     key: 'rate',
                     render: (data) => {
+                        const num = data.Rating
+                        const result = (Math.round(num * 10) / 10)
                         return (
-                            <Rate allowHalf defaultValue={data.Rating} />
+                            <div><Rate style={{ fontSize: 14 }} disabled allowHalf defaultValue={data.Rating} />&nbsp;{result}</div>
                         )
                     }
                 },
@@ -1013,7 +1010,6 @@ function ManageContestsComponent() {
                     title: 'Ngày diễn ra',
                     key: 'age',
                     width: '28%',
-                    ...this.getColumnSearchProps('age'),
                     render: (data) => {
                         return (
                             <Row>
@@ -1147,8 +1143,8 @@ function ManageContestsComponent() {
                     title={
                         <Row>
                             <Space size="middle"><div>Đề xuất bởi </div></Space>
-                            <Avatar src={recordPro !== null ? recordPro.Manager.Image : null} style={{ marginLeft: 5 }}></Avatar>
-                            <Space size="middle"><div style={{ fontWeight: '500', fontSize: 14, color: '#2A528A', marginLeft: 5 }}>{recordPro !== null ? recordPro.Manager.FullName : null}</div></Space>
+                            <Avatar src={recordPro !== null ? recordPro.User.Image : null} style={{ marginLeft: 5 }}></Avatar>
+                            <Space size="middle"><div style={{ fontWeight: '500', fontSize: 14, color: '#2A528A', marginLeft: 5 }}>{recordPro !== null ? recordPro.User.FullName : null}</div></Space>
                         </Row>
                     }
                     visible={visibleSelect}

@@ -249,7 +249,7 @@ function ManageEventsComponent() {
                     render: (data) => {
                         return (
                             <Row>
-                                <Col span={5}><img alt="" style={{ height: '50px', width: 'auto', maxWidth: '100%', maxHeight: '50px',objectFit: 'cover', margin: 'auto' }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
+                                <Col span={5}><img alt="" style={{ height: '50px', width: 'auto', maxWidth: '100%', maxHeight: '50px', objectFit: 'cover', margin: 'auto' }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
                                 <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{data.Title}</div></Col>
                             </Row>
                         )
@@ -259,7 +259,6 @@ function ManageEventsComponent() {
                     title: 'Ngày diễn ra',
                     key: 'age',
                     width: '28%',
-                    ...this.getColumnSearchProps('age'),
                     render: (data) => {
                         return (
                             <Row>
@@ -469,7 +468,6 @@ function ManageEventsComponent() {
                     title: 'Ngày diễn ra',
                     key: 'age',
                     width: '28%',
-                    ...this.getColumnSearchProps('age'),
                     render: (data) => {
                         return (
                             <Row>
@@ -655,7 +653,6 @@ function ManageEventsComponent() {
                     title: 'Ngày diễn ra',
                     key: 'age',
                     width: '28%',
-                    ...this.getColumnSearchProps('age'),
                     render: (data) => {
                         return (
                             <Row>
@@ -826,7 +823,6 @@ function ManageEventsComponent() {
                     title: 'Ngày diễn ra',
                     key: 'age',
                     width: '28%',
-                    ...this.getColumnSearchProps('age'),
                     render: (data) => {
                         return (
                             <Row>
@@ -863,8 +859,10 @@ function ManageEventsComponent() {
                     title: 'Đánh giá',
                     key: 'join',
                     render: (data) => {
+                        const num = data.Rating
+                        const result = (Math.round(num * 10) / 10)
                         return (
-                            <Rate allowHalf defaultValue={data.Rating} />
+                            <div><Rate style={{ fontSize: 14 }} disabled allowHalf defaultValue={data.Rating} />&nbsp;{result}</div>
                         )
                     }
                 },
@@ -1006,7 +1004,6 @@ function ManageEventsComponent() {
                     title: 'Ngày diễn ra',
                     key: 'age',
                     width: '28%',
-                    ...this.getColumnSearchProps('age'),
                     render: (data) => {
                         return (
                             <Row>
@@ -1130,8 +1127,8 @@ function ManageEventsComponent() {
                     title={
                         <Row>
                             <Space size="middle"><div>Đề xuất bởi </div></Space>
-                            <Avatar src={recordPro !== null ? recordPro.Manager.Image : null} style={{ marginLeft: 5 }}></Avatar>
-                            <Space size="middle"><div style={{ fontWeight: '500', fontSize: 14, color: '#2A528A', marginLeft: 5 }}>{recordPro !== null ? recordPro.Manager.FullName : null}</div></Space>
+                            <Avatar src={recordPro !== null ? recordPro.User.Image : null} style={{ marginLeft: 5 }}></Avatar>
+                            <Space size="middle"><div style={{ fontWeight: '500', fontSize: 14, color: '#2A528A', marginLeft: 5 }}>{recordPro !== null ? recordPro.User.FullName : null}</div></Space>
                         </Row>
                     }
                     visible={visibleSelect}

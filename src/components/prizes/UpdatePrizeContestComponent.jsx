@@ -312,7 +312,7 @@ export default function ViewEventComponent({ record, recordImage }) {
                                         <Col span={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             <Row gutter={10}>
                                                 <div onClick={() => showModalEdit(prize)}> <span style={{ color: '#5AA469', textDecoration: 'underline', cursor: 'pointer' }}>Sửa</span> </div>
-                                                <div onClick={() => confirm(prize.Id)} style={{ paddingLeft: 10 }}><span style={{ color: '#F38BA0', textDecoration: 'underline', cursor: 'pointer' }}>Xóa</span>  </div>
+                                                {record.CurrentParticipants === 0 && <div onClick={() => confirm(prize.Id)} style={{ paddingLeft: 10 }}><span style={{ color: '#F38BA0', textDecoration: 'underline', cursor: 'pointer' }}>Xóa</span>  </div>}
                                             </Row>
                                         </Col>
                                     </Row>

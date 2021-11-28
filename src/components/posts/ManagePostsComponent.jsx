@@ -194,7 +194,6 @@ function ManagePostsComponent() {
                     dataIndex: 'Overview',
                     key: 'AllOverview',
                     width: '20%',
-                    ...this.getColumnSearchProps('Overview'),
                     render: (data) => {
                         return <div className="textOverflow" >{data}</div>
                     }
