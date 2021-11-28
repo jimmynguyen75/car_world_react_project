@@ -110,10 +110,10 @@ function ManageAccountsComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -157,7 +157,6 @@ function ManageAccountsComponent() {
                     title: 'Họ và tên',
                     key: 'fullname1',
                     ...this.getColumnSearchProps('FullName'),
-                    sorter: (a, b) => sorter(a.FullName, b.FullName),
                     render: (data) => {
                         return (
                             <Row>

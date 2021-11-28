@@ -160,7 +160,7 @@ export default function CreateAccessoryBodyModalComponent() {
                         {fileList.length >= 3 ? null : uploadButton}
                     </Upload>
                 </Form.Item>
-                <Form.Item label="Name" name="name" rules={[{ required: true, message: "Tên phụ kiện không được bỏ trống" }]}>
+                <Form.Item label="Tên phụ kiện" name="name" rules={[{ required: true, message: "Tên phụ kiện không được bỏ trống" }]}>
                     <Input.TextArea
                         placeholder="Nhập tên phụ kiện"
                         showCount maxLength={200}

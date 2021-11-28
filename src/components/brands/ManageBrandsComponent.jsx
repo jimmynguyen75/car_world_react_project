@@ -120,10 +120,10 @@ export default function ManageBrandComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -185,7 +185,6 @@ export default function ManageBrandComponent() {
                     title: 'Mô tả',
                     dataIndex: 'Description',
                     key: 'description',
-                    ...this.getColumnSearchProps('Description'),
                     render: (data) => {
                         return <p className="textOverflow" >{data}</p>
                     }
@@ -331,7 +330,6 @@ export default function ManageBrandComponent() {
                     title: 'Mô tả',
                     dataIndex: 'Description',
                     key: 'description',
-                    ...this.getColumnSearchProps('Description'),
                     render: (data) => {
                         return <p className="textOverflow">{data}</p>
                     }

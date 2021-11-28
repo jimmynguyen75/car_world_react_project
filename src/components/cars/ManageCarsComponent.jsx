@@ -142,23 +142,10 @@ function ManageCarsComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -219,7 +206,6 @@ function ManageCarsComponent() {
                     title: "Hãng xe",
                     key: 'brand',
                     width: '16%',
-                    ...this.getColumnSearchProps('Brand'),
                     render: (brand) => {
                         return (
                             <Row>
@@ -253,7 +239,6 @@ function ManageCarsComponent() {
                     title: 'Ngày tạo',
                     key: 'date',
                     width: '12%',
-                    ...this.getColumnSearchProps('CreatedDate'),
                     render: (date) => {
                         return <div style={{ color: '#868686', fontWeight: 450 }}>{moment(date.CreatedDate).format('ll')}</div>
                     }

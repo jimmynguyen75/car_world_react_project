@@ -31,11 +31,11 @@ export default function CreateAccountModalComponent() {
         console.log(values)
     }
     form.setFieldsValue({
-        role: 1
+        role: 2
     })
     return (
         <div>
-            <Tooltip key="Id" title="Chỉ được tạo tài khoản dành cho quản trị và quản lý" color='#6F4C5B'>
+            <Tooltip key="Id" title="Chỉ được tạo tài khoản dành cho quản lý" color='#6F4C5B'>
                 <Button type="primary" onClick={showModal} shape="round" style={{ height: 36, marginBottom: 5 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2.5 }}>Tạo tài khoản</span></Button>
             </Tooltip>
             <Modal
