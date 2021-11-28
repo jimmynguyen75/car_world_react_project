@@ -197,8 +197,8 @@ export default function CheckAttendanceComponent() {
             render: (data) => {
                 return (
                     <Row gutter={15}>
-                        <Col span={6}><img alt="" style={{ height: 50, width: '100%', objectFit: 'cover' }} src={data.User.Image} /></Col>
-                        <Col span={18} style={{ display: 'flex', alignItems: 'center' }}><div>{data.User.FullName}</div></Col>
+                        <Col span={4} style={{ textAlign: 'center' }}><img alt="" style={{ height: 'auto', width: 'auto', maxHeight: '50px' }} src={data.User.Image} /></Col>
+                        <Col span={20} style={{ display: 'flex', alignItems: 'center' }}><div>{data.User.FullName}</div></Col>
                     </Row>
                 )
             }
