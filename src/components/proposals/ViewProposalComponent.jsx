@@ -30,8 +30,8 @@ export default function ViewProposalComponent({ record, recordImage }) {
                             <Col span={18}>
                                 <div className='viewEventText'>Người đề xuất</div>
                                 <Row>
-                                    <Avatar src={userId.Image}></Avatar>
-                                    <Space size="middle"><div style={{ fontWeight: '500', fontSize: 14, color: '#2A528A', marginLeft: 5 }}>{userId.FullName}</div></Space>
+                                    <Avatar src={record.User.Image}></Avatar>
+                                    <Space size="middle"><div style={{ fontWeight: '500', fontSize: 14, color: '#2A528A', marginLeft: 5 }}>{record.User.FullName}</div></Space>
                                 </Row>
                             </Col>
                             <Col span={6}>
