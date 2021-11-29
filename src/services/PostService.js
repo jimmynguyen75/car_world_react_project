@@ -1,5 +1,7 @@
 import axios from "axios";
 import authHeader from './AuthHeader'
+import moment from 'moment';
+import 'moment/locale/vi';
 const POST_API_URL = "https://carworld.cosplane.asia/api/post/"
 
 class PostService {
@@ -22,7 +24,7 @@ class PostService {
         return axios.get(POST_API_URL + "GetAllPosts", { headers: authHeader() })
     }
     getPostByMonth() {
-        return axios.get(POST_API_URL + "CountPostsByMonth?date=2021-10-23T07:51:08", { headers: authHeader() })
+        return axios.get(POST_API_URL + "CountPostsByMonth?date=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
 }
 

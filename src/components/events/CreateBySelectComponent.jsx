@@ -44,6 +44,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
     function onChangeDate(value, dateString) {
         const start = moment(dateString[0], 'HH:mm - DD/MM/yyyy').format("yyyy-MM-DDTHH:mm:ss")
         const end = moment(dateString[1], 'HH:mm - DD/MM/yyyy').format("yyyy-MM-DDTHH:mm:ss")
+        console.log("start: ", start)
         setS([moment(dateString[0], "HH:mm - DD/MM/yyyy"), moment(dateString[1], "HH:mm - DD/MM/yyyy")])
         form.setFieldsValue({
             startDate: start,
@@ -116,9 +117,15 @@ export default function CreateBySelectComponent({ record, recordImage }) {
     }
     //End -----------------------------
     //Effect -----------------------------
+    console.log("s: ", s)
+    console.log("date: ", moment().format("yyyy-MM-DDTHH:mm:ss") > record.StartDate ? null : false)
+
     useEffect(() => {
         setR([moment(record.StartRegister, "yyyy-MM-DDTHH:mm:ss"), moment(record.EndRegister, "yyyy-MM-DDTHH:mm:ss")])
-        setS([moment(record.StartDate, "yyyy-MM-DDTHH:mm:ss"), moment(record.EndDate, "yyyy-MM-DDTHH:mm:ss")])
+        setS([
+            (moment(record.StartDate, "yyyy-MM-DDTHH:mm:ss") > moment().format("yyyy-MM-DDTHH:mm:ss") ? moment(record.StartDate, "yyyy-MM-DDTHH:mm:ss") : null),
+            (moment(record.EndDate, "yyyy-MM-DDTHH:mm:ss") > moment().format("yyyy-MM-DDTHH:mm:ss") ? moment(record.EndDate, "yyyy-MM-DDTHH:mm:ss") : null)
+        ])
         form.setFieldsValue({
             startRegister: record.StartRegister,
             endRegister: record.EndRegister,
@@ -134,22 +141,20 @@ export default function CreateBySelectComponent({ record, recordImage }) {
             title: record.Title,
             description: record.Description,
             venue: record.Venue,
-            proposalId: record.Id,
+            proposalId: null,
             modifiedBy: null,
             createdBy: AccountService.getCurrentUser().Id,
             min: record.MinParticipants,
             max: record.MaxParticipants,
             createdDate: record.CreatedDate,
-            currentParticipants: record.CurrentParticipants,
+            type: 1
             //fake           
         })
     }, [form, record])
-    useEffect(() => {
-        form.setFieldsValue({
-            registerFAKE: (moment(r[0], "yyyy-MM-DDTHH:mm:ss")._isValid) === false ? null : r,
-            startFAKE: (moment(s[0], "yyyy-MM-DDTHH:mm:ss")._i) === "" ? null : s,
-        })
-    }, [r, s, form])
+    form.setFieldsValue({
+        registerFAKE: (moment(r[0], "yyyy-MM-DDTHH:mm:ss")._isValid) === false ? null : r,
+        startFAKE: (moment(s[0], "yyyy-MM-DDTHH:mm:ss")._i) === "" ? null : s,
+    })
     useEffect(() => {
         const stringUrl = urls.reduce((result, key) => {
             return `${result}${key}|`
@@ -169,16 +174,14 @@ export default function CreateBySelectComponent({ record, recordImage }) {
         EventService.createNewEvent(values)
             .then((result) => {
                 console.log(result);
-                setTimeout(() => {
-                    message.success("Cập nhật thành công")
-                }, 500)
+                message.success("Tạo sự kiện thành công")
                 setTimeout(() => {
                     window.location.href = '/su-kien'
-                }, 1000)
+                }, 500)
             })
             .catch((err) => {
                 console.log(err);
-                message.error('Cập nhật không thành công')
+                message.error('Tạo sự kiện không thành công')
             })
     }
     function disabledDateR(current) {
@@ -246,6 +249,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
             <Form onFinish={onFinish} layout="vertical" id="editEvent" form={form}>
+                <Form.Item hidden={true} name="type"><Input /></Form.Item>
                 <Form.Item hidden={true} name="image"><Input></Input></Form.Item>
                 <Form.Item hidden={true} name="createdBy"><Input /></Form.Item>
                 <Form.Item hidden={true} name="modifiedBy"><Input /></Form.Item>
@@ -256,7 +260,6 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                 <Form.Item hidden={true} name="endRegister"><Input /></Form.Item>
                 <Form.Item hidden={true} name="minParticipants"><Input /></Form.Item>
                 <Form.Item hidden={true} name="maxParticipants"><Input /></Form.Item>
-                <Form.Item hidden={true} name="currentParticipants"><Input /></Form.Item>
                 <Form.Item hidden={true} name="createdDate"><Input /></Form.Item>
                 <Form.Item label={<div><span style={{ color: 'red', fontFamily: 'SimSun, sans-serif' }}>*</span>&nbsp;Ảnh sự kiện</div>}>
                     <Row>

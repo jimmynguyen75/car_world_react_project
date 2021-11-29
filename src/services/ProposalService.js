@@ -4,7 +4,7 @@ import moment from 'moment';
 import 'moment/locale/vi';
 const PROPOSAL_API_URL = "https://carworld.cosplane.asia/api/proposal/"
 
-class ProposalService {
+class ProposalService { 
     getAllProposals() {
         return axios.get(PROPOSAL_API_URL + "GetAllProposal", { headers: authHeader() })
     }

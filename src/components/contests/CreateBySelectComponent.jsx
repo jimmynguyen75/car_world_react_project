@@ -1,4 +1,4 @@
-    import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { Col, ConfigProvider, DatePicker, Form, Image, Input, message, Modal, Row, Tooltip, Upload } from "antd";
 import locale from 'antd/es/locale-provider/fr_FR';
 import moment from 'moment';
@@ -120,7 +120,10 @@ export default function CreateBySelectComponent({ record, recordImage }) {
     //Effect -----------------------------
     useEffect(() => {
         setR([moment(record.StartRegister, "yyyy-MM-DDTHH:mm:ss"), moment(record.EndRegister, "yyyy-MM-DDTHH:mm:ss")])
-        setS([moment(record.StartDate, "yyyy-MM-DDTHH:mm:ss"), moment(record.EndDate, "yyyy-MM-DDTHH:mm:ss")])
+        setS([
+            (moment(record.StartDate, "yyyy-MM-DDTHH:mm:ss") > moment().format("yyyy-MM-DDTHH:mm:ss") ? moment(record.StartDate, "yyyy-MM-DDTHH:mm:ss") : null),
+            (moment(record.EndDate, "yyyy-MM-DDTHH:mm:ss") > moment().format("yyyy-MM-DDTHH:mm:ss") ? moment(record.EndDate, "yyyy-MM-DDTHH:mm:ss") : null)
+        ])
         form.setFieldsValue({
             startRegister: record.StartRegister,
             endRegister: record.EndRegister,
@@ -136,13 +139,13 @@ export default function CreateBySelectComponent({ record, recordImage }) {
             title: record.Title,
             description: record.Description,
             venue: record.Venue,
-            proposalId: record.Id,
+            proposalId: null,
             modifiedBy: null,
             createdBy: AccountService.getCurrentUser().Id,
             min: record.MinParticipants,
             max: record.MaxParticipants,
             createdDate: record.CreatedDate,
-            currentParticipants: record.CurrentParticipants,
+            type: 2
             //fake           
         })
     }, [form, record])
@@ -171,16 +174,14 @@ export default function CreateBySelectComponent({ record, recordImage }) {
         ContestService.createNewContest(values)
             .then((result) => {
                 console.log(result);
-                setTimeout(() => {
-                    message.success("Cập nhật thành công")
-                }, 500)
+                message.success("Tạo cuộc thi thành công")
                 setTimeout(() => {
                     window.location.href = '/cuoc-thi'
                 }, 1000)
             })
             .catch((err) => {
                 console.log(err);
-                message.error('Cập nhật không thành công')
+                message.error('Tạo cuộc thi không thành công')
             })
     }
     function disabledDateR(current) {
@@ -255,6 +256,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
             <Form onFinish={onFinish} layout="vertical" id="editEvent" form={form}>
+                <Form.Item hidden={true} name="type"><Input /></Form.Item>
                 <Form.Item hidden={true} name="image"><Input></Input></Form.Item>
                 <Form.Item hidden={true} name="createdBy"><Input /></Form.Item>
                 <Form.Item hidden={true} name="modifiedBy"><Input /></Form.Item>
@@ -265,7 +267,6 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                 <Form.Item hidden={true} name="endRegister"><Input /></Form.Item>
                 <Form.Item hidden={true} name="minParticipants"><Input /></Form.Item>
                 <Form.Item hidden={true} name="maxParticipants"><Input /></Form.Item>
-                <Form.Item hidden={true} name="currentParticipants"><Input /></Form.Item>
                 <Form.Item hidden={true} name="createdDate"><Input /></Form.Item>
                 <Form.Item hidden={true} name="fee" ><Input></Input> </Form.Item>
                 <Form.Item label={<div><span style={{ color: 'red', fontFamily: 'SimSun, sans-serif' }}>*</span>&nbsp;Ảnh cuộc thi</div>}>
