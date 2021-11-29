@@ -529,7 +529,6 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Bán kính quay xe" name="turningRadius" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
-                                decimalScale={0}
                                 allowNegative={false}
                                 maxLength={9}
                                 placeholder="Nhập bán kính quay (m)"
@@ -552,10 +551,9 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Tiêu hao nhiên liệu" name="nhien" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
-                                decimalScale={0}
                                 allowNegative={false}
                                 onChange={onFuelConsumption}
-                                maxLength={14}
+                                maxLength={16}
                                 placeholder="Nhập mức tiêu hao nhiên liệu (lít/100km)"
                                 className="currency"
                                 displayType="input"
@@ -579,7 +577,6 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Trọng lượng khô" name="tr" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
-                                decimalScale={0}
                                 allowNegative={false}
                                 onChange={onKerbWeight}
                                 maxLength={10}
@@ -603,10 +600,9 @@ export default function CreateCarBodyModalComponent() {
                     <Col span={6}>
                         <Form.Item label="Dung tích bình xăng" name="dung" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                             <NumberFormat
-                                decimalScale={0}
                                 allowNegative={false}
                                 onChange={onFuelCapacity}
-                                maxLength={7}
+                                maxLength={9}
                                 placeholder="Nhập dung tích bình xăng (lít)"
                                 className="currency"
                                 displayType="input"
