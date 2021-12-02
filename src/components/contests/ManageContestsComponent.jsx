@@ -1246,7 +1246,7 @@ function ManageContestsComponent() {
                 {/* Modal check attendence */}
                 <Modal
                     destroyOnClose={true}
-                    title="Điểm danh sự kiện"
+                    title="Điểm danh cuộc thi"
                     visible={visibleCheck}
                     onCancel={handleCancel}
                     width={800}
