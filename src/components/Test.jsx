@@ -188,28 +188,28 @@
 //         </div>
 //     )
 // }
-import React from 'react';
+// import React, { useEffect, useState }from 'react';
 // import { getToken } from '../services/ImageFirebase'
 
-export default function Test() {
-    // const [isTokenFound, setTokenFound] = useState(false);
-    // console.log("Token found", isTokenFound);
-    // useEffect(() => {
-    //     let data;
-    //     async function tokenFunc() {
-    //         data = await getToken(setTokenFound);
-    //         if (data) {
-    //             console.log("Token is", data);
-    //         }
-    //         return data;
-    //     }
-    //     tokenFunc(); 
-    // }, [setTokenFound]);
-    return (
-        <div>
-            ok
-        </div>
-    )
-}
+// export default function Test() {
+//     const [isTokenFound, setTokenFound] = useState(false);
+//     console.log("Token found", isTokenFound);
+//     useEffect(() => {
+//         let data;
+//         async function tokenFunc() {
+//             data = await getToken(setTokenFound);
+//             if (data) {
+//                 console.log("Token is", data);
+//             }
+//             return data;
+//         }
+//         tokenFunc();
+//     }, [setTokenFound]);
+//     return (
+//         <div>
+//             ok
+//         </div>
+//     )
+// }
 
 

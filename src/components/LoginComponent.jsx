@@ -1,27 +1,12 @@
 import { message } from 'antd';
-import React, { useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import login from '../images/login.png';
 import AccountService from '../services/AccountService';
-import { getToken } from '../services/ImageFirebase'
 
 function LoginComponent() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [incorrect, setIncorrect] = useState("none");
-    const [isTokenFound, setTokenFound] = useState(false);
-    const [token, setToken] = useState("")
-    console.log("Token found", isTokenFound);
-    useEffect(() => {
-        let data;
-        async function tokenFunc() {
-            data = await getToken(setTokenFound);
-            if (data) {
-                setToken(data)
-            }
-            return data;
-        }
-        tokenFunc(); 
-    }, [setTokenFound]);
     const onChangeUsername = (e) => {
         const username = e.target.value;
         setUsername(username);
@@ -33,7 +18,7 @@ function LoginComponent() {
     const handleLogin = (e) => {
         e.preventDefault();
         message.loading({ content: 'Đang tải...', duration: 2 });
-        AccountService.login(username, password, token)
+        AccountService.login(username, password)
             .then(() => {
                 message.destroy()
                 if (AccountService.getCurrentUser().RoleId === 1) {
