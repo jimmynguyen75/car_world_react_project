@@ -8,7 +8,6 @@ import ManagerDashboardComponent from './components/manager/ManagerDashboardComp
 import CheckLogin from './components/notFound/CheckLogin';
 import NotFound404Component from './components/notFound/NotFound404Component';
 import ReactNotificationComponent from './components/ReactNotificationComponent';
-import Test from './components/Test';
 import AccountService from './services/AccountService';
 import { onMessageListener } from './services/ImageFirebase';
 import './styles/login.css';
@@ -52,25 +51,28 @@ function App() {
         )
       } if (role.RoleId === 2) {
         return (
-          <Router>
-            <Switch>
-              {/* Manager */}
-              <Route path="/" exact component={ManagerDashboardComponent}></Route>
-              <Route path="/:title" exact component={ManagerDashboardComponent}></Route>
-              <Route path="/de-xuat" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
-              <Route path="/phan-hoi" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
-              <Route path="/bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
-              <Route path="/su-kien" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
-              <Route path="/cuoc-thi" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
-              <Route path="/giai-thuong" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
-              <Route path="/tao-bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
-              <Route path="/sua-bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
-              <Route path="/thong-tin-ca-nhan" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
-              <Route path="/test" exact component={ManagerDashboardComponent}></Route>
-              {/* Not Found - Must End */}
-              <Route path="*" exact component={NotFound404Component}></Route>
-            </Switch>
-          </Router>
+          <>
+            <Router>
+              <Switch>
+                {/* Manager */}
+                <Route path="/" exact component={ManagerDashboardComponent}></Route>
+                <Route path="/:title" exact component={ManagerDashboardComponent}></Route>
+                <Route path="/de-xuat" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
+                <Route path="/phan-hoi" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
+                <Route path="/bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
+                <Route path="/su-kien" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
+                <Route path="/cuoc-thi" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
+                <Route path="/giai-thuong" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
+                <Route path="/tao-bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
+                <Route path="/sua-bai-dang" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
+                <Route path="/thong-tin-ca-nhan" render={() => { return role ? <ManagerDashboardComponent /> : <Redirect to="/" /> }}></Route>
+                <Route path="/test" exact component={ManagerDashboardComponent}></Route>
+                {/* Not Found - Must End */}
+                <Route path="*" exact component={NotFound404Component}></Route>
+              </Switch>
+            </Router>
+            {show && (notification.title !== "" && (<ReactNotificationComponent title={notification.title} body={notification.body} />))}
+          </>
         )
       }
       <Route path="*" exact component={NotFound404Component}></Route>
@@ -87,9 +89,8 @@ function App() {
   }
   return (
     <>
-      <WebRouter />   
-      {show && (notification.title !== "" && (<ReactNotificationComponent title={notification.title} body={notification.body} />))}
-      <Test />
+      <WebRouter />
+      {/* <Test /> */}
       {/* <Fader text="Hellu"></Fader> */}
     </>
   );

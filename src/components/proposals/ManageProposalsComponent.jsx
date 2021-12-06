@@ -235,7 +235,7 @@ export default function ManageProposalsComponent() {
                 render: (data) => {
                     return (
                         <Row>
-                            <Col span={3} style={{ textAlign: 'center' }}> <div> <img alt="" style={{ height: 'auto', width: 'auto', margin: 'auto', maxWidth: '100%', maxHeight: '100%' }} src={data.Image} /></div></Col>
+                            <Col span={3} style={{ textAlign: 'center' }}> <div> <img alt="" style={{ height: 'auto', width: 'auto', margin: 'auto', maxWidth: '100%',  maxHeight: '50px' }} src={data.Image} /></div></Col>
                             <Col span={21} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15 }}>{data.Title}</div></Col>
                         </Row>
                     )
@@ -475,7 +475,7 @@ export default function ManageProposalsComponent() {
             {/* View Modal */}
             <Modal
                 destroyOnClose={true}
-                title={"Chi tiết sự kiện"}
+                title={"Chi tiết đề xuất"}
                 visible={visibleView}
                 onCancel={handleCancel}
                 width={1000}
