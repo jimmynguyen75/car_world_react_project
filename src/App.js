@@ -12,11 +12,12 @@ import Test from './components/Test';
 import AccountService from './services/AccountService';
 import { onMessageListener } from './services/ImageFirebase';
 import './styles/login.css';
+
 function App() {
   //start
   const [show, setShow] = useState(false);
   const [notification, setNotification] = useState({ title: "", body: "" })
-  // console.log("show:", show)
+  console.log("show:", show)
   // console.log("notification:", notification)
   onMessageListener()
     .then((payload) => {
@@ -86,8 +87,8 @@ function App() {
   }
   return (
     <>
-      <WebRouter />
-      {show && (notification.title !== "" && (<ReactNotificationComponent title={notification.title} body={notification.body} />)) }
+      <WebRouter />   
+      {show && (notification.title !== "" && (<ReactNotificationComponent title={notification.title} body={notification.body} />))}
       <Test />
       {/* <Fader text="Hellu"></Fader> */}
     </>

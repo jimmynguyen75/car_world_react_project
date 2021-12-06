@@ -47,11 +47,9 @@ export default function ManagerBodyDashboardComponent() {
         }
         fetchData()
     }, [])
-    console.log("dagt: ", data.post)
     const columnsE = [
         {
             title: 'Tên sự kiện',
-            key: 'name',
             render: (data) => {
                 return (
                     <Row>
@@ -63,7 +61,6 @@ export default function ManagerBodyDashboardComponent() {
         },
         {
             title: 'Ngày diễn ra',
-            key: 'date',
             width: '36%',
             render: (data) => {
                 return (
@@ -79,7 +76,6 @@ export default function ManagerBodyDashboardComponent() {
         },
         {
             title: 'Đã tham gia',
-            key: 'join',
             sorter: (a, b) => a.CurrentParticipants - b.CurrentParticipants,
             sortDirections: ['descend', 'ascend'],
             render: (data) => {
@@ -116,7 +112,6 @@ export default function ManagerBodyDashboardComponent() {
         {
             title: 'Tác vụ',
             width: '10%',
-            key: 'action',
             render: (record) => {
                 return (
                     <div style={{ textAlign: 'center', fontSize: '0.6rem' }}>
@@ -137,7 +132,6 @@ export default function ManagerBodyDashboardComponent() {
     const columnsC = [
         {
             title: 'Tên cuộc thi',
-            key: 'name',
             render: (data) => {
                 return (
                     <Row>
@@ -149,7 +143,6 @@ export default function ManagerBodyDashboardComponent() {
         },
         {
             title: 'Ngày diễn ra',
-            key: 'date',
             width: '36%',
             render: (data) => {
                 return (
@@ -165,7 +158,6 @@ export default function ManagerBodyDashboardComponent() {
         },
         {
             title: 'Đã tham gia',
-            key: 'join',
             sorter: (a, b) => a.CurrentParticipants - b.CurrentParticipants,
             sortDirections: ['descend', 'ascend'],
             render: (data) => {
@@ -202,7 +194,6 @@ export default function ManagerBodyDashboardComponent() {
         {
             title: 'Tác vụ',
             width: '10%',
-            key: 'action',
             render: (record) => {
                 return (
                     <div style={{ textAlign: 'center', fontSize: '0.6rem' }}>
@@ -314,6 +305,7 @@ export default function ManagerBodyDashboardComponent() {
                 <Row gutter={15}>
                     <Col span={12}>
                         <Table
+                            rowKey="IdE"
                             columns={columnsE}
                             dataSource={data.events}
                             pagination={{
@@ -331,6 +323,7 @@ export default function ManagerBodyDashboardComponent() {
                     </Col>
                     <Col span={12}>
                         <Table
+                            rowKey="IdC"
                             columns={columnsC}
                             dataSource={data.contests}
                             pagination={{

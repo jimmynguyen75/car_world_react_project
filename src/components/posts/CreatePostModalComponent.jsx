@@ -235,7 +235,7 @@ function CreatePostModalComponent() {
                             label={<div style={{ letterSpacing: '1px' }}>Ảnh đại diện</div>}
                             name="featuredImage"
                             getValueFromEvent={fearturedImage}
-                            rules={[{ required: true, message: "Đang tải..." }]}
+                            rules={[{ required: true, message: "" }]}
                         >
                             <Upload
                                 listType="picture-card"

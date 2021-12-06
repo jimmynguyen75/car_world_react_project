@@ -105,11 +105,11 @@ export default function CreateCarBodyModalComponent() {
                 }, 500)
                 setTimeout(() => {
                     window.location.href = '/xe'
-                }, 1500)
+                }, 1000)
             })
             .catch(err => {
                 console.log(err)
-                message.error("Lỗi server hoặc tên không được trùng nhau!")
+                message.error("Tạo xe không thành công")
             });
     }
     const handleCancel = () => setVisible(false);
@@ -172,7 +172,7 @@ export default function CreateCarBodyModalComponent() {
     const uploadButton = (
         <div>
             <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
+            <div style={{ marginTop: 8 }}>Tải ảnh</div>
         </div>
     );
     useEffect(() => {
@@ -247,7 +247,7 @@ export default function CreateCarBodyModalComponent() {
                 <Form.Item
                     name="image" label="Ảnh xe"
                     getValueFromEvent={normFile}
-                    rules={[{ required: true, message: "Đang tải..." }]}
+                    rules={[{ required: true, message: "" }]}
                 >
                     <Upload
                         name="image"

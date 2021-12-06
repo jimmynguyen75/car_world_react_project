@@ -83,7 +83,7 @@ export default function CreateContestBodyModalComponent() {
     const uploadButton = (
         <div>
             <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
+            <div style={{ marginTop: 8 }}>Tải ảnh</div>
         </div>
     );
     function onChangeDate(value, dateString) {
@@ -230,7 +230,7 @@ export default function CreateContestBodyModalComponent() {
                 <Form.Item hidden={true} name="fee" ><Input></Input> </Form.Item>
                 <Form.Item label="Ảnh cuộc thi" name="image"
                     getValueFromEvent={normFile}
-                    rules={[{ required: true, message: "Đảng tải..." }]}>
+                    rules={[{ required: true, message: "" }]}>
                     <Upload
                         name="image"
                         listType="picture-card"

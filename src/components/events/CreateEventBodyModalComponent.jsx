@@ -81,7 +81,7 @@ export default function CreateEventBodyModalComponent() {
     const uploadButton = (
         <div>
             <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
+            <div style={{ marginTop: 8 }}>Tải ảnh</div>
         </div>
     );
     function onChangeDate(value, dateString) {
@@ -221,7 +221,7 @@ export default function CreateEventBodyModalComponent() {
 
                 <Form.Item label="Ảnh sự kiện" name="image"
                     getValueFromEvent={normFile}
-                    rules={[{ required: true, message: "Đảng tải..." }]}>
+                    rules={[{ required: true, message: "" }]}>
                     <Upload
                         name="image"
                         listType="picture-card"

@@ -24,7 +24,7 @@ export default function CreateAccessoryBodyModalComponent() {
     const uploadButton = (
         <div>
             <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
+            <div style={{ marginTop: 8 }}>Tải ảnh</div>
         </div>
     );
     const onFinish = (values) => {
@@ -40,7 +40,7 @@ export default function CreateAccessoryBodyModalComponent() {
                 }, 1500)
             })
             .catch((err) => {
-                message.error("Lỗi server hoặc tên không được trùng nhau!")
+                message.error("Tạo không thành công")
                 console.log(err)
             });
     }
@@ -144,7 +144,7 @@ export default function CreateAccessoryBodyModalComponent() {
                 <Form.Item
                     name="image" label="Ảnh phụ kiện"
                     getValueFromEvent={normFile}
-                    rules={[{ required: true, message: "Đang tải..." }]}
+                    rules={[{ required: true, message: "" }]}
                 >
                     <Upload
                         name="image"
@@ -170,7 +170,7 @@ export default function CreateAccessoryBodyModalComponent() {
 
                 <Row gutter={15}>
                     <Col span={12}>
-                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068'}}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
+                        <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
                                 decimalScale={0}
                                 allowNegative={false}
@@ -205,12 +205,16 @@ export default function CreateAccessoryBodyModalComponent() {
                                 }
                             >
                                 {brands.map(brands => (
-                                    <Option key={brands.Id} value={brands.Name}>{brands.Name}</Option>
+                                    <Option key={brands.Id} value={brands.Name}>
+                                        {brands.Name}
+                                    </Option>
                                 ))}
                             </Select>
                         </Form.Item>
                     </Col>
                 </Row>
+                {/* <Avatar alt="" style={{ width: 'auto', height: 'auto', maxHeight: '25px', maxWidth: '25px' }} src={brands.Image}></Avatar> & nbsp;&nbsp; */}
+
                 <Form.Item label="Mô tả chi tiết" name="description" rules={[{ required: true, message: "Mô tả phụ kiện không được bỏ trống" }]}>
                     <Input.TextArea
                         size="large"

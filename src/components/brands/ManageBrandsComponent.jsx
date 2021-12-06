@@ -348,6 +348,7 @@ export default function ManageBrandComponent() {
                 }
             ];
             return <Table
+                rowKey="Id"
                 onRow={(record) => {
                     return {
                         onClick: () => {
