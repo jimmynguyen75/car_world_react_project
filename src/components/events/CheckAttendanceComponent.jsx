@@ -14,7 +14,7 @@ export default function CheckAttendanceComponent() {
         EventService.getUserJoined(eventId).then((result) => {
             setRecord(result.data)
         })
-            .catch((error) => console.log(error))
+            .catch((error) => console.log(error)) 
     }, [eventId])
     useEffect(() => {
         EventService.getOngoingEvents().then((response) => { setEvents(response.data) }).catch((error) => console.log(error))
@@ -177,12 +177,10 @@ export default function CheckAttendanceComponent() {
                 EventService.checkUser(userId.type, userId)
             ))])
                 .then(axios.spread(() => {
-                    setTimeout(() => {
                         message.success("Điểm danh thành công")
-                    }, 500)
                     setTimeout(() => {
                         window.location.href = '/su-kien'
-                    }, 1000)
+                    }, 500)
                 }))
                 .catch(() => { message.error("Điểm danh không thành công") })
         )

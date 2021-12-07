@@ -5,6 +5,7 @@ import 'moment/locale/vi';
 
 const CONTEST_API_URL = "https://carworld.cosplane.asia/api/contestEvent/"
 const USERCONTEST_API_URL = "https://carworld.cosplane.asia/api/ceRegister/"
+const CONTEST_PRIZE = "https://carworld.cosplane.asia/api/contestPrize/"
 
 class ContestService {
     getAllContests() {
@@ -37,12 +38,16 @@ class ContestService {
     getUserJoined(id) {
         return axios.get(USERCONTEST_API_URL + "GetUsersInCE?contestEventId=" + id, { headers: authHeader() })
     }
-    checkUser(user) {
-        return axios.put(USERCONTEST_API_URL + "CheckInUser?status=", user, { headers: authHeader() })
+    checkUser(status, user) {
+        return axios.put(USERCONTEST_API_URL + "CheckInUser?status=" + status, user, { headers: authHeader() })
     }
     //beforeFinished
     getAllContestPrize() {
         return axios.get(CONTEST_API_URL + "GetAllContestPrizes?now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
+    }
+    ////
+    getCheckedAttendance(id) {
+        return axios.get(CONTEST_PRIZE + "GetJoinedUsers?contestEventId=" + id, { headers: authHeader() })
     }
 }
 

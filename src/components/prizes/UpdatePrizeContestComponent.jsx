@@ -20,7 +20,7 @@ export default function ViewEventComponent({ record, recordImage }) {
     const [form] = Form.useForm();
     useEffect(() => {
         const result = []
-        ContestService.getUserJoined(record.Id)
+        ContestService.getCheckedAttendance(record.Id)
             .then((user) => {
                 user.data.forEach((data) => {
                     result.push(data.User)

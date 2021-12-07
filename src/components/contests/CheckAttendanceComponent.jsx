@@ -177,12 +177,10 @@ export default function CheckAttendanceComponent() {
                 ContestService.checkUser(userId.type, userId)
             ))])
                 .then(axios.spread(() => {
-                    setTimeout(() => {
                         message.success("Điểm danh thành công")
-                    }, 500)
                     setTimeout(() => {
-                        window.location.href = '/su-kien'
-                    }, 1000)
+                        window.location.href = '/cuoc-thi'
+                    }, 500)
                 }))
                 .catch(() => { message.error("Điểm danh không thành công") })
         )
