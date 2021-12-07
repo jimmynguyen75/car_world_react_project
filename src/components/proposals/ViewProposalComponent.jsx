@@ -43,7 +43,7 @@ export default function ViewProposalComponent({ record, recordImage }) {
                         </Row>
                         <div className='viewEventText' style={{ margin: '18px 0px 7px 0px' }}>Tên sự kiện</div>
                         <div style={{ fontWeight: '500', fontSize: 16, color: '#2A528A' }}>{record.Title}</div>
-                        <div style={{ marginTop: 18, marginBottom: 7, fontWeight: '450', fontSize: 14, letterSpacing: 1 }}>Thời gian <span style={{ color: '#BB5A5A', fontWeight: 500 }}>ĐĂNG KÝ</span></div>
+                        <div style={{ marginTop: 18, marginBottom: 7, fontWeight: '450', fontSize: 14, letterSpacing: 1 }}>Thời gian <span style={{ color: '#BB5A5A', fontWeight: 500 }}>DIỄN RA DỰ KIẾN</span></div>
                         <Descriptions
                             bordered
                             column={1}
@@ -51,10 +51,10 @@ export default function ViewProposalComponent({ record, recordImage }) {
                             size="small"
                         >
                             <Descriptions.Item label="Bắt đầu">
-                                <i class="far fa-calendar-check" style={{ color: '#BB5A5A' }}></i>&nbsp;&nbsp;{moment(record.StartRegister).format('L')}
+                                <i class="far fa-calendar-check" style={{ color: '#BB5A5A' }}></i>&nbsp;&nbsp;{moment(record.StartDate).format('L')}
                             </Descriptions.Item>
                             <Descriptions.Item label="Kết thúc">
-                                <i class="far fa-calendar-check" style={{ color: '#BB5A5A' }}></i>&nbsp;&nbsp;{moment(record.EndRegister).format('L')}
+                                <i class="far fa-calendar-check" style={{ color: '#BB5A5A' }}></i>&nbsp;&nbsp;{moment(record.EndDate).format('L')}
                             </Descriptions.Item>
                         </Descriptions>
 

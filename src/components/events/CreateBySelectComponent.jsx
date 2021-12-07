@@ -123,8 +123,8 @@ export default function CreateBySelectComponent({ record, recordImage }) {
     useEffect(() => {
         setR([moment(record.StartRegister, "yyyy-MM-DDTHH:mm:ss"), moment(record.EndRegister, "yyyy-MM-DDTHH:mm:ss")])
         setS([
-            (moment(record.StartDate, "yyyy-MM-DDTHH:mm:ss") > moment().format("yyyy-MM-DDTHH:mm:ss") ? moment(record.StartDate, "yyyy-MM-DDTHH:mm:ss") : null),
-            (moment(record.EndDate, "yyyy-MM-DDTHH:mm:ss") > moment().format("yyyy-MM-DDTHH:mm:ss") ? moment(record.EndDate, "yyyy-MM-DDTHH:mm:ss") : null)
+            (moment(record.StartDate, "yyyy-MM-DDTHH:mm:ss")._i > moment().format("yyyy-MM-DDTHH:mm:ss") ? moment(record.StartDate, "yyyy-MM-DDTHH:mm:ss") : null),
+            (moment(record.EndDate, "yyyy-MM-DDTHH:mm:ss")._i > moment().format("yyyy-MM-DDTHH:mm:ss") ? moment(record.EndDate, "yyyy-MM-DDTHH:mm:ss") : null)
         ])
         form.setFieldsValue({
             startRegister: record.StartRegister,
@@ -133,6 +133,8 @@ export default function CreateBySelectComponent({ record, recordImage }) {
             endDate: record.EndDate,
         })
     }, [record, form])
+    console.log("start 1: ", moment(record.StartDate, "yyyy-MM-DDTHH:mm:ss")._i)
+    console.log("start 2: ", moment().format("yyyy-MM-DDTHH:mm:ss"))
     form.setFieldsValue({
         image: images,
     })
