@@ -289,7 +289,7 @@ export default function ViewEventComponent({ record, recordImage }) {
                 <br />
                 <Row >
                     <Col span={24}>
-                        <div className='viewEventText'>Giải thưởng cuộc thi</div>
+                        {prizes.length !== 0 && <div className='viewEventText'>Giải thưởng cuộc thi</div>}
                         {prizes.map((prize) => (
                             <Descriptions
                                 bordered

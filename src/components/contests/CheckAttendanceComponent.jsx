@@ -177,7 +177,7 @@ export default function CheckAttendanceComponent() {
                 ContestService.checkUser(userId.type, userId)
             ))])
                 .then(axios.spread(() => {
-                        message.success("Điểm danh thành công")
+                    message.success("Điểm danh thành công")
                     setTimeout(() => {
                         window.location.href = '/cuoc-thi'
                     }, 500)
@@ -284,7 +284,9 @@ export default function CheckAttendanceComponent() {
                     <Check />
                 </Spin>
             </Modal>
-            <App />
+            <Spin spinning={events === null ? true : false}>
+                <App />
+            </Spin>
         </>
     )
 }

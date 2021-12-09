@@ -40,7 +40,7 @@ function ViewDetailAccessoryComponent({ setDataToChild, setDataToChildFixingImag
                         />
                     </div>
                     <div style={{ marginTop: 10, fontSize: 14 }}><Avatar size="small" src={setDataToChild.Brand.Image} /><span style={{ marginLeft: 5 }}>{setDataToChild.Brand.Name}</span></div>
-                    <div style={{ marginTop: 10, fontSize: 16 }}>Description: {setDataToChild.Description}</div>
+                    <div style={{ marginTop: 10, fontSize: 16 }}>Mô tả: {setDataToChild.Description}</div>
                 </Col>
             </Row>
 

@@ -14,7 +14,7 @@ export default function CheckAttendanceComponent() {
         EventService.getUserJoined(eventId).then((result) => {
             setRecord(result.data)
         })
-            .catch((error) => console.log(error)) 
+            .catch((error) => console.log(error))
     }, [eventId])
     useEffect(() => {
         EventService.getOngoingEvents().then((response) => { setEvents(response.data) }).catch((error) => console.log(error))
@@ -177,7 +177,7 @@ export default function CheckAttendanceComponent() {
                 EventService.checkUser(userId.type, userId)
             ))])
                 .then(axios.spread(() => {
-                        message.success("Điểm danh thành công")
+                    message.success("Điểm danh thành công")
                     setTimeout(() => {
                         window.location.href = '/su-kien'
                     }, 500)
@@ -195,7 +195,7 @@ export default function CheckAttendanceComponent() {
             render: (data) => {
                 return (
                     <Row gutter={15}>
-                        <Col span={4} style={{ textAlign: 'center' }}><img alt="" style={{ height: 'auto', width: 'auto', maxHeight: '50px'}} src={data.User.Image} /></Col>
+                        <Col span={4} style={{ textAlign: 'center' }}><img alt="" style={{ height: 'auto', width: 'auto', maxHeight: '50px' }} src={data.User.Image} /></Col>
                         <Col span={20} style={{ display: 'flex', alignItems: 'center' }}><div>{data.User.FullName}</div></Col>
                     </Row>
                 )
@@ -284,7 +284,9 @@ export default function CheckAttendanceComponent() {
                     <Check />
                 </Spin>
             </Modal>
-            <App />
+            <Spin spinning={events === null ? true : false}>
+                <App />
+            </Spin>
         </>
     )
 }
