@@ -1,6 +1,6 @@
 .body123 {
     background-color: white;
-   // height: 100vh;
+    // height: 100vh;
     color: black;
 }
 
@@ -151,3 +151,19 @@ Preserve the relative scale, though. */
     border: none !important;
 }
 
+/* Uploading... text*/
+.ant-upload-list-item-info>span>div[class="ant-upload-list-item-thumbnail"] {
+    visibility: hidden;
+}
+
+
+/* you need to customise top and left css attribute */
+.ant-upload-list-item-info>span>div[class="ant-upload-list-item-thumbnail"]:after {
+    content: "Đang tải...";
+    visibility: visible;
+    display: block;
+    position: absolute;
+    padding: 1px;
+    top: 10px;
+    left: 10px;
+}

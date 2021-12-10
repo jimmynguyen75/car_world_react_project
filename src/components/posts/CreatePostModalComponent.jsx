@@ -62,7 +62,7 @@ function CreatePostModalComponent() {
     const uploadButton = (
         <div>
             <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
+            <div style={{ marginTop: 8 }}>Tải ảnh</div>
         </div>
     );
     //end Featured Image

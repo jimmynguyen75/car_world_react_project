@@ -350,7 +350,7 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                     </Col>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>
-                            <Form.Item name="startFAKE" label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>cuộc thi</span> và kết thúc</div>} rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
+                            <Form.Item name="startFAKE" label={<div>Ngày bắt đầu <span style={{ color: 'green' }}>CUỘC THI</span> và kết thúc</div>} rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                                 <RangePicker
                                     //value={(moment(s[0], "yyyy-MM-DDTHH:mm:ss")._i) === "" ? null : s}
                                     style={{ width: '100%' }}

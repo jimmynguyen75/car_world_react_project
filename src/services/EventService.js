@@ -27,8 +27,8 @@ class EventService {
     getCanceledEvent() {
         return axios.get(EVENT_API_URL + "GetCanceledCEs?type=1", { headers: authHeader() })
     }
-    cancelEvent(id) {
-        return axios.put(EVENT_API_URL + "CancelCE?id=" + id, { headers: authHeader() })
+    cancelEvent(id, reason) {
+        return axios.put(EVENT_API_URL + "CancelCE?id=" + id + "&reason=" + reason, { headers: authHeader() })
     }
     getEventByMonth() {
         return axios.get(EVENT_API_URL + "CountCEsByMonth?type=1&date=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })

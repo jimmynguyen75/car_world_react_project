@@ -261,7 +261,7 @@ export default function CreateContestBodyModalComponent() {
                                 allowNegative={false}
                                 decimalScale={0}
                                 onChange={onChangePrice}
-                                placeholder="Nhập giá phụ kiện (vnđ)"
+                                placeholder="Nhập lệ phí (vnđ)"
                                 className="currency"
                                 displayType="input"
                                 type="primary"

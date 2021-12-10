@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CreateContestsModalComponent from './CreateContestsModalComponent';
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Input, Modal, Row, Tooltip, Space, Spin, Table, Tabs, Tag, message, Rate } from 'antd';
+import { Avatar, Button, Col, Input, Modal, Row, Tooltip, Space, Form, Spin, Table, Tabs, Tag, message, Rate } from 'antd';
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import CreateBySelectComponent from './CreateBySelectComponent';
@@ -14,6 +14,7 @@ import CheckAttendanceComponent from './CheckAttendanceComponent';
 import ProposalService from '../../services/ProposalService';
 function ManageContestsComponent() {
     const [contests, setContests] = useState(null)
+    const [form] = Form.useForm();
     const { TabPane } = Tabs;
     const imgPlacehoder = 'https://via.placeholder.com/120';
     const [modalConfirm, setModalConfirm] = useState(false);
@@ -79,21 +80,6 @@ function ManageContestsComponent() {
     };
     const handleCancelContest = (id) => {
         setLoadingButton(true);
-        ContestService.cancelEvent(id)
-            .then(() => {
-                setTimeout(() => {
-                    message.success("Hủy cuộc thi thành công")
-                }, 500)
-                setTimeout(() => {
-                    setLoadingButton(false);
-                }, 1000);
-                setTimeout(() => {
-                    window.location.href = '/su-kien'
-                }, 800)
-            })
-            .catch(() => {
-                message.error("Hủy cuộc thi không thành công")
-            })
     };
     //Effect
     // register
@@ -187,23 +173,10 @@ function ManageContestsComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -303,7 +276,7 @@ function ManageContestsComponent() {
                         const result = (Math.round(diff / 86400) / 1000).toFixed()
                         return (
                             <div>
-                                {result !== 0 ? result + ' ngày còn lại' : 'Sắp hết hạn'}
+                                {result !== '0' ? result + ' ngày còn lại' : 'Sắp hết hạn'}
                             </div>
                         )
                     }
@@ -396,23 +369,10 @@ function ManageContestsComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -585,23 +545,10 @@ function ManageContestsComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -755,23 +702,10 @@ function ManageContestsComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -936,23 +870,10 @@ function ManageContestsComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -993,7 +914,7 @@ function ManageContestsComponent() {
         render() {
             const columns = [
                 {
-                    title: 'Tên sự kiện',
+                    title: 'Tên cuộc thi',
                     key: 'name',
                     width: '30%',
                     ...this.getColumnSearchProps('Title'),
@@ -1134,6 +1055,43 @@ function ManageContestsComponent() {
             />
         )
     }
+    const onFinishCancelContent = (values) => {
+        ContestService.cancelContest(values.id, values.reason)
+            .then(() => {
+                message.success("Hủy cuộc thi thành công")
+                setTimeout(() => {
+                    setLoadingButton(false);
+                }, 200);
+                setTimeout(() => {
+                    window.location.href = '/cuoc-thi'
+                }, 500)
+            })
+            .catch(() => {
+                message.error("Hủy cuộc thi không thành công")
+            })
+    }
+    form.setFieldsValue({
+        id: cancelContestId !== null && cancelContestId.Id
+    })
+    const CancelContent = () => {
+        return (
+            <Form layout="vertical" form={form} onFinish={onFinishCancelContent} id="cancelContentC" style={{ marginTop: '-10px', marginBottom: '-20px' }}>
+                <div><span style={{ letterSpacing: 1, color: '#52524E' }}>Tên cuộc thi:</span> &nbsp;<span style={{ fontWeight: 500, fontSize: 15, letterSpacing: 1 }}>{cancelContestId !== null && cancelContestId.Title}</span></div>
+                <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Thông báo <span style={{ color: 'red' }}>HỦY</span> đến người đăng ký:</span></div>
+                <Form.Item hidden={true} name='id'>
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item name="reason" style={{ paddingTop: '5px' }}>
+                    <Input.TextArea
+                        placeholder="Nhập thông báo"
+                        showCount maxLength={200}
+                        spellCheck={false}
+                        autoSize={{ minRows: 3, maxRows: 10 }}
+                    />
+                </Form.Item>
+            </Form>
+        )
+    }
     return (
         <Spin size="large" spinning={contests === null ? true : false}>
             <div>
@@ -1237,11 +1195,12 @@ function ManageContestsComponent() {
                     onCancel={() => handleCancel()}
                     footer={[
                         <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                            <Button onClick={() => handleCancel()}>Không </Button>
-                            <Button loading={loadingButton} onClick={() => handleCancelContest(cancelContestId !== null && cancelContestId.Id)} type="primary">Có</Button>
+                            <Button onClick={() => handleCancel()}>Hủy </Button>
+                            <Button form="cancelContentC" loading={loadingButton} onClick={handleCancelContest} type="primary" key="submit" htmlType="submit">Xác nhận</Button>
                         </Row>
                     ]}
-                > <div>Bạn có muốn hủy "{cancelContestId !== null && cancelContestId.Title}" không?</div>
+                >
+                    <CancelContent />
                 </Modal>
                 {/* Modal check attendence */}
                 <Modal

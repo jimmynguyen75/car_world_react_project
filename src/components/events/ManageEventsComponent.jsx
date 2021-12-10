@@ -1,5 +1,5 @@
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Input, Modal, Row, Space, Spin, Table, Tabs, Tag, message, Rate, Tooltip } from 'antd';
+import { Avatar, Button, Col, Input, Modal, Row, Space, Spin, Table, Tabs, Tag, message, Rate, Tooltip, Form } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
@@ -14,6 +14,7 @@ import EditEventComponent from './EditEventComponent';
 import ViewEventComponent from './ViewEventComponent';
 function ManageEventsComponent() {
     const { TabPane } = Tabs;
+    const [form] = Form.useForm();
     const [events, setEvents] = useState(null);
     const [proposals, setProposals] = useState(null);
     const imgPlacehoder = 'https://via.placeholder.com/120';
@@ -76,23 +77,8 @@ function ManageEventsComponent() {
         setVisibleCancel(false);
         history.push('/su-kien');
     };
-    const handleCancelEvent = (id) => {
+    const handleCancelEvent = () => {
         setLoadingButton(true);
-        EventService.cancelEvent(id)
-            .then(() => {
-                setTimeout(() => {
-                    message.success("Hủy sự kiện thành công")
-                }, 500)
-                setTimeout(() => {
-                    setLoadingButton(false);
-                }, 1000);
-                setTimeout(() => {
-                    window.location.href = '/su-kien'
-                }, 800)
-            })
-            .catch(() => {
-                message.error("Hủy sự kiện không thành công")
-            })
     };
     //register
     useEffect(() => {
@@ -185,23 +171,10 @@ function ManageEventsComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -302,7 +275,7 @@ function ManageEventsComponent() {
                         return (
                             <div>
                                 {/* <Countdown value={countdown} onFinish={onFinish} /> */}
-                                {result !== 0 ? result + ' ngày còn lại' : 'Sắp hết hạn'}
+                                {result !== '0' ? result + ' ngày còn lại' : 'Sắp hết hạn'}
                             </div>
                         )
                     }
@@ -394,23 +367,10 @@ function ManageEventsComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -579,23 +539,10 @@ function ManageEventsComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -749,23 +696,10 @@ function ManageEventsComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -930,23 +864,10 @@ function ManageEventsComponent() {
                             size="small"
                             style={{ width: 90 }}
                         >
-                            Search
+                            Tìm
                         </Button>
                         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Reset
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            onClick={() => {
-                                confirm({ closeDropdown: false });
-                                this.setState({
-                                    searchText: selectedKeys[0],
-                                    searchedColumn: dataIndex,
-                                });
-                            }}
-                        >
-                            Filter
+                            Đặt lại
                         </Button>
                     </Space>
                 </div>
@@ -1118,6 +1039,43 @@ function ManageEventsComponent() {
             />
         )
     }
+    const onFinishCancelContent = (values) => {
+        EventService.cancelEvent(values.id, values.reason)
+            .then(() => {
+                message.success("Hủy sự kiện thành công")
+                setTimeout(() => {
+                    setLoadingButton(false);
+                }, 200);
+                setTimeout(() => {
+                    window.location.href = '/su-kien'
+                }, 500)
+            })
+            .catch(() => {
+                message.error("Hủy sự kiện không thành công")
+            })
+    }
+    form.setFieldsValue({
+        id: cancelEventId !== null && cancelEventId.Id
+    })
+    const CancelContent = () => {
+        return (
+            <Form layout="vertical" form={form} onFinish={onFinishCancelContent} id="cancelContent" style={{ marginTop: '-10px', marginBottom: '-20px' }}>
+                <div><span style={{ letterSpacing: 1, color: '#52524E' }}>Tên sự kiện:</span> &nbsp;<span style={{ fontWeight: 500, fontSize: 15, letterSpacing: 1 }}>{cancelEventId !== null && cancelEventId.Title}</span></div>
+                <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Thông báo <span style={{ color: 'red' }}>HỦY</span> đến người đăng ký:</span></div>
+                <Form.Item hidden={true} name='id'>
+                    <Input></Input>
+                </Form.Item>
+                <Form.Item name="reason" style={{ paddingTop: '5px' }}>
+                    <Input.TextArea
+                        placeholder="Nhập thông báo"
+                        showCount maxLength={200}
+                        spellCheck={false}
+                        autoSize={{ minRows: 3, maxRows: 10 }}
+                    />
+                </Form.Item>
+            </Form>
+        )
+    }
     return (
         <Spin size="large" spinning={events === null ? true : false}>
             <div>
@@ -1221,11 +1179,12 @@ function ManageEventsComponent() {
                     onCancel={() => handleCancel()}
                     footer={[
                         <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                            <Button onClick={() => handleCancel()}>Không </Button>
-                            <Button loading={loadingButton} onClick={() => handleCancelEvent(cancelEventId !== null && cancelEventId.Id)} type="primary">Có</Button>
+                            <Button onClick={() => handleCancel()}>Hủy </Button>
+                            <Button form="cancelContent" loading={loadingButton} onClick={handleCancelEvent} type="primary" key="submit" htmlType="submit">Xác nhận</Button>
                         </Row>
                     ]}
-                > <div>Bạn có muốn hủy "{cancelEventId !== null && cancelEventId.Title}" không?</div>
+                >
+                    <CancelContent />
                 </Modal>
                 {/* Modal check attendence */}
                 <Modal

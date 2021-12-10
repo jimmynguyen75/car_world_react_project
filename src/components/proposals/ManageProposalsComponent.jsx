@@ -428,7 +428,7 @@ export default function ManageProposalsComponent() {
                         spellCheck={false}
                         autoSize={{ minRows: 3, maxRows: 10 }}
                     />
-                </Form.Item>
+                </Form.Item> 
             </Form>
         )
     }

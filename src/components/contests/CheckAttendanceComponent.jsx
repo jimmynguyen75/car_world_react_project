@@ -102,7 +102,7 @@ export default function CheckAttendanceComponent() {
         render() {
             const columns = [
                 {
-                    title: 'Tên sự kiện',
+                    title: 'Tên cuộc thi',
                     key: 'name',
                     render: (data) => {
                         return (

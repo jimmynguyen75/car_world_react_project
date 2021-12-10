@@ -29,8 +29,8 @@ class ContestService {
     getCanceledContest() {
         return axios.get(CONTEST_API_URL + "GetCanceledCEs?type=2", { headers: authHeader() })
     }
-    cancelContest(id) {
-        return axios.put(CONTEST_API_URL + "CancelCE?id=" + id, { headers: authHeader() })
+    cancelContest(id, reason) {
+        return axios.put(CONTEST_API_URL + "CancelCE?id=" + id + "&reason=" + reason, { headers: authHeader() })
     }
     getContestByMonth() {
         return axios.get(CONTEST_API_URL + "CountCEsByMonth?type=2&date=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
