@@ -1061,11 +1061,13 @@ function ManageEventsComponent() {
         return (
             <Form layout="vertical" form={form} onFinish={onFinishCancelContent} id="cancelContent" style={{ marginTop: '-10px', marginBottom: '-20px' }}>
                 <div><span style={{ letterSpacing: 1, color: '#52524E' }}>Tên sự kiện:</span> &nbsp;<span style={{ fontWeight: 500, fontSize: 15, letterSpacing: 1 }}>{cancelEventId !== null && cancelEventId.Title}</span></div>
-                <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Thông báo <span style={{ color: 'red' }}>HỦY</span> đến người đăng ký:</span></div>
+                {cancelEventId !== null && (cancelEventId.CurrentParticipants !== 0 &&
+                    <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Thông báo <span style={{ color: 'red' }}>HỦY</span> đến người đăng ký:</span></div>
+                )}
                 <Form.Item hidden={true} name='id'>
                     <Input></Input>
                 </Form.Item>
-                <Form.Item name="reason" style={{ paddingTop: '5px' }}>
+                <Form.Item name="reason" hidden={cancelEventId !== null && (cancelEventId.CurrentParticipants !== 0 ? false : true)} style={{ paddingTop: '5px' }}>
                     <Input.TextArea
                         placeholder="Nhập thông báo"
                         showCount maxLength={200}
@@ -1073,6 +1075,7 @@ function ManageEventsComponent() {
                         autoSize={{ minRows: 3, maxRows: 10 }}
                     />
                 </Form.Item>
+
             </Form>
         )
     }

@@ -1077,11 +1077,13 @@ function ManageContestsComponent() {
         return (
             <Form layout="vertical" form={form} onFinish={onFinishCancelContent} id="cancelContentC" style={{ marginTop: '-10px', marginBottom: '-20px' }}>
                 <div><span style={{ letterSpacing: 1, color: '#52524E' }}>Tên cuộc thi:</span> &nbsp;<span style={{ fontWeight: 500, fontSize: 15, letterSpacing: 1 }}>{cancelContestId !== null && cancelContestId.Title}</span></div>
-                <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Thông báo <span style={{ color: 'red' }}>HỦY</span> đến người đăng ký:</span></div>
+                {cancelContestId !== null && (cancelContestId.CurrentParticipants !== 0 &&
+                    <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Thông báo <span style={{ color: 'red' }}>HỦY</span> đến người đăng ký:</span></div>
+                )}
                 <Form.Item hidden={true} name='id'>
                     <Input></Input>
                 </Form.Item>
-                <Form.Item name="reason" style={{ paddingTop: '5px' }}>
+                <Form.Item name="reason" hidden={cancelContestId !== null && (cancelContestId.CurrentParticipants !== 0 ? false : true)} style={{ paddingTop: '5px' }}>
                     <Input.TextArea
                         placeholder="Nhập thông báo"
                         showCount maxLength={200}
