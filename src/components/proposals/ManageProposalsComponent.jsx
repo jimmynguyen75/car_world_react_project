@@ -414,7 +414,7 @@ export default function ManageProposalsComponent() {
                 <div><span style={{ letterSpacing: 1, color: '#52524E' }}>Tên đề xuất:</span> &nbsp;<span style={{ fontWeight: 500, fontSize: 15, letterSpacing: 1 }}>{proposalDetail !== null && proposalDetail.Title}</span></div>
                 <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Loại đề xuất:</span> &nbsp;{proposalDetail !== null && proposalDetail.Type === 1 ?
                     <Tag color='geekblue' key={proposalDetail !== null && proposalDetail.Type}> CUỘC THI </Tag> : <Tag color='green' key={proposalDetail !== null && proposalDetail.Type}> SỰ KIỆN </Tag>}</div>
-                <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Thông báo <span style={{ color: 'red' }}>KHÔNG DUYỆT</span> đến người đề xuất:</span></div>
+                <div style={{ paddingTop: '10px' }}><span style={{ letterSpacing: 1, color: '#52524E' }}>Lý do <span style={{ color: 'red' }}>KHÔNG DUYỆT</span> đến người đề xuất:</span></div>
                 <Form.Item hidden={true} name='id'>
                     <Input></Input>
                 </Form.Item>
@@ -423,7 +423,7 @@ export default function ManageProposalsComponent() {
                 </Form.Item>
                 <Form.Item name="reason" style={{ paddingTop: '5px' }}>
                     <Input.TextArea
-                        placeholder="Nhập thông báo"
+                        placeholder="Nhập lý do"
                         showCount maxLength={200}
                         spellCheck={false}
                         autoSize={{ minRows: 3, maxRows: 10 }}
@@ -442,7 +442,7 @@ export default function ManageProposalsComponent() {
                     setVisibleApprove(false);
                     setConfirmLoading(false);
                     window.location.href = "/de-xuat"
-                }, 1500);
+                }, 500);
             })
             .catch((err) => {
                 message.error("Duyệt đề xuất không thành công")
@@ -459,7 +459,7 @@ export default function ManageProposalsComponent() {
                     setVisibleApprove(false);
                     setConfirmLoading(false);
                     window.location.href = "/de-xuat"
-                }, 1500);
+                }, 500);
             })
             .catch((err) => {
                 message.error("Không duyệt đề xuất không thành công")
