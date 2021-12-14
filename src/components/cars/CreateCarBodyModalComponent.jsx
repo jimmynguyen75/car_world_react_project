@@ -709,8 +709,8 @@ export default function CreateCarBodyModalComponent() {
                         />
                     </Form.Item>
                 </Col> */}
-                <div style={{ paddingBottom: 10, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Mô tả</div>
-                <Form.Item name="despcription">
+                
+                <Form.Item name="despcription" label={<div style={{ paddingBottom: 5, fontSize: 18, fontWeight: 'bold', textDecoration: 'underline' }}>Mô tả</div>} rules={[{ required: true, message: "" }]}>
                     <Input.TextArea
                         size="large"
                         maxLength={2000} showCount

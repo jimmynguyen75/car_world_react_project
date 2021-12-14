@@ -1080,166 +1080,166 @@ function ManageEventsComponent() {
         )
     }
     return (
-        <Spin size="large" spinning={events === null ? true : false}>
-            <div>
-                {/* Modal Select */}
-                <Modal
-                    destroyOnClose={true}
-                    title={
-                        <Row>
-                            <Space size="middle"><div>Đề xuất bởi </div></Space>
-                            <Avatar src={recordPro !== null ? recordPro.User.Image : null} style={{ marginLeft: 5 }}></Avatar>
-                            <Space size="middle"><div style={{ fontWeight: '500', fontSize: 14, color: '#2A528A', marginLeft: 5 }}>{recordPro !== null ? recordPro.User.FullName : null}</div></Space>
-                        </Row>
-                    }
-                    visible={visibleSelect}
-                    onCancel={handleCancel}
-                    width={1000}
-                    footer={
-                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                            <Button onClick={handleCancel}>
-                                Hủy
-                            </Button>
-                            <Button type="primary" onClick={showModalConfirmSelect}>
-                                Hoàn tất
-                            </Button>
-                        </Row>
-                    }
-                >
-                    <CreateBySelectComponent record={recordPro} recordImage={recordImagePro} />
-                </Modal>
-                <Modal
-                    title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
-                    centered
-                    icon={<ExclamationCircleOutlined />}
-                    visible={modalConfirmSelect}
-                    onCancel={() => setModalConfirmSelect(false)}
-                    footer={[
-                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                            <Button onClick={() => setModalConfirmSelect(false)}>Hủy </Button>
-                            <Button form="editEvent" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
-                        </Row>
-                    ]}
-                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn tạo sự kiện này không?</span>
-                </Modal>
-                {/* Modal Edit */}
-                <Modal
-                    destroyOnClose={true}
-                    title={"Chỉnh sửa sự kiện"}
-                    visible={visibleEdit}
-                    onCancel={handleCancel}
-                    width={1000}
-                    footer={
-                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                            <Button onClick={handleCancel}>
-                                Hủy
-                            </Button>
-                            <Button type="primary" onClick={showModalConfirm}>
-                                Hoàn tất
-                            </Button>
-                        </Row>
-                    }
-                >
-                    <EditEventComponent record={record} recordImage={recordImage} />
-                </Modal>
-                <Modal
-                    title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
-                    centered
-                    icon={<ExclamationCircleOutlined />}
-                    visible={modalConfirm}
-                    onCancel={() => setModalConfirm(false)}
-                    footer={[
-                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                            <Button onClick={() => setModalConfirm(false)}>Hủy </Button>
-                            <Button form="editEvent" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
-                        </Row>
-                    ]}
-                ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn cập nhật sự kiện này không?</span>
-                </Modal>
-                {/* Modal View */}
-                <Modal
-                    destroyOnClose={true}
-                    title="Chi tiết"
-                    visible={visibleView}
-                    onCancel={handleCancel}
-                    width={1000}
-                    footer={
-                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                            <Button type="primary" onClick={handleCancel}>
-                                Xong
-                            </Button>
-                        </Row>
-                    }
-                >
-                    <ViewEventComponent record={record} recordImage={recordImage} />
-                </Modal>
-                {/* Modal Cancel */}
-                <Modal
-                    title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
-                    centered
-                    icon={<ExclamationCircleOutlined />}
-                    visible={visibleCancel}
-                    onCancel={() => handleCancel()}
-                    footer={[
-                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                            <Button onClick={() => handleCancel()}>Hủy </Button>
-                            <Button form="cancelContent" loading={loadingButton} onClick={handleCancelEvent} type="primary" key="submit" htmlType="submit">Xác nhận</Button>
-                        </Row>
-                    ]}
-                >
-                    <CancelContent />
-                </Modal>
-                {/* Modal check attendence */}
-                <Modal
-                    destroyOnClose={true}
-                    title="Điểm danh sự kiện"
-                    visible={visibleCheck}
-                    onCancel={handleCancel}
-                    width={800}
-                    footer={
-                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                            <Button type="primary" onClick={handleCancel}>
-                                Xong
-                            </Button>
-                        </Row>
-                    }
-                >
-                    <CheckAttendanceComponent />
-                </Modal>
-                {/* end */}
-                <Row>
-                    <CreateEventsModalComponent />
-                    <Button shape="round" className="createButton" onClick={() => showModalCheck()} style={{ height: 36, marginLeft: 15, backgroundColor: '#23814F', border: 'none', color: 'white' }}><i class="fas fa-user-check"></i><span style={{ marginTop: 2, marginLeft: 8 }}>Điểm danh</span></Button>
-                </Row>
-                <Row gutter={15}>
-                    <Col span={18}>
-                        <Tabs type="card">
-                            <TabPane tab={<div><i class="far fa-check-square" ></i>&nbsp;&nbsp;Sự kiện đăng ký</div>} key="1" >
+        <div>
+            {/* Modal Select */}
+            <Modal
+                destroyOnClose={true}
+                title={
+                    <Row>
+                        <Space size="middle"><div>Đề xuất bởi </div></Space>
+                        <Avatar src={recordPro !== null ? recordPro.User.Image : null} style={{ marginLeft: 5 }}></Avatar>
+                        <Space size="middle"><div style={{ fontWeight: '500', fontSize: 14, color: '#2A528A', marginLeft: 5 }}>{recordPro !== null ? recordPro.User.FullName : null}</div></Space>
+                    </Row>
+                }
+                visible={visibleSelect}
+                onCancel={handleCancel}
+                width={1000}
+                footer={
+                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Button onClick={handleCancel}>
+                            Hủy
+                        </Button>
+                        <Button type="primary" onClick={showModalConfirmSelect}>
+                            Hoàn tất
+                        </Button>
+                    </Row>
+                }
+            >
+                <CreateBySelectComponent record={recordPro} recordImage={recordImagePro} />
+            </Modal>
+            <Modal
+                title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
+                centered
+                icon={<ExclamationCircleOutlined />}
+                visible={modalConfirmSelect}
+                onCancel={() => setModalConfirmSelect(false)}
+                footer={[
+                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Button onClick={() => setModalConfirmSelect(false)}>Hủy </Button>
+                        <Button form="editEvent" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
+                    </Row>
+                ]}
+            ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn tạo sự kiện này không?</span>
+            </Modal>
+            {/* Modal Edit */}
+            <Modal
+                destroyOnClose={true}
+                title={"Chỉnh sửa sự kiện"}
+                visible={visibleEdit}
+                onCancel={handleCancel}
+                width={1000}
+                footer={
+                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Button onClick={handleCancel}>
+                            Hủy
+                        </Button>
+                        <Button type="primary" onClick={showModalConfirm}>
+                            Hoàn tất
+                        </Button>
+                    </Row>
+                }
+            >
+                <EditEventComponent record={record} recordImage={recordImage} />
+            </Modal>
+            <Modal
+                title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
+                centered
+                icon={<ExclamationCircleOutlined />}
+                visible={modalConfirm}
+                onCancel={() => setModalConfirm(false)}
+                footer={[
+                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Button onClick={() => setModalConfirm(false)}>Hủy </Button>
+                        <Button form="editEvent" loading={loadingButton} onClick={handleOk} type="primary" key="submit" htmlType="submit">Có</Button>
+                    </Row>
+                ]}
+            ><span style={{ fontSize: '16px', fontWeight: 400 }}>Bạn có muốn cập nhật sự kiện này không?</span>
+            </Modal>
+            {/* Modal View */}
+            <Modal
+                destroyOnClose={true}
+                title="Chi tiết"
+                visible={visibleView}
+                onCancel={handleCancel}
+                width={1000}
+                footer={
+                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Button type="primary" onClick={handleCancel}>
+                            Xong
+                        </Button>
+                    </Row>
+                }
+            >
+                <ViewEventComponent record={record} recordImage={recordImage} />
+            </Modal>
+            {/* Modal Cancel */}
+            <Modal
+                title={<span style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận</span>}
+                centered
+                icon={<ExclamationCircleOutlined />}
+                visible={visibleCancel}
+                onCancel={() => handleCancel()}
+                footer={[
+                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Button onClick={() => handleCancel()}>Hủy </Button>
+                        <Button form="cancelContent" loading={loadingButton} onClick={handleCancelEvent} type="primary" key="submit" htmlType="submit">Xác nhận</Button>
+                    </Row>
+                ]}
+            >
+                <CancelContent />
+            </Modal>
+            {/* Modal check attendence */}
+            <Modal
+                destroyOnClose={true}
+                title="Điểm danh sự kiện"
+                visible={visibleCheck}
+                onCancel={handleCancel}
+                width={800}
+                footer={
+                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Button type="primary" onClick={handleCancel}>
+                            Xong
+                        </Button>
+                    </Row>
+                }
+            >
+                <CheckAttendanceComponent />
+            </Modal>
+            {/* end */}
+            <Row>
+                <CreateEventsModalComponent />
+                <Button shape="round" className="createButton" onClick={() => showModalCheck()} style={{ height: 36, marginLeft: 15, backgroundColor: '#23814F', border: 'none', color: 'white' }}><i class="fas fa-user-check"></i><span style={{ marginTop: 2, marginLeft: 8 }}>Điểm danh</span></Button>
+            </Row>
+            <Row gutter={15}>
+                <Col span={18}>
+                    <Tabs type="card">
+                        <TabPane tab={<div><i class="far fa-check-square" ></i>&nbsp;&nbsp;Sự kiện đăng ký</div>} key="1" >
+                            <Spin size="large" spinning={events === null ? true : false}>
                                 <Register />
-                            </TabPane>
-                            <TabPane tab={<div><i class="far fa-check-square" ></i>&nbsp;&nbsp;Sự kiện sắp diễn ra</div>} key="2" >
-                                <Ready />
-                            </TabPane>
-                            <TabPane tab={<div><i className="fas fa-spinner" ></i>&nbsp;&nbsp;Sự kiện đang diễn ra</div>} key="3">
-                                <Loading />
-                            </TabPane>
-                            <TabPane tab={<div><i className="fas fa-history" ></i>&nbsp;&nbsp;Lịch sử</div>} key="4" >
-                                <History />
-                            </TabPane>
-                            <TabPane tab={<div><i class="far fa-times-circle"></i>&nbsp;&nbsp;Đã hủy</div>} key="5" >
-                                <Cancel />
-                            </TabPane>
-                        </Tabs>
-                    </Col>
-                    <Col span={6}>
-                        <p className="textEventAndProposal"><span className="textEventAndProposalChild" ><i className="far fa-lightbulb" />&nbsp;&nbsp;Sự kiện đề xuất</span></p>
-                        <Spin size="middle" spinning={proposals === null ? true : false}>
-                            <Proposal />
-                        </Spin>
-                    </Col>
-                </Row>
-            </div>
-        </Spin>
+                            </Spin>
+                        </TabPane>
+                        <TabPane tab={<div><i class="far fa-check-square" ></i>&nbsp;&nbsp;Sự kiện sắp diễn ra</div>} key="2" >
+                            <Ready />
+                        </TabPane>
+                        <TabPane tab={<div><i className="fas fa-spinner" ></i>&nbsp;&nbsp;Sự kiện đang diễn ra</div>} key="3">
+                            <Loading />
+                        </TabPane>
+                        <TabPane tab={<div><i className="fas fa-history" ></i>&nbsp;&nbsp;Lịch sử</div>} key="4" >
+                            <History />
+                        </TabPane>
+                        <TabPane tab={<div><i class="far fa-times-circle"></i>&nbsp;&nbsp;Đã hủy</div>} key="5" >
+                            <Cancel />
+                        </TabPane>
+                    </Tabs>
+                </Col>
+                <Col span={6}>
+                    <p className="textEventAndProposal"><span className="textEventAndProposalChild" ><i className="far fa-lightbulb" />&nbsp;&nbsp;Sự kiện đề xuất</span></p>
+                    <Spin size="middle" spinning={proposals === null ? true : false}>
+                        <Proposal />
+                    </Spin>
+                </Col>
+            </Row>
+        </div>
     )
 }
 

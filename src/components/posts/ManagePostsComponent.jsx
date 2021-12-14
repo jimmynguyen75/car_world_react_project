@@ -457,26 +457,28 @@ function ManagePostsComponent() {
             >
                 <div style={{ fontSize: 16 }}> Bạn có muốn xóa bài này không?</div>
             </Modal>
-            <Spin size="large" spinning={data.all.length === 0 ? true : false}>
-                <Button type="primary" shape="round" onClick={createModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2 }}>Tạo bài đăng</span></Button>
-                <Tabs type="card" onChange={callback}>
-                    <TabPane tab="Tất cả" key="all">
+
+            <Button type="primary" shape="round" onClick={createModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2 }}>Tạo bài đăng</span></Button>
+            <Tabs type="card" onChange={callback}>
+                <TabPane tab="Tất cả" key="all">
+                    <Spin size="large" spinning={data.all.length === 0 ? true : false}>
                         <All />
-                    </TabPane>
-                    <TabPane tab="Xe" key="car">
-                        <GetAll />
-                    </TabPane>
-                    <TabPane tab="Phụ kiện" key="accessory">
-                        <GetAll />
-                    </TabPane>
-                    <TabPane tab="Sự kiện" key="event">
-                        <GetAll />
-                    </TabPane>
-                    <TabPane tab="Cuộc thi" key="contest">
-                        <GetAll />
-                    </TabPane>
-                </Tabs>
-            </Spin>
+                    </Spin>
+                </TabPane>
+                <TabPane tab="Xe" key="car">
+                    <GetAll />
+                </TabPane>
+                <TabPane tab="Phụ kiện" key="accessory">
+                    <GetAll />
+                </TabPane>
+                <TabPane tab="Sự kiện" key="event">
+                    <GetAll />
+                </TabPane>
+                <TabPane tab="Cuộc thi" key="contest">
+                    <GetAll />
+                </TabPane>
+            </Tabs>
+
         </div>
     )
 }
