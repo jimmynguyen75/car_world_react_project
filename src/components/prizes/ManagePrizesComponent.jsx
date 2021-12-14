@@ -666,14 +666,14 @@ export default function ManagePrizesComponent() {
             </Row>
             <Tabs type="card">
                 <TabPane tab="Cuộc thi" key="1">
-                    <Spin spinning={contests === null ? true : false}>
+                    <Spin size="large" spinning={contests === null ? true : false}>
                         <PrizeContest />
                     </Spin>
                 </TabPane>
                 <TabPane tab="Giải thưởng" key="2">
                     <Row gutter={15}>
                         <Col span={12}>
-                            <Spin spinning={prizes === null ? true : false}>
+                            <Spin size="large" spinning={prizes === null ? true : false}>
                                 <Prize />
                             </Spin>
                         </Col>

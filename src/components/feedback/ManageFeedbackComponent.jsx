@@ -499,7 +499,7 @@ function ManageFeedbackComponent() {
             </Modal>
             <Tabs type="card">
                 <TabPane tab={<div><i class="fas fa-calendar-alt" ></i>&nbsp;&nbsp;Sự kiện</div>} key="1" >
-                    <Spin size="small" spinning={CE.event.length !== 0 ? false : true}>
+                    <Spin size="large" spinning={CE.event.length !== 0 ? false : true}>
                         <Table
                             onRow={(record) => {
                                 return {
@@ -528,7 +528,7 @@ function ManageFeedbackComponent() {
                     </Spin>
                 </TabPane>
                 <TabPane tab={<div><i class="fas fa-trophy" ></i>&nbsp;&nbsp;Cuộc thi</div>} key="2" >
-                    <Spin size="small" spinning={CE.contest.length !== 0 ? false : true}>
+                    <Spin size="large" spinning={CE.contest.length !== 0 ? false : true}>
                         <Table
                             onRow={(record) => {
                                 return {
@@ -560,7 +560,7 @@ function ManageFeedbackComponent() {
                     <Row gutter={15}>
                         <Col span={12}>
                             <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#9E7777', padding: '4px 7px 4px 7px', color: 'white' }}><i class="fas fa-car"></i>&nbsp;&nbsp;Người bán</span></div>
-                            <Spin size="small" spinning={data.ExchangeResponse.length !== 0 ? false : true}>
+                            <Spin size="large" spinning={data.ExchangeResponse.length !== 0 ? false : true}>
                                 <Table
                                     onRow={(record) => {
                                         return {
@@ -590,7 +590,7 @@ function ManageFeedbackComponent() {
                         </Col>
                         <Col span={12}>
                             <div style={{ marginBottom: 10 }}><span style={{ backgroundColor: '#87AAAA', padding: '4px 7px 4px 7px', color: 'white' }}><i class="far fa-life-ring"></i>&nbsp;&nbsp;Người mua</span></div>
-                            <Spin size="small" spinning={data.ExchangeResponse.length !== 0 ? false : true}>
+                            <Spin size="large" spinning={data.ExchangeResponse.length !== 0 ? false : true}>
                                 <Table
                                     onRow={(record) => {
                                         return {

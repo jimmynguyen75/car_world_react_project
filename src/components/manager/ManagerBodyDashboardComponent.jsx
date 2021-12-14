@@ -247,7 +247,7 @@ export default function ManagerBodyDashboardComponent() {
             >
                 <ViewContestComponent record={record} recordImage={recordImage} />
             </Modal>
-            <Spin spinning={data.post === '' ? true : false}>
+            <Spin size="large" spinning={data.post === '' ? true : false}>
                 <Row gutter={15}>
                     {/* <Col span={18}></Col>
                 <Col span={6}>

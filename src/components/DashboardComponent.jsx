@@ -171,7 +171,7 @@ function DashboardComponent() {
     };
     return (
         <>
-            <Spin spinning={data.exchangeCar === '' ? true : false}>
+            <Spin size="large" spinning={data.exchangeCar === '' ? true : false}>
                 <div className="container mw-100">
                     <Row gutter={15} style={{ marginBottom: 20, borderRadius: 15 }}>
                         <Col style={{ backgroundColor: '#e76f51', borderRadius: 20, padding: 25, width: '32.5%', marginRight: 15 }}>
