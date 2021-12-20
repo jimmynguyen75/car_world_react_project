@@ -9,6 +9,9 @@ import '../styles/admin-dashboard.less';
 import ManageAccessoryComponent from './accessories/ManageAccessoryComponent';
 import ManageAccountsComponent from './accounts/ManageAccountsComponent';
 import ManageBrandsComponent from './brands/ManageBrandsComponent';
+import CarTypesComponent from './cars/CarTypesComponent';
+import CarModelsComponent from './cars/CarModelsComponent';
+import ManageAttributesComponent from './cars/ManageAttributesComponent';
 import ManageCarsComponent from './cars/ManageCarsComponent';
 import DashboardComponent from './DashboardComponent';
 import ProfileComponent from './profile/ProfileComponent';
@@ -21,6 +24,7 @@ function AdminDashboardComponent() {
     const [user, setUser] = useState("")
     const currentUser = AccountService.getCurrentUser();
     const [title, setTitle] = useState('');
+    const { SubMenu } = Menu;
     useEffect(() => {
         if (location.pathname === "/") {
             console.log(location.pathname)
@@ -77,6 +81,15 @@ function AdminDashboardComponent() {
     function manageBrands() {
         history.push('/thuong-hieu')
     }
+    function manageAttributes() {
+        history.push('/thuoc-tinh-xe')
+    }
+    function carTypes() {
+        history.push('/loai-xe')
+    }
+    function carModels() {
+        history.push('/mau-xe')
+    }
 
     function confirmLogout() {
         Modal.confirm({
@@ -104,7 +117,12 @@ function AdminDashboardComponent() {
                 <img src={logo2} className="logo" alt="logo..." />
                 <Menu mode="inline" defaultSelectedKeys={[location.pathname]}>
                     <Menu.Item key="/" icon={<HomeOutlined style={{ fontSize: 18, color: '#316B83', paddingTop: 2 }} />} onClick={dashboard}>Trang chủ</Menu.Item>
-                    <Menu.Item key="/xe" icon={<CarOutlined style={{ fontSize: 18, color: '#DBAD68', paddingTop: 4 }} />} onClick={manageCars}>Quản lý xe</Menu.Item>
+                    <SubMenu key="/cuoc-thi" icon={<CarOutlined style={{ fontSize: 18, color: '#DBAD68', paddingTop: 4 }} />} title="Quản lý xe">
+                        <Menu.Item key="1" onClick={manageCars}>Danh sách xe</Menu.Item>
+                        <Menu.Item key="2" onClick={carModels}>Mẫu xe</Menu.Item>
+                        <Menu.Item key="3" onClick={carTypes}>Loại xe</Menu.Item>
+                        <Menu.Item key="4" onClick={manageAttributes}>Thuộc tính xe</Menu.Item>
+                    </SubMenu>
                     <Menu.Item key="/phu-kien" onClick={manageAccessories}><i className="fas fa-peace" style={{ fontSize: 18, color: '#52BCC2' }} />&nbsp;&nbsp;&nbsp;Quản lý phụ kiện</Menu.Item>
                     <Menu.Item key="/thuong-hieu" icon={<TagsOutlined style={{ fontSize: 18, color: '#BFA2DB', paddingTop: 4 }} />} onClick={manageBrands}>Quản lý thương hiệu</Menu.Item>
                     <Menu.Item key="/tai-khoan" icon={<UserSwitchOutlined style={{ fontSize: 18, color: '#6B7AA1', paddingTop: 2 }} />} onClick={manageAccounts}>Quản lý tài khoản</Menu.Item>
@@ -129,6 +147,18 @@ function AdminDashboardComponent() {
                             case '/xe':
                                 return (
                                     <ManageCarsComponent />
+                                )
+                            case '/thuoc-tinh-xe':
+                                return (
+                                    <ManageAttributesComponent />
+                                )
+                            case '/mau-xe':
+                                return (
+                                    <CarModelsComponent />
+                                )
+                            case '/loai-xe':
+                                return (
+                                    <CarTypesComponent />
                                 )
                             case '/tai-khoan':
                                 return (
