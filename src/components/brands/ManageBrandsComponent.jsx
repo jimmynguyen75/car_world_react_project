@@ -30,21 +30,21 @@ export default function ManageBrandComponent() {
     }
     useEffect(() => {
         const fetchData = async () => {
-            let carFilter = []
-            let accessoryFilter = []
+            // let carFilter = []
+            // let accessoryFilter = []
             const cars = await BrandService.getAllBrand();
             const accessories = await BrandService.getAllAccessoriesBrand();
-            cars.data.forEach((filter) => {
-                if (filter.IsDeleted === false) {
-                    carFilter.push(filter)
-                }
-            })
-            accessories.data.forEach((filter) => {
-                if (filter.IsDeleted === false) {
-                    accessoryFilter.push(filter)
-                }
-            })
-            setBrands({ cars: carFilter, accessories: accessoryFilter });
+            // cars.data.forEach((filter) => {
+            //     if (filter.IsDeleted === false) {
+            //         carFilter.push(filter)
+            //     }
+            // })
+            // accessories.data.forEach((filter) => {
+            //     if (filter.IsDeleted === false) {
+            //         accessoryFilter.push(filter)
+            //     }
+            // })
+            setBrands({ cars: cars.data, accessories: accessories.data });
         }
         fetchData();
     }, [])

@@ -41,13 +41,13 @@ function ManageCarsComponent() {
         CarService
             .getCars()
             .then(res => {
-                res.data.forEach((data) => {
-                    if (data.IsDeleted === false) {
-                        result.push(data)
-                    }
-                })
-                console.log(result)
-                setCars(result)
+                // res.data.forEach((data) => {
+                //     if (data.IsDeleted === false) {
+                //         result.push(data)
+                //     }
+                // })
+                // console.log(result)
+                setCars(res.data)
             })
             .catch(err => {
                 console.log(err)

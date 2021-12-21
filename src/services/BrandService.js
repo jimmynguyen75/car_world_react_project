@@ -20,7 +20,7 @@ class BrandService {
         return axios.put(BRAND_API_URL + "UpdateBrand?id=" + id, brand, { headers: authHeader() })
     }
     deleteBrand(id) {
-        return axios.put(BRAND_API_URL + "RemoveBrand?id=" + id, { headers: authHeader() })
+        return axios.delete(BRAND_API_URL + "RemoveBrand?id=" + id, { headers: authHeader() })
     }
 }
 

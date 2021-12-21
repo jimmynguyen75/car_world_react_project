@@ -36,15 +36,15 @@ export default function ManagePrizesComponent() {
     useEffect(() => { ContestService.getAllContestPrize().then((result) => { setContests(result.data) }).catch(() => { console.log("Error") }) }, [])
     useEffect(() => { ContestService.getFinishedContests().then((result) => { setContestHistory(result.data) }).catch(() => { console.log("Error") }) }, [])
     useEffect(() => {
-        const data = []
+        // const data = []
         PrizeService.getPrizes()
             .then((result) => {
-                result.data.forEach((filter) => {
-                    if (filter.IsDeleted === false) {
-                        data.push(filter)
-                    }
-                })
-                setPrizes(data)
+                // result.data.forEach((filter) => {
+                //     if (filter.IsDeleted === false) {
+                //         data.push(filter)
+                //     }
+                // })
+                setPrizes(result.data)
             })
             .catch(() => { console.log("Error") })
     }, [])

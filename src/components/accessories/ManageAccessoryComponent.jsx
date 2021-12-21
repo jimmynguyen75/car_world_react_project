@@ -29,17 +29,17 @@ function ManageAccessoryComponent() {
     //     setDataToChild(dataToChildFixingImage);
     // }, [dataToChildFixingImage])
     useEffect(() => {
-        let result = []
+        // let result = []
         AccessoryService
             .getAccessories()
             .then(response => {
-                response.data.forEach((req) => {
-                    if (req.IsDeleted === false) {
-                        result.push(req)
-                    }
-                })
-                console.log(result)
-                setAccessories(result);
+                // response.data.forEach((req) => {
+                //     if (req.IsDeleted === false) {
+                //         result.push(req)
+                //     }
+                // })
+                // console.log(result)
+                setAccessories(response.data);
             })
             .catch(error => {
                 console.log(error);

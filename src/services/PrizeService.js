@@ -17,7 +17,7 @@ class PrizeService {
         return axios.put(PRIZE_API_URL + "UpdatePrize?id=" + id, prize, { headers: authHeader() })
     }
     removePrizeById(id) {
-        return axios.put(PRIZE_API_URL + "RemovePrize?id=" + id, { headers: authHeader() })
+        return axios.delete(PRIZE_API_URL + "RemovePrize?id=" + id, { headers: authHeader() })
     }
     ///Prize Contest
     createPrizeContest(prizeContest) {

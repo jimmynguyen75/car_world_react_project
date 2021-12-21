@@ -11,7 +11,7 @@ class AccessoryService {
         return axios.get(ACCESSORIES_API_URL + "GetAllAccessoryById/" + id, { headers: authHeader() });
     }
     deleteAccessoryById(id) {
-        return axios.put(ACCESSORIES_API_URL + "RemoveAccessory?id=" + id, { headers: authHeader() });
+        return axios.delete(ACCESSORIES_API_URL + "RemoveAccessory?id=" + id, { headers: authHeader() });
     }
     createNewAccessory(accessory) {
         return axios.post(ACCESSORIES_API_URL + "CreateNewAccessory", accessory, { headers: authHeader() });
