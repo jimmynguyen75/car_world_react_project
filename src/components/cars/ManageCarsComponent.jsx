@@ -10,6 +10,7 @@ import NumberFormat from 'react-number-format';
 import moment from 'moment';
 import 'moment/locale/vi';
 import EditCarBodyComponent from './EditCarBodyComponent';
+import CreateCarComponent from './CreateCarComponent';
 function ManageCarsComponent() {
     const imgPlacehoder = 'https://via.placeholder.com/120';
     const [car, setCars] = useState(null);
@@ -60,7 +61,7 @@ function ManageCarsComponent() {
             content: 'Bạn có muốn xóa chiếc xe này không?',
             okText: 'Có',
             cancelText: 'Không',
-            onOk: () => { 
+            onOk: () => {
                 CarService.deleteCar(id)
                     .then(() => {
                         setTimeout(() => {
@@ -196,7 +197,7 @@ function ManageCarsComponent() {
                     render: (record) => {
                         return (
                             <Row>
-                                <Col span={3} style={{height: 50, textAlign: 'center', display: 'flex', alignItems: 'center'}}><img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }} src={record.Image === "string" ? imgPlacehoder : record.Image} /></Col>
+                                <Col span={3} style={{ height: 50, textAlign: 'center', display: 'flex', alignItems: 'center' }}><img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }} src={record.Image === "string" ? imgPlacehoder : record.Image} /></Col>
                                 <Col span={21} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15, width: '100%' }} class="textOverflow">{record.Name}</div></Col>
                             </Row>
                         );
@@ -347,7 +348,7 @@ function ManageCarsComponent() {
                 footer={[
                     <Row style={{ float: 'right' }}>
                         <Button onClick={handleCancel}>
-                            Hủy 
+                            Hủy
                         </Button>
                         <Button form="myFormEdit" type="primary" key="submit" htmlType="submit">
                             Cập nhật
@@ -357,13 +358,13 @@ function ManageCarsComponent() {
             >
                 <EditCarBodyComponent record={record} recordImage={recordImage} />
             </Modal>
-            <CreateCarModalComponent />
-            <Spin
+            <CreateCarComponent />
+            {/* <Spin
                 spinning={car === null ? true : false}
                 // delay={100}
                 size="large" >
                 <Cars />
-            </Spin>
+            </Spin> */}
         </div>
     )
 }

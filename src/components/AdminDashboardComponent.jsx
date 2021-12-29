@@ -120,7 +120,7 @@ function AdminDashboardComponent() {
                     <SubMenu key="/cuoc-thi" icon={<CarOutlined style={{ fontSize: 18, color: '#DBAD68', paddingTop: 4 }} />} title="Quản lý xe">
                         <Menu.Item key="1" onClick={manageCars}>Danh sách xe</Menu.Item>
                         <Menu.Item key="2" onClick={carModels}>Mẫu xe</Menu.Item>
-                        <Menu.Item key="3" onClick={carTypes}>Loại xe</Menu.Item>
+                        {/* <Menu.Item key="3" onClick={carTypes}>Loại xe</Menu.Item> */}
                         <Menu.Item key="4" onClick={manageAttributes}>Thuộc tính xe</Menu.Item>
                     </SubMenu>
                     <Menu.Item key="/phu-kien" onClick={manageAccessories}><i className="fas fa-peace" style={{ fontSize: 18, color: '#52BCC2' }} />&nbsp;&nbsp;&nbsp;Quản lý phụ kiện</Menu.Item>

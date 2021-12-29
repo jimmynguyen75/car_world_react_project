@@ -1,11 +1,67 @@
-import React, { useEffect, useState } from 'react'
-import { Form, Input, Button, Space, Select, Divider, Row } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useEffect, useState, useRef } from 'react'
+import { Form, Input, Button, Space, Select, Divider, Row, Col, Radio } from 'antd';
+import { MinusCircleOutlined, PlusOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import CarService from '../../services/CarService';
 
 function CreateAttributesComponent() {
     const { Option } = Select;
+    const [typeInput, setTypeInput] = useState(true);
+    const [engine, setEngine] = useState([]);
+    const [addValue, setAddValue] = useState(0);
+    const buttonRef = useRef(null);
+    const [form] = Form.useForm();
     let index = 0;
+    useEffect(() => {
+        CarService.getEngineType()
+            .then((result) => {
+                setEngine(result.data)
+            })
+            .catch((error) => console.log(error))
+    }, [])
+    useEffect(() => {
+        buttonRef.current.click();
+    }, []);
+    const handleChange = (value, fieldKey) => {
+        // for (let i = 0; i <= fieldKey; i++) {
+        //     console.log("dd", fieldKey + i)
+        if (value === '1') {
+            form.setFieldsValue({ type: value })
+            form.setFieldsValue({ fieldKey: fieldKey })
+        }
+        if (value === '2') {
+            form.setFieldsValue({ type: value })
+            form.setFieldsValue({ fieldKey: fieldKey })
+        }
+        // }
 
+        console.log("type: ", form.getFieldValue('fieldKey'))
+    }
+    const [formLayout, setFormLayout] = useState('horizontal');
+
+    const onFormLayoutChange = ({ layout }) => {
+        setFormLayout(layout);
+    };
+
+    const formItemLayout =
+        formLayout === 'horizontal'
+            ? {
+                labelCol: {
+                    span: 4,
+                },
+                wrapperCol: {
+                    span: 14,
+                },
+            }
+            : null;
+    const buttonItemLayout =
+        formLayout === 'horizontal'
+            ? {
+                wrapperCol: {
+                    span: 14,
+                    offset: 4,
+                },
+            }
+            : null;
     const Demo = () => {
         const onFinish = values => {
             console.log('Received values of form:', values);
@@ -16,77 +72,105 @@ function CreateAttributesComponent() {
                 name="dynamic_form_nest_item"
                 onFinish={onFinish}
                 autoComplete="off"
-
+                form={form}
             >
-                <Form.List name="attributes">
-                    {(fields, { add, remove }) => (
-                        <>
-                            {fields.map(({ key, name, fieldKey, ...restField }) => (
-                                <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, 'first']}
-                                        fieldKey={[fieldKey, 'first']}
-                                        rules={[{ required: true, message: 'Tên thuộc tính không được bỏ trống' }]}
-                                        style={{ width: '252.03px' }}
-                                    >
-                                        <Input placeholder="Tên thuộc tính" />
-                                    </Form.Item>
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, 'last123']}
-                                        fieldKey={[fieldKey, 'last123']}
-                                        rules={[{ required: true, message: 'Không bỏ trống!' }]}
-                                    >
-                                        <Select
-                                            style={{ width: '95px' }}
-                                            showSearch
-                                            placeholder="Đơn vị"
-                                            optionFilterProp="children"
-                                            filterOption={(input, option) =>
-                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                            }
+                <Form.List name="attributes" >
+                    {(fields, { add, remove }) => {
+                        console.log(fields)
+                        return (
+                            <>
+                                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, 'name']}
+                                            fieldKey={[fieldKey, 'name']}
+                                            rules={[{ required: true, message: 'Tên thuộc tính không được bỏ trống' }]}
+                                            style={{ width: '252.03px' }}
                                         >
-                                            {/* {brands.map(brands => (
+                                            <Input placeholder="Tên thuộc tính" />
+                                        </Form.Item>
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, 'type']}
+                                            fieldKey={[fieldKey, 'type']}
+                                            rules={[{ required: true, message: 'Không bỏ trống!' }]}
+                                        >
+                                            <Select
+                                                onChange={(value) => handleChange(value, fieldKey)}
+                                                style={{ width: '95px' }}
+                                                showSearch
+                                                placeholder="Kiểu nhập"
+                                                optionFilterProp="children"
+                                                filterOption={(input, option) =>
+                                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                }
+                                            >
+                                                {/* {brands.map(brands => (
                                                 <Option key={brands.Id} value={brands.Name}>{brands.Name}</Option>
                                             ))} */}
-                                            <Option key='1'>cm</Option>
-                                            <Option key='2'>mm</Option>
-                                            <Option key='3'>kg</Option>
-                                        </Select>
-                                    </Form.Item>
-                                    <Form.Item
-                                        style={{ width: '165px' }}
-                                        {...restField}
-                                        name={[name, 'last']}
-                                        fieldKey={[fieldKey, 'last']}
-                                        rules={[{ required: true, message: 'Không bỏ trống!' }]}
-                                    >
-                                        <Select
-                                            showSearch
-                                            placeholder="Đơn vị thuộc tính"
-                                            optionFilterProp="children"
-                                            filterOption={(input, option) =>
-                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                            }
+                                                <Option key='1'>Chữ</Option>
+                                                <Option key='2'>Số</Option>
+                                            </Select>
+                                        </Form.Item>
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, 'measure']}
+                                            fieldKey={[fieldKey, 'measure']}
+                                            rules={[{ required: true, message: 'Không bỏ trống!' }]}
                                         >
-                                            {/* {brands.map(brands => (
+                                            <Select
+                                                style={{ width: '95px' }}
+                                                showSearch
+                                                placeholder="Đơn vị"
+                                                optionFilterProp="children"
+                                                filterOption={(input, option) =>
+                                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                }
+                                            >
+                                                {/* {brands.map(brands => (
                                                 <Option key={brands.Id} value={brands.Name}>{brands.Name}</Option>
                                             ))} */}
-                                            <Option key='1'>Thông số cơ bản</Option>
-                                            <Option key='2'>Thông số kỹ thuật</Option>
-                                        </Select>
-                                    </Form.Item>
-                                    <MinusCircleOutlined onClick={() => remove(name)} />
-                                </Space>
-                            ))}
-                            <Form.Item>
-                                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                    Nhập thuộc tính
-                                </Button>
-                            </Form.Item>
-                        </>
-                    )}
+                                                <Option key='1'>cm</Option>
+                                                <Option key='2'>mm</Option>
+                                                <Option key='3'>kg</Option>
+                                            </Select>
+                                        </Form.Item>
+                                        <Form.Item
+                                            style={{ width: '165px' }}
+                                            {...restField}
+                                            name={[name, 'att']}
+                                            fieldKey={[fieldKey, 'att']}
+                                            rules={[{ required: true, message: 'Không bỏ trống!' }]}
+                                            shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}
+                                        // hidden={fieldKey === form.getFieldValue('fieldKey') ? false : true}
+                                        >
+                                            <Select
+                                                showSearch
+                                                placeholder="Đơn vị thuộc tính"
+                                                optionFilterProp="children"
+                                                filterOption={(input, option) =>
+                                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                }
+                                            >
+                                                {/* {brands.map(brands => (
+                                                <Option key={brands.Id} value={brands.Name}>{brands.Name}</Option>
+                                            ))} */}
+                                                <Option key='1'>Thông số cơ bản</Option>
+                                                <Option key='2'>Thông số kỹ thuật</Option>
+                                            </Select>
+                                        </Form.Item>
+                                        <MinusCircleOutlined onClick={() => remove(name)} />
+                                    </Space>
+                                ))}
+                                <Form.Item>
+                                    <Button ref={buttonRef} type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                        Thêm thuộc tính
+                                    </Button>
+                                </Form.Item>
+                            </>
+                        )
+                    }}
                 </Form.List>
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
@@ -96,64 +180,9 @@ function CreateAttributesComponent() {
             </Form>
         );
     };
-    class App extends React.Component {
-        state = {
-            items: ['Xe xăng', 'Xe dầu', 'Xe điện'],
-            name: '',
-        };
-
-        onNameChange = event => {
-            this.setState({
-                name: event.target.value,
-            });
-        };
-
-        addItem = () => {
-            console.log('addItem');
-            const { items, name } = this.state;
-            this.setState({
-                items: [...items, name || `New item ${index++}`],
-                name: '',
-            });
-        };
-
-        render() {
-            const { items, name } = this.state;
-            return (
-                <Select
-                    style={{ width: '100%', marginBottom: 20 }}
-                    placeholder="Chọn loại động cơ"
-                    dropdownRender={menu => (
-                        <div>
-                            {menu}
-                            <Divider style={{ margin: '4px 0' }} />
-                            <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
-                                <Input style={{ flex: 'auto' }} value={name} onChange={this.onNameChange} />
-                                <a
-                                    style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
-                                    onClick={this.addItem}
-                                >
-                                    <PlusOutlined /> Thêm động cơ
-                                </a>
-                            </div>
-                        </div>
-                    )}
-                >
-                    {items.map(item => (
-                        <Option key={item}>
-
-                            <div>{item}</div>
-                            {/* <div onClick={() => console.log("xoa: ", item)}>Xóa</div> */}
-
-                        </Option>
-                    ))}
-                </Select>
-            );
-        }
-    }
+    console.log(addValue)
     return (
         <div>
-            <App />
             <Demo />
         </div>
     )
