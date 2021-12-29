@@ -31,8 +31,6 @@ function ManageAttributesComponent() {
             .then((result) => { setAttributes(result.data) })
             .catch((error) => { console.log(error) });
     }
-
-    console.log(attributes)
     // class Engine extends React.Component {
     //     state = {
     //         items: engine,
@@ -274,6 +272,8 @@ function ManageAttributesComponent() {
             const [nameItemsCreate, setNameItemsCreate] = useState('')
             const [check, setCheck] = useState(0);
             const [formCreate] = Form.useForm();
+            const [attributeNameToCheck, setAttributeNameToCheck] = useState([])
+            const [validate, setValidate] = useState(0);
             const handleChangeCreateType = (value) => {
                 formCreate.setFieldsValue({ type: value, measure: 'N/A' })
                 setCheck(value)
@@ -324,6 +324,32 @@ function ManageAttributesComponent() {
                         message.error("Tạo thuộc tính không thành công")
                     })
             }
+            const handleChangeSelectCheckValidate = (value) => {
+                let data = []
+                setValidate(0)
+                formCreate.setFieldsValue({ name: null, type: null })
+                setCheck(0)
+                CarService.getAttributeByTypeId(value)
+                    .then((response) => {
+                        response.data.forEach((res) => {
+                            data.push(res.Name)
+                        })
+                        setAttributeNameToCheck(data)
+                    })
+                    .then((error) => { console.log(error) })
+            }
+            const handleChangeCheckAttribute = (e) => {
+                var data = e.target.value.toLowerCase().replace(/\s/g, '');
+                for (var i = 0; i < attributeNameToCheck.length; i++) {
+                    if (data === (attributeNameToCheck[i].toLowerCase().replace(/\s/g, ''))) {
+                        form.setFieldsValue({ name: data })
+                        setValidate(1)
+                        break;
+                    } else {
+                        setValidate(0)
+                    }
+                }
+            }
             return (
                 <Form
                     layout="vertical"
@@ -334,7 +360,7 @@ function ManageAttributesComponent() {
                     <Form.Item label="Tên động cơ" name="engineType" rules={[{ required: true, message: "Tên động cơ không được bỏ trống" }]}>
                         <Select
                             // defaultValue={items.length !== 0 && items[0].Id}
-                            // onChange={handleChangeSelect}
+                            onChange={handleChangeSelectCheckValidate}
                             placeholder="Chọn loại động cơ"
                             dropdownRender={menu => (
                                 <div>
@@ -354,8 +380,13 @@ function ManageAttributesComponent() {
                             ))}
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Tên thuộc tính" name="name" rules={[{ required: true, message: "Tên thuộc tính không được bỏ trống" }]}>
+                    <Form.Item label="Tên thuộc tính" name="name" rules={[{ required: true, message: "Tên thuộc tính không được bỏ trống" }]}
+                        help={validate === 1 && "Thuộc tính không được trùng nhau"}
+                        hasFeedback
+                        validateStatus={validate === 1 ? "error" : "success"}
+                    >
                         <Input.TextArea
+                            onChange={handleChangeCheckAttribute}
                             placeholder="Nhập tên thuộc tính"
                             showCount maxLength={100}
                             autoSize={{ minRows: 1, maxRows: 10 }}
@@ -709,7 +740,6 @@ function ManageAttributesComponent() {
                 </div>
             )
         }
-        console.log("items", items.length !== 0 && items[0].Id)
         return (
             <div>
                 <Modal

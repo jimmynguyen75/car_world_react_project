@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Modal, Row, Steps, message, Col, Form, Upload, Select, Input, Spin } from 'antd';
+import React, { useEffect, useState, useRef } from 'react'
+import { Button, Modal, Row, Steps, message, Col, Form, Upload, Select, Input, Spin, Divider, DatePicker, Tooltip, Image, Carousel, Descriptions } from 'antd';
 import { ExclamationCircleOutlined, PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import storage from '../../services/ImageFirebase';
 import BrandService from '../../services/BrandService';
@@ -12,10 +12,32 @@ function CreateCarComponent() {
     const [visibleStep, setVisibleStep] = React.useState(false);
     const { Option } = Select;
     const [current, setCurrent] = React.useState(0);
+    const buttonRef = useRef(null);
+    const [base, setBase] = useState([]);
+    const [attribute, setAttribute] = useState([]);
+    const [img, setImg] = useState([]);
+    const [type, setType] = useState('');
+    const [formCreateBase] = Form.useForm();
+    const [attributeName, setAttributeName] = useState([]);
+    const [formCreateAttribute] = Form.useForm();
+
+    useEffect(() => {
+        CarService.getAttributeByTypeId(type).then((result) => setAttributeName(result.data)).catch((error) => console.log(error))
+    }, [type])
     const next = () => {
         setCurrent(current + 1);
     };
-    const prev = () => {
+    const prevBase = () => {
+        setCurrent(current - 1);
+        // formCreateBase.setFieldsValue({
+        //     image: base.image,
+        //     brandName: base.brandName,
+        //     carModelId: base.carModelId,
+        //     yearOfManufactor: base.yearOfManufactor,
+        //     name: base.name,
+        // })
+    };
+    const prevAtt = () => {
         setCurrent(current - 1);
     };
     const showModalStep = () => {
@@ -26,9 +48,10 @@ function CreateCarComponent() {
     };
     const CreateAttribute = () => {
         const [engine, setEngine] = useState([])
-        const [formCreateAttribute] = Form.useForm();
-        const [attributes, setAttributes] = useState([])
         const [showAttribute, setShowAttribute] = useState(0)
+        const [attributes, setAttributes] = useState([])
+        const [typeId, setTypeId] = useState('');
+        const [visibleCreate, setVisibleCreate] = React.useState(false);
 
         useEffect(() => {
             CarService.getEngineType()
@@ -36,6 +59,13 @@ function CreateCarComponent() {
                     setEngine(result.data)
                 })
                 .catch((error) => console.log(error))
+        }, [])
+        useEffect(() => {
+            type !== '' && setShowAttribute(1)
+            CarService.getAttributeByTypeId(type).then((result) => {
+                setTypeId(type)
+                setAttributes(result.data)
+            }).catch((error) => console.log(error))
         }, [])
         const onFinishCreateAttribute = (values) => {
             let attId = []
@@ -48,47 +78,258 @@ function CreateCarComponent() {
                 attId.push({
                     "value": repo[i].replace("{", "").replace('"}', "").replace(ref[i], "").replace('""', '').replace(':"', '').replace('" ', ''),
                     "attributionId": attributes[i].Id
-                    // "value": repo[i].replace("/[{}]/g", "").replace(ref[i], "").replace('""', '').replace(':"', '').replace('" ', '')
                 })
             }
             let data = {
-                "generationId": "16d21ff8-ca55-4a88-99e1-51ab26dd94b2",
+                "generationId": "null",
                 "attributionWithValues": attId
             }
-            console.log(data)
-            CarService.createCarWithAttribute(data)
-                .then(() => { message.success("Tạo thành công") })
-                .catch(err => { console.log(err) })
+            setAttribute(data)
+            setType(typeId)
+            next()
         }
         const handleChangeEngine = (values) => {
             setShowAttribute(1)
+            setTypeId(values)
             CarService.getAttributeByTypeId(values).then((result) => setAttributes(result.data)).catch((error) => console.log(error))
         }
-        console.log(attributes.length !== 0 && attributes[0].Id)
-        return (
-            <div>
-                <div style={{ textAlign: 'center', marginBottom: 15 }}>
-                    <Spin spinning={engine.length !== 0 ? false : true}>
+        const handleCancelCreate = () => {
+            setVisibleCreate(false);
+        };
+        console.log("Type: ", typeId)
+        const CreateAttributeModal = () => {
+            let index = 0;
+            const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít'])
+            const [engineCreate, setEngineCreate] = useState([])
+            const [nameItemss, setNameItemss] = useState('')
+            const [nameItemsCreate, setNameItemsCreate] = useState('')
+            const [check, setCheck] = useState(0);
+            const [formCreate] = Form.useForm();
+            const [attributeNameToCheck, setAttributeNameToCheck] = useState([])
+            const [validate, setValidate] = useState(0);
+            const handleChangeCreateType = (value) => {
+                formCreate.setFieldsValue({ type: value, measure: 'N/A' })
+                setCheck(value)
+            }
+            useEffect(() => {
+                CarService.getEngineType()
+                    .then((result) => {
+                        setEngineCreate(result.data)
+                    })
+                    .catch((error) => console.log(error))
+            }, [])
+            const onNameChangeItemss = (event) => {
+                setNameItemss(event.target.value)
+            };
+            const addItemss = () => {
+                setItemss([...itemss, nameItemss || `New item ${index++}`])
+                setNameItemss('')
+            };
+            const onNameChangeItemsCreate = (event) => {
+                setNameItemsCreate(event.target.value)
+            };
+            const addItemsCreate = () => {
+                CarService.createEngineType(nameItemsCreate)
+                    .then(() => {
+                        CarService.getEngineType().then((result) => { setEngineCreate(result.data) }).catch((error) => console.log(error))
+                        message.success("Tạo động cơ thành công")
+                    })
+                    .catch(() => { message.error("Tạo động cơ không thành công") })
+                setEngineCreate([...engineCreate, nameItemsCreate || `New item ${index++}`])
+                setNameItemsCreate('')
+            };
+            const onCreateAttributeFinish = (values) => {
+                console.log(values)
+                message.loading("Đang tải...")
+                CarService.createAttribute([values])
+                    .then(() => {
+                        message.destroy()
+                        setVisibleCreate(false)
+                        typeId !== '' && setShowAttribute(1)
+                        CarService.getAttributeByTypeId(typeId).then((result) => {
+                            // setTypeId(typeId)
+                            setAttributes(result.data)
+                        }).catch((error) => console.log(error))
+                        message.success("Tạo thuộc tính thành công")
+                    })
+                    .catch(() => {
+                        message.error("Tạo thuộc tính không thành công")
+                    })
+            }
+            const handleChangeSelectCheckValidate = (value) => {
+                let data = []
+                setValidate(0)
+                formCreate.setFieldsValue({ name: null, type: null })
+                setCheck(0)
+                CarService.getAttributeByTypeId(value)
+                    .then((response) => {
+                        response.data.forEach((res) => {
+                            data.push(res.Name)
+                        })
+                        setAttributeNameToCheck(data)
+                    })
+                    .then((error) => { console.log(error) })
+            }
+            const handleChangeCheckAttribute = (e) => {
+                var data = e.target.value.toLowerCase().replace(/\s/g, '');
+                for (var i = 0; i < attributeNameToCheck.length; i++) {
+                    if (data === (attributeNameToCheck[i].toLowerCase().replace(/\s/g, ''))) {
+                        // form.setFieldsValue({ name: data })
+                        setValidate(1)
+                        break;
+                    } else {
+                        setValidate(0)
+                    }
+                }
+            }
+            return (
+                <Form
+                    layout="vertical"
+                    id="createNewAttribute"
+                    onFinish={onCreateAttributeFinish}
+                    form={formCreate}
+                >
+                    <Form.Item label="Tên động cơ" name="engineType" rules={[{ required: true, message: "Tên động cơ không được bỏ trống" }]}>
                         <Select
-                            style={{ width: '240px' }}
+                            onChange={handleChangeSelectCheckValidate}
+                            placeholder="Chọn loại động cơ"
+                            dropdownRender={menu => (
+                                <div>
+                                    {menu}
+                                    <Divider style={{ margin: '4px 0' }} />
+                                    <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
+                                        <Input style={{ flex: 'auto' }} value={nameItemsCreate} onChange={onNameChangeItemsCreate} />
+                                        <Button disabled={nameItemsCreate !== '' ? false : true} style={{ marginLeft: '10px' }} onClick={addItemsCreate}>
+                                            <PlusOutlined /> Thêm
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
+                        >
+                            {engineCreate.length !== 0 && engineCreate.map(item => (
+                                <Option key={item.Id}>{item.Name}</Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item label="Tên thuộc tính" name="name" rules={[{ required: true, message: "Tên thuộc tính không được bỏ trống" }]}
+                        help={validate === 1 && "Thuộc tính không được trùng nhau"}
+                        hasFeedback
+                        validateStatus={validate === 1 ? "error" : "success"}
+                    >
+                        <Input.TextArea
+                            onChange={handleChangeCheckAttribute}
+                            placeholder="Nhập tên thuộc tính"
+                            showCount maxLength={100}
+                            autoSize={{ minRows: 1, maxRows: 10 }}
+                        />
+                    </Form.Item>
+                    <Form.Item label="Kiểu nhập" name="type" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                        <Select
                             showSearch
-                            placeholder="Chọn động cơ"
+                            placeholder="Chọn kiểu nhập"
                             optionFilterProp="children"
                             filterOption={(input, option) =>
                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
-                            onChange={handleChangeEngine}
+                            onChange={handleChangeCreateType}
                         >
-                            {engine.map(engine => (
-                                <Option key={engine.Id} value={engine.Id}>{engine.Name}</Option>
-                            ))}
+                            <Option key={1} value={1}>Chữ</Option>
+                            <Option key={2} value={2}>Số</Option>
                         </Select>
-                    </Spin>
+                    </Form.Item>
+                    <div style={{ display: check === 0 ? 'none' : false }}>
+                        <Form.Item shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}>
+                            {() => {
+                                return (
+                                    <Row gutter={15}>
+                                        <Col span={12} hidden={formCreate.getFieldValue('type') === 1 || formCreate.getFieldValue('type') === undefined}>
+                                            <Form.Item label="Đơn vị tính" name="measure" rules={[{ required: true, message: "Đơn vị tính không được bỏ trống" }]}>
+                                                <Select
+                                                    placeholder="Nhập đơn vị tính"
+                                                    dropdownRender={menu => (
+                                                        <div>
+                                                            {menu}
+                                                            <Divider style={{ margin: '4px 0' }} />
+                                                            <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
+                                                                <Input style={{ flex: 'auto' }} value={nameItemss} onChange={onNameChangeItemss} />
+                                                                <a
+                                                                    style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
+                                                                    onClick={addItemss}
+                                                                >
+                                                                    <PlusOutlined /> Thêm
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                >
+                                                    {itemss.map(item => (
+                                                        <Option key={item}>{item}</Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={12} hidden={formCreate.getFieldValue('type') === undefined}>
+                                            <Form.Item label="Độ dài tối đa" name="rangeOfValue" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                                                <Input.TextArea
+                                                    placeholder="Nhập chiều dài"
+                                                    showCount maxLength={10}
+                                                    autoSize={{ minRows: 1, maxRows: 10 }}
+                                                />
+                                            </Form.Item>
+                                        </Col>
+                                    </Row>
+                                )
+                            }}
+                        </Form.Item>
+                    </div>
+                </Form >
+            )
+        }
+        return (
+            <div>
+                <Modal
+                    destroyOnClose={true}
+                    title={'Thêm thuộc tính'}
+                    visible={visibleCreate}
+                    onCancel={handleCancelCreate}
+                    width={400}
+                    footer={[
+                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                            <Button onClick={handleCancelCreate}>
+                                Hủy
+                            </Button>
+                            <Button type="primary" form="createNewAttribute" key="submit" htmlType="submit">
+                                Hoàn tất
+                            </Button>
+                        </Row>
+                    ]}
+                >
+                    <CreateAttributeModal />
+                </Modal>
+                <div style={{ marginBottom: 15 }}>
+                    <Row type="flex" justify="center">
+                        <Spin spinning={engine.length !== 0 ? false : true}>
+                            <Select
+                                style={{ width: '240px', marginRight: 15, marginTop: 2, fontWeight: 'bold', marginBottom: 15 }}
+                                showSearch
+                                placeholder="Chọn loại động cơ"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                                defaultValue={type !== '' ? type : null}
+                                onChange={handleChangeEngine}
+                            >
+                                {engine.map(engine => (
+                                    <Option key={engine.Id} value={engine.Id}>{engine.Name}</Option>
+                                ))}
+                            </Select>
+                        </Spin>
+                    </Row>
                 </div>
                 <Form
                     layout="vertical"
                     className="formCreate"
-                    name="cc"
                     onFinish={onFinishCreateAttribute}
                     id="createAttribute"
                     form={formCreateAttribute}
@@ -100,7 +341,6 @@ function CreateCarComponent() {
                                 {attributes.map((attribute) =>
                                     attribute.Type === 1 ?
                                         <Col span={8}>
-                                            {/* <Form.Item label={attribute.Name} name={[attribute.Id, 'attributionId']}><input type="text" size="32" placeholder="1000" name="fee" /></Form.Item> */}
                                             <Form.Item label={attribute.Name} name={attribute.Id} rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                                                 <Input.TextArea
                                                     placeholder={"Nhập " + attribute.Name}
@@ -111,12 +351,10 @@ function CreateCarComponent() {
                                         </Col>
                                         :
                                         <Col span={8}>
-                                            {/* <Form.Item hidden={true} name={[attribute.Id, 'attributionId']}><Input defaultValue={attribute.Id} /></Form.Item> */}
                                             <Form.Item label={attribute.Name} name={attribute.Id} rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                                                 <NumberFormat
                                                     decimalScale={0}
                                                     allowNegative={false}
-                                                    // onChange={onLength}
                                                     maxLength={9}
                                                     placeholder={"Nhập " + attribute.Name.toLowerCase() + " (" + attribute.Measure + ")"}
                                                     className="currency"
@@ -140,11 +378,16 @@ function CreateCarComponent() {
                         </Spin>
                     }
                 </Form>
+                <Row>
+                    <Col span={12}></Col>
+                    <Col span={12}>
+                        <div style={{ float: 'right', marginTop: 15 }}> <Button type="primary" onClick={setVisibleCreate} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}>Thêm thuộc tính</Button></div>
+                    </Col>
+                </Row>
             </div>
         )
     }
     const CreateBase = () => {
-        const [formCreateBase] = Form.useForm();
         const [previewImage, setPreviewImage] = useState('');
         const [previewTitle, setPreviewTitle] = useState('');
         const [fileList, setFileList] = useState([]);
@@ -153,7 +396,9 @@ function CreateCarComponent() {
         const [brands, setBrands] = useState([]);
         const [models, setModels] = useState([]);
         const [price, setPrice] = useState(0);
+        function deleteImage(index) {
 
+        }
         useEffect(() => {
             BrandService.getAllBrand()
                 .then(res => {
@@ -226,20 +471,33 @@ function CreateCarComponent() {
             </div>
         );
         const onFinishCreateBase = (values) => {
+            let data = [];
+            data = values.image.split('|')
+            if (data.length > 1) {
+                data.pop();
+            }
+            setImg(data)
+            setBase(values)
+            next()
             console.log(values)
-            // CarService.createGeneration(values)
-            // .then(() => next())
-            // .catch(() => message.error("Vui lòng kiểm tra lại"))
         }
-        const handleBrandChange = (value) => {
-            console.log(value)
-            formCreateBase.setFieldsValue({ carModelId: [] })
-            CarService.getCarModelsByBrand(value).then((res) => setModels(res.data)).catch((err) => console.log(err))
+        const handleBrandChange = (id, key) => {
+            console.log(key.key)
+            formCreateBase.setFieldsValue({ carModelId: [], brandName: key.key })
+            CarService.getCarModelsByBrand(key.key).then((res) => setModels(res.data)).catch((err) => console.log(err))
+        }
+        const handleModelChange = (id, key) => {
+            console.log(key.key)
+            formCreateBase.setFieldsValue({ carModelId: key.key })
         }
         const onPrice = (e) => {
             const string = e.target.value;
             setPrice(string.replace(/\D/g, ''))
             formCreateBase.setFieldsValue({ price: string.replace(/\D/g, '') })
+        }
+        const onYear = (date, dateString) => {
+            console.log(dateString);
+            formCreateBase.setFieldsValue({ yearOfManufactor: dateString })
         }
         return (
             <div>
@@ -259,32 +517,44 @@ function CreateCarComponent() {
                     id="createBase"
                     form={formCreateBase}
                 >
-                    <Form.Item hidden={true} name="price" >
-                        <Input></Input>
-                    </Form.Item>
-                    <Form.Item
-                        name="image" label="Ảnh xe"
-                        getValueFromEvent={normFile}
-                        rules={[{ required: true, message: "" }]}
-                    >
-                        <Upload
+                    <Form.Item hidden={true} name="price" ><Input /></Form.Item>
+                    <Form.Item hidden={true} name="yearOfManufactor" ><Input /></Form.Item>
+                    <Form.Item hidden={true} name="carModelId" ><Input /></Form.Item>
+                    <Form.Item hidden={true} name="brandName" ><Input /></Form.Item>
+                    <div style={{ paddingBottom: 8, fontSize: 14, fontWeight: '500' }}><span style={{ marginRight: 4, fontSize: 14, color: '#ff4d4f', fontFamily: 'SimSun, sans-serif', lineHeight: 1 }}>*</span>Thêm ảnh</div>
+                    <Row>
+                        {img.length !== 0 && img.map((object, i) => (
+                            <div style={{ marginRight: 8 }}>
+                                <Tooltip placement="topRight" color="#FF7643" title={<i onClick={() => { deleteImage(i) }} id="btnDelete" class="far fa-trash-alt"> Xóa hình</i>}>
+                                    <Image style={{ padding: 8, border: '1px solid #d9d9d9' }} width={104} height={104} key={i} src={object} />
+                                </Tooltip>
+                            </div>
+                        ))}
+                        <Form.Item
+                            label=""
                             name="image"
-                            listType="picture-card"
-                            fileList={fileList}
-                            onPreview={handlePreview}
-                            onChange={handleChange}
-                            customRequest={customRequest}
-                            beforeUpload={beforeUpload}
-                            multiple={true}
-                            accept=".png,.jpeg,.jpg"
+                            getValueFromEvent={normFile}
+                            rules={[{ required: true, message: "" }]}
                         >
-                            {fileList.length >= 8 ? null : uploadButton}
-                        </Upload>
-                    </Form.Item>
+                            <Upload
+                                name="image"
+                                listType="picture-card"
+                                fileList={fileList}
+                                onPreview={handlePreview}
+                                onChange={handleChange}
+                                customRequest={customRequest}
+                                beforeUpload={beforeUpload}
+                                multiple={true}
+                                accept=".png,.jpeg,.jpg"
+                            >
+                                {fileList.length >= 8 ? null : uploadButton}
+                            </Upload>
+                        </Form.Item>
+                    </Row>
                     <Row gutter={15}>
                         <Col span={8}>
-                            <Form.Item label="Chọn hãng" name="brandName" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
-                                <Spin spinning={brands.length !== 0 ? false : true}>
+                            <Spin spinning={brands.length !== 0 ? false : true}>
+                                <Form.Item label="Chọn hãng" name="brand" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                                     <Select
                                         showSearch
                                         placeholder="Chọn hãng xe"
@@ -295,14 +565,14 @@ function CreateCarComponent() {
                                         onChange={handleBrandChange}
                                     >
                                         {brands.map(brands => (
-                                            <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                            <Option key={brands.Id} value={brands.Name}>{brands.Name}</Option>
                                         ))}
                                     </Select>
-                                </Spin>
-                            </Form.Item>
+                                </Form.Item>
+                            </Spin>
                         </Col>
                         <Col span={8}>
-                            <Form.Item label="Chọn mẫu xe" name="carModelId" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                            <Form.Item label="Chọn mẫu xe" name="carModelName" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                                 <Select
                                     disabled={models.length !== 0 ? false : true}
                                     showSearch
@@ -311,21 +581,17 @@ function CreateCarComponent() {
                                     filterOption={(input, option) =>
                                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                     }
-                                // onChange={handleBrandChange}
+                                    onChange={handleModelChange}
                                 >
                                     {models.map(model => (
-                                        <Option key={model.Id} value={model.Id}>{model.Name}</Option>
+                                        <Option key={model.Id} value={model.Name}>{model.Name}</Option>
                                     ))}
                                 </Select>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
-                            <Form.Item label="Năm sản xuất" name="yearOfManufactor" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
-                                <Input.TextArea
-                                    placeholder="Chọn năm sản xuất"
-                                    showCount maxLength={200}
-                                    autoSize={{ minRows: 1, maxRows: 10 }}
-                                />
+                            <Form.Item label="Năm sản xuất" name="nam" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                <DatePicker onChange={onYear} style={{ width: '100%' }} placeholder="Chọn năm sản xuất" picker="year" />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -340,7 +606,7 @@ function CreateCarComponent() {
                             </Form.Item>
                         </Col>
                         <Col span={8}>
-                            <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                            <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Gia" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                                 <NumberFormat
                                     allowNegative={false}
                                     decimalScale={0}
@@ -364,6 +630,53 @@ function CreateCarComponent() {
                         </Col>
                     </Row>
                 </Form>
+            </div >
+        )
+    }
+    const Confirm = () => {
+        const data = []
+        for (let i = 0; i < attributeName.length; i++) {
+            data.push({
+                "name": attributeName.length !== 0 && attributeName[i].Name,
+                "value": attribute.length !== 0 && attribute.attributionWithValues[i].value
+            })
+        }
+        return (
+            <div style={{ marginTop: '25px' }}>
+                <Row gutter={15} style={{ marginBottom: 15 }}>
+                    <Col span={12} style={{ marginTop: '15px' }}>
+                        <Carousel effect="fade">
+                            {img.length !== 0 && img.map((object, i) => {
+                                return (
+                                    <div>
+                                        <Image preview={false} style={{ display: 'block', margin: 'auto', maxHeight: '300px' }} key={i} src={object} />
+                                    </div>)
+                            })}
+                        </Carousel>
+                    </Col>
+                    <Col span={12}>
+                        <Descriptions title="Thông số cơ bản" bordered>
+                            <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Tên xe" span={3}>{base.name}</Descriptions.Item>
+                            <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Mẫu" span={3}>{base.carModelName}</Descriptions.Item>
+                            <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Hãng" span={3}>{base.brand}</Descriptions.Item>
+                            <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Năm sản xuất" span={3}>{base.yearOfManufactor}</Descriptions.Item>
+                            <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Giá tham khảo" span={3}>{base.price}</Descriptions.Item>
+                        </Descriptions>
+                    </Col>
+                </Row>
+                <Descriptions title="Thông số xe" bordered layout="horizontal" style={{ marginBottom: 15 }}>
+                    {data.map((attribute) => (
+                        <Descriptions.Item labelStyle={{ fontWeight: '600' }} label={attribute.name}>{attribute.value}</Descriptions.Item>
+                    ))}
+                </Descriptions>
+
+                {/* <Descriptions title="Thuộc tính xe" bordered>
+                    <Row gutter={15}>
+                            <Col span={8}>
+                                <Descriptions.Item label="Tên xe" span={3}>sdf</Descriptions.Item>
+                            </Col>
+                    </Row>
+                </Descriptions> */}
             </div>
         )
     }
@@ -379,9 +692,44 @@ function CreateCarComponent() {
             },
             {
                 title: 'Xác nhận',
-                content: 'Last-content',
+                content: <Confirm />,
             },
         ];
+        const handleSubmit = () => {
+            message.loading("Đang tải...")
+            CarService.createGeneration(base)
+                .then(() => {
+                    CarService.getGenerationByCarModel(base.carModelId)
+                        .then((result) => {
+                            result.data.forEach((data) => {
+                                if (data.Name === base.name && data.YearOfManufactor.toString() === base.yearOfManufactor) {
+                                    var old = JSON.stringify(attribute).replace(/null/g, data.Id)
+                                    var news = JSON.parse(old)
+                                    CarService.createCarWithAttribute(news)
+                                        .then(() => {
+                                            message.destroy()
+                                            message.success("Tạo xe thành công")
+                                        })
+                                        .catch((err) => {
+                                            message.destroy()
+                                            message.error("Tạo xe không thành công")
+                                            console.log(err)
+                                        })
+                                }
+                            })
+                        })
+                        .catch((err) => {
+                            message.destroy()
+                            message.error("Tạo xe không thành công")
+                            console.log(err)
+                        })
+                })
+                .catch((err) => {
+                    message.destroy()
+                    message.error("Tạo xe không thành công")
+                    console.log(err)
+                })
+        }
         return (
             <>
                 <Steps current={current} style={{ marginBottom: 15 }}>
@@ -394,13 +742,18 @@ function CreateCarComponent() {
                     <Col span={12}></Col>
                     <Col span={12}>
                         <div className="steps-action" style={{ marginTop: '15px', float: 'right' }} >
-                            {current > 0 && (
-                                <Button style={{ marginRight: '8px' }} onClick={() => prev()}>
+                            {current === 1 && (
+                                <Button style={{ marginRight: '8px' }} onClick={() => prevBase()}>
+                                    Quay lại
+                                </Button>
+                            )}
+                            {current === 2 && (
+                                <Button style={{ marginRight: '8px' }} onClick={() => prevAtt()}>
                                     Quay lại
                                 </Button>
                             )}
                             {current === 0 && (
-                                <Button onClick={() => next()} type="primary" form="createBase" key="submit" htmlType="submit">
+                                <Button type="primary" form="createBase" key="submit" htmlType="submit">
                                     Tiếp tục
                                 </Button>
                             )}
@@ -410,7 +763,7 @@ function CreateCarComponent() {
                                 </Button>
                             )}
                             {current === steps.length - 1 && (
-                                <Button type="primary" onClick={() => message.success('Processing complete!')}>
+                                <Button type="primary" onClick={handleSubmit}>
                                     Hoàn tất
                                 </Button>
                             )}
@@ -424,6 +777,7 @@ function CreateCarComponent() {
     return (
         <div>
             <Modal
+                destroyOnClose={true}
                 title='Tạo xe mới'
                 visible={visibleStep}
                 onCancel={handleCancelStep}
