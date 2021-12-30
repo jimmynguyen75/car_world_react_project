@@ -79,7 +79,12 @@ class CarService {
     createCarWithAttribute(attributes) {
         return axios.post(CARS_WITH_ATTRIBUTE_URL + "CreateCarWithAtts", attributes, { headers: authHeader() })
     }
-    
+    getCarWithAttributeByGenerationId(id) {
+        return axios.get(CARS_WITH_ATTRIBUTE_URL + "GetGenerationWithAtts?generationId=" + id, { headers: authHeader() })
+    }
+    deleteCarWithAttributesByGenerationId(id) {
+        return axios.delete(CARS_WITH_ATTRIBUTE_URL + "RemoveGenWithAtts?generationId=" + id, { headers: authHeader() })
+    }
 }
 
 export default new CarService();

@@ -343,8 +343,8 @@ function CreateCarComponent() {
                                         <Col span={8}>
                                             <Form.Item label={attribute.Name} name={attribute.Id} rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                                                 <Input.TextArea
-                                                    placeholder={"Nhập " + attribute.Name}
-                                                    showCount maxLength={200}
+                                                    placeholder={"Nhập " + attribute.Name.toLowerCase()}
+                                                    showCount maxLength={attribute.RangeOfValue}
                                                     autoSize={{ minRows: 1, maxRows: 10 }}
                                                 />
                                             </Form.Item>
@@ -355,7 +355,10 @@ function CreateCarComponent() {
                                                 <NumberFormat
                                                     decimalScale={0}
                                                     allowNegative={false}
-                                                    maxLength={9}
+                                                    isAllowed={(values) => {
+                                                        const { formattedValue, floatValue } = values;
+                                                        return formattedValue === "" || floatValue <= attribute.RangeOfValue;
+                                                    }}
                                                     placeholder={"Nhập " + attribute.Name.toLowerCase() + " (" + attribute.Measure + ")"}
                                                     className="currency"
                                                     displayType="input"
@@ -669,14 +672,6 @@ function CreateCarComponent() {
                         <Descriptions.Item labelStyle={{ fontWeight: '600' }} label={attribute.name}>{attribute.value}</Descriptions.Item>
                     ))}
                 </Descriptions>
-
-                {/* <Descriptions title="Thuộc tính xe" bordered>
-                    <Row gutter={15}>
-                            <Col span={8}>
-                                <Descriptions.Item label="Tên xe" span={3}>sdf</Descriptions.Item>
-                            </Col>
-                    </Row>
-                </Descriptions> */}
             </div>
         )
     }
@@ -709,6 +704,8 @@ function CreateCarComponent() {
                                         .then(() => {
                                             message.destroy()
                                             message.success("Tạo xe thành công")
+                                            setVisibleStep(false)
+
                                         })
                                         .catch((err) => {
                                             message.destroy()

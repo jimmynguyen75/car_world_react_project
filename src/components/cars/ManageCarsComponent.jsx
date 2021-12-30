@@ -1,5 +1,8 @@
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Input, message, Modal, Popover, Row, Space, Spin, Table } from 'antd';
+import {
+    Avatar, Button, Col, Input, message, Modal, Popover, Row, Space,
+    Spin, Image, Table, Carousel, Descriptions, Popconfirm, Select
+} from 'antd';
 import React, { useEffect, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import CarService from '../../services/CarService';
@@ -11,6 +14,7 @@ import moment from 'moment';
 import 'moment/locale/vi';
 import EditCarBodyComponent from './EditCarBodyComponent';
 import CreateCarComponent from './CreateCarComponent';
+import BrandService from '../../services/BrandService';
 function ManageCarsComponent() {
     const imgPlacehoder = 'https://via.placeholder.com/120';
     const [car, setCars] = useState(null);
@@ -86,7 +90,6 @@ function ManageCarsComponent() {
     const showModal = () => {
         setVisible(true);
     };
-
     const showViewDetail = () => {
         setVisibleDetail(true);
     }
@@ -306,6 +309,258 @@ function ManageCarsComponent() {
             />;
         }
     }
+
+    const CarsTable = () => {
+        const [attributes, setAttributes] = useState([])
+        const [generations, setGenerations] = useState([])
+        const [filterTable, setFilterTable] = useState(null)
+        const [pageGenerationSize, setPageGenerationSize] = React.useState(5)
+        const [pageGeneration, setPageGeneration] = React.useState(1)
+        const [visibleCarDetail, setVisibleCarDetail] = React.useState(false)
+        const [carDetail, setCarDetail] = React.useState(null)
+        const [carImg, setCarImg] = useState([]);
+        const [brands, setBrands] = useState([]);
+        const [models, setModels] = useState([]);
+        const { Option } = Select;
+        const baseColumns = [
+            {
+                title: 'Tên xe',
+                key: 'carName',
+                render: (data) => {
+                    return (
+                        <Row>
+                            <Col span={3} style={{ height: 50, textAlign: 'center', display: 'flex', alignItems: 'center' }}><img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
+                            <Col span={21} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15, width: '100%' }} class="textOverflow">{data.Name}</div></Col>
+                        </Row>
+                    )
+                }
+            },
+            {
+                title: 'Giá xe',
+                key: 'carPrize',
+                render: (data) => {
+                    return <NumberFormat
+                        value={data.Price}
+                        displayType="text"
+                        suffix=" vnđ"
+                        thousandSeparator={'.'}
+                        decimalSeparator={','}
+                    />
+                }
+            },
+            {
+                title: 'Năm sản xuất',
+                key: 'carPublished',
+                render: (data) => {
+                    return (
+                        <div>{data.YearOfManufactor}</div>
+                    )
+                }
+            },
+            {
+                title: 'Tác vụ',
+                width: '15%',
+                key: 'carAction',
+                render: (data) => {
+                    return (
+                        <i className="far fa-edit" onClick={() => { handleVisibleCarDetail(data) }} />
+                    )
+                }
+            }
+        ];
+
+        const handleCancelCarDetail = () => {
+            setVisibleCarDetail(false);
+        }
+        const handleVisibleCarDetail = (value) => {
+            console.log(value)
+            let data = [];
+            data = value.Image.split('|')
+            if (data.length > 1) {
+                data.pop();
+            }
+            setCarImg(data)
+            setCarDetail(value);
+            setVisibleCarDetail(true);
+            CarService.getCarWithAttributeByGenerationId(value.Id)
+                .then((result) => {
+                    setAttributes(result.data)
+                })
+                .catch((error) => { console.log(error); })
+        }
+        const handleSelectBrand = (value) => {
+            CarService.getCarModelsByBrand(value).then((res) => setModels(res.data)).catch((err) => console.log(err))
+        }
+        const handleBrandClear = (value) => {
+            console.log("clear: ", value)
+        }
+        const handleModelClear = (value) => {
+            console.log("clear: ", value)
+        }
+        const handleModelChange = (value) => {
+            console.log(value)
+        }
+        const confirmDeleteCar = (id) => {
+            console.log(id)
+            message.loading("Đang tải...")
+            CarService.deleteCarWithAttributesByGenerationId(id).then(() => {
+                CarService.deleteCarGeneration(id).then(() => {
+                    message.destroy()
+                    message.success("Xóa xe thành công")
+                    setVisibleCarDetail(false)
+                    CarService.getGenerationByCarModel("3ab1d3b5-fd22-4bc2-859b-7e110e225acb").then((res) => setGenerations(res.data)).catch((err) => console.log(err))
+                }).catch(() => {
+                    message.destroy()
+                    message.error("Xóa không thành công")
+                })
+            }).catch(() => {
+                message.destroy()
+                message.error("Xóa không thành công")
+            })
+        };
+        const ViewCarDetail = () => {
+            return (
+                <div>
+                    <Row gutter={15} style={{ marginBottom: 15 }}>
+                        <Col span={12} style={{ marginTop: '15px' }}>
+                            <Carousel effect="fade">
+                                {carImg.length !== 0 && carImg.map((object, i) => {
+                                    return (
+                                        <div>
+                                            <Image preview={false} style={{ display: 'block', margin: 'auto', maxHeight: '300px' }} key={i} src={object} />
+                                        </div>)
+                                })}
+                            </Carousel>
+                        </Col>
+                        <Col span={12}>
+                            <Descriptions title="Thông số cơ bản" bordered>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Tên xe" span={3}>{carDetail.Name}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Mẫu" span={3}>{carDetail.CarModelName}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Hãng" span={3}>{carDetail.Brand}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Năm sản xuất" span={3}>{carDetail.YearOfManufactor}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Giá tham khảo" span={3}>{carDetail.Price}</Descriptions.Item>
+                            </Descriptions>
+                        </Col>
+                    </Row>
+                    <Descriptions title="Thông số xe" bordered layout="horizontal" style={{ marginBottom: 15 }}>
+                        {attributes.length !== 0 && attributes.map((attribute) => (
+                            <Descriptions.Item labelStyle={{ fontWeight: '600' }} label={attribute.Attribution.Name}>{attribute.Value}</Descriptions.Item>
+                        ))}
+                    </Descriptions>
+                    <Row>
+                        <Col span={12}></Col>
+                        <Col span={12}>
+                            <div style={{ marginTop: '15px', float: 'right' }}>
+                                <Popconfirm
+                                    title="Bạn có muốn xóa xe này không?"
+                                    onConfirm={() => confirmDeleteCar(carDetail.Id)}
+                                    okText="Có"
+                                    cancelText="Không"
+                                >
+                                    <Button style={{ marginRight: '8px' }}>Xóa</Button>
+                                </Popconfirm>
+                                <Button style={{ marginRight: '8px' }}>Sửa</Button>
+                                <Button type="primary" onClick={handleCancelCarDetail}>Xong</Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
+            )
+        }
+        useEffect(() => {
+            CarService.getGenerationByCarModel("3ab1d3b5-fd22-4bc2-859b-7e110e225acb").then((res) => setGenerations(res.data)).catch((err) => console.log(err))
+            BrandService.getAllBrand().then((res) => { setBrands(res.data) }).catch((err) => console.log(err))
+        }, [])
+        const search = value => {
+            console.log("PASS", { value });
+            const filterTable = generations.filter(o =>
+                Object.keys(o).some(k =>
+                    String(o[k])
+                        .toLowerCase()
+                        .includes(value.toLowerCase())
+                )
+            );
+            setFilterTable(filterTable)
+        }
+        console.log(generations)
+        return (
+            <>
+                <Modal
+                    destroyOnClose={true}
+                    title='Xem chi tiết xe'
+                    visible={visibleCarDetail}
+                    onCancel={handleCancelCarDetail}
+                    width={1000}
+                    footer={false}
+                >
+                    <ViewCarDetail />
+                </Modal>
+                <div>
+                    <Select
+                        style={{ width: '180px', marginBottom: 5, marginRight: 8 }}
+                        showSearch
+                        placeholder="Sắp xếp theo hãng"
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                        onChange={handleSelectBrand}
+                        onClear={handleBrandClear}
+                        allowClear
+                    >
+                        {brands.map(brands => (
+                            <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                        ))}
+                    </Select>
+                    <Select
+                        style={{ width: 130 }}
+                        disabled={models.length !== 0 ? false : true}
+                        showSearch
+                        placeholder="Chọn mẫu xe"
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                        onChange={handleModelChange}
+                        onClear={handleModelClear}
+                        allowClear
+                    >
+                        {models.map(model => (
+                            <Option key={model.Id} value={model.Name}>{model.Name}</Option>
+                        ))}
+                    </Select>
+                    <div style={{ textAlign: 'center', marginBottom: 15 }}>
+                        <Input.Search
+                            className={"fixAnticon"}
+                            style={{ marginTop: 1, width: 440 }}
+                            placeholder="Tìm kiếm. . ."
+                            enterButton
+                            onSearch={search}
+                            allowClear
+                        />
+                    </div>
+                    <Spin spinning={generations ? false : true}>
+                        <Table
+                            columns={baseColumns}
+                            dataSource={filterTable === null ? generations : filterTable}
+                            rowKey="IdModel"
+                            pagination={{
+                                current: pageGeneration,
+                                pageSize: pageGenerationSize,
+                                onChange: (pageGeneration, pageGenerationSize) => {
+                                    setPageGeneration(pageGeneration)
+                                    setPageGenerationSize(pageGenerationSize)
+                                },
+                                pageSizeOptions: ['5', '10', '15', '20'],
+                                showSizeChanger: true,
+                                locale: { items_per_page: "/ trang" },
+                            }}
+                        />
+                    </Spin>
+                </div>
+            </>
+        )
+    }
     return (
         <div>
             <Modal
@@ -365,6 +620,7 @@ function ManageCarsComponent() {
                 size="large" >
                 <Cars />
             </Spin> */}
+            <CarsTable />
         </div>
     )
 }
