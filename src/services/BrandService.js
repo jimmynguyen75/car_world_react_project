@@ -22,6 +22,9 @@ class BrandService {
     deleteBrand(id) {
         return axios.delete(BRAND_API_URL + "RemoveBrand?id=" + id, { headers: authHeader() })
     }
+    getBrandById(id) {
+        return axios.get(BRAND_API_URL + "GetBrandById?id=" + id, { headers: authHeader() })
+    }
 }
 
 export default new BrandService();

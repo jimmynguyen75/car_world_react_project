@@ -24,24 +24,20 @@ function DashboardComponent() {
     const [users, setUsers] = useState({ user: [], admin: [], manager: [] });
     const [brands, setBrands] = useState({ all: [], car: [], accessory: [] });
     const [carAccessory, setCarAccessory] = useState({ car: [], accessory: [] });
-    const [data, setData] = useState({ topExchange: [], exchangeCar: '', exchangeAccessory: '', contest: '', event: '', proposal: '', post: '', events: [], contests: [], eventReady: [], contestReady: [] })
+    const [data, setData] = useState({ topExchange: [], exchangeCar: '', exchangeAccessory: '', contest: '', event: '', proposal: '' })
     useEffect(() => {
         const fetchData = async () => {
-            const events = await EventService.getAllEvents()
-            const contests = await ContestService.getAllContests()
-            const eventReady = await EventService.getPreparedEvents()
-            const contestReady = await ContestService.getPreparedContests()
-            const post = await PostService.getPostByMonth()
             const proposal = await ProposalService.getProposalByMonth()
             const contest = await EventService.getEventByMonth()
             const event = await ContestService.getContestByMonth()
             const exchangeCar = await ExchangeService.getExchangeCarByMonth()
             const exchangeAccessory = await ExchangeService.getExchangeAccessoryByMonth()
             const topExchange = await ExchangeService.getTopExchangeByMonth()
-            setData({ topExchange: topExchange.data, exchangeCar: exchangeCar.data, exchangeAccessory: exchangeAccessory.data, contest: contest.data, event: event.data, proposal: proposal.data, post: post.data, events: events.data, contests: contests.data, eventReady: eventReady.data, contestReady: contestReady.data })
+            setData({ topExchange: topExchange.data, exchangeCar: exchangeCar.data, exchangeAccessory: exchangeAccessory.data, contest: contest.data, event: event.data, proposal: proposal.data })
         }
         fetchData()
     }, [])
+    console.log(data)
     //user
     useEffect(() => {
         const fetchData = async () => {
@@ -66,7 +62,7 @@ function DashboardComponent() {
         const fetchData = async () => {
             const car = await BrandService.getAllBrand()
             const accessory = await BrandService.getAllAccessoriesBrand()
-            const all = await BrandService.getBrands()
+            const all = await BrandService.getAllBrand()
             setBrands({ all: all.data, car: car.data, accessory: accessory.data })
         }
         fetchData()
@@ -74,7 +70,7 @@ function DashboardComponent() {
     //car accessory
     useEffect(() => {
         const fetchData = async () => {
-            const car = await CarService.getCars()
+            const car = await CarService.getAllGeneration()
             const accessory = await AccessoryService.getAccessories()
             setCarAccessory({ car: car.data, accessory: accessory.data })
         }
@@ -233,7 +229,7 @@ function DashboardComponent() {
                                 <Col span={8} style={{ height: 250 }}>
                                     <div className="exchangeC" style={{ backgroundColor: "#e9c46a", borderRadius: 20, padding: 10, height: '92%' }}>
                                         <span style={{ color: 'white', letterSpacing: 1, fontWeight: 500, fontSize: 15 }}>Trao đổi xe THÁNG {moment().format('MM')}</span>
-                                        <div style={{ textAlign: 'center', marginTop: 10  }}>
+                                        <div style={{ textAlign: 'center', marginTop: 10 }}>
                                             <img alt="" src={car} style={{ height: '131px', width: '100%' }} />
                                             <span style={{ color: 'white', fontWeight: 700, fontSize: '30px' }}>{data.exchangeCar} <span style={{ letterSpacing: 2, fontSize: 18 }}>giao dịch</span></span>
                                         </div>

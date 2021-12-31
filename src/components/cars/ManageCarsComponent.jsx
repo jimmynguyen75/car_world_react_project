@@ -1,327 +1,32 @@
-import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import {
-    Avatar, Button, Col, Input, message, Modal, Popover, Row, Space,
-    Spin, Image, Table, Carousel, Descriptions, Popconfirm, Select
-} from 'antd';
-import React, { useEffect, useState } from 'react';
-import Highlighter from 'react-highlight-words';
-import CarService from '../../services/CarService';
-import CreateCarBodyModalComponent from './CreateCarBodyModalComponent';
-import CreateCarModalComponent from './CreateCarModalComponent';
-import ViewCarModalComponent from './ViewCarModalComponent';
-import NumberFormat from 'react-number-format';
-import moment from 'moment';
+import { PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Carousel, Col, DatePicker, Descriptions, Divider, Form, Image, Input, InputNumber, message, Modal, Popconfirm, Row, Select, Spin, Steps, Table, Tooltip, Upload } from 'antd';
 import 'moment/locale/vi';
-import EditCarBodyComponent from './EditCarBodyComponent';
-import CreateCarComponent from './CreateCarComponent';
+import React, { useEffect, useState } from 'react';
+import NumberFormat from 'react-number-format';
 import BrandService from '../../services/BrandService';
+import CarService from '../../services/CarService';
+import storage from '../../services/ImageFirebase';
+import numberToWord from '../../utils/numberToWord';
+import { useHistory } from "react-router-dom";
+
 function ManageCarsComponent() {
     const imgPlacehoder = 'https://via.placeholder.com/120';
-    const [car, setCars] = useState(null);
-    const [visible, setVisible] = React.useState(false);
-    const [visibleDetail, setVisibleDetail] = React.useState(false);
-    const [confirmLoading, setConfirmLoading] = React.useState(false);
-    const [setSuccess] = React.useState(false);
-    const [record, setRecord] = React.useState(null);
-    const [recordImage, setRecordImage] = React.useState(null);
-    const [pageSize, setPageSize] = React.useState(5)
-    const [page, setPage] = React.useState(1)
-    const contentDelete = (
-        <div>
-            <p>Bạn sẽ xóa chiếc xe này khi nhấn vào!</p>
-        </div>
-    );
-    const contentView = (
-        <div>
-            <p>Bạn sẽ được xem chiếc xe này khi nhấn vào</p>
-        </div>
-    );
-    const contentEdit = (
-        <div>
-            <p>Bạn sẽ chỉnh sửa chiếc xe này khi nhấn vào</p>
-        </div>
-    );
-    useEffect(() => {
-        let result = []
-        CarService
-            .getCars()
-            .then(res => {
-                // res.data.forEach((data) => {
-                //     if (data.IsDeleted === false) {
-                //         result.push(data)
-                //     }
-                // })
-                // console.log(result)
-                setCars(res.data)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }, []);
-    function confirmDelete(id) {
-        Modal.confirm({
-            title: 'Xóa xe',
-            icon: <ExclamationCircleOutlined />,
-            content: 'Bạn có muốn xóa chiếc xe này không?',
-            okText: 'Có',
-            cancelText: 'Không',
-            onOk: () => {
-                CarService.deleteCar(id)
-                    .then(() => {
-                        setTimeout(() => {
-                            message.success("Xóa xe thành công");
-                        }, 500)
-                        setTimeout(() => {
-                            window.location.href = '/xe'
-                        }, 1500)
-                    })
-                    .catch(err => {
-                        message.error("Lỗi server, vui lòng thử lại sau")
-                        console.log(err);
-                    })
-            }
-        });
-    }
-
-    const success = () => {
-        setSuccess(false);
-        message.success('Tạo xe thành công');
-    };
-    const showModal = () => {
-        setVisible(true);
-    };
-    const showViewDetail = () => {
-        setVisibleDetail(true);
-    }
-    const handleOk = () => {
-        setConfirmLoading(true);
-        setTimeout(() => {
-            setVisible(false);
-            setConfirmLoading(false);
-        }, 2000);
-        setTimeout(() => {
-            success();
-            setSuccess(true);
-        }, 2000)
-    };
-    const handleOkDetail = () => {
-        setConfirmLoading(true);
-        setTimeout(() => {
-            setVisibleDetail(false);
-            setConfirmLoading(false);
-        }, 2000);
-    };
-    const handleCancel = () => {
-        console.log('Clicked cancel button');
-        setVisible(false);
-    };
-    const handleCancelDetail = () => {
-        console.log('Clicked cancel button');
-        setVisibleDetail(false);
-    };
-    class Cars extends React.Component {
-        state = {
-            searchText: '',
-            searchedColumn: '',
-        };
-
-        getColumnSearchProps = dataIndex => ({
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-                <div style={{ padding: 8 }}>
-                    <Input
-                        ref={node => {
-                            this.searchInput = node;
-                        }}
-                        placeholder={`Search ${dataIndex}`}
-                        value={selectedKeys[0]}
-                        onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                        onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-                        style={{ marginBottom: 8, display: 'block' }}
-                    />
-                    <Space>
-                        <Button
-                            type="primary"
-                            onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-                            icon={<SearchOutlined />}
-                            size="small"
-                            style={{ width: 90 }}
-                        >
-                            Tìm
-                        </Button>
-                        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                            Đặt lại
-                        </Button>
-                    </Space>
-                </div>
-            ),
-            filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-            onFilter: (value, record) =>
-                record[dataIndex]
-                    ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-                    : '',
-            onFilterDropdownVisibleChange: visible => {
-                if (visible) {
-                    setTimeout(() => this.searchInput.select(), 100);
-                }
-            },
-            render: text =>
-                this.state.searchedColumn === dataIndex ? (
-                    <Highlighter
-                        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                        searchWords={[this.state.searchText]}
-                        autoEscape
-                        textToHighlight={text ? text.toString() : ''}
-                    />
-                ) : (
-                    text
-                ),
-        });
-
-        handleSearch = (selectedKeys, confirm, dataIndex) => {
-            confirm();
-            this.setState({
-                searchText: selectedKeys[0],
-                searchedColumn: dataIndex,
-            });
-        };
-
-        handleReset = clearFilters => {
-            clearFilters();
-            this.setState({ searchText: '' });
-        };
-
-        render() {
-            const columns = [
-                {
-                    title: 'Tên xe',
-                    key: 'name',
-                    width: '40%',
-                    ...this.getColumnSearchProps('Name'),
-                    render: (record) => {
-                        return (
-                            <Row>
-                                <Col span={3} style={{ height: 50, textAlign: 'center', display: 'flex', alignItems: 'center' }}><img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }} src={record.Image === "string" ? imgPlacehoder : record.Image} /></Col>
-                                <Col span={21} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15, width: '100%' }} class="textOverflow">{record.Name}</div></Col>
-                            </Row>
-                        );
-                    },
-                },
-                {
-                    title: "Hãng xe",
-                    key: 'brand',
-                    width: '16%',
-                    render: (brand) => {
-                        return (
-                            <Row>
-                                <Col span={6}>
-                                    <Avatar style={{ display: true, height: 'auto', width: 'auto', margin: 'auto', maxHeight: '30px', maxWidth: '30px' }} size="small" src={brand.Brand.Image} />
-                                </Col>
-                                <Col span={18}>
-                                    <div style={{ paddingLeft: 5 }}>{brand.Brand.Name}</div>
-                                </Col>
-                            </Row>
-                        );
-                    }
-                },
-                {
-                    title: 'Giá',
-                    dataIndex: 'Price',
-                    key: 'price',
-                    width: '14%',
-                    ...this.getColumnSearchProps('Price'),
-                    render: (price) => {
-                        return <NumberFormat
-                            value={price}
-                            displayType="text"
-                            suffix=" vnđ"
-                            thousandSeparator={'.'}
-                            decimalSeparator={','}
-                        />
-                    }
-                },
-                {
-                    title: 'Ngày tạo',
-                    key: 'date',
-                    width: '12%',
-                    render: (date) => {
-                        return <div style={{ color: '#868686', fontWeight: 450 }}>{moment(date.CreatedDate).format('ll')}</div>
-                    }
-                },
-                {
-                    title: 'Các tác vụ',
-                    key: 'action',
-                    render: (record) => {
-                        return (
-                            <Space size="middle">
-                                {/* <a>Invite {record.lastName}</a> */}
-                                <Popover content={contentView} title='Xem chi tiết'>
-                                    <Button onClick={() => {
-                                        showViewDetail()
-                                        setRecord(record)
-                                        let ex = record.Image.split("|")
-                                        if (ex.length > 1) {
-                                            ex.pop();
-                                        }
-                                        setRecordImage(ex);
-                                    }}
-                                        block className="viewButton" ><i className="fas fa-eye"></i></Button>
-                                </Popover>
-                                <Popover content={contentEdit} title='Chỉnh sửa'>
-                                    <Button onClick={() => {
-                                        showModal()
-                                        setRecord(record)
-                                        let ex = record.Image.split("|")
-                                        if (ex.length > 1) {
-                                            ex.pop();
-                                        }
-                                        setRecordImage(ex)
-                                    }}
-                                        block className="editButton"><i className="fas fa-edit"></i></Button>
-                                </Popover>
-                                <Popover content={contentDelete} title='Xóa'>
-                                    <Button onClick={() => confirmDelete(record.Id)}
-                                        block className="deleteButton"><i className="far fa-trash-alt"></i></Button>
-                                </Popover>
-                            </Space>
-                        )
-                    },
-                }
-            ];
-            return <Table
-                rowKey="Id"
-                columns={columns}
-                dataSource={car}
-                onChange={() => {
-                    document.body.scrollTop = 0; // For Safari
-                    document.documentElement.scrollTop = 0;
-                }}
-                pagination={{
-                    current: page,
-                    pageSize: pageSize,
-                    onChange: (page, pageSize) => {
-                        setPage(page)
-                        setPageSize(pageSize)
-                    },
-                    pageSizeOptions: ['5', '10', '15', '20'],
-                    showSizeChanger: true,
-                    locale: { items_per_page: "/ trang" },
-                }}
-            />;
-        }
-    }
-
     const CarsTable = () => {
         const [attributes, setAttributes] = useState([])
-        const [generations, setGenerations] = useState([])
+        const [subs, setSubs] = useState([])
         const [filterTable, setFilterTable] = useState(null)
         const [pageGenerationSize, setPageGenerationSize] = React.useState(5)
         const [pageGeneration, setPageGeneration] = React.useState(1)
         const [visibleCarDetail, setVisibleCarDetail] = React.useState(false)
-        const [carDetail, setCarDetail] = React.useState(null)
+        const [carDetail, setCarDetail] = React.useState([])
         const [carImg, setCarImg] = useState([]);
-        const [brands, setBrands] = useState([]);
         const [models, setModels] = useState([]);
+        const [brandName, setBrandName] = useState('');
         const { Option } = Select;
+        const [generations, setGenerations] = useState([])
+        const [brands, setBrands] = useState([]);
+    const history = useHistory();
+        const [brandSelected, setBrandSelected] = useState('')
         const baseColumns = [
             {
                 title: 'Tên xe',
@@ -332,6 +37,15 @@ function ManageCarsComponent() {
                             <Col span={3} style={{ height: 50, textAlign: 'center', display: 'flex', alignItems: 'center' }}><img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
                             <Col span={21} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15, width: '100%' }} class="textOverflow">{data.Name}</div></Col>
                         </Row>
+                    )
+                }
+            },
+            {
+                title: 'Tên mẫu xe',
+                key: 'carModel',
+                render: (data) => {
+                    return (
+                        <div>{data.CarModel.Name}</div>
                     )
                 }
             },
@@ -368,12 +82,14 @@ function ManageCarsComponent() {
                 }
             }
         ];
-
+        useEffect(() => {
+            CarService.getAllGeneration().then((res) => setGenerations(res.data)).catch((err) => console.log(err))
+            BrandService.getAllBrand().then((res) => { setBrands(res.data) }).catch((err) => console.log(err))
+        }, [])
         const handleCancelCarDetail = () => {
             setVisibleCarDetail(false);
         }
         const handleVisibleCarDetail = (value) => {
-            console.log(value)
             let data = [];
             data = value.Image.split('|')
             if (data.length > 1) {
@@ -382,23 +98,57 @@ function ManageCarsComponent() {
             setCarImg(data)
             setCarDetail(value);
             setVisibleCarDetail(true);
-            CarService.getCarWithAttributeByGenerationId(value.Id)
-                .then((result) => {
-                    setAttributes(result.data)
+            let fakeSub = []
+            let fakeAttribute = []
+            BrandService.getBrandById(value.CarModel.BrandId)
+                .then((res) => {
+                    setBrandName(res.data.Name)
                 })
-                .catch((error) => { console.log(error); })
+                .catch((err) => {
+                    console.log(err)
+                })
+            CarService.getCarWithAttributeByGenerationId(value.Id)
+                .then((res) => {
+                    res.data.forEach((filter) => {
+                        if (filter.Attribution.EngineType === "0416e0c8-2120-4d3f-8656-5c708d263c04") {
+                            fakeSub.push(filter);
+                        } else {
+                            fakeAttribute.push(filter);
+                        }
+                    })
+                    setAttributes(fakeAttribute);
+                    setSubs(fakeSub)
+                })
+                .catch((error) => { console.log(error) })
         }
         const handleSelectBrand = (value) => {
+            setBrandSelected(value)
             CarService.getCarModelsByBrand(value).then((res) => setModels(res.data)).catch((err) => console.log(err))
+            CarService.getGenerationByBrand(value)
+                .then((result) => {
+                    setGenerations(result.data)
+                })
+                .catch((err) => console.log(err))
         }
-        const handleBrandClear = (value) => {
-            console.log("clear: ", value)
+        const handleBrandClear = () => {
+            // CarService.getAllGeneration().then((res) => setGenerations(res.data)).catch((err) => console.log(err))
+            history.push('/xe')
         }
-        const handleModelClear = (value) => {
-            console.log("clear: ", value)
+        const handleModelClear = () => {
+            history.push('/xe')
+            // CarService.getGenerationByBrand(brandSelected)
+            //     .then((result) => {
+            //         setGenerations(result.data)
+            //     })
+            //     .catch((err) => console.log(err))
         }
         const handleModelChange = (value) => {
             console.log(value)
+            CarService.getGenerationByCarModel(value)
+                .then((result) => {
+                    setGenerations(result.data)
+                })
+                .catch((err) => console.log(err))
         }
         const confirmDeleteCar = (id) => {
             console.log(id)
@@ -408,7 +158,7 @@ function ManageCarsComponent() {
                     message.destroy()
                     message.success("Xóa xe thành công")
                     setVisibleCarDetail(false)
-                    CarService.getGenerationByCarModel("3ab1d3b5-fd22-4bc2-859b-7e110e225acb").then((res) => setGenerations(res.data)).catch((err) => console.log(err))
+                    CarService.getAllGeneration().then((res) => setGenerations(res.data)).catch((err) => console.log(err))
                 }).catch(() => {
                     message.destroy()
                     message.error("Xóa không thành công")
@@ -433,15 +183,20 @@ function ManageCarsComponent() {
                             </Carousel>
                         </Col>
                         <Col span={12}>
-                            <Descriptions title="Thông số cơ bản" bordered>
+                            <Descriptions title="Thông số chính" bordered>
                                 <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Tên xe" span={3}>{carDetail.Name}</Descriptions.Item>
-                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Mẫu" span={3}>{carDetail.CarModelName}</Descriptions.Item>
-                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Hãng" span={3}>{carDetail.Brand}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Mẫu" span={3}>{carDetail.CarModel.Name}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Hãng" span={3}>{brandName}</Descriptions.Item>
                                 <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Năm sản xuất" span={3}>{carDetail.YearOfManufactor}</Descriptions.Item>
                                 <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Giá tham khảo" span={3}>{carDetail.Price}</Descriptions.Item>
                             </Descriptions>
                         </Col>
                     </Row>
+                    <Descriptions title="Thông số cơ bản" bordered layout="horizontal" style={{ marginBottom: 15 }}>
+                        {subs.length !== 0 && subs.map((attribute) => (
+                            <Descriptions.Item labelStyle={{ fontWeight: '600' }} label={attribute.Attribution.Name}>{attribute.Value}</Descriptions.Item>
+                        ))}
+                    </Descriptions>
                     <Descriptions title="Thông số xe" bordered layout="horizontal" style={{ marginBottom: 15 }}>
                         {attributes.length !== 0 && attributes.map((attribute) => (
                             <Descriptions.Item labelStyle={{ fontWeight: '600' }} label={attribute.Attribution.Name}>{attribute.Value}</Descriptions.Item>
@@ -467,10 +222,1115 @@ function ManageCarsComponent() {
                 </div>
             )
         }
-        useEffect(() => {
-            CarService.getGenerationByCarModel("3ab1d3b5-fd22-4bc2-859b-7e110e225acb").then((res) => setGenerations(res.data)).catch((err) => console.log(err))
-            BrandService.getAllBrand().then((res) => { setBrands(res.data) }).catch((err) => console.log(err))
-        }, [])
+        const CreateCarComponent = () => {
+            const { Step } = Steps;
+            const [visibleStep, setVisibleStep] = React.useState(false);
+            const { Option } = Select;
+            const [current, setCurrent] = React.useState(0);
+            const [base, setBase] = useState([]);
+            const [attribute, setAttribute] = useState([]);
+            const [sub, setSub] = useState([]);
+            const [img, setImg] = useState([]);
+            const [type, setType] = useState('');
+            const [formCreateBase] = Form.useForm();
+            const [attributeName, setAttributeName] = useState([]);
+            const [formCreateAttribute] = Form.useForm();
+            const [formCreateSub] = Form.useForm();
+
+            useEffect(() => {
+                CarService.getAttributeByTypeId(type).then((result) => setAttributeName(result.data)).catch((error) => console.log(error))
+            }, [type])
+            const next = () => {
+                setCurrent(current + 1);
+            };
+            const prev = () => {
+                setCurrent(current - 1);
+            };
+            const showModalStep = () => {
+                setVisibleStep(true);
+            };
+            const handleCancelStep = () => {
+                setVisibleStep(false);
+            };
+            const CreateAttribute = () => {
+                const [engine, setEngine] = useState([])
+                const [showAttribute, setShowAttribute] = useState(0)
+                const [attributes, setAttributes] = useState([])
+                const [typeId, setTypeId] = useState('');
+                const [visibleCreate, setVisibleCreate] = React.useState(false);
+
+                useEffect(() => {
+                    let data = []
+                    CarService.getEngineType()
+                        .then((result) => {
+                            data = result.data
+                            data.shift()
+                            setEngine(data)
+                        })
+                        .catch((error) => console.log(error))
+                }, [])
+                useEffect(() => {
+                    type !== '' && setShowAttribute(1)
+                    CarService.getAttributeByTypeId(type).then((result) => {
+                        setTypeId(type)
+                        setAttributes(result.data)
+                    }).catch((error) => console.log(error))
+                }, [])
+                const onFinishCreateAttribute = (values) => {
+                    let attId = []
+                    let ref = []
+                    let repo = (JSON.stringify(values)).split('",')
+                    attributes.forEach((filterData) => {
+                        ref.push(filterData.Id)
+                    })
+                    for (let i = 0; i < ref.length; i++) {
+                        attId.push({
+                            "value": repo[i].replace("{", "").replace('"}', "").replace(ref[i], "").replace('""', '').replace(':"', '').replace('" ', ''),
+                            "attributionId": attributes[i].Id
+                        })
+                    }
+                    let data = {
+                        "generationId": "null",
+                        "attributionWithValues": attId
+                    }
+                    setAttribute(data)
+                    setType(typeId)
+                    next()
+                }
+                const handleChangeEngine = (values) => {
+                    setShowAttribute(1)
+                    setTypeId(values)
+                    CarService.getAttributeByTypeId(values).then((result) => setAttributes(result.data)).catch((error) => console.log(error))
+                }
+                const handleCancelCreate = () => {
+                    setVisibleCreate(false);
+                };
+                const CreateAttributeModal = () => {
+                    let index = 0;
+                    const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít'])
+                    const [engineCreate, setEngineCreate] = useState([])
+                    const [nameItemss, setNameItemss] = useState('')
+                    const [nameItemsCreate, setNameItemsCreate] = useState('')
+                    const [check, setCheck] = useState(0);
+                    const [formCreate] = Form.useForm();
+                    const [attributeNameToCheck, setAttributeNameToCheck] = useState([])
+                    const [validate, setValidate] = useState(0);
+                    const handleChangeCreateType = (value) => {
+                        formCreate.setFieldsValue({ type: value, measure: 'N/A' })
+                        setCheck(value)
+                    }
+                    useEffect(() => {
+                        CarService.getEngineType()
+                            .then((result) => {
+                                setEngineCreate(result.data)
+                            })
+                            .catch((error) => console.log(error))
+                    }, [])
+                    const onNameChangeItemss = (event) => {
+                        setNameItemss(event.target.value)
+                    };
+                    const addItemss = () => {
+                        setItemss([...itemss, nameItemss || `New item ${index++}`])
+                        setNameItemss('')
+                    };
+                    const onNameChangeItemsCreate = (event) => {
+                        setNameItemsCreate(event.target.value)
+                    };
+                    const addItemsCreate = () => {
+                        CarService.createEngineType(nameItemsCreate)
+                            .then(() => {
+                                CarService.getEngineType().then((result) => { setEngineCreate(result.data) }).catch((error) => console.log(error))
+                                message.success("Tạo loại thuộc tính thành công")
+                            })
+                            .catch(() => { message.error("Tạo loại thuộc tính không thành công") })
+                        setEngineCreate([...engineCreate, nameItemsCreate || `New item ${index++}`])
+                        setNameItemsCreate('')
+                    };
+                    const onCreateAttributeFinish = (values) => {
+                        console.log(values)
+                        message.loading("Đang tải...")
+                        CarService.createAttribute([values])
+                            .then(() => {
+                                message.destroy()
+                                setVisibleCreate(false)
+                                typeId !== '' && setShowAttribute(1)
+                                CarService.getAttributeByTypeId(typeId).then((result) => {
+                                    // setTypeId(typeId)
+                                    setAttributes(result.data)
+                                }).catch((error) => console.log(error))
+                                message.success("Tạo thuộc tính thành công")
+                            })
+                            .catch(() => {
+                                message.error("Tạo thuộc tính không thành công")
+                            })
+                    }
+                    const handleChangeSelectCheckValidate = (value) => {
+                        let data = []
+                        setValidate(0)
+                        formCreate.setFieldsValue({ name: null, type: null })
+                        setCheck(0)
+                        CarService.getAttributeByTypeId(value)
+                            .then((response) => {
+                                response.data.forEach((res) => {
+                                    data.push(res.Name)
+                                })
+                                setAttributeNameToCheck(data)
+                            })
+                            .then((error) => { console.log(error) })
+                    }
+                    const handleChangeCheckAttribute = (e) => {
+                        var data = e.target.value.toLowerCase().replace(/\s/g, '');
+                        for (var i = 0; i < attributeNameToCheck.length; i++) {
+                            if (data === (attributeNameToCheck[i].toLowerCase().replace(/\s/g, ''))) {
+                                // form.setFieldsValue({ name: data })
+                                setValidate(1)
+                                break;
+                            } else {
+                                setValidate(0)
+                            }
+                        }
+                    }
+                    return (
+                        <Form
+                            layout="vertical"
+                            id="createNewAttribute"
+                            onFinish={onCreateAttributeFinish}
+                            form={formCreate}
+                        >
+                            <Form.Item label="Tên loại thuộc tính" name="engineType" rules={[{ required: true, message: "Tên loại thuộc tính không được bỏ trống" }]}>
+                                <Select
+                                    onChange={handleChangeSelectCheckValidate}
+                                    placeholder="Chọn loại thuộc tính"
+                                    dropdownRender={menu => (
+                                        <div>
+                                            {menu}
+                                            <Divider style={{ margin: '4px 0' }} />
+                                            <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
+                                                <Input style={{ flex: 'auto' }} value={nameItemsCreate} onChange={onNameChangeItemsCreate} />
+                                                <Button disabled={nameItemsCreate !== '' ? false : true} style={{ marginLeft: '10px' }} onClick={addItemsCreate}>
+                                                    <PlusOutlined /> Thêm
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    )}
+                                >
+                                    {engineCreate.length !== 0 && engineCreate.map(item => (
+                                        <Option key={item.Id}>{item.Name}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                            <Form.Item label="Tên thuộc tính" name="name" rules={[{ required: true, message: "Tên thuộc tính không được bỏ trống" }]}
+                                help={validate === 1 && "Thuộc tính không được trùng nhau"}
+                                hasFeedback
+                                validateStatus={validate === 1 ? "error" : "success"}
+                            >
+                                <Input.TextArea
+                                    onChange={handleChangeCheckAttribute}
+                                    placeholder="Nhập tên thuộc tính"
+                                    showCount maxLength={100}
+                                    autoSize={{ minRows: 1, maxRows: 10 }}
+                                />
+                            </Form.Item>
+                            <Form.Item label="Kiểu nhập" name="type" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                                <Select
+                                    showSearch
+                                    placeholder="Chọn kiểu nhập"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                    onChange={handleChangeCreateType}
+                                >
+                                    <Option key={1} value={1}>Chữ</Option>
+                                    <Option key={2} value={2}>Số</Option>
+                                </Select>
+                            </Form.Item>
+                            <div style={{ display: check === 0 ? 'none' : false }}>
+                                <Form.Item shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}>
+                                    {() => {
+                                        return (
+                                            <Row gutter={15}>
+                                                <Col span={12} hidden={formCreate.getFieldValue('type') === 1 || formCreate.getFieldValue('type') === undefined}>
+                                                    <Form.Item label="Đơn vị tính" name="measure" rules={[{ required: true, message: "Đơn vị tính không được bỏ trống" }]}>
+                                                        <Select
+                                                            placeholder="Nhập đơn vị tính"
+                                                            dropdownRender={menu => (
+                                                                <div>
+                                                                    {menu}
+                                                                    <Divider style={{ margin: '4px 0' }} />
+                                                                    <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
+                                                                        <Input style={{ flex: 'auto' }} value={nameItemss} onChange={onNameChangeItemss} />
+                                                                        <a
+                                                                            style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
+                                                                            onClick={addItemss}
+                                                                        >
+                                                                            <PlusOutlined /> Thêm
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        >
+                                                            {itemss.map(item => (
+                                                                <Option key={item}>{item}</Option>
+                                                            ))}
+                                                        </Select>
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={12} hidden={formCreate.getFieldValue('type') === undefined}>
+                                                    <Form.Item label="Độ dài tối đa" name="rangeOfValue" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                                                        <InputNumber
+                                                            style={{ width: '100%' }}
+                                                            placeholder="Nhập độ dài"
+                                                            min={1} max={1000000000}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+                                        )
+                                    }}
+                                </Form.Item>
+                            </div>
+                        </Form >
+                    )
+                }
+                return (
+                    <div>
+                        <Modal
+                            destroyOnClose={true}
+                            title={'Thêm thuộc tính'}
+                            visible={visibleCreate}
+                            onCancel={handleCancelCreate}
+                            width={400}
+                            footer={[
+                                <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                                    <Button onClick={handleCancelCreate}>
+                                        Hủy
+                                    </Button>
+                                    <Button type="primary" form="createNewAttribute" key="submit" htmlType="submit">
+                                        Hoàn tất
+                                    </Button>
+                                </Row>
+                            ]}
+                        >
+                            <CreateAttributeModal />
+                        </Modal>
+                        <div style={{ marginBottom: 15 }}>
+                            <Row type="flex" justify="center">
+                                <Spin spinning={engine.length !== 0 ? false : true}>
+                                    <Select
+                                        style={{ width: '240px', marginRight: 15, marginTop: 2, fontWeight: 'bold', marginBottom: 15 }}
+                                        showSearch
+                                        placeholder="Chọn loại thuộc tính"
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }
+                                        defaultValue={type !== '' ? type : null}
+                                        onChange={handleChangeEngine}
+                                    >
+                                        {engine.map(engine => (
+                                            <Option key={engine.Id} value={engine.Id}>{engine.Name}</Option>
+                                        ))}
+                                    </Select>
+                                </Spin>
+                            </Row>
+                        </div>
+                        <Form
+                            layout="vertical"
+                            className="formCreate"
+                            onFinish={onFinishCreateAttribute}
+                            id="createAttribute"
+                            form={formCreateAttribute}
+                        >
+                            {
+                                showAttribute !== 0 &&
+                                <Spin spinning={attributes.length !== 0 ? false : true}>
+                                    <Row gutter={15}>
+                                        {attributes.map((attribute) =>
+                                            attribute.Type === 1 ?
+                                                <Col span={8}>
+                                                    <Form.Item label={attribute.Name} name={attribute.Id} rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                                        <Input.TextArea
+                                                            placeholder={"Nhập " + attribute.Name.toLowerCase()}
+                                                            showCount maxLength={attribute.RangeOfValue}
+                                                            autoSize={{ minRows: 1, maxRows: 10 }}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                                :
+                                                <Col span={8}>
+                                                    <Form.Item label={attribute.Name} name={attribute.Id} rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                                        <NumberFormat
+                                                            decimalScale={0}
+                                                            allowNegative={false}
+                                                            isAllowed={(values) => {
+                                                                const { formattedValue, floatValue } = values;
+                                                                return formattedValue === "" || floatValue <= attribute.RangeOfValue;
+                                                            }}
+                                                            placeholder={"Nhập " + attribute.Name.toLowerCase() + " (" + attribute.Measure + ")"}
+                                                            className="currency"
+                                                            displayType="input"
+                                                            type="primary"
+                                                            suffix={" " + attribute.Measure}
+                                                            thousandSeparator={'.'}
+                                                            decimalSeparator={','}
+                                                            spellCheck="false"
+                                                            style={{
+                                                                width: '100%',
+                                                                border: '1px solid #d9d9d9',
+                                                                padding: '4px 11px'
+
+                                                            }}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                        )}
+                                    </Row>
+                                </Spin>
+                            }
+                        </Form>
+                        <Row>
+                            <Col span={12}></Col>
+                            <Col span={12}>
+                                <div style={{ float: 'right', marginTop: 15 }}> <Button type="primary" onClick={setVisibleCreate} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}>Thêm thuộc tính</Button></div>
+                            </Col>
+                        </Row>
+                    </div>
+                )
+            }
+            const CreateBase = () => {
+                const [previewImage, setPreviewImage] = useState('');
+                const [previewTitle, setPreviewTitle] = useState('');
+                const [fileList, setFileList] = useState([]);
+                const [urls, setUrls] = useState([]);
+                const [visible, setVisible] = React.useState(false);
+                const [brands, setBrands] = useState([]);
+                const [models, setModels] = useState([]);
+                const [price, setPrice] = useState(0);
+                function deleteImage(index) {
+
+                }
+                useEffect(() => {
+                    BrandService.getAllBrand()
+                        .then(res => {
+                            setBrands(res.data);
+                        })
+                        .catch(err => console.log(err))
+                }, [])
+                const handleCancel = () => {
+                    setVisible(false);
+                };
+                function getBase64(file) {
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = error => reject(error);
+                    });
+                }
+                const handlePreview = async file => {
+                    if (!file.url && !file.preview) {
+                        file.preview = await getBase64(file.originFileObj);
+                    }
+                    setVisible(true)
+                    setPreviewImage(file.url || file.preview)
+                    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
+                };
+                const handleChange = ({ fileList }) => {
+                    setFileList(fileList);
+                };
+                const customRequest = ({ file, onSuccess, onError }) => {
+                    const uploadTask = storage.ref(`images/${file.name}`).put(file);
+                    uploadTask.on(
+                        "state_changed",
+                        snapshot => { },
+                        error => {
+                            onError(error)
+                        },
+                        async () => {
+                            await storage
+                                .ref("images")
+                                .child(file.name)
+                                .getDownloadURL()
+                                .then((urls) => {
+                                    onSuccess(setUrls((prevState) => [...prevState, urls]));
+                                });
+                        }
+                    );
+                }
+                const normFile = (e) => {
+                    const stringData = urls.reduce((result, key) => {
+                        return `${result}${key}|`
+                    }, "")
+                    return stringData
+                };
+                const beforeUpload = (file) => {
+                    const isImage = file.type.indexOf('image/') === 0;
+                    if (!isImage) {
+                        message.error('You can only upload image file!');
+                    }
+                    const isLt5M = file.size / 1024 / 1024 < 2;
+                    if (!isLt5M) {
+                        message.error('Image must smaller than 2MB!');
+                    }
+                    return isImage && isLt5M;
+                }
+                const uploadButton = (
+                    <div>
+                        <PlusOutlined />
+                        <div style={{ marginTop: 8 }}>Tải ảnh</div>
+                    </div>
+                );
+                const onFinishCreateBase = (values) => {
+                    let data = [];
+                    data = values.image.split('|')
+                    if (data.length > 1) {
+                        data.pop();
+                    }
+                    setImg(data)
+                    setBase(values)
+                    next()
+                    console.log(values)
+                }
+                const handleBrandChange = (id, key) => {
+                    console.log(key.key)
+                    formCreateBase.setFieldsValue({ carModelId: [], brandName: key.key })
+                    CarService.getCarModelsByBrand(key.key).then((res) => setModels(res.data)).catch((err) => console.log(err))
+                }
+                const handleModelChange = (id, key) => {
+                    console.log(key.key)
+                    formCreateBase.setFieldsValue({ carModelId: key.key })
+                }
+                const onPrice = (e) => {
+                    const string = e.target.value;
+                    setPrice(string.replace(/\D/g, ''))
+                    formCreateBase.setFieldsValue({ price: string.replace(/\D/g, '') })
+                }
+                const onYear = (date, dateString) => {
+                    console.log(dateString);
+                    formCreateBase.setFieldsValue({ yearOfManufactor: dateString })
+                }
+                return (
+                    <div>
+                        <Modal
+                            animation={false}
+                            visible={visible}
+                            title={previewTitle}
+                            footer={null}
+                            onCancel={handleCancel}
+                        >
+                            <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                        </Modal>
+                        <Form
+                            layout="vertical"
+                            className="formCreate"
+                            onFinish={onFinishCreateBase}
+                            id="createBase"
+                            form={formCreateBase}
+                        >
+                            <Form.Item hidden={true} name="price" ><Input /></Form.Item>
+                            <Form.Item hidden={true} name="yearOfManufactor" ><Input /></Form.Item>
+                            <Form.Item hidden={true} name="carModelId" ><Input /></Form.Item>
+                            <Form.Item hidden={true} name="brandName" ><Input /></Form.Item>
+                            <div style={{ paddingBottom: 8, fontSize: 14, fontWeight: '500' }}><span style={{ marginRight: 4, fontSize: 14, color: '#ff4d4f', fontFamily: 'SimSun, sans-serif', lineHeight: 1 }}>*</span>Thêm ảnh</div>
+                            <Row>
+                                {img.length !== 0 && img.map((object, i) => (
+                                    <div style={{ marginRight: 8 }}>
+                                        <Tooltip placement="topRight" color="#FF7643" title={<i onClick={() => { deleteImage(i) }} id="btnDelete" class="far fa-trash-alt"> Xóa hình</i>}>
+                                            <Image style={{ padding: 8, border: '1px solid #d9d9d9' }} width={104} height={104} key={i} src={object} />
+                                        </Tooltip>
+                                    </div>
+                                ))}
+                                <Form.Item
+                                    label=""
+                                    name="image"
+                                    getValueFromEvent={normFile}
+                                    rules={[{ required: true, message: "" }]}
+                                >
+                                    <Upload
+                                        name="image"
+                                        listType="picture-card"
+                                        fileList={fileList}
+                                        onPreview={handlePreview}
+                                        onChange={handleChange}
+                                        customRequest={customRequest}
+                                        beforeUpload={beforeUpload}
+                                        multiple={true}
+                                        accept=".png,.jpeg,.jpg"
+                                    >
+                                        {fileList.length >= 8 ? null : uploadButton}
+                                    </Upload>
+                                </Form.Item>
+                            </Row>
+                            <Row gutter={15}>
+                                <Col span={8}>
+                                    <Spin spinning={brands.length !== 0 ? false : true}>
+                                        <Form.Item label="Chọn hãng" name="brand" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                            <Select
+                                                showSearch
+                                                placeholder="Chọn hãng xe"
+                                                optionFilterProp="children"
+                                                filterOption={(input, option) =>
+                                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                }
+                                                onChange={handleBrandChange}
+                                            >
+                                                {brands.map(brands => (
+                                                    <Option key={brands.Id} value={brands.Name}>{brands.Name}</Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                    </Spin>
+                                </Col>
+                                <Col span={8}>
+                                    <Form.Item label="Chọn mẫu xe" name="carModelName" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                        <Select
+                                            disabled={models.length !== 0 ? false : true}
+                                            showSearch
+                                            placeholder="Chọn mẫu xe"
+                                            optionFilterProp="children"
+                                            filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            }
+                                            onChange={handleModelChange}
+                                        >
+                                            {models.map(model => (
+                                                <Option key={model.Id} value={model.Name}>{model.Name}</Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                                <Col span={8}>
+                                    <Form.Item label="Năm sản xuất" name="nam" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                        <DatePicker onChange={onYear} style={{ width: '100%' }} placeholder="Chọn năm sản xuất" picker="year" />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <Row gutter={15}>
+                                <Col span={16}>
+                                    <Form.Item label="Tên xe" name="name" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                        <Input.TextArea
+                                            placeholder="Nhập tên xe"
+                                            showCount maxLength={200}
+                                            autoSize={{ minRows: 1, maxRows: 10 }}
+                                        />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={8}>
+                                    <Form.Item label={<div>Giá:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Gia" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                        <NumberFormat
+                                            allowNegative={false}
+                                            decimalScale={0}
+                                            onChange={onPrice}
+                                            maxLength={20}
+                                            placeholder="Nhập giá xe (vnđ)"
+                                            className="currency"
+                                            displayType="input"
+                                            type="primary"
+                                            suffix=" vnđ"
+                                            thousandSeparator={'.'}
+                                            decimalSeparator={','}
+                                            spellCheck="false"
+                                            style={{
+                                                width: '100%',
+                                                border: '1px solid #d9d9d9',
+                                                padding: '4px 11px'
+                                            }}
+                                        />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </div >
+                )
+            }
+            const CreateSub = () => {
+                const [subData, setSubData] = useState([])
+                const [visibleCreate, setVisibleCreate] = React.useState(false);
+
+                const onFinishCreateSub = (values) => {
+                    let attId = []
+                    let ref = []
+                    let repo = (JSON.stringify(values)).split('",')
+                    subData.forEach((filterData) => {
+                        ref.push(filterData.Id)
+                    })
+                    for (let i = 0; i < ref.length; i++) {
+                        attId.push({
+                            "value": repo[i].replace("{", "").replace('"}', "").replace(ref[i], "").replace('""', '').replace(':"', '').replace('" ', ''),
+                            "attributionId": subData[i].Id
+                        })
+                    }
+                    let data = {
+                        "generationId": "null",
+                        "attributionWithValues": attId
+                    }
+                    setSub(data)
+                    next()
+                }
+                console.log(sub)
+                const handleCancelCreate = () => {
+                    setVisibleCreate(false);
+                };
+                const CreateAttributeModal = () => {
+                    let index = 0;
+                    const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít'])
+                    const [engineCreate, setEngineCreate] = useState([])
+                    const [nameItemss, setNameItemss] = useState('')
+                    const [nameItemsCreate, setNameItemsCreate] = useState('')
+                    const [check, setCheck] = useState(0);
+                    const [formCreate] = Form.useForm();
+                    const [attributeNameToCheck, setAttributeNameToCheck] = useState([])
+                    const [validate, setValidate] = useState(0);
+                    const handleChangeCreateType = (value) => {
+                        formCreate.setFieldsValue({ type: value, measure: 'N/A' })
+                        setCheck(value)
+                    }
+                    useEffect(() => {
+                        CarService.getEngineType()
+                            .then((result) => {
+                                setEngineCreate(result.data)
+                            })
+                            .catch((error) => console.log(error))
+                    }, [])
+                    const onNameChangeItemss = (event) => {
+                        setNameItemss(event.target.value)
+                    };
+                    const addItemss = () => {
+                        setItemss([...itemss, nameItemss || `New item ${index++}`])
+                        setNameItemss('')
+                    };
+                    const onNameChangeItemsCreate = (event) => {
+                        setNameItemsCreate(event.target.value)
+                    };
+                    const addItemsCreate = () => {
+                        CarService.createEngineType(nameItemsCreate)
+                            .then(() => {
+                                CarService.getEngineType().then((result) => { setEngineCreate(result.data) }).catch((error) => console.log(error))
+                                message.success("Tạo thuộc tính thành công")
+                            })
+                            .catch(() => { message.error("Tạo thuộc tính không thành công") })
+                        setEngineCreate([...engineCreate, nameItemsCreate || `New item ${index++}`])
+                        setNameItemsCreate('')
+                    };
+                    const onCreateAttributeFinish = (values) => {
+                        console.log(values)
+                        message.loading("Đang tải...")
+                        CarService.createAttribute([values])
+                            .then(() => {
+                                message.destroy()
+                                setVisibleCreate(false)
+                                CarService.getAttributeByTypeId("0416e0c8-2120-4d3f-8656-5c708d263c04").then((result) => {
+                                    // setTypeId(typeId)
+                                    setSubData(result.data)
+                                }).catch((error) => console.log(error))
+                                message.success("Tạo thuộc tính thành công")
+                            })
+                            .catch(() => {
+                                message.error("Tạo thuộc tính không thành công")
+                            })
+                    }
+                    const handleChangeSelectCheckValidate = (value) => {
+                        let data = []
+                        setValidate(0)
+                        formCreate.setFieldsValue({ name: null, type: null })
+                        setCheck(0)
+                        CarService.getAttributeByTypeId(value)
+                            .then((response) => {
+                                response.data.forEach((res) => {
+                                    data.push(res.Name)
+                                })
+                                setAttributeNameToCheck(data)
+                            })
+                            .then((error) => { console.log(error) })
+                    }
+                    const handleChangeCheckAttribute = (e) => {
+                        var data = e.target.value.toLowerCase().replace(/\s/g, '');
+                        for (var i = 0; i < attributeNameToCheck.length; i++) {
+                            if (data === (attributeNameToCheck[i].toLowerCase().replace(/\s/g, ''))) {
+                                // form.setFieldsValue({ name: data })
+                                setValidate(1)
+                                break;
+                            } else {
+                                setValidate(0)
+                            }
+                        }
+                    }
+                    return (
+                        <Form
+                            layout="vertical"
+                            id="createNewAttributeSub"
+                            onFinish={onCreateAttributeFinish}
+                            form={formCreate}
+                        >
+                            <Form.Item label="Tên thuộc tính" name="engineType" rules={[{ required: true, message: "Tên thuộc tính không được bỏ trống" }]}>
+                                <Select
+                                    onChange={handleChangeSelectCheckValidate}
+                                    placeholder="Chọn loại thuộc tính"
+                                    dropdownRender={menu => (
+                                        <div>
+                                            {menu}
+                                            <Divider style={{ margin: '4px 0' }} />
+                                            <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
+                                                <Input style={{ flex: 'auto' }} value={nameItemsCreate} onChange={onNameChangeItemsCreate} />
+                                                <Button disabled={nameItemsCreate !== '' ? false : true} style={{ marginLeft: '10px' }} onClick={addItemsCreate}>
+                                                    <PlusOutlined /> Thêm
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    )}
+                                >
+                                    {engineCreate.length !== 0 && engineCreate.map(item => (
+                                        <Option key={item.Id}>{item.Name}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                            <Form.Item label="Tên thuộc tính" name="name" rules={[{ required: true, message: "Tên thuộc tính không được bỏ trống" }]}
+                                help={validate === 1 && "Thuộc tính không được trùng nhau"}
+                                hasFeedback
+                                validateStatus={validate === 1 ? "error" : "success"}
+                            >
+                                <Input.TextArea
+                                    onChange={handleChangeCheckAttribute}
+                                    placeholder="Nhập tên thuộc tính"
+                                    showCount maxLength={100}
+                                    autoSize={{ minRows: 1, maxRows: 10 }}
+                                />
+                            </Form.Item>
+                            <Form.Item label="Kiểu nhập" name="type" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                                <Select
+                                    showSearch
+                                    placeholder="Chọn kiểu nhập"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                    onChange={handleChangeCreateType}
+                                >
+                                    <Option key={1} value={1}>Chữ</Option>
+                                    <Option key={2} value={2}>Số</Option>
+                                </Select>
+                            </Form.Item>
+                            <div style={{ display: check === 0 ? 'none' : false }}>
+                                <Form.Item shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}>
+                                    {() => {
+                                        return (
+                                            <Row gutter={15}>
+                                                <Col span={12} hidden={formCreate.getFieldValue('type') === 1 || formCreate.getFieldValue('type') === undefined}>
+                                                    <Form.Item label="Đơn vị tính" name="measure" rules={[{ required: true, message: "Đơn vị tính không được bỏ trống" }]}>
+                                                        <Select
+                                                            placeholder="Nhập đơn vị tính"
+                                                            dropdownRender={menu => (
+                                                                <div>
+                                                                    {menu}
+                                                                    <Divider style={{ margin: '4px 0' }} />
+                                                                    <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
+                                                                        <Input style={{ flex: 'auto' }} value={nameItemss} onChange={onNameChangeItemss} />
+                                                                        <a
+                                                                            style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
+                                                                            onClick={addItemss}
+                                                                        >
+                                                                            <PlusOutlined /> Thêm
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        >
+                                                            {itemss.map(item => (
+                                                                <Option key={item}>{item}</Option>
+                                                            ))}
+                                                        </Select>
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={12} hidden={formCreate.getFieldValue('type') === undefined}>
+                                                    <Form.Item label="Độ dài tối đa" name="rangeOfValue" rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                                                        <InputNumber
+                                                            style={{ width: '100%' }}
+                                                            placeholder="Nhập độ dài"
+                                                            min={1} max={1000000000}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+                                        )
+                                    }}
+                                </Form.Item>
+                            </div>
+                        </Form >
+                    )
+                }
+                useEffect(() => {
+                    CarService.getAttributeByTypeId("0416e0c8-2120-4d3f-8656-5c708d263c04").then((res) => { setSubData(res.data) }).catch((err) => { console.log(err) })
+                }, [])
+                return (
+                    <div>
+                        <Modal
+                            destroyOnClose={true}
+                            title={'Thêm thuộc tính'}
+                            visible={visibleCreate}
+                            onCancel={handleCancelCreate}
+                            width={400}
+                            footer={[
+                                <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                                    <Button onClick={handleCancelCreate}>
+                                        Hủy
+                                    </Button>
+                                    <Button type="primary" form="createNewAttributeSub" key="submit" htmlType="submit">
+                                        Hoàn tất
+                                    </Button>
+                                </Row>
+                            ]}
+                        >
+                            <CreateAttributeModal />
+                        </Modal>
+                        <Form
+                            layout="vertical"
+                            className="formCreate"
+                            onFinish={onFinishCreateSub}
+                            id="createSub"
+                            form={formCreateSub}
+                        >
+                            {
+                                <Spin spinning={subData.length !== 0 ? false : true}>
+                                    <Row gutter={15}>
+                                        {subData.map((attribute) =>
+                                            attribute.Type === 1 ?
+                                                <Col span={8}>
+                                                    <Form.Item label={attribute.Name} name={attribute.Id} rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                                        <Input.TextArea
+                                                            placeholder={"Nhập " + attribute.Name.toLowerCase()}
+                                                            showCount maxLength={attribute.RangeOfValue}
+                                                            autoSize={{ minRows: 1, maxRows: 10 }}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                                :
+                                                <Col span={8}>
+                                                    <Form.Item label={attribute.Name} name={attribute.Id} rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                                        <NumberFormat
+                                                            decimalScale={0}
+                                                            allowNegative={false}
+                                                            isAllowed={(values) => {
+                                                                const { formattedValue, floatValue } = values;
+                                                                return formattedValue === "" || floatValue <= attribute.RangeOfValue;
+                                                            }}
+                                                            placeholder={"Nhập " + attribute.Name.toLowerCase() + " (" + attribute.Measure + ")"}
+                                                            className="currency"
+                                                            displayType="input"
+                                                            type="primary"
+                                                            suffix={" " + attribute.Measure}
+                                                            thousandSeparator={'.'}
+                                                            decimalSeparator={','}
+                                                            spellCheck="false"
+                                                            style={{
+                                                                width: '100%',
+                                                                border: '1px solid #d9d9d9',
+                                                                padding: '4px 11px'
+
+                                                            }}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                        )}
+                                    </Row>
+                                </Spin>
+                            }
+                        </Form>
+                        <Row>
+                            <Col span={12}></Col>
+                            <Col span={12}>
+                                <div style={{ float: 'right', marginTop: 15 }}> <Button type="primary" onClick={setVisibleCreate} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}>Thêm thuộc tính</Button></div>
+                            </Col>
+                        </Row>
+                    </div>
+                )
+            }
+            const Confirm = () => {
+                const [subName, setSubName] = useState([])
+                useEffect(() => {
+                    CarService.getAttributeByTypeId("0416e0c8-2120-4d3f-8656-5c708d263c04").then((res) => { setSubName(res.data) }).catch((err) => { console.log(err) })
+                }, [])
+                const data = []
+                const subDataPrint = []
+                for (let i = 0; i < attributeName.length; i++) {
+                    data.push({
+                        "name": attributeName.length !== 0 && attributeName[i].Name,
+                        "value": attribute.length !== 0 && attribute.attributionWithValues[i].value
+                    })
+                }
+                for (let i = 0; i < subName.length; i++) {
+                    subDataPrint.push({
+                        "name": subName.length !== 0 && subName[i].Name,
+                        "value": sub.length !== 0 && sub.attributionWithValues[i].value
+                    })
+                }
+                console.log("sub:", sub)
+                return (
+                    <div style={{ marginTop: '25px' }}>
+                        <Row gutter={15} style={{ marginBottom: 15 }}>
+                            <Col span={12} style={{ marginTop: '15px' }}>
+                                <Carousel effect="fade">
+                                    {img.length !== 0 && img.map((object, i) => {
+                                        return (
+                                            <div>
+                                                <Image preview={false} style={{ display: 'block', margin: 'auto', maxHeight: '300px' }} key={i} src={object} />
+                                            </div>)
+                                    })}
+                                </Carousel>
+                            </Col>
+                            <Col span={12}>
+                                <Descriptions title="Thông số chính" bordered>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Tên xe" span={3}>{base.name}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Mẫu" span={3}>{base.carModelName}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Hãng" span={3}>{base.brand}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Năm sản xuất" span={3}>{base.yearOfManufactor}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Giá tham khảo" span={3}>{base.price}</Descriptions.Item>
+                                </Descriptions>
+                            </Col>
+                        </Row>
+                        <Descriptions title="Thông số cơ bản" bordered layout="horizontal" style={{ marginBottom: 15 }}>
+                            {subDataPrint.map((sub) => (
+                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label={sub.name}>{sub.value}</Descriptions.Item>
+                            ))}
+                        </Descriptions>
+                        <Descriptions title="Thông số xe" bordered layout="horizontal" style={{ marginBottom: 15 }}>
+                            {data.map((attribute) => (
+                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label={attribute.name}>{attribute.value}</Descriptions.Item>
+                            ))}
+                        </Descriptions>
+                    </div>
+                )
+            }
+            const StepSubmit = () => {
+                const steps = [
+                    {
+                        title: 'Thông số chính',
+                        content: <CreateBase />,
+                    },
+                    {
+                        title: 'Thông số cơ bản',
+                        content: <CreateSub />,
+                    },
+                    {
+                        title: 'Thuộc tính xe',
+                        content: <CreateAttribute />,
+                    },
+                    {
+                        title: 'Xác nhận',
+                        content: <Confirm />,
+                    },
+                ];
+                const handleSubmit = () => {
+                    message.loading("Đang tải...")
+                    CarService.createGeneration(base)
+                        .then(() => {
+                            CarService.getGenerationByCarModel(base.carModelId)
+                                .then((result) => {
+                                    result.data.forEach((data) => {
+                                        if (data.Name === base.name && data.YearOfManufactor.toString() === base.yearOfManufactor) {
+                                            var old = JSON.stringify(attribute).replace(/null/g, data.Id)
+                                            var news = JSON.parse(old)
+                                            var oldSub = JSON.stringify(sub).replace(/null/g, data.Id)
+                                            var newsSub = JSON.parse(oldSub)
+                                            console.log(newsSub)
+                                            CarService.createCarWithAttribute(news)
+                                                .then(() => {
+                                                    CarService.createCarWithAttribute(newsSub)
+                                                        .then(() => {
+                                                            message.destroy()
+                                                            message.success("Tạo xe thành công")
+                                                            setVisibleStep(false)
+                                                            CarService.getAllGeneration().then((res) => setGenerations(res.data)).catch((err) => console.log(err))
+                                                            BrandService.getAllBrand().then((res) => { setBrands(res.data) }).catch((err) => console.log(err))
+                                                        })
+                                                        .catch((err) => {
+                                                            message.destroy()
+                                                            message.error("Tạo xe không thành công")
+                                                            console.log(err)
+                                                        })
+                                                })
+                                                .catch((err) => {
+                                                    message.destroy()
+                                                    message.error("Tạo xe không thành công")
+                                                    console.log(err)
+                                                })
+                                        }
+                                    })
+                                })
+                                .catch((err) => {
+                                    message.destroy()
+                                    message.error("Tạo xe không thành công")
+                                    console.log(err)
+                                })
+                        })
+                        .catch((err) => {
+                            message.destroy()
+                            message.error("Tạo xe không thành công")
+                            console.log(err)
+                        })
+                }
+                return (
+                    <>
+                        <Steps current={current} style={{ marginBottom: 15 }}>
+                            {steps.map(item => (
+                                <Step key={item.title} title={item.title} />
+                            ))}
+                        </Steps>
+                        <div className="steps-content">{steps[current].content}</div>
+                        <Row>
+                            <Col span={12}></Col>
+                            <Col span={12}>
+                                <div className="steps-action" style={{ marginTop: '15px', float: 'right' }} >
+                                    {current > 0 && (
+                                        <Button style={{ marginRight: '8px' }} onClick={() => prev()}>
+                                            Quay lại
+                                        </Button>
+                                    )}
+                                    {current === 0 && (
+                                        <Button type="primary" form="createBase" key="submit" htmlType="submit">
+                                            Tiếp tục
+                                        </Button>
+                                    )}
+                                    {current === 1 && (
+                                        <Button type="primary" form="createSub" key="submit" htmlType="submit">
+                                            Tiếp tục
+                                        </Button>
+                                    )}
+                                    {current === 2 && (
+                                        <Button type="primary" form="createAttribute" key="submit" htmlType="submit">
+                                            Tiếp tục
+                                        </Button>
+                                    )}
+                                    {current === steps.length - 1 && (
+                                        <Button type="primary" onClick={handleSubmit}>
+                                            Hoàn tất
+                                        </Button>
+                                    )}
+                                </div>
+                            </Col>
+                        </Row>
+                    </>
+                );
+            };
+
+            return (
+                <>
+                    <div>
+                        <Modal
+                            destroyOnClose={true}
+                            title='Tạo xe mới'
+                            visible={visibleStep}
+                            onCancel={handleCancelStep}
+                            width={1000}
+                            footer={false}
+                        >
+                            <StepSubmit />
+                        </Modal>
+                        <Button type="primary" shape="round" onClick={showModalStep} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2.5 }}>Tạo xe</span></Button>
+                    </div>
+                </>
+            )
+        }
         const search = value => {
             console.log("PASS", { value });
             const filterTable = generations.filter(o =>
@@ -482,9 +1342,9 @@ function ManageCarsComponent() {
             );
             setFilterTable(filterTable)
         }
-        console.log(generations)
         return (
             <>
+                <CreateCarComponent />
                 <Modal
                     destroyOnClose={true}
                     title='Xem chi tiết xe'
@@ -526,7 +1386,7 @@ function ManageCarsComponent() {
                         allowClear
                     >
                         {models.map(model => (
-                            <Option key={model.Id} value={model.Name}>{model.Name}</Option>
+                            <Option key={model.Id} value={model.Id}>{model.Name}</Option>
                         ))}
                     </Select>
                     <div style={{ textAlign: 'center', marginBottom: 15 }}>
@@ -563,63 +1423,6 @@ function ManageCarsComponent() {
     }
     return (
         <div>
-            <Modal
-                destroyOnClose={true}
-                title='Tạo xe mới'
-                visible={visible}
-                onOk={handleOk}
-                confirmLoading={confirmLoading}
-                onCancel={handleCancel}
-                width={1000}
-            >
-                <CreateCarBodyModalComponent />
-            </Modal>
-            <Modal
-                destroyOnClose={true}
-                title="Chi tiết xe"
-                visible={visibleDetail}
-                onOk={handleOkDetail}
-                confirmLoading={confirmLoading}
-                onCancel={handleCancelDetail}
-                width={1100}
-                footer={[
-                    <Row style={{ float: 'right' }}>
-                        <Button type="primary" onClick={handleCancelDetail}>
-                            Xong
-                        </Button>
-                    </Row>
-                ]}
-            >
-                <ViewCarModalComponent record={record} recordImage={recordImage} />
-            </Modal>
-            <Modal
-                destroyOnClose={true}
-                title={"Cập nhật xe"}
-                visible={visible}
-                onOk={handleOk}
-                confirmLoading={confirmLoading}
-                onCancel={handleCancel}
-                width={1000}
-                footer={[
-                    <Row style={{ float: 'right' }}>
-                        <Button onClick={handleCancel}>
-                            Hủy
-                        </Button>
-                        <Button form="myFormEdit" type="primary" key="submit" htmlType="submit">
-                            Cập nhật
-                        </Button>
-                    </Row>
-                ]}
-            >
-                <EditCarBodyComponent record={record} recordImage={recordImage} />
-            </Modal>
-            <CreateCarComponent />
-            {/* <Spin
-                spinning={car === null ? true : false}
-                // delay={100}
-                size="large" >
-                <Cars />
-            </Spin> */}
             <CarsTable />
         </div>
     )

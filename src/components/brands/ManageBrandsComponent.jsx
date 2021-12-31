@@ -59,9 +59,7 @@ export default function ManageBrandComponent() {
     const onFinish1 = (values) => {
         BrandService.updateBrand(values.id, values)
             .then((res) => {
-                setTimeout(() => {
-                    message.success("Cập nhật thương hiệu thành công")
-                }, 200)
+                message.success("Cập nhật thương hiệu thành công")
                 setTimeout(() => {
                     window.location.href = '/thuong-hieu'
                 }, 500)
@@ -82,9 +80,7 @@ export default function ManageBrandComponent() {
                 BrandService.deleteBrand(id)
                     .then(() => {
                         console.log('Deleted')
-                        setTimeout(() => {
-                            message.success("Xóa thương hiệu thành công");
-                        }, 200)
+                        message.success("Xóa thương hiệu thành công");
                         setTimeout(() => {
                             window.location.href = '/thuong-hieu'
                         }, 500)

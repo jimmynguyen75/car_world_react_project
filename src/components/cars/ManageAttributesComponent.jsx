@@ -1,12 +1,10 @@
 import { PlusCircleOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons';
-import { Button, Col, Divider, Form, Input, message, Modal, Row, Select, Table, Transfer, Spin, Popconfirm } from 'antd';
+import { Button, Col, Divider, Form, Input, message, Modal, Row, Select, Table, Transfer, Spin, Popconfirm, InputNumber } from 'antd';
 import React, { useEffect, useState, useRef } from 'react';
 import CarService from '../../services/CarService';
 import CreateAttributesComponent from './CreateAttributesComponent';
 
 function ManageAttributesComponent() {
-    const [pageTableAttributesSize, setPageTableAttributesSize] = React.useState(5);
-    const [pageTableAttributes, setPageTableAttributes] = React.useState(1);
     const [visible, setVisible] = React.useState(false);
     const [visibleItem, setVisibleItem] = React.useState(false);
     const [attributes, setAttributes] = useState([]);
@@ -101,6 +99,8 @@ function ManageAttributesComponent() {
         const [visibleEdit, setVisibleEdit] = React.useState(false);
         const [visibleCreate, setVisibleCreate] = React.useState(false);
         const [visibleEngine, setVisibleEngine] = React.useState(false);
+        const [pageTableAttributesSize, setPageTableAttributesSize] = React.useState(5);
+        const [pageTableAttributes, setPageTableAttributes] = React.useState(1);
         const [name, setName] = useState('');
         const [filterTable, setFilterTable] = useState(null);
         const [attributesSelected, setAttributesSelected] = useState([]);
@@ -251,10 +251,10 @@ function ManageAttributesComponent() {
                                     </Col>
                                     <Col span={12}>
                                         <Form.Item label="Độ dài tối đa" name="rangeOfValue" rules={[{ required: true, message: "Không được bỏ trống" }]}>
-                                            <Input.TextArea
-                                                placeholder="Nhập chiều dài"
-                                                showCount maxLength={10}
-                                                autoSize={{ minRows: 1, maxRows: 10 }}
+                                            <InputNumber
+                                                style={{ width: '100%' }}
+                                                placeholder="Nhập độ dài"
+                                                min={1} max={1000000000}
                                             />
                                         </Form.Item>
                                     </Col>
@@ -299,9 +299,9 @@ function ManageAttributesComponent() {
                 CarService.createEngineType(nameItemsCreate)
                     .then(() => {
                         CarService.getEngineType().then((result) => { setEngineCreate(result.data) }).catch((error) => console.log(error))
-                        message.success("Tạo động cơ thành công")
+                        message.success("Tạo thuộc tính thành công")
                     })
-                    .catch(() => { message.error("Tạo động cơ không thành công") })
+                    .catch(() => { message.error("Tạo thuộc tính không thành công") })
                 setEngineCreate([...engineCreate, nameItemsCreate || `New item ${index++}`])
                 setNameItemsCreate('')
             };
@@ -357,11 +357,11 @@ function ManageAttributesComponent() {
                     onFinish={onCreateAttributeFinish}
                     form={formCreate}
                 >
-                    <Form.Item label="Tên động cơ" name="engineType" rules={[{ required: true, message: "Tên động cơ không được bỏ trống" }]}>
+                    <Form.Item label="Tên thuộc tính" name="engineType" rules={[{ required: true, message: "Tên thuộc tính không được bỏ trống" }]}>
                         <Select
                             // defaultValue={items.length !== 0 && items[0].Id}
                             onChange={handleChangeSelectCheckValidate}
-                            placeholder="Chọn loại động cơ"
+                            placeholder="Chọn loại thuộc tính"
                             dropdownRender={menu => (
                                 <div>
                                     {menu}
@@ -439,10 +439,10 @@ function ManageAttributesComponent() {
                                         </Col>
                                         <Col span={12} hidden={formCreate.getFieldValue('type') === undefined}>
                                             <Form.Item label="Độ dài tối đa" name="rangeOfValue" rules={[{ required: true, message: "Không được bỏ trống" }]}>
-                                                <Input.TextArea
-                                                    placeholder="Nhập chiều dài"
-                                                    showCount maxLength={10}
-                                                    autoSize={{ minRows: 1, maxRows: 10 }}
+                                                <InputNumber
+                                                    style={{ width: '100%' }}
+                                                    placeholder="Nhập độ dài"
+                                                    min={1} max={1000000}
                                                 />
                                             </Form.Item>
                                         </Col>
@@ -476,9 +476,9 @@ function ManageAttributesComponent() {
                             setItems(result.data)
                         })
                         .catch((error) => console.log(error))
-                    message.success("Tạo động cơ thành công")
+                    message.success("Tạo thuộc tính thành công")
                 })
-                .catch(() => { message.error("Tạo động cơ không thành công") })
+                .catch(() => { message.error("Tạo thuộc tính không thành công") })
             setItems([...items, name || `New item ${index++}`])
             setName('')
         };
@@ -618,22 +618,22 @@ function ManageAttributesComponent() {
                                 setAttributeList(result.data)
                             })
                             .catch((error) => console.log(error))
-                        message.success("Cập nhật động cơ thành công")
+                        message.success("Cập nhật thuộc tính thành công")
                     })
                     .catch(() => {
-                        message.error("Cập nhật động cơ không thành công")
+                        message.error("Cập nhật thuộc tính không thành công")
                     })
             }
             const confirmDeleteEngine = (id) => {
                 CarService.deleteEngineType(id)
                     .then(() => {
                         CarService.getEngineType().then((result) => { setAttributeList(result.data) }).catch((error) => console.log(error))
-                        message.success("Xóa động cơ xe thành công")
-                    }).catch(() => message.error("Xóa động cơ xe không thành công"))
+                        message.success("Xóa thuộc tính xe thành công")
+                    }).catch(() => message.error("Xóa thuộc tính xe không thành công"))
             };
             const baseColumnsAttribute = [
                 {
-                    title: 'Mẫu xe',
+                    title: 'Loại thuộc tính',
                     key: 'modelName',
                     render: (data) => {
                         return (
@@ -660,9 +660,9 @@ function ManageAttributesComponent() {
                                                 <Form.Item hidden={true} name="id">
                                                     <Input defaultValue={data.Id} />
                                                 </Form.Item>
-                                                <Form.Item label="Cập nhật động cơ" name="name">
+                                                <Form.Item label="Cập nhật thuộc tính" name="name">
                                                     <Input.TextArea
-                                                        placeholder="Nhập tên động cơ"
+                                                        placeholder="Nhập tên thuộc tính"
                                                         showCount maxLength={100}
                                                         autoSize={{ minRows: 1, maxRows: 10 }}
                                                         style={{ width: '300px' }}
@@ -682,7 +682,7 @@ function ManageAttributesComponent() {
                                 </Col>
                                 <Col span={12}>
                                     <Popconfirm
-                                        title="Bạn có muốn xóa động cơ xe này không?"
+                                        title="Bạn có muốn xóa thuộc tính xe này không?"
                                         onConfirm={() => confirmDeleteEngine(data.Id)}
                                         // onCancel={cancel}
                                         okText="Có"
@@ -749,7 +749,7 @@ function ManageAttributesComponent() {
                     onCancel={handleCancelEdit}
                     width={400}
                     footer={[
-                        <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                        <Row style={{ float: 'right', marginBottom: 30, marginRight: 8 }}>
                             <Button onClick={handleCancelEdit}>
                                 Hủy
                             </Button>
@@ -782,7 +782,7 @@ function ManageAttributesComponent() {
                 </Modal>
                 <Modal
                     destroyOnClose={true}
-                    title='Danh sách động cơ'
+                    title='Danh sách thuộc tính'
                     visible={visibleEngine}
                     onCancel={handleCancelEngine}
                     width={600}
@@ -799,13 +799,13 @@ function ManageAttributesComponent() {
                 <div>
                     <Row>
                         <Button type="primary" shape="round" onClick={setVisibleCreate} className="createButton" style={{ height: 36, float: 'left', marginRight: 15 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2.5 }}>Tạo thuộc tính</span></Button>
-                        <Button type="primary" shape="round" onClick={setVisibleEngine} className="createButton" style={{ height: 36, float: 'left' }} icon={<SettingOutlined />}><span style={{ marginTop: 2.5 }}>Quản lý động cơ</span></Button>
+                        <Button type="primary" shape="round" onClick={setVisibleEngine} className="createButton" style={{ height: 36, float: 'left' }} icon={<SettingOutlined />}><span style={{ marginTop: 2.5 }}>Quản lý thuộc tính</span></Button>
                     </Row>
                     <Select
                         defaultValue={items.length !== 0 && items[0].Id}
                         onChange={handleChangeSelect}
                         style={{ width: 240 }}
-                        placeholder="Chọn loại động cơ"
+                        placeholder="Chọn loại thuộc tính"
                         dropdownRender={menu => (
                             <div>
                                 {menu}
@@ -816,7 +816,7 @@ function ManageAttributesComponent() {
                                         style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
                                         onClick={addItem}
                                     >
-                                        <PlusOutlined /> Thêm động cơ
+                                        <PlusOutlined /> Thêm thuộc tính
                                     </a>
                                 </div>
                             </div>

@@ -69,6 +69,12 @@ class CarService {
     getGenerationByCarModel(id) {
         return axios.get(CARS_GENERATION_URL + "GetAllGenerationsByCarModel?carModelId=" + id, { headers: authHeader() })
     }
+    getAllGeneration() {
+        return axios.get(CARS_GENERATION_URL + "GetAllGenerations", { headers: authHeader() })
+    }
+    getGenerationByBrand(id) {
+        return axios.get(CARS_GENERATION_URL + "GetAllGenerationsByBrand?brandId=" + id, { headers: authHeader() })
+    }
     updateCarGeneration(id, generation) {
         return axios.put(CARS_GENERATION_URL + "UpdateGeneration?id=" + id, generation, { headers: authHeader() })
     }

@@ -32,12 +32,10 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
             .updateAccessoryById(values.id, values)
             .then(() => {
                 console.log(values)
-                setTimeout(() => {
-                    message.success("Cập nhật phụ kiện thành công");
-                }, 500)
+                message.success("Cập nhật phụ kiện thành công");
                 setTimeout(() => {
                     window.location.href = '/phu-kien'
-                }, 1500)
+                }, 500)
             })
             .catch(err => {
                 console.log(err)
@@ -101,12 +99,7 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
         let result = []
         BrandService.getAllAccessoriesBrand()
             .then(res => {
-                res.data.forEach(data => {
-                    if (data.IsDeleted === false) {
-                        result.push(data)
-                    }
-                })
-                setBrands(result)
+                setBrands(res.data)
             }).catch(err => console.log(err))
     }, [])
     const onChangePrice = (price) => {
@@ -129,7 +122,7 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
         name: setDataToChild.Name,
         pricewithoutany: setDataToChild.Price,
         description: setDataToChild.Description,
-        brandName: setDataToChild.Brand.Name,
+        brandId: setDataToChild.Brand.Id,
         image: images,
         price: setDataToChild.Price,
         id: setDataToChild.Id,
@@ -240,10 +233,10 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
                     <Col span={12}>
                         <Form.Item label={<div>Hãng phụ kiện <Tag icon={<PlusCircleOutlined />} onClick={handleAddBrand} color="processing">
                             Thêm hãng
-                        </Tag></div>} name="brandName">
+                        </Tag></div>} name="brandId">
                             <Select
-                                name="brandName"
-                                defaultValue={setDataToChild.Brand.Name}
+                                name="brandId"
+                                defaultValue={setDataToChild.Brand.Id}
                                 showSearch
                                 placeholder="Chọn hãng phụ kiện"
                                 optionFilterProp="children"
@@ -252,7 +245,7 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
                                 }
                             >
                                 {brands.map(brands => (
-                                    <Option key={brands.Id} value={brands.Name}>{brands.Name}</Option>
+                                    <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
                                 ))}
                             </Select>
                         </Form.Item>
