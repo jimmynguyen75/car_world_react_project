@@ -85,7 +85,7 @@ export default function ManageBrandComponent() {
                             window.location.href = '/thuong-hieu'
                         }, 500)
                     })
-                    .catch(() => { message.error(id); })
+                    .catch(() => { message.error("Xóa thương hiệu không thành công"); })
             }
         });
     }

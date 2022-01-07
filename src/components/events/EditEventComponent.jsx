@@ -1,4 +1,4 @@
-import { Form, Modal, Upload, Image, message, Row, Tooltip, Input, ConfigProvider, DatePicker, Col } from "antd";
+import { Form, Modal, Upload, Image, message, Row, Tooltip, Input, ConfigProvider, DatePicker, Col, Spin, Select } from "antd";
 import React, { useState, useEffect } from 'react';
 import storage from '../../services/ImageFirebase';
 import { PlusOutlined } from '@ant-design/icons';
@@ -7,7 +7,10 @@ import 'moment/locale/vi';
 import moment from 'moment';
 import AccountService from '../../services/AccountService'
 import NumberFormat from 'react-number-format';
+import { useHistory } from "react-router-dom";
 import EventService from "../../services/EventService";
+import BrandService from '../../services/BrandService';
+
 export default function EditEventComponent({ record, recordImage }) {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -19,6 +22,17 @@ export default function EditEventComponent({ record, recordImage }) {
     const [images, setImages] = useState([]);
     const [r, setR] = useState([]);
     const [s, setS] = useState([]);
+    const [brands, setBrands] = useState([]);
+    const { Option } = Select;
+    const history = useHistory();
+
+    useEffect(() => {
+        BrandService.getAllBrand()
+            .then(res => {
+                setBrands(res.data);
+            })
+            .catch(err => console.log(err))
+    }, [])
     //Date --------------------
     function minRegister(value) {
         form.setFieldsValue({
@@ -140,6 +154,7 @@ export default function EditEventComponent({ record, recordImage }) {
             id: record.Id,
             createdDate: record.CreatedDate,
             currentParticipants: record.CurrentParticipants,
+            brandId: record.BrandId,
             type: 1,
             status: 1
             //fake           
@@ -168,14 +183,14 @@ export default function EditEventComponent({ record, recordImage }) {
     const onFinish = (values) => {
         console.log(values);
         EventService.updateEvent(values.id, values)
-            .then((result) => {
-                console.log(result);
+            .then(() => {
+                message.success("Cập nhật sự kiện thành công")
                 setTimeout(() => {
-                    message.success("Cập nhật sự kiện thành công")
+                    history.push({
+                        pathname: '/su-kien',
+                        state: true
+                    })
                 }, 500)
-                setTimeout(() => {
-                    window.location.href = '/su-kien'
-                }, 1000)
             })
             .catch((err) => {
                 console.log(err);
@@ -291,13 +306,35 @@ export default function EditEventComponent({ record, recordImage }) {
                         </div>
                     </Row>
                 </Form.Item>
-                <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Ngày không được bỏ trống" }]}>
-                    <Input.TextArea
-                        placeholder="Nhập tên sự kiện"
-                        showCount maxLength={200}
-                        autoSize={{ minRows: 1, maxRows: 10 }}
-                    />
-                </Form.Item>
+                <Row gutter={15}>
+                    <Col span={16}>
+                        <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                            <Input.TextArea
+                                placeholder="Nhập tên sự kiện"
+                                showCount maxLength={200}
+                                autoSize={{ minRows: 1, maxRows: 10 }}
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Spin spinning={brands.length !== 0 ? false : true}>
+                            <Form.Item label="Chọn hãng" name="brandId" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                <Select
+                                    showSearch
+                                    placeholder="Chọn hãng xe"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {brands.map(brands => (
+                                        <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Spin>
+                    </Col>
+                </Row>
                 <Row gutter={15}>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>

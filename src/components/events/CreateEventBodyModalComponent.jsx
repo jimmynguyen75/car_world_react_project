@@ -1,14 +1,17 @@
-import { Col, ConfigProvider, DatePicker, Form, Input, Row, Modal, Upload, message } from 'antd';
+import { Col, ConfigProvider, DatePicker, Form, Input, Row, Modal, Upload, message, Select, Spin } from 'antd';
 import locale from 'antd/es/locale-provider/fr_FR';
 import 'moment/locale/vi';
 import moment from 'moment';
 import NumberFormat from 'react-number-format';
 import { PlusOutlined } from '@ant-design/icons';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import storage from '../../services/ImageFirebase';
 import './styles.less'
 import EventService from '../../services/EventService';
 import AccountService from '../../services/AccountService';
+import BrandService from '../../services/BrandService';
+import { useHistory } from "react-router-dom";
+
 export default function CreateEventBodyModalComponent() {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -22,6 +25,10 @@ export default function CreateEventBodyModalComponent() {
     const [form] = Form.useForm();
     const { RangePicker } = DatePicker;
     const handleCancel = () => setVisible(false);
+    const [brands, setBrands] = useState([]);
+    const { Option } = Select;
+    const history = useHistory();
+
     function getBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -123,17 +130,17 @@ export default function CreateEventBodyModalComponent() {
     const onFinish = (values) => {
         console.log(values)
         EventService.createNewEvent(values)
-            .then((result) => {
-                console.log(result)
-                setTimeout(() => {
-                    message.success("Tạo sự kiện thành công");
+            .then(() => {
+                message.success("Tạo sự kiện thành công");
+                setTimeout((reult) => {
+                    history.push({
+                        pathname: '/su-kien',
+                        state: true
+                    })
                 }, 500)
-                setTimeout(() => {
-                    window.location.href = '/su-kien'
-                }, 1500)
             })
             .catch((error) => {
-                message.error("Lỗi server hoặc tên không được trùng nhau!")
+                message.error("Tạo sự kiện không thành công")
                 console.log(error)
             })
     }
@@ -191,6 +198,13 @@ export default function CreateEventBodyModalComponent() {
             }
         }
     }
+    useEffect(() => {
+        BrandService.getAllBrand()
+            .then(res => {
+                setBrands(res.data);
+            })
+            .catch(err => console.log(err))
+    }, [])
     return (
         <div>
             <Modal
@@ -236,13 +250,35 @@ export default function CreateEventBodyModalComponent() {
                         {fileList.length >= 3 ? null : uploadButton}
                     </Upload>
                 </Form.Item>
-                <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
-                    <Input.TextArea
-                        placeholder="Nhập tên sự kiện"
-                        showCount maxLength={200}
-                        autoSize={{ minRows: 1, maxRows: 10 }}
-                    />
-                </Form.Item>
+                <Row gutter={15}>
+                    <Col span={16}>
+                        <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                            <Input.TextArea
+                                placeholder="Nhập tên sự kiện"
+                                showCount maxLength={200}
+                                autoSize={{ minRows: 1, maxRows: 10 }}
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Spin spinning={brands.length !== 0 ? false : true}>
+                            <Form.Item label="Chọn hãng" name="brandId" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                <Select
+                                    showSearch
+                                    placeholder="Chọn hãng xe"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {brands.map(brands => (
+                                        <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Spin>
+                    </Col>
+                </Row>
                 <Row gutter={15}>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>

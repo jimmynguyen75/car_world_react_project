@@ -19,7 +19,6 @@ function CarModelsComponent() {
     const [pageModel, setPageModel] = React.useState(1);
     const [form] = Form.useForm();
     const buttonRef = useRef(null);
-    const buttonRefUpdate = useRef(null);
     const { Option } = Select;
     form.setFieldsValue({
         brandId: brandId,
@@ -63,22 +62,12 @@ function CarModelsComponent() {
         console.log('cc')
     }
     useEffect(() => {
-        var brand = []
         BrandService.getAllBrand()
             .then((res) => {
-                // res.data.map((brandFilter) => {
-                //     CarService.getCarModelsByBrand(brandFilter.Id)
-                //         .then((resFilter) => {
-                //             brand.push(resFilter.data.length)
-                //         })
-                //         .catch(err => console.error(err))
-                // })
-                // console.log("ssssssssssss", brand.length)
                 setBrands(res.data)
             })
             .catch(err => console.error(err))
     }, [])
-    // console.log("brand: ", brands)
     const onFinish = (values) => {
         console.log(values)
         CarService.createCarModel(values)
@@ -111,7 +100,7 @@ function CarModelsComponent() {
                     setCarModels(data)
                 })
                 .catch((error) => console.log(error))
-        }, [brandId])
+        }, [])
         const handleChange = (e) => {
             var data = e.target.value.toLowerCase().replace(/\s/g, '');
             console.log(e.target.value);
@@ -179,7 +168,6 @@ function CarModelsComponent() {
             </div>
         )
     }
-    // console.log("ra day", brands)
     const TableBrand = () => {
         const [filterTable, setFilterTable] = useState(null);
         const baseColumns = [
@@ -195,15 +183,6 @@ function CarModelsComponent() {
                     )
                 }
             },
-            // {
-            //     title: 'Số lượng',
-            //     key: 'brandTotal',
-            //     render: (data) => {
-            //         return (
-            //             <div>{data.total}</div>
-            //         )
-            //     }
-            // },
             {
                 title: 'Tác vụ',
                 key: 'brandAction',

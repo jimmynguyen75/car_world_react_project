@@ -1,10 +1,11 @@
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Input, Modal, Row, Space, Spin, Table, Tabs, Tag, message, Rate, Tooltip, Form } from 'antd';
+import { Avatar, Button, Col, Input, Modal, Select, Row, Space, Spin, Table, Tabs, Tag, message, Rate, Tooltip, Form } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
 import Highlighter from 'react-highlight-words';
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import BrandService from '../../services/BrandService';
 import EventService from '../../services/EventService';
 import ProposalService from '../../services/ProposalService';
 import CheckAttendanceComponent from './CheckAttendanceComponent';
@@ -26,6 +27,7 @@ function ManageEventsComponent() {
     const [visibleCancel, setVisibleCancel] = useState(false);
     const [loadingButton, setLoadingButton] = React.useState(false)
     const history = useHistory();
+    const location = useLocation();
     const [record, setRecord] = useState(null)
     const [recordImage, setRecordImage] = useState(null)
     const [recordPro, setRecordPro] = useState(null)
@@ -38,6 +40,24 @@ function ManageEventsComponent() {
     const [historyEvent, setHistoryEvent] = useState(null)
     const [cancelEvent, setCancelEvent] = useState(null)
     const [modalConfirmSelect, setModalConfirmSelect] = useState(false)
+    const [brandSelected, setBrandSelected] = useState(null)
+    const [key, setKey] = useState(0)
+    const [clear, setClear] = useState(false)
+    const [brandSelectValue, setBrandValue] = useState(null)
+    const { Option } = Select;
+    const [brands, setBrands] = useState([]);
+
+    if (location.state === true) {
+        EventService.getAllEvents()
+            .then((response) => {
+                setEvents(response.data)
+                setVisibleEdit(false)
+                location.state = false
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }
     const showModalView = () => {
         setVisibleView(true);
     };
@@ -80,56 +100,82 @@ function ManageEventsComponent() {
     const handleCancelEvent = () => {
         setLoadingButton(true);
     };
+    const callback = (key) => {
+        console.log(key)
+        setBrandValue(null)
+        setClear(true)
+        setKey(key)
+    }
+    useEffect(() => {
+        if (key === 0) {
+            setBrandSelected(events)
+        } else if (key === '1') {
+            setBrandSelected(events)
+        } else if (key === '2') {
+            setBrandSelected(readyEvent)
+        } else if (key === '3') {
+            setBrandSelected(loadingEvent)
+        } else if (key === '4') {
+            setBrandSelected(historyEvent)
+        } else if (key === '5') {
+            setBrandSelected(cancelEvent)
+        }
+    }, [key, events, readyEvent, loadingEvent, historyEvent, cancelEvent])
     //register
     useEffect(() => {
         EventService.getAllEvents()
             .then((response) => {
                 setEvents(response.data)
+                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [])
+    }, [clear])
     //ready
     useEffect(() => {
         EventService.getPreparedEvents()
             .then((response) => {
                 setReadyEvent(response.data)
+                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [])
+    }, [clear])
     //loading
     useEffect(() => {
         EventService.getOngoingEvents()
             .then((response) => {
                 setLoadingEvent(response.data)
+                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [])
+    }, [clear])
     //history
     useEffect(() => {
         EventService.getFinishedEvents()
             .then((response) => {
                 setHistoryEvent(response.data)
+                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [])
+    }, [clear])
     //cancal 
     useEffect(() => {
         EventService.getCanceledEvent()
             .then((response) => {
                 setCancelEvent(response.data)
+                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [])
+    }, [clear])
     //proposal
     useEffect(() => {
         let result = [];
@@ -145,6 +191,7 @@ function ManageEventsComponent() {
                 setProposals(result)
             })
     }, [])
+
     class Register extends React.Component {
         state = {
             searchText: '',
@@ -1079,6 +1126,57 @@ function ManageEventsComponent() {
             </Form>
         )
     }
+    useEffect(() => {
+        BrandService.getAllBrand()
+            .then(res => {
+                setBrands(res.data);
+            })
+            .catch(err => console.log(err))
+    }, [])
+    const handleSelectBrand = (value) => {
+        setBrandValue(value)
+        if (key === 0) {
+            const filterTable = events.filter(o => Object.keys(o).some(k =>
+                String(o[k])
+                    .includes(value)
+            ))
+            setEvents(filterTable)
+        } else if (key === '1') {
+            const filterTable = events.filter(o => Object.keys(o).some(k =>
+                String(o[k])
+                    .includes(value)
+            ))
+            setEvents(filterTable)
+        } else if (key === '2') {
+            const filterTable = readyEvent.filter(o => Object.keys(o).some(k =>
+                String(o[k])
+                    .includes(value)
+            ))
+            setReadyEvent(filterTable)
+        } else if (key === '3') {
+            const filterTable = loadingEvent.filter(o => Object.keys(o).some(k =>
+                String(o[k])
+                    .includes(value)
+            ))
+            setLoadingEvent(filterTable)
+        } else if (key === '4') {
+            const filterTable = historyEvent.filter(o => Object.keys(o).some(k =>
+                String(o[k])
+                    .includes(value)
+            ))
+            setHistoryEvent(filterTable)
+        } else if (key === '5') {
+            const filterTable = cancelEvent.filter(o => Object.keys(o).some(k =>
+                String(o[k])
+                    .includes(value)
+            ))
+            setCancelEvent(filterTable)
+        }
+    }
+    const handleBrandClear = () => {
+        setClear(true)
+        history.push('/su-kien')
+    }
     return (
         <div>
             {/* Modal Select */}
@@ -1207,12 +1305,41 @@ function ManageEventsComponent() {
             </Modal>
             {/* end */}
             <Row>
-                <CreateEventsModalComponent />
-                <Button shape="round" className="createButton" onClick={() => showModalCheck()} style={{ height: 36, marginLeft: 15, backgroundColor: '#23814F', border: 'none', color: 'white' }}><i class="fas fa-user-check"></i><span style={{ marginTop: 2, marginLeft: 8 }}>Điểm danh</span></Button>
+                <Col span={9}>
+                    <Row>
+                        <CreateEventsModalComponent />
+                        <Button shape="round" className="createButton" onClick={() => showModalCheck()} style={{ height: 36, marginLeft: 15, backgroundColor: '#23814F', border: 'none', color: 'white' }}><i class="fas fa-user-check"></i><span style={{ marginTop: 2, marginLeft: 8 }}>Điểm danh</span></Button>
+                    </Row>
+                </Col>
+                <Col span={9}>
+                    <div style={{ float: 'right' }}>
+                        <Select
+                            style={{ width: '180px', marginBottom: 5, marginRight: 8 }}
+                            showSearch
+                            placeholder="Sắp xếp theo hãng"
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            onChange={handleSelectBrand}
+                            onClear={handleBrandClear}
+                            allowClear
+                            value={brandSelectValue}
+                        >
+                            {brandSelected !== null && Array.from(new Set(brandSelected.map(obj => obj.BrandId))).map((contest) => (
+                                brands.map((brands) => (
+                                    contest === brands.Id && <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                ))
+                            ))}
+                        </Select>
+                    </div>
+                </Col>
+                <Col span={6}></Col>
             </Row>
+
             <Row gutter={15}>
                 <Col span={18}>
-                    <Tabs type="card">
+                    <Tabs type="card" onChange={callback}>
                         <TabPane tab={<div><i class="far fa-check-square" ></i>&nbsp;&nbsp;Sự kiện đăng ký</div>} key="1" >
                             <Spin size="large" spinning={events === null ? true : false}>
                                 <Register />

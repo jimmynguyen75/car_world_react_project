@@ -1,11 +1,12 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
-import { Button, Col, Form, Image, Input, message, Row, Select } from 'antd';
+import { Button, Col, Form, Image, Input, message, Row, Select, Spin } from 'antd';
 import parse from 'html-react-parser';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { useStorage } from '../../hook/usePost';
 import AccountService from '../../services/AccountService';
+import BrandService from '../../services/BrandService';
 import storage from "../../services/ImageFirebase";
 import PostService from '../../services/PostService';
 import './stylePost.less';
@@ -15,6 +16,14 @@ export default function EditPostComponent({ record }) {
     const { url } = useStorage(file)
     const [form] = Form.useForm()
     const history = useHistory();
+    const [brands, setBrands] = useState([]);
+    useEffect(() => {
+        BrandService.getAllBrand()
+            .then(res => {
+                setBrands(res.data);
+            })
+            .catch(err => console.log(err))
+    }, [])
     const normFile = (data) => {
         form.setFieldsValue({
             contents: data.getData()
@@ -85,7 +94,8 @@ export default function EditPostComponent({ record }) {
         createdBy: record.CreatedBy,
         modifiedBy: AccountService.getCurrentUser().Id,
         createdDate: record.CreatedDate,
-        status: record.Status
+        status: record.Status,
+        brandId: record.BrandId
     })
     DecoupledEditor
         .create(document.querySelector('#editor'), {
@@ -165,7 +175,7 @@ export default function EditPostComponent({ record }) {
                             <input type="file" onChange={changeImage} name="photo" id="upload-photo" />
                         </Form.Item>
                         <Row gutter={15}>
-                            <Col span={18}>
+                            <Col span={12}>
                                 <Form.Item
                                     name="title"
                                     label={<div style={{ letterSpacing: '1px' }}>Tiêu đề</div>}
@@ -196,6 +206,25 @@ export default function EditPostComponent({ record }) {
                                         <Option key="4" value={4}>Cuộc thi</Option>
                                     </Select>
                                 </Form.Item>
+                            </Col>
+                            <Col span={6}>
+                                <Spin spinning={brands.length !== 0 ? false : true}>
+                                    <Form.Item label="Chọn hãng" name="brandId" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                        <Select
+                                            showSearch
+                                            size="large"
+                                            placeholder="Chọn hãng xe"
+                                            optionFilterProp="children"
+                                            filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            }
+                                        >
+                                            {brands.map(brands => (
+                                                <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                </Spin>
                             </Col>
                         </Row>
                         <Form.Item

@@ -1,4 +1,4 @@
-import { CarOutlined, ExclamationCircleOutlined, HomeOutlined, LogoutOutlined, UserOutlined, UserSwitchOutlined, TagsOutlined } from '@ant-design/icons';
+import { CarOutlined, ExclamationCircleOutlined, HomeOutlined, LogoutOutlined, TagsOutlined, UserOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import { Avatar, Layout, Menu, Modal, Typography } from 'antd';
 import 'antd/dist/antd.less';
 import React, { useEffect, useState } from 'react';
@@ -9,7 +9,6 @@ import '../styles/admin-dashboard.less';
 import ManageAccessoryComponent from './accessories/ManageAccessoryComponent';
 import ManageAccountsComponent from './accounts/ManageAccountsComponent';
 import ManageBrandsComponent from './brands/ManageBrandsComponent';
-import CarTypesComponent from './cars/CarTypesComponent';
 import CarModelsComponent from './cars/CarModelsComponent';
 import ManageAttributesComponent from './cars/ManageAttributesComponent';
 import ManageCarsComponent from './cars/ManageCarsComponent';
@@ -84,9 +83,6 @@ function AdminDashboardComponent() {
     function manageAttributes() {
         history.push('/thuoc-tinh-xe')
     }
-    function carTypes() {
-        history.push('/loai-xe')
-    }
     function carModels() {
         history.push('/mau-xe')
     }
@@ -120,7 +116,6 @@ function AdminDashboardComponent() {
                     <SubMenu key="/cuoc-thi" icon={<CarOutlined style={{ fontSize: 18, color: '#DBAD68', paddingTop: 4 }} />} title="Quản lý xe">
                         <Menu.Item key="1" onClick={manageCars}>Danh sách xe</Menu.Item>
                         <Menu.Item key="2" onClick={carModels}>Mẫu xe</Menu.Item>
-                        {/* <Menu.Item key="3" onClick={carTypes}>Loại xe</Menu.Item> */}
                         <Menu.Item key="4" onClick={manageAttributes}>Thuộc tính xe</Menu.Item>
                     </SubMenu>
                     <Menu.Item key="/phu-kien" onClick={manageAccessories}><i className="fas fa-peace" style={{ fontSize: 18, color: '#52BCC2' }} />&nbsp;&nbsp;&nbsp;Quản lý phụ kiện</Menu.Item>
@@ -155,10 +150,6 @@ function AdminDashboardComponent() {
                             case '/mau-xe':
                                 return (
                                     <CarModelsComponent />
-                                )
-                            case '/loai-xe':
-                                return (
-                                    <CarTypesComponent />
                                 )
                             case '/tai-khoan':
                                 return (

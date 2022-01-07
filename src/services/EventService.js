@@ -7,7 +7,7 @@ const USEREVENT_API_URL = "https://carworld.cosplane.asia/api/ceRegister/"
 
 class EventService {
     getAllEvents() {
-        return axios.get(EVENT_API_URL + "GetNewCEs?type=1&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
+        return axios.get(EVENT_API_URL + "GetRegisterCEsWeb?type=1&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
     createNewEvent(event) {
         return axios.post(EVENT_API_URL + "CreateCE", event, { headers: authHeader() })
@@ -16,13 +16,13 @@ class EventService {
         return axios.put(EVENT_API_URL + "UpdateCE?id=" + id, event, { headers: authHeader() })
     }
     getPreparedEvents() {
-        return axios.get(EVENT_API_URL + "GetPreparedCEs?type=1&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
+        return axios.get(EVENT_API_URL + "GetPreparedCEsWeb?type=1&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
     getOngoingEvents() {
         return axios.get(EVENT_API_URL + "GetOngoingCEsWeb?type=1&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
     getFinishedEvents() {
-        return axios.get(EVENT_API_URL + "GetFinishedCEs?type=1&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
+        return axios.get(EVENT_API_URL + "GetFinishedCEsWeb?type=1&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
     getCanceledEvent() {
         return axios.get(EVENT_API_URL + "GetCanceledCEs?type=1", { headers: authHeader() })

@@ -41,7 +41,6 @@ function App() {
               <Route path="/xe" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/thuoc-tinh-xe" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/mau-xe" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
-              <Route path="/loai-xe" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/tai-khoan" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/phu-kien" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>
               <Route path="/thong-tin-ca-nhan" render={() => { return role ? <AdminDashboardComponent /> : <Redirect to="/" /> }}></Route>

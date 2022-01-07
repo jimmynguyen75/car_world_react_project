@@ -1,15 +1,18 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Col, ConfigProvider, DatePicker, Form, Input, message, Modal, Row, Upload } from 'antd';
+import { Col, ConfigProvider, DatePicker, Form, Input, message, Modal, Row, Upload, Spin, Select } from 'antd';
 import locale from 'antd/es/locale-provider/fr_FR';
 import moment from 'moment';
 import 'moment/locale/vi';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NumberFormat from 'react-number-format';
 import AccountService from '../../services/AccountService';
 import ContestService from '../../services/ContestService';
 import storage from '../../services/ImageFirebase';
 import numberToWord from '../../utils/numberToWord';
 import '../events/styles.less';
+import BrandService from '../../services/BrandService';
+import { useHistory } from "react-router-dom";
+
 export default function CreateContestBodyModalComponent() {
     const [price, setPrice] = useState(0);
     const [previewImage, setPreviewImage] = useState('');
@@ -22,8 +25,12 @@ export default function CreateContestBodyModalComponent() {
     const [startRegister, setStartRegister] = useState(null);
     const [endRegister, setEndRegister] = useState(null);
     const [form] = Form.useForm();
+    const { Option } = Select;
     const { RangePicker } = DatePicker;
+    const [brands, setBrands] = useState([]);
     const handleCancel = () => setVisible(false);
+    const history = useHistory();
+
     function getBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -125,14 +132,14 @@ export default function CreateContestBodyModalComponent() {
     const onFinish = (values) => {
         console.log(values)
         ContestService.createNewContest(values)
-            .then((result) => {
-                console.log(result)
+            .then(() => {
+                message.success("Tạo cuộc thi thành công");
                 setTimeout(() => {
-                    message.success("Tạo cuộc thi thành công");
+                    history.push({
+                        pathname: '/cuoc-thi',
+                        state: true
+                    })
                 }, 500)
-                setTimeout(() => {
-                    window.location.href = '/cuoc-thi'
-                }, 1500)
             })
             .catch((error) => {
                 message.error("Tạo cuộc thi không thành công")
@@ -200,6 +207,13 @@ export default function CreateContestBodyModalComponent() {
     form.setFieldsValue({
         fee: price
     })
+    useEffect(() => {
+        BrandService.getAllBrand()
+            .then(res => {
+                setBrands(res.data);
+            })
+            .catch(err => console.log(err))
+    }, [])
     return (
         <div>
             <Modal
@@ -255,7 +269,25 @@ export default function CreateContestBodyModalComponent() {
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={6}>
+                        <Spin spinning={brands.length !== 0 ? false : true}>
+                            <Form.Item label="Chọn hãng" name="brandId" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                <Select
+                                    showSearch
+                                    placeholder="Chọn hãng xe"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {brands.map(brands => (
+                                        <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Spin>
+                    </Col>
+                    <Col span={6}>
                         <Form.Item label={<div>Lệ phí:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" >
                             <NumberFormat
                                 allowNegative={false}

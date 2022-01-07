@@ -9,7 +9,7 @@ const CONTEST_PRIZE = "https://carworld.cosplane.asia/api/contestPrize/"
 
 class ContestService {
     getAllContests() {
-        return axios.get(CONTEST_API_URL + "GetNewCEs?type=2&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
+        return axios.get(CONTEST_API_URL + "GetRegisterCEsWeb?type=2&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
     createNewContest(contest) {
         return axios.post(CONTEST_API_URL + "CreateCE", contest, { headers: authHeader() })
@@ -18,13 +18,13 @@ class ContestService {
         return axios.put(CONTEST_API_URL + "UpdateCE?id=" + id, contest, { headers: authHeader() })
     }
     getPreparedContests() {
-        return axios.get(CONTEST_API_URL + "GetPreparedCEs?type=2&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
+        return axios.get(CONTEST_API_URL + "GetPreparedCEsWeb?type=2&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
     getOngoingContests() {
         return axios.get(CONTEST_API_URL + "GetOngoingCEsWeb?type=2&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
     getFinishedContests() {
-        return axios.get(CONTEST_API_URL + "GetFinishedCEs?type=2&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
+        return axios.get(CONTEST_API_URL + "GetFinishedCEsWeb?type=2&now=" + moment().format('yyyy-MM-DDTHH:mm:ss'), { headers: authHeader() })
     }
     getCanceledContest() {
         return axios.get(CONTEST_API_URL + "GetCanceledCEs?type=2", { headers: authHeader() })

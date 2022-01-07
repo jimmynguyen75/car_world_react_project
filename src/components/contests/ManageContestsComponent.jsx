@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import CreateContestsModalComponent from './CreateContestsModalComponent';
 import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Input, Modal, Row, Tooltip, Space, Form, Spin, Table, Tabs, Tag, message, Rate } from 'antd';
+import { Avatar, Button, Col, Input, Modal, Row, Tooltip, Space, Form, Spin, Table, Tabs, Tag, message, Select, Rate } from 'antd';
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import CreateBySelectComponent from './CreateBySelectComponent';
 import 'moment/locale/vi';
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import EditContestComponent from './EditContestComponent';
 import ViewContestComponent from './ViewContestComponent';
 import ContestService from '../../services/ContestService';
 import CheckAttendanceComponent from './CheckAttendanceComponent';
 import ProposalService from '../../services/ProposalService';
+import BrandService from '../../services/BrandService';
+
 function ManageContestsComponent() {
     const [contests, setContests] = useState(null)
     const [form] = Form.useForm();
@@ -25,6 +27,7 @@ function ManageContestsComponent() {
     const [visibleCheck, setVisibleCheck] = useState(false);
     const [loadingButton, setLoadingButton] = React.useState(false)
     const history = useHistory();
+    const location = useLocation();
     const [record, setRecord] = useState(null)
     const [recordImage, setRecordImage] = useState(null)
     const [recordPro, setRecordPro] = useState(null)
@@ -38,6 +41,24 @@ function ManageContestsComponent() {
     const [proposals, setProposals] = useState(null)
     const [cancelContestId, setCancelContestId] = React.useState(null)
     const [visibleCancel, setVisibleCancel] = useState(false);
+    const [brands, setBrands] = useState([]);
+    const { Option } = Select;
+    const [brandSelected, setBrandSelected] = useState(null)
+    const [key, setKey] = useState(0)
+    const [clear, setClear] = useState(false)
+    const [brandSelectValue, setBrandValue] = useState(null)
+
+    if (location.state === true) {
+        ContestService.getAllContests()
+            .then((response) => {
+                location.state = false
+                setContests(response.data)
+                setVisibleEdit(false)
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }
     //show
     const showModalView = () => {
         setVisibleView(true);
@@ -81,57 +102,90 @@ function ManageContestsComponent() {
     const handleCancelContest = (id) => {
         setLoadingButton(true);
     };
+    useEffect(() => {
+        BrandService.getAllBrand()
+            .then(res => {
+                setBrands(res.data);
+            })
+            .catch(err => console.log(err))
+    }, [])
+    const callback = (key) => {
+        console.log(key)
+        setBrandValue(null)
+        setClear(true)
+        setKey(key)
+    }
+    useEffect(() => {
+        if (key === 0) {
+            setBrandSelected(contests)
+        } else if (key === '1') {
+            setBrandSelected(contests)
+        } else if (key === '2') {
+            setBrandSelected(readyContest)
+        } else if (key === '3') {
+            setBrandSelected(loadingContest)
+        } else if (key === '4') {
+            setBrandSelected(historyContest)
+        } else if (key === '5') {
+            setBrandSelected(cancelContest)
+        }
+    }, [key, contests, readyContest, loadingContest, historyContest, cancelContest])
     //Effect
     // register
     useEffect(() => {
         ContestService.getAllContests()
             .then((response) => {
                 setContests(response.data)
+                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [])
+    }, [clear])
     //ready
     useEffect(() => {
         ContestService.getPreparedContests()
             .then((response) => {
                 setReadyContest(response.data)
+                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [])
+    }, [clear])
     //loading
     useEffect(() => {
         ContestService.getOngoingContests()
             .then((response) => {
                 setLoadingContest(response.data)
+                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [])
+    }, [clear])
     //history
     useEffect(() => {
         ContestService.getFinishedContests()
             .then((response) => {
                 setHistoryContest(response.data)
+                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [])
+    }, [clear])
     //cancal 
     useEffect(() => {
         ContestService.getCanceledContest()
             .then((response) => {
                 setCancelContest(response.data)
+                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [])
+    }, [clear])
     //proposal
     useEffect(() => {
         let result = [];
@@ -1094,8 +1148,51 @@ function ManageContestsComponent() {
             </Form>
         )
     }
+    const handleSelectBrand = (value) => {
+        setBrandValue(value)
+        if (key === 0) {
+            const filterTable = contests.filter(o => Object.keys(o).some(k =>
+                String(o[k])
+                    .includes(value)
+            ))
+            setContests(filterTable)
+        } else if (key === '1') {
+            const filterTable = contests.filter(o => Object.keys(o).some(k =>
+                String(o[k])
+                    .includes(value)
+            ))
+            setContests(filterTable)
+        } else if (key === '2') {
+            const filterTable = readyContest.filter(o => Object.keys(o).some(k =>
+                String(o[k])
+                    .includes(value)
+            ))
+            setReadyContest(filterTable)
+        } else if (key === '3') {
+            const filterTable = loadingContest.filter(o => Object.keys(o).some(k =>
+                String(o[k])
+                    .includes(value)
+            ))
+            setLoadingContest(filterTable)
+        } else if (key === '4') {
+            const filterTable = historyContest.filter(o => Object.keys(o).some(k =>
+                String(o[k])
+                    .includes(value)
+            ))
+            setHistoryContest(filterTable)
+        } else if (key === '5') {
+            const filterTable = cancelContest.filter(o => Object.keys(o).some(k =>
+                String(o[k])
+                    .includes(value)
+            ))
+            setCancelContest(filterTable)
+        }
+    }
+    const handleBrandClear = () => {
+        setClear(true)
+        history.push('/cuoc-thi')
+    }
     return (
-
         <div>
             {/* Modal Select */}
             <Modal
@@ -1223,12 +1320,41 @@ function ManageContestsComponent() {
             </Modal>
             {/* end */}
             <Row>
-                <CreateContestsModalComponent />
-                <Button shape="round" className="createButton" onClick={() => showModalCheck()} style={{ height: 36, marginLeft: 15, backgroundColor: '#23814F', border: 'none', color: 'white' }}><i class="fas fa-user-check"></i><span style={{ marginTop: 2, marginLeft: 8 }}>Điểm danh</span></Button>
+                <Col span={9}>
+                    <Row>
+                        <CreateContestsModalComponent />
+                        <Button shape="round" className="createButton" onClick={() => showModalCheck()} style={{ height: 36, marginLeft: 15, backgroundColor: '#23814F', border: 'none', color: 'white' }}><i class="fas fa-user-check"></i><span style={{ marginTop: 2, marginLeft: 8 }}>Điểm danh</span></Button>
+                    </Row>
+                </Col>
+                <Col span={9}>
+                    <div style={{ float: 'right' }}>
+                        <Select
+                            style={{ width: '180px', marginBottom: 5, marginRight: 8 }}
+                            showSearch
+                            placeholder="Sắp xếp theo hãng"
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            onChange={handleSelectBrand}
+                            onClear={handleBrandClear}
+                            allowClear
+                            value={brandSelectValue}
+                        >
+                            {brandSelected !== null && Array.from(new Set(brandSelected.map(obj => obj.BrandId))).map((contest) => (
+                                brands.map((brands) => (
+                                    contest === brands.Id && <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                ))
+                            ))}
+                        </Select>
+                    </div>
+                </Col>
+                <Col span={6}>
+                </Col>
             </Row>
             <Row gutter={15}>
                 <Col span={18}>
-                    <Tabs type="card">
+                    <Tabs type="card" onChange={callback}>
                         <TabPane tab={<div><i class="far fa-check-square" ></i>&nbsp;&nbsp;Cuộc thi đăng ký</div>} key="1" >
                             <Spin size="large" spinning={contests === null ? true : false}>
                                 <Register />

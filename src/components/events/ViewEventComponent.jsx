@@ -4,6 +4,8 @@ import moment from 'moment';
 import 'moment/locale/vi';
 import React, { useState, useEffect } from 'react';
 import EventService from '../../services/EventService';
+import BrandService from '../../services/BrandService';
+
 export default function ViewEventComponent({ record, recordImage }) {
     const [visibleCheck, setVisibleCheck] = useState(false);
     const [userList, setUserList] = useState([])
@@ -87,6 +89,14 @@ export default function ViewEventComponent({ record, recordImage }) {
     const ModalBodyView = () => {
         const [visible, setVisible] = useState("none")
         const [loading, setLoading] = useState("0")
+        const [brands, setBrands] = useState([]);
+        useEffect(() => {
+            BrandService.getAllBrand()
+                .then(res => {
+                    setBrands(res.data);
+                })
+                .catch(err => console.log(err))
+        }, [])
         setTimeout(() => {
             setLoading("none")
             setVisible(true)
@@ -122,6 +132,15 @@ export default function ViewEventComponent({ record, recordImage }) {
                         >
                             <Descriptions.Item label="Tên sự kiện">
                                 <div style={{ fontWeight: '500', fontSize: 16, color: '#2A528A' }}>{record.Title}</div>
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Thương hiệu">
+                                <div style={{ fontWeight: '500', fontSize: 16, color: '#2A528A' }}>
+                                    {brands.map(brands => (
+                                        <div>
+                                            {brands.Id === record.BrandId && <div key={brands.Id} value={brands.Id}>{brands.Name}</div>}
+                                        </div>
+                                    ))}
+                                </div>
                             </Descriptions.Item>
                         </Descriptions>
                         <div style={{ marginTop: 12, marginBottom: 7, fontWeight: '450', fontSize: 14, letterSpacing: 1 }}>Thời hạn <span style={{ color: '#BB5A5A', fontWeight: 500 }}>ĐĂNG KÝ</span></div>

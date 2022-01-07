@@ -1,93 +1,13 @@
 import { PlusCircleOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons';
-import { Button, Col, Divider, Form, Input, message, Modal, Row, Select, Table, Transfer, Spin, Popconfirm, InputNumber } from 'antd';
-import React, { useEffect, useState, useRef } from 'react';
+import { Button, Col, Divider, Form, Input, InputNumber, message, Modal, Popconfirm, Row, Select, Spin, Table } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import CarService from '../../services/CarService';
-import CreateAttributesComponent from './CreateAttributesComponent';
 
 function ManageAttributesComponent() {
-    const [visible, setVisible] = React.useState(false);
-    const [visibleItem, setVisibleItem] = React.useState(false);
-    const [attributes, setAttributes] = useState([]);
-    const [engineTitle, setEngineTitle] = useState([]);
     const [engine, setEngine] = useState([]);
     const { Option } = Select;
     const [form] = Form.useForm();
     let index = 0;
-    const handleCancel = () => {
-        setVisibleItem(false);
-    };
-    const handleCancelAttribute = () => {
-        setVisible(false);
-    };
-    const handleClickItem = (title) => {
-        console.log(title);
-        setEngineTitle(title)
-    }
-    function handleChange(value) {
-        setVisibleItem(true)
-        CarService.getAttributeByTypeId(value)
-            .then((result) => { setAttributes(result.data) })
-            .catch((error) => { console.log(error) });
-    }
-    // class Engine extends React.Component {
-    //     state = {
-    //         items: engine,
-    //         name: '',
-    //     };
-
-    //     onNameChange = event => {
-    //         this.setState({
-    //             name: event.target.value,
-    //         });
-    //     };
-
-    //     addItem = () => {
-    //         const { items, name } = this.state;
-    //         console.log('addItem: ', name);
-    //         CarService.createEngineType(name)
-    //             .then(() => { message.success("Tạo động cơ thành công") })
-    //             .catch(() => { message.error("Tạo động cơ không thành công") })
-    //         this.setState({
-    //             items: [...items, name || `New item ${index++}`],
-    //             name: '',
-    //         });
-    //     };
-
-    //     render() {
-    //         const { items, name } = this.state;
-    //         return (
-    //             <Select
-    //                 onChange={handleChange}
-    //                 style={{ width: 240 }}
-    //                 placeholder="Chọn loại động cơ"
-    //                 dropdownRender={menu => (
-    //                     <div>
-    //                         {menu}
-    //                         <Divider style={{ margin: '4px 0' }} />
-    //                         <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
-    //                             <Input style={{ flex: 'auto' }} value={name} onChange={this.onNameChange} />
-    //                             <a
-    //                                 style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
-    //                                 onClick={this.addItem}
-    //                             >
-    //                                 <PlusOutlined /> Thêm động cơ
-    //                             </a>
-    //                         </div>
-    //                     </div>
-    //                 )}
-    //             >
-    //                 {items.map(item => (
-    //                     <Option key={item.Id}>
-    //                         <Row onClick={() => handleClickItem(item.Name)}>
-    //                             <div>{item.Name}</div>
-    //                             {/* <div onClick={() => console.log("xoa: ", item)}>Xóa</div> */}
-    //                         </Row>
-    //                     </Option>
-    //                 ))}
-    //             </Select>
-    //         );
-    //     }
-    // }
     useEffect(() => {
         CarService.getEngineType()
             .then((result) => {
@@ -123,7 +43,7 @@ function ManageAttributesComponent() {
             CarService.getAttributeByTypeId(items.length !== 0 && items[0].Id)
                 .then((result) => { setAttributesSelected(result.data) })
                 .catch((error) => { console.log(error) });
-        }, [])
+        }, [items])
         function handleChangeSelect(value) {
             setSearchValue('')
             setFilterTable(null)
@@ -233,12 +153,12 @@ function ManageAttributesComponent() {
                                                         <Divider style={{ margin: '4px 0' }} />
                                                         <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
                                                             <Input style={{ flex: 'auto' }} value={nameItemss} onChange={onNameChangeItemss} />
-                                                            <a
+                                                            <div
                                                                 style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
                                                                 onClick={addItemss}
                                                             >
                                                                 <PlusOutlined /> Thêm
-                                                            </a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 )}
@@ -357,7 +277,7 @@ function ManageAttributesComponent() {
                     onFinish={onCreateAttributeFinish}
                     form={formCreate}
                 >
-                    <Form.Item label="Tên thuộc tính" name="engineType" rules={[{ required: true, message: "Tên thuộc tính không được bỏ trống" }]}>
+                    <Form.Item label="Tên loại thuộc tính" name="engineType" rules={[{ required: true, message: "Tên thuộc tính không được bỏ trống" }]}>
                         <Select
                             // defaultValue={items.length !== 0 && items[0].Id}
                             onChange={handleChangeSelectCheckValidate}
@@ -421,12 +341,12 @@ function ManageAttributesComponent() {
                                                             <Divider style={{ margin: '4px 0' }} />
                                                             <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
                                                                 <Input style={{ flex: 'auto' }} value={nameItemss} onChange={onNameChangeItemss} />
-                                                                <a
+                                                                <div
                                                                     style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
                                                                     onClick={addItemss}
                                                                 >
                                                                     <PlusOutlined /> Thêm
-                                                                </a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     )}
@@ -680,7 +600,7 @@ function ManageAttributesComponent() {
                                         <i className="far fa-edit" onClick={() => handleUpdate(data.Id, data.Name)}></i>
                                     </Popconfirm>
                                 </Col>
-                                <Col span={12}>
+                                {data.Id !== "0416e0c8-2120-4d3f-8656-5c708d263c04" && <Col span={12}>
                                     <Popconfirm
                                         title="Bạn có muốn xóa thuộc tính xe này không?"
                                         onConfirm={() => confirmDeleteEngine(data.Id)}
@@ -688,9 +608,9 @@ function ManageAttributesComponent() {
                                         okText="Có"
                                         cancelText="Không"
                                     >
-                                        <i className="far fa-trash-alt"></i>
+                                        <i className="far fa-trash-alt" ></i>
                                     </Popconfirm>
-                                </Col>
+                                </Col>}
                             </Row >
                         )
                     }
@@ -782,7 +702,7 @@ function ManageAttributesComponent() {
                 </Modal>
                 <Modal
                     destroyOnClose={true}
-                    title='Danh sách thuộc tính'
+                    title='Danh sách loại thuộc tính'
                     visible={visibleEngine}
                     onCancel={handleCancelEngine}
                     width={600}
@@ -799,7 +719,7 @@ function ManageAttributesComponent() {
                 <div>
                     <Row>
                         <Button type="primary" shape="round" onClick={setVisibleCreate} className="createButton" style={{ height: 36, float: 'left', marginRight: 15 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2.5 }}>Tạo thuộc tính</span></Button>
-                        <Button type="primary" shape="round" onClick={setVisibleEngine} className="createButton" style={{ height: 36, float: 'left' }} icon={<SettingOutlined />}><span style={{ marginTop: 2.5 }}>Quản lý thuộc tính</span></Button>
+                        <Button type="primary" shape="round" onClick={setVisibleEngine} className="createButton" style={{ height: 36, float: 'left' }} icon={<SettingOutlined />}><span style={{ marginTop: 2.5 }}>Quản loại thuộc tính</span></Button>
                     </Row>
                     <Select
                         defaultValue={items.length !== 0 && items[0].Id}
@@ -812,12 +732,12 @@ function ManageAttributesComponent() {
                                 <Divider style={{ margin: '4px 0' }} />
                                 <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
                                     <Input style={{ flex: 'auto' }} value={name} onChange={onNameChange} />
-                                    <a
+                                    <div
                                         style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
                                         onClick={addItem}
                                     >
-                                        <PlusOutlined /> Thêm thuộc tính
-                                    </a>
+                                        <PlusOutlined /> Thêm
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -866,114 +786,9 @@ function ManageAttributesComponent() {
             </div>
         );
     }
-    class Attributes extends React.Component {
-        state = {
-            mockData: [],
-            targetKeys: [],
-        };
-
-        componentDidMount() {
-            this.getMock();
-        }
-
-        getMock = () => {
-            const targetKeys = [];
-            const mockData = [];
-            for (let i = 0; i < 20; i++) {
-                const data = {
-                    key: i.toString(),
-                    title: `content${i + 1}`,
-                    description: `description of content${i + 1}`,
-                    chosen: Math.random() * 2 > 1,
-                };
-                if (data.chosen) {
-                    targetKeys.push(data.key);
-                }
-                mockData.push(data);
-            }
-            this.setState({ mockData, targetKeys });
-        };
-
-        filterOption = (inputValue, option) => option.description.indexOf(inputValue) > -1;
-
-        handleChange = targetKeys => {
-            this.setState({ targetKeys });
-        };
-
-        handleSearch = (dir, value) => {
-            console.log('search:', dir, value);
-        };
-
-        render() {
-            return (
-                <Transfer
-                    titles={['Nguồn', 'Sử dụng']}
-                    dataSource={this.state.mockData}
-                    showSearch
-                    filterOption={this.filterOption}
-                    targetKeys={this.state.targetKeys}
-                    onChange={this.handleChange}
-                    onSearch={this.handleSearch}
-                    render={item => item.title}
-                    listStyle={{
-                        width: 300,
-                        height: 300,
-                    }}
-                    locale={{
-                        itemUnit: "mục",
-                        itemsUnit: "mục",
-                        notFoundContent: "Danh sách trống",
-                        searchPlaceholder: "Tìm kiếm"
-                    }}
-                />
-            );
-        }
-    }
     return (
         <>
-            <Modal
-                destroyOnClose={true}
-                title={'Tạo thuộc tính ' + engineTitle}
-                visible={visible}
-                onCancel={handleCancelAttribute}
-                width={800}
-                footer={[
-                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                        <Button onClick={handleCancelAttribute}>
-                            Hủy
-                        </Button>
-                        <Button type="primary" onClick={handleCancelAttribute}>
-                            Hoàn tất
-                        </Button>
-                    </Row>
-                ]}
-            >
-                <CreateAttributesComponent />
-            </Modal>
-            <Modal
-                destroyOnClose={true}
-                title={engineTitle}
-                visible={visibleItem}
-                onCancel={handleCancel}
-                width={600}
-                footer={[
-                    <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                        <Button onClick={handleCancel}>
-                            Hủy
-                        </Button>
-                        <Button type="primary" onClick={handleCancel}>
-                            Hoàn tất
-                        </Button>
-                    </Row>
-                ]}
-            >
-                <Button style={{ width: '100px', marginBottom: 10 }} type='primary' icon={<PlusCircleOutlined />} onClick={() => setVisible(true)}>Tạo</Button>
-                <Attributes />
-            </Modal>
-
             <div style={{ marginBottom: 30, textAlign: 'center' }}>
-                {/* <div><Button onClick={showModal} style={{ width: '240px', marginBottom: 20 }} type='primary' icon={<PlusCircleOutlined />}>Thêm thuộc tính</Button></div> */}
-                {/* <Engine /> */}
                 <Spin spinning={engine.length !== 0 ? false : true}>
                     <SelectEngine />
                 </Spin>

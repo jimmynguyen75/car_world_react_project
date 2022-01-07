@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Col, ConfigProvider, DatePicker, Form, Image, Input, message, Modal, Row, Tooltip, Upload } from "antd";
+import { Col, ConfigProvider, DatePicker, Form, Image, Input, message, Modal, Row, Tooltip, Upload, Select, Spin } from "antd";
 import locale from 'antd/es/locale-provider/fr_FR';
 import moment from 'moment';
 import 'moment/locale/vi';
@@ -9,6 +9,8 @@ import AccountService from '../../services/AccountService';
 import ContestService from '../../services/ContestService';
 import storage from '../../services/ImageFirebase';
 import numberToWord from '../../utils/numberToWord';
+import BrandService from '../../services/BrandService';
+import { useHistory } from "react-router-dom";
 export default function EditContestComponent({ record, recordImage }) {
     const [price, setPrice] = useState(0);
     const [previewImage, setPreviewImage] = useState('');
@@ -21,6 +23,17 @@ export default function EditContestComponent({ record, recordImage }) {
     const [images, setImages] = useState([]);
     const [r, setR] = useState([]);
     const [s, setS] = useState([]);
+    const history = useHistory();
+    const [brands, setBrands] = useState([]);
+    const { Option } = Select;
+
+    useEffect(() => {
+        BrandService.getAllBrand()
+            .then(res => {
+                setBrands(res.data);
+            })
+            .catch(err => console.log(err))
+    }, [])
     //Date --------------------
     function minRegister(value) {
         form.setFieldsValue({
@@ -143,6 +156,7 @@ export default function EditContestComponent({ record, recordImage }) {
             createdDate: record.CreatedDate,
             currentParticipants: record.CurrentParticipants,
             priceWithoutAny: record.Fee,
+            brandId: record.BrandId,
             status: 1,
             type: 2,
             //fake           
@@ -171,14 +185,14 @@ export default function EditContestComponent({ record, recordImage }) {
     const onFinish = (values) => {
         console.log(values);
         ContestService.updateContest(values.id, values)
-            .then((result) => {
-                console.log(result);
+            .then(() => {
+                message.success("Cập nhật cuộc thi thành công")
                 setTimeout(() => {
-                    message.success("Cập nhật cuộc thi thành công")
+                    history.push({
+                        pathname: '/cuoc-thi',
+                        state: true
+                    })
                 }, 500)
-                setTimeout(() => {
-                    window.location.href = '/cuoc-thi'
-                }, 1000)
             })
             .catch((err) => {
                 console.log(err);
@@ -312,7 +326,25 @@ export default function EditContestComponent({ record, recordImage }) {
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={6}>
+                        <Spin spinning={brands.length !== 0 ? false : true}>
+                            <Form.Item label="Chọn hãng" name="brandId" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                <Select
+                                    showSearch
+                                    placeholder="Chọn hãng xe"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {brands.map(brands => (
+                                        <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Spin>
+                    </Col>
+                    <Col span={6}>
                         <Form.Item label={<div>Lệ phí:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="priceWithoutAny" rules={[{ required: true, message: "Vui lòng nhập lại" }]}>
                             <NumberFormat
                                 allowNegative={false}

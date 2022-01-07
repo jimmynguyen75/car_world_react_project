@@ -96,7 +96,6 @@ export default function EditAccessoryBodyComponent({ setDataToChild, setDataToCh
         return isImage && isLt5M;
     }
     useEffect(() => {
-        let result = []
         BrandService.getAllAccessoriesBrand()
             .then(res => {
                 setBrands(res.data)

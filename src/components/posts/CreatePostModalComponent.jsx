@@ -1,13 +1,14 @@
 import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { Button, Form, Input, Modal, Row, Select, Upload, message, Col } from 'antd';
-import React, { useState } from 'react';
+import { Button, Form, Input, Modal, Row, Select, Upload, message, Col, Spin } from 'antd';
+import React, { useState, useEffect} from 'react';
 import { useHistory } from "react-router-dom";
 import storage from "../../services/ImageFirebase";
 import './stylePost.less';
 import AccountService from '../../services/AccountService'
 import PostService from '../../services/PostService'
+import BrandService from '../../services/BrandService';
 function CreatePostModalComponent() {
     const { Option } = Select;
     const history = useHistory();
@@ -16,6 +17,15 @@ function CreatePostModalComponent() {
     const [imageURL, setImageURL] = useState([]);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
+    const [brands, setBrands] = useState([]);
+
+    useEffect(() => {
+        BrandService.getAllBrand()
+            .then(res => {
+                setBrands(res.data);
+            })
+            .catch(err => console.log(err))
+    }, [])
     function handleBack() {
         history.goBack();
     }
@@ -191,7 +201,7 @@ function CreatePostModalComponent() {
         })
         .then(editor => {
             const toolbarContainer = document.querySelector('.document-editor__toolbar');
-            
+
             toolbarContainer.appendChild(editor.ui.view.toolbar.element);
 
             window.editor = editor;
@@ -252,7 +262,7 @@ function CreatePostModalComponent() {
                             </Upload>
                         </Form.Item>
                         <Row gutter={15}>
-                            <Col span={18}>
+                            <Col span={12}>
                                 <Form.Item
                                     name="title"
                                     label={<div style={{ letterSpacing: '1px' }}>Tiêu đề</div>}
@@ -283,6 +293,25 @@ function CreatePostModalComponent() {
                                         <Option key="4" value="4">Cuộc thi</Option>
                                     </Select>
                                 </Form.Item>
+                            </Col>
+                            <Col span={6}>
+                                <Spin spinning={brands.length !== 0 ? false : true}>
+                                    <Form.Item label="Chọn hãng" name="brandId" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                        <Select
+                                            showSearch
+                                            size="large"
+                                            placeholder="Chọn hãng xe"
+                                            optionFilterProp="children"
+                                            filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            }
+                                        >
+                                            {brands.map(brands => (
+                                                <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                </Spin>
                             </Col>
                         </Row>
                         <Form.Item

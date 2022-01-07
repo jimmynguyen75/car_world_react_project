@@ -248,6 +248,7 @@ function DashboardComponent() {
                                     <div className="exchangeEx" style={{ backgroundColor: "#e9c46a", borderRadius: 20, padding: 10, height: '92%' }}>
                                         <span style={{ color: 'white', letterSpacing: 1, fontWeight: 500, fontSize: 15 }}>Hiệu nổi bật THÁNG {moment().format('MM')}</span>
                                         <div style={{ marginTop: 10, color: 'white', fontSize: 18, letterSpacing: 1 }}>
+                                            {data.topExchange.length === 0 && <div>Không có dữ liệu</div>}
                                             <div>{data.topExchange.length !== 0 && (data.topExchange[0] !== undefined && <div><img alt="" src={number1} style={{ height: '28px', marginTop: '-3px' }} />&nbsp;{data.topExchange[0].BrandName}</div>)}</div>
                                             <div>{data.topExchange.length !== 0 && (data.topExchange[1] !== undefined && <div style={{ marginTop: 2 }}><img alt="" src={number2} style={{ height: '28px', marginTop: '-3px' }} />&nbsp;{data.topExchange[1].BrandName}</div>)}</div>
                                             <div>{data.topExchange.length !== 0 && (data.topExchange[2] !== undefined && <div style={{ marginTop: 2 }}><img alt="" src={number3} style={{ height: '28px', marginTop: '-3px' }} />&nbsp;{data.topExchange[2].BrandName}</div>)}</div>
