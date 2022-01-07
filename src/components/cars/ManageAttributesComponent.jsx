@@ -506,10 +506,13 @@ function ManageAttributesComponent() {
             const [attributeName, setAttributeName] = useState(null);
             const [attributeId, setAttributeId] = useState(0);
             const [formCreateEngine] = Form.useForm();
-
+            const [visibleCreateEngine, setVisibleCreateEngine] = useState(false)
             const handleUpdate = (id, name) => {
                 setAttributeName(name)
                 setAttributeId(id)
+            }
+            const handleCancelCreateEngine = () => {
+                setVisibleCreateEngine(false)
             }
             formCreateEngine.setFieldsValue({
                 id: attributeId,
@@ -522,10 +525,9 @@ function ManageAttributesComponent() {
                     })
                     .catch((error) => console.log(error))
             }, [])
-            // const showModal = () => {
-            //     setVisible(true);
-            //     setModelName(null);
-            // };
+            const showModal = () => {
+                setVisibleCreateEngine(true)
+            };
             const confirmUpdateAttribute = () => {
                 buttonRefUpdateAttribute.current.click();
             };
@@ -627,17 +629,68 @@ function ManageAttributesComponent() {
                 );
                 setFilterTable(filterTable)
             }
+            const onCreateEngine = (value) => {
+                CarService.createEngineType(value.name)
+                    .then(() => {
+                        CarService.getEngineType()
+                            .then((result) => {
+                                setAttributeList(result.data)
+                            })
+                            .catch((error) => console.log(error))
+                        setVisibleCreateEngine(false)
+                        message.success("Tạo thuộc tính thành công")
+                    })
+                    .catch(() => { message.error("Tạo thuộc tính không thành công") })
+            }
             return (
                 <div>
+                    <Modal
+                        destroyOnClose={true}
+                        title={'Thêm loại thuộc tính'}
+                        visible={visibleCreateEngine}
+                        onCancel={handleCancelCreateEngine}
+                        width={400}
+                        footer={[
+                            <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                                <Button onClick={handleCancelCreateEngine}>
+                                    Hủy
+                                </Button>
+                                <Button type="primary" form="createEngine" key="submit" htmlType="submit">
+                                    Hoàn tất
+                                </Button>
+                            </Row>
+                        ]}
+                    >
+                        <Form
+                            layout="vertical"
+                            id="createEngine"
+                            onFinish={onCreateEngine}
+                        >
+                            <Form.Item label="Loại thuộc tính" name="name" rules={[{ required: true, message: "Loại thuộc tính không được bỏ trống" }]}>
+                                <Input.TextArea
+                                    placeholder="Nhập loại thuộc tính"
+                                    showCount maxLength={100}
+                                    autoSize={{ minRows: 1, maxRows: 10 }}
+                                />
+                            </Form.Item>
+                        </Form>
+                    </Modal>
                     <div style={{ textAlign: 'center', marginBottom: 15 }}>
-                        <Input.Search
-                            className={"fixAnticon"}
-                            style={{ marginTop: 1 }}
-                            placeholder="Tìm kiếm. . ."
-                            enterButton
-                            onSearch={search}
-                            allowClear
-                        />
+                        <Row gutter={15}>
+                            <Col span={20}>
+                                <Input.Search
+                                    className={"fixAnticon"}
+                                    style={{ marginTop: 1 }}
+                                    placeholder="Tìm kiếm. . ."
+                                    enterButton
+                                    onSearch={search}
+                                    allowClear
+                                />
+                            </Col>
+                            <Col span={4}>
+                                <Button type="primary" shape="round" onClick={showModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined style={{ marginTop: 5.5 }} />}></Button>
+                            </Col>
+                        </Row>
                     </div>
                     <Spin spinning={attributeList.length !== 0 ? false : true}>
                         <Table
