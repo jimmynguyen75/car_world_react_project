@@ -27,7 +27,7 @@ export default function CreateEventBodyModalComponent() {
     const handleCancel = () => setVisible(false);
     const [brands, setBrands] = useState([]);
     const { Option } = Select;
-    const history = useHistory();
+    const history = useHistory(); 
 
     function getBase64(file) {
         return new Promise((resolve, reject) => {

@@ -19,11 +19,7 @@ function ManageFeedbackComponent() {
     const [dt, setDt] = useState(null)
     const [visible, setVisible] = React.useState(false);
     const history = useHistory();
-    const [test, setTest] = useState([])
     const [testEx, setTestEx] = useState([])
-    // const [car, setCar] = useState([])
-    // const [accessory, setAccessory] = useState([])
-    // const [exC, setExC] = useState('')
     const handleCancel = () => {
         setVisible(false);
         history.push('/phan-hoi')
@@ -31,21 +27,9 @@ function ManageFeedbackComponent() {
     //Effect
     useEffect(() => {
         const fetchData = async () => {
-            // let car = []
-            // let accessory = []
             const CE = await FeebackService.getCE();
             const Exchange = await FeebackService.getExchange();
             const ExchangeResponse = await FeebackService.getExchangeResponse();
-            // Exchange.data.forEach((filter) => {
-            //     if (filter.Exchanges.Type === 1) {
-            //         car.push(filter)
-            //     }
-            //     if (filter.Exchanges.Type === 2) {
-            //         accessory.push(filter)
-            //     }
-            // })
-            // setCar(car)
-            // setAccessory(accessory)
             setData({ CE: CE.data, Exchange: Exchange.data, ExchangeResponse: ExchangeResponse.data })
         }
         fetchData()
@@ -54,37 +38,27 @@ function ManageFeedbackComponent() {
         let exchange = []
         FeebackService.getExchangeResponse().then((response) => {
             response.data.forEach((filter) => {
-                filter.ExchangeResponses.map((data) => (
-                    ExchangeService.getExchangeById(data.ExchangeId).then((result) => {
-                        exchange.push(result.data)
-                    })
-                ))
+                ExchangeService.getExchangeById(filter.ExchangeResponse.ExchangeId).then((result) => {
+                    exchange.push(result.data)
+                })
             })
             setTestEx(exchange)
         })
     }, [])
     useEffect(() => {
-        let contests = []
-        let events = []
-        let test = []
+        let contest = []
+        let event = []
         FeebackService.getCE()
-            .then((result1) => {
-                result1.data.forEach((data1) => {
-                    data1.ContestEventRegisters.map((data) => (
-                        FeebackService.getCEById(data.ContestEventId).then((result) => {
-                            test.push(result.data)
-                            if (result.data.Type === 1) {
-                                events.push(data1)
-                            }
-                            if (result.data.Type === 2) {
-                                contests.push(data1)
-                            }
-                        })
-                    ))
+            .then((result) => {
+                result.data.forEach((filter) => {
+                    if (filter.ContestEvent.Type === 1) {
+                        event.push(filter);
+                    } else if (filter.ContestEvent.Type === 2) {
+                        contest.push(filter);
+                    }
                 })
-                setTimeout(() => { setCE({ event: events, contest: contests }) }, 1000)
-                setTest(test)
-            })
+                setCE({ event: event, contest: contest })
+            }).catch((err) => { console.log(err) })
     }, [])
     const onFinish = (values) => {
         FeebackService.replyFeedback(values.id, values)
@@ -103,7 +77,7 @@ function ManageFeedbackComponent() {
         {
             title: 'Tên người gửi',
             key: 'name',
-            width: '25%',
+            width: '15%',
             render: (data) => {
                 return (
                     <Row>
@@ -116,17 +90,11 @@ function ManageFeedbackComponent() {
         {
             title: 'Tên sự kiện',
             key: 'date',
-            render: (data1) => {
-                let ok = ''
-                test.forEach((data) => {
-                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
-                        ok = data
-                    }
-                })
+            render: (ok) => {
                 return (
                     <Row>
-                        <Col span={5}><img alt="" style={{ height: 40, maxWidth: '100%', objectFit: 'cover', width: 'auto' }} src={ok.Image === "string" ? imgPlacehoder : ok.Image} /></Col>
-                        <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{ok.Title}</div></Col>
+                        <Col span={5}><img alt="" style={{ height: 40, maxWidth: '100%', objectFit: 'cover', width: 'auto' }} src={ok.ContestEvent.Image === "string" ? imgPlacehoder : ok.ContestEvent.Image} /></Col>
+                        <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{ok.ContestEvent.Title}</div></Col>
                     </Row>
                 )
             }
@@ -135,20 +103,14 @@ function ManageFeedbackComponent() {
         {
             title: 'Ngày diễn ra',
             key: 'da',
-            width: '25%',
-            render: (data) => {
-                let ok = ''
-                test.forEach((dataT) => {
-                    if (dataT.Id === data.ContestEventRegisters[0].ContestEventId) {
-                        ok = dataT
-                    }
-                })
+            width: '22%',
+            render: (ok) => {
                 return (
                     <Row>
                         <div style={{ paddingTop: 15, width: '40px', fontSize: '0.5rem' }}><i className="far fa-clock fa-3x" style={{ color: '#F29191' }} /></div>
                         <div>
-                            <div style={{ marginBottom: 5 }}>Bắt đầu:&nbsp;{moment(ok.StartDate).format('LT')} - {moment(ok.StartDate).format('L')}</div>
-                            <div>Kết thúc:&nbsp;{moment(ok.EndDate).format('LT')} - {moment(ok.EndDate).format('L')}</div>
+                            <div style={{ marginBottom: 5 }}>Bắt đầu:&nbsp;{moment(ok.ContestEvent.StartDate).format('LT')} - {moment(ok.ContestEvent.StartDate).format('L')}</div>
+                            <div>Kết thúc:&nbsp;{moment(ok.ContestEvent.EndDate).format('LT')} - {moment(ok.ContestEvent.EndDate).format('L')}</div>
                         </div>
                     </Row>
                 )
@@ -157,15 +119,9 @@ function ManageFeedbackComponent() {
         {
             title: 'Địa điểm diễn ra',
             key: 'date',
-            render: (data1) => {
-                let ok = ''
-                test.forEach((data) => {
-                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
-                        ok = data
-                    }
-                })
+            render: (ok) => {
                 return (
-                    <div>{ok.Venue}</div>
+                    <div>{ok.ContestEvent.Venue}</div>
                 )
             }
         },
@@ -209,17 +165,11 @@ function ManageFeedbackComponent() {
         {
             title: 'Tên cuộc thi',
             key: 'date',
-            render: (data1) => {
-                let ok = ''
-                test.forEach((data) => {
-                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
-                        ok = data
-                    }
-                })
+            render: (ok) => {
                 return (
                     <Row>
-                        <Col span={5}><img alt="" style={{ height: 40, maxWidth: '100%', objectFit: 'cover', width: 'auto' }} src={ok.Image === "string" ? imgPlacehoder : ok.Image} /></Col>
-                        <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{ok.Title}</div></Col>
+                        <Col span={5}><img alt="" style={{ height: 40, maxWidth: '100%', objectFit: 'cover', width: 'auto' }} src={ok.ContestEvent.Image === "string" ? imgPlacehoder : ok.ContestEvent.Image} /></Col>
+                        <Col span={19} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '450', fontSize: 15, width: '100%' }}>{ok.ContestEvent.Title}</div></Col>
                     </Row>
                 )
             }
@@ -228,19 +178,13 @@ function ManageFeedbackComponent() {
             title: 'Ngày diễn ra',
             key: 'da',
             width: '25%',
-            render: (data) => {
-                let ok = ''
-                test.forEach((dataT) => {
-                    if (dataT.Id === data.ContestEventRegisters[0].ContestEventId) {
-                        ok = dataT
-                    }
-                })
+            render: (ok) => {
                 return (
                     <Row>
                         <div style={{ paddingTop: 15, width: '40px', fontSize: '0.5rem' }}><i className="far fa-clock fa-3x" style={{ color: '#F29191' }} /></div>
                         <div>
-                            <div style={{ marginBottom: 5 }}>Bắt đầu:&nbsp;{moment(ok.StartDate).format('LT')} - {moment(ok.StartDate).format('L')}</div>
-                            <div>Kết thúc:&nbsp;{moment(ok.EndDate).format('LT')} - {moment(ok.EndDate).format('L')}</div>
+                            <div style={{ marginBottom: 5 }}>Bắt đầu:&nbsp;{moment(ok.ContestEvent.StartDate).format('LT')} - {moment(ok.ContestEvent.StartDate).format('L')}</div>
+                            <div>Kết thúc:&nbsp;{moment(ok.ContestEvent.EndDate).format('LT')} - {moment(ok.ContestEvent.EndDate).format('L')}</div>
                         </div>
                     </Row>
                 )
@@ -249,15 +193,9 @@ function ManageFeedbackComponent() {
         {
             title: 'Địa điểm diễn ra',
             key: 'date',
-            render: (data1) => {
-                let ok = ''
-                test.forEach((data) => {
-                    if (data.Id === data1.ContestEventRegisters[0].ContestEventId) {
-                        ok = data
-                    }
-                })
+            render: (ok) => {
                 return (
-                    <div>{ok.Venue}</div>
+                    <div>{ok.ContestEvent.Venue}</div>
                 )
             }
         },
@@ -302,11 +240,8 @@ function ManageFeedbackComponent() {
             title: 'Tên giao dịch',
             key: 'nameEx123',
             render: (data) => {
-
-                // setExC(data.Exchanges[0])
-                // console.log("tt: ", exC !== null && exC.Title)
                 return (
-                    <div>{data.Exchanges[0].Title}</div>
+                    <div>{data.Exchange.Title}</div>
                 )
             }
         },
@@ -326,7 +261,7 @@ function ManageFeedbackComponent() {
                     }
                 }
                 return (
-                    <div>{convertFeedbackIDToName(data !== null && data.Exchanges[0].Type)}</div>
+                    <div>{convertFeedbackIDToName(data !== null && data.Exchange.Type)}</div>
                 )
             }
         },
@@ -370,7 +305,7 @@ function ManageFeedbackComponent() {
             render: (data) => {
                 let ok = ''
                 testEx.forEach((data1) => {
-                    if (data1.Id === data.ExchangeResponses[0].ExchangeId) {
+                    if (data1.Id === data.ExchangeResponse.ExchangeId) {
                         ok = data1
                     }
                 })
@@ -385,7 +320,7 @@ function ManageFeedbackComponent() {
             render: (data) => {
                 let ok = ''
                 testEx.forEach((data1) => {
-                    if (data1.Id === data.ExchangeResponses[0].ExchangeId) {
+                    if (data1.Id === data.ExchangeResponse.ExchangeId) {
                         ok = data1
                     }
                 })
@@ -453,9 +388,6 @@ function ManageFeedbackComponent() {
                     </Row>
                 ]}
             >
-                {/* {dt !== null && <div><span style={{ letterSpacing: 1, color: '#52524E' }}>Trả lời:</span> &nbsp;
-                    {dt.ReplyContent}
-                </div>} */}
                 <Form layout="vertical" form={form} onFinish={onFinish} id="respone" style={{ marginTop: '-10px', marginBottom: '-20px' }}>
                     <Form.Item hidden={true} name='id'>
                         <Input></Input>
@@ -485,21 +417,23 @@ function ManageFeedbackComponent() {
                                 ))}
                             </Row>
                         </div>))}
-                    <span style={{ letterSpacing: 1, color: '#52524E' }}>Trả lời:</span> &nbsp;
-                    {dt !== null && (dt.ReplyContent === null ?
-                        <Form.Item name="replyContent" style={{ paddingTop: '5px' }} rules={[{ required: true, message: "Trả lời phản hồi không được bỏ trống" }]}>
-                            <Input.TextArea
-                                placeholder="Nhập phản hồi"
-                                showCount maxLength={200}
-                                spellCheck={false}
-                                autoSize={{ minRows: 3, maxRows: 10 }}
-                            />
-                        </Form.Item> : dt.ReplyContent)}
+                    <div style={{marginBottom: 10}}>
+                        <span style={{ letterSpacing: 1, color: '#52524E' }}>Trả lời:</span> &nbsp;
+                        {dt !== null && (dt.ReplyContent === null ?
+                            <Form.Item name="replyContent" style={{ paddingTop: '5px' }} rules={[{ required: true, message: "Trả lời phản hồi không được bỏ trống" }]}>
+                                <Input.TextArea
+                                    placeholder="Nhập phản hồi"
+                                    showCount maxLength={200}
+                                    spellCheck={false}
+                                    autoSize={{ minRows: 3, maxRows: 10 }}
+                                />
+                            </Form.Item> : dt.ReplyContent)}
+                    </div>
                 </Form>
             </Modal>
             <Tabs type="card">
                 <TabPane tab={<div><i class="fas fa-calendar-alt" ></i>&nbsp;&nbsp;Sự kiện</div>} key="1" >
-                    <Spin size="large" spinning={CE.event.length !== 0 ? false : true}>
+                    <Spin size="large" spinning={CE.event.length || CE.event ? false : true}>
                         <Table
                             onRow={(record) => {
                                 return {
@@ -528,7 +462,7 @@ function ManageFeedbackComponent() {
                     </Spin>
                 </TabPane>
                 <TabPane tab={<div><i class="fas fa-trophy" ></i>&nbsp;&nbsp;Cuộc thi</div>} key="2" >
-                    <Spin size="large" spinning={CE.contest.length !== 0 ? false : true}>
+                    <Spin size="large" spinning={CE.contest.length || CE.contest ? false : true}>
                         <Table
                             onRow={(record) => {
                                 return {

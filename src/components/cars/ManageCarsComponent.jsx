@@ -25,8 +25,7 @@ function ManageCarsComponent() {
         const { Option } = Select;
         const [generations, setGenerations] = useState([])
         const [brands, setBrands] = useState([]);
-        const history = useHistory();
-     
+        const history = useHistory();     
         const [visibleEdit, setVisibleEdit] = useState(false)
         const [editInfo, setEditInfo] = useState('')
         const baseColumns = [
@@ -2191,7 +2190,7 @@ function ManageCarsComponent() {
                             allowClear
                         />
                     </div>
-                    <Spin spinning={generations.length !== 0 ? false : true}>
+                    <Spin spinning={generations ? false : true}>
                         <Table
                             columns={baseColumns}
                             dataSource={filterTable === null ? generations : filterTable}

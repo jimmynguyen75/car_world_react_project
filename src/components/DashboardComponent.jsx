@@ -37,7 +37,6 @@ function DashboardComponent() {
         }
         fetchData()
     }, [])
-    console.log(data)
     //user
     useEffect(() => {
         const fetchData = async () => {

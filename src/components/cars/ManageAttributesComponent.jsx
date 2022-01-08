@@ -226,23 +226,26 @@ function ManageAttributesComponent() {
                 setNameItemsCreate('')
             };
             const onCreateAttributeFinish = (values) => {
-                console.log(values)
-                CarService.createAttribute([values])
-                    .then(() => {
-                        setVisibleCreate(false)
-                        CarService.getEngineType()
-                            .then((result) => {
-                                setItems(result.data)
-                            })
-                            .catch((error) => console.log(error))
-                        CarService.getAttributeByTypeId(attributeId !== 0 ? attributeId : (items.length !== 0 && items[0].Id))
-                            .then((result) => { setAttributesSelected(result.data) })
-                            .catch((error) => { console.log(error) });
-                        message.success("Tạo thuộc tính thành công")
-                    })
-                    .catch(() => {
-                        message.error("Tạo thuộc tính không thành công")
-                    })
+                if (validate === 1) {
+                    message.error("Thuộc tính bị trùng nhau")
+                } else {
+                    CarService.createAttribute([values])
+                        .then(() => {
+                            setVisibleCreate(false)
+                            CarService.getEngineType()
+                                .then((result) => {
+                                    setItems(result.data)
+                                })
+                                .catch((error) => console.log(error))
+                            CarService.getAttributeByTypeId(attributeId !== 0 ? attributeId : (items.length !== 0 && items[0].Id))
+                                .then((result) => { setAttributesSelected(result.data) })
+                                .catch((error) => { console.log(error) });
+                            message.success("Tạo thuộc tính thành công")
+                        })
+                        .catch(() => {
+                            message.error("Tạo thuộc tính không thành công")
+                        })
+                }
             }
             const handleChangeSelectCheckValidate = (value) => {
                 let data = []
@@ -303,7 +306,7 @@ function ManageAttributesComponent() {
                     <Form.Item label="Tên thuộc tính" name="name" rules={[{ required: true, message: "Tên thuộc tính không được bỏ trống" }]}
                         help={validate === 1 && "Thuộc tính không được trùng nhau"}
                         hasFeedback
-                        validateStatus={validate === 1 ? "error" : "success"}
+                        validateStatus={validate === 1 ? 'error' : 'success'}
                     >
                         <Input.TextArea
                             onChange={handleChangeCheckAttribute}

@@ -45,9 +45,9 @@ function ManageContestsComponent() {
     const { Option } = Select;
     const [brandSelected, setBrandSelected] = useState(null)
     const [key, setKey] = useState(0)
-    const [clear, setClear] = useState(false)
     const [brandSelectValue, setBrandValue] = useState(null)
-
+    const [dt, setDt] = useState([])
+    const [filteredTable, setFilteredTable] = useState(null);
     if (location.state === true) {
         ContestService.getAllContests()
             .then((response) => {
@@ -110,23 +110,28 @@ function ManageContestsComponent() {
             .catch(err => console.log(err))
     }, [])
     const callback = (key) => {
-        console.log(key)
         setBrandValue(null)
-        setClear(true)
         setKey(key)
+        setFilteredTable(null)
     }
     useEffect(() => {
         if (key === 0) {
+            setDt(contests)
             setBrandSelected(contests)
         } else if (key === '1') {
+            setDt(contests)
             setBrandSelected(contests)
         } else if (key === '2') {
+            setDt(readyContest)
             setBrandSelected(readyContest)
         } else if (key === '3') {
+            setDt(loadingContest)
             setBrandSelected(loadingContest)
         } else if (key === '4') {
+            setDt(historyContest)
             setBrandSelected(historyContest)
         } else if (key === '5') {
+            setDt(cancelContest)
             setBrandSelected(cancelContest)
         }
     }, [key, contests, readyContest, loadingContest, historyContest, cancelContest])
@@ -136,56 +141,51 @@ function ManageContestsComponent() {
         ContestService.getAllContests()
             .then((response) => {
                 setContests(response.data)
-                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [clear])
+    }, [])
     //ready
     useEffect(() => {
         ContestService.getPreparedContests()
             .then((response) => {
                 setReadyContest(response.data)
-                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [clear])
+    }, [])
     //loading
     useEffect(() => {
         ContestService.getOngoingContests()
             .then((response) => {
                 setLoadingContest(response.data)
-                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [clear])
+    }, [])
     //history
     useEffect(() => {
         ContestService.getFinishedContests()
             .then((response) => {
                 setHistoryContest(response.data)
-                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [clear])
+    }, [])
     //cancal 
     useEffect(() => {
         ContestService.getCanceledContest()
             .then((response) => {
                 setCancelContest(response.data)
-                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [clear])
+    }, [])
     //proposal
     useEffect(() => {
         let result = [];
@@ -382,7 +382,7 @@ function ManageContestsComponent() {
             return <Table
                 rowKey="eventKey2"
                 columns={columns}
-                dataSource={contests}
+                dataSource={filteredTable === null ? dt : filteredTable}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -558,7 +558,7 @@ function ManageContestsComponent() {
             return <Table
                 rowKey="eventKey2"
                 columns={columns}
-                dataSource={readyContest}
+                dataSource={filteredTable === null ? dt : filteredTable}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -645,7 +645,6 @@ function ManageContestsComponent() {
                 {
                     title: 'Tên cuộc thi',
                     key: 'name',
-                    width: '30%',
                     ...this.getColumnSearchProps('Title'),
                     render: (data) => {
                         return (
@@ -659,7 +658,6 @@ function ManageContestsComponent() {
                 {
                     title: 'Ngày diễn ra',
                     key: 'age',
-                    width: '28%',
                     render: (data) => {
                         return (
                             <Row>
@@ -715,7 +713,7 @@ function ManageContestsComponent() {
             return <Table
                 rowKey="eventKey2"
                 columns={columns}
-                dataSource={loadingContest}
+                dataSource={filteredTable === null ? dt : filteredTable}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -883,7 +881,7 @@ function ManageContestsComponent() {
             return <Table
                 rowKey="eventKey2"
                 columns={columns}
-                dataSource={historyContest}
+                dataSource={filteredTable === null ? dt : filteredTable}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -970,7 +968,6 @@ function ManageContestsComponent() {
                 {
                     title: 'Tên cuộc thi',
                     key: 'name',
-                    width: '30%',
                     ...this.getColumnSearchProps('Title'),
                     render: (data) => {
                         return (
@@ -984,7 +981,6 @@ function ManageContestsComponent() {
                 {
                     title: 'Ngày diễn ra',
                     key: 'age',
-                    width: '28%',
                     render: (data) => {
                         return (
                             <Row>
@@ -1050,7 +1046,7 @@ function ManageContestsComponent() {
             return <Table
                 rowKey="eventKey2"
                 columns={columns}
-                dataSource={cancelContest}
+                dataSource={filteredTable === null ? dt : filteredTable}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -1150,47 +1146,14 @@ function ManageContestsComponent() {
     }
     const handleSelectBrand = (value) => {
         setBrandValue(value)
-        if (key === 0) {
-            const filterTable = contests.filter(o => Object.keys(o).some(k =>
-                String(o[k])
-                    .includes(value)
-            ))
-            setContests(filterTable)
-        } else if (key === '1') {
-            const filterTable = contests.filter(o => Object.keys(o).some(k =>
-                String(o[k])
-                    .includes(value)
-            ))
-            setContests(filterTable)
-        } else if (key === '2') {
-            const filterTable = readyContest.filter(o => Object.keys(o).some(k =>
-                String(o[k])
-                    .includes(value)
-            ))
-            setReadyContest(filterTable)
-        } else if (key === '3') {
-            const filterTable = loadingContest.filter(o => Object.keys(o).some(k =>
-                String(o[k])
-                    .includes(value)
-            ))
-            setLoadingContest(filterTable)
-        } else if (key === '4') {
-            const filterTable = historyContest.filter(o => Object.keys(o).some(k =>
-                String(o[k])
-                    .includes(value)
-            ))
-            setHistoryContest(filterTable)
-        } else if (key === '5') {
-            const filterTable = cancelContest.filter(o => Object.keys(o).some(k =>
-                String(o[k])
-                    .includes(value)
-            ))
-            setCancelContest(filterTable)
-        }
+        const filterTable = dt.filter(o => Object.keys(o).some(k =>
+            String(o[k])
+                .includes(value)
+        ))
+        value !== undefined && setFilteredTable(filterTable)
     }
     const handleBrandClear = () => {
-        setClear(true)
-        history.push('/cuoc-thi')
+        setFilteredTable(null)
     }
     return (
         <div>

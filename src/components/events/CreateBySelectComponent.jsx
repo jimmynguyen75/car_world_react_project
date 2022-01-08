@@ -1,4 +1,4 @@
-import { Form, Modal, Upload, Image, message, Row, Tooltip, Input, ConfigProvider, DatePicker, Col } from "antd";
+import { Form, Modal, Upload, Image, message, Row, Tooltip, Input, ConfigProvider, DatePicker, Col, Spin, Select } from "antd";
 import React, { useState, useEffect } from 'react';
 import storage from '../../services/ImageFirebase';
 import { PlusOutlined } from '@ant-design/icons';
@@ -8,6 +8,7 @@ import moment from 'moment';
 import AccountService from '../../services/AccountService'
 import NumberFormat from 'react-number-format';
 import EventService from "../../services/EventService";
+import BrandService from "../../services/BrandService";
 export default function CreateBySelectComponent({ record, recordImage }) {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -20,6 +21,15 @@ export default function CreateBySelectComponent({ record, recordImage }) {
     const [images, setImages] = useState([]);
     const [r, setR] = useState([]);
     const [s, setS] = useState([]);
+    const { Option } = Select;
+    const [brands, setBrands] = useState([]);
+    useEffect(() => {
+        BrandService.getAllBrand()
+            .then(res => {
+                setBrands(res.data);
+            })
+            .catch(err => console.log(err))
+    }, [])
     //Date --------------------
     function minRegister(value) {
         form.setFieldsValue({
@@ -291,13 +301,35 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                         </div>
                     </Row>
                 </Form.Item>
-                <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
-                    <Input.TextArea
-                        placeholder="Nhập tên sự kiện"
-                        showCount maxLength={200}
-                        autoSize={{ minRows: 1, maxRows: 10 }}
-                    />
-                </Form.Item>
+                <Row gutter={15}>
+                    <Col span={16}>
+                        <Form.Item label="Tên sự kiện" name="title" rules={[{ required: true, message: "Tên sự kiện không được bỏ trống" }]}>
+                            <Input.TextArea
+                                placeholder="Nhập tên sự kiện"
+                                showCount maxLength={200}
+                                autoSize={{ minRows: 1, maxRows: 10 }}
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Spin spinning={brands.length !== 0 ? false : true}>
+                            <Form.Item label="Chọn hãng" name="brandId" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                <Select
+                                    showSearch
+                                    placeholder="Chọn hãng xe"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {brands.map(brands => (
+                                        <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Spin>
+                    </Col>
+                </Row>
                 <Row gutter={15}>
                     <Col span={12}>
                         <ConfigProvider locale={locale}>

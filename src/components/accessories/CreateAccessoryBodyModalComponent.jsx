@@ -32,12 +32,10 @@ export default function CreateAccessoryBodyModalComponent() {
         AccessoryService.createNewAccessory(values)
             .then((finish) => {
                 console.log(finish)
-                setTimeout(() => {
-                    message.success("Tạo phụ kiện thành công");
-                }, 500)
+                message.success("Tạo phụ kiện thành công");
                 setTimeout(() => {
                     window.location.href = '/phu-kien'
-                }, 1500)
+                }, 500)
             })
             .catch((err) => {
                 message.error("Tạo không thành công")
@@ -102,15 +100,12 @@ export default function CreateAccessoryBodyModalComponent() {
         return isImage && isLt5M;
     }
     useEffect(() => {
-        let result = []
-        BrandService.getBrands()
-            .then(res => {
-                res.data.forEach(data => {
-                    if (data.IsDeleted === false) {
-                        result.push(data)
-                    }
-                })
-                setBrands(result)
+        BrandService.getAllBrand()
+            .then(car => {
+                BrandService.getAllAccessoriesBrand()
+                    .then(acc => {
+                        setBrands([...car.data, ...acc.data])
+                    }).catch(err => console.log(err))
             }).catch(err => console.log(err))
     }, [])
     const onChangePrice = (e) => {
@@ -195,7 +190,7 @@ export default function CreateAccessoryBodyModalComponent() {
                     <Col span={12}>
                         <Form.Item label={<div>Hãng phụ kiện <Tag icon={<PlusCircleOutlined />} onClick={handleAddBrand} color="processing">
                             Thêm hãng
-                        </Tag></div>} name="brandName" rules={[{ required: true, message: "Hãng phụ kiện không được bỏ trống" }]}>
+                        </Tag></div>} name="brandId" rules={[{ required: true, message: "Hãng phụ kiện không được bỏ trống" }]}>
                             <Select
                                 showSearch
                                 placeholder="Chọn hãng phụ kiện"
@@ -205,7 +200,7 @@ export default function CreateAccessoryBodyModalComponent() {
                                 }
                             >
                                 {brands.map(brands => (
-                                    <Option key={brands.Id} value={brands.Name}>
+                                    <Option key={brands.Id} value={brands.Id}>
                                         {brands.Name}
                                     </Option>
                                 ))}

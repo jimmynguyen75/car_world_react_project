@@ -21,8 +21,9 @@ function ManagePostsComponent() {
     const { Option } = Select;
     const [brands, setBrands] = useState([]);
     const [brandSelected, setBrandSelected] = useState(null)
-    const [clear, setClear] = useState(false)
     const [brandSelectValue, setBrandValue] = useState(null)
+    const [filteredTable, setFilteredTable] = useState(null)
+    const [dt, setDt] = useState([])
     useEffect(() => {
         let all = []
         let car = []
@@ -40,7 +41,6 @@ function ManagePostsComponent() {
                     all.push(data);
                 }
             })
-            // console.log(allEvent.data)
             cars.data.forEach((data) => {
                 if (data.Status === 1) {
                     car.push(data);
@@ -64,8 +64,7 @@ function ManagePostsComponent() {
             setData({ all: all, car: car, accessory: accessory, event: event, contest: contest })
         }
         fetchData()
-        setClear(false)
-    }, [clear, data])
+    }, [data])
     useEffect(() => {
         BrandService.getAllBrand()
             .then(res => {
@@ -77,24 +76,29 @@ function ManagePostsComponent() {
         history.push("/tao-bai-dang");
     }
     function callback(keyValue) {
-        console.log(keyValue);
         setBrandValue(null)
-        setClear(true)
+        setFilteredTable(null)
         setKey(keyValue)
     }
     useEffect(() => {
         if (key === 0) {
+            setDt(data.all)
+            setBrandSelected(data.all)
+        } else if (key === '1') {
+            setDt(data.all)
             setBrandSelected(data.all)
         } else if (key === '2') {
+            setDt(data.car)
             setBrandSelected(data.car)
         } else if (key === '3') {
+            setDt(data.accessory)
             setBrandSelected(data.accessory)
         } else if (key === '4') {
+            setDt(data.event)
             setBrandSelected(data.event)
         } else if (key === '5') {
+            setDt(data.contest)
             setBrandSelected(data.contest)
-        } else if (key === '1') {
-            setBrandSelected(data.all)
         }
     }, [data, key])
     const viewPost = (record) => {
@@ -298,7 +302,7 @@ function ManagePostsComponent() {
             return <Table
                 rowKey="keyall"
                 columns={columns}
-                dataSource={data.all}
+                dataSource={filteredTable === null ? dt : filteredTable}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -454,7 +458,7 @@ function ManagePostsComponent() {
             return <Table
                 rowKey="keyCar"
                 columns={columns}
-                dataSource={key === '2' ? data.car : key === '3' ? data.accessory : key === '4' ? data.event : key === '5' ? data.contest : null}
+                dataSource={filteredTable === null ? dt : filteredTable}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -471,56 +475,15 @@ function ManagePostsComponent() {
     }
     const handleSelectedBrand = (value) => {
         setBrandValue(value)
-        const filterTable = data.all.filter(o => Object.keys(o).some(k =>
+        const filterTable = dt.filter(o => Object.keys(o).some(k =>
             String(o[k])
                 .includes(value)
         ))
-        console.log(key)
-        // if (key === 0) {
-        //     const filterTable = data.all.filter(o => Object.keys(o).some(k =>
-        //         String(o[k])
-        //             .includes(value)
-        //     ))
-        //     setData({ all: filterTable })
-        // } else if (key === '2') {
-        //     const filterTable = data.car.filter(o => Object.keys(o).some(k =>
-        //         String(o[k])
-        //             .includes(value)
-        //     ))
-        //     setData({ car: filterTable })
-        // } else if (key === '1') {
-        //     const filterTable = data.all.filter(o => Object.keys(o).some(k =>
-        //         String(o[k])
-        //             .includes(value)
-        //     ))
-        //     setData({ all: filterTable })
-        // } else if (key === '3') {
-        //     const filterTable = data.accessory.filter(o => Object.keys(o).some(k =>
-        //         String(o[k])
-        //             .includes(value)
-        //     ))
-        //     setData({ accessory: filterTable })
-        // } else if (key === '4') {
-        //     const filterTable = data.event.filter(o => Object.keys(o).some(k =>
-        //         String(o[k])
-        //             .includes(value)
-        //     ))
-        //     setData({ event: filterTable })
-        // } else if (key === '5') {
-        //     const filterTable = data.contest.filter(o => Object.keys(o).some(k =>
-        //         String(o[k])
-        //             .includes(value)
-        //     ))
-        //     setData({ contest: filterTable })
-        // }
-
-        setData({ all: filterTable, car: filterTable, accessory: filterTable, event: filterTable, contest: filterTable })
+        value !== undefined && setFilteredTable(filterTable)
     }
     const handleBrandClear = () => {
-        setClear(true)
-        history.push('/bai-dang')
+        setFilteredTable(null)
     }
-    console.log("selected: ", brandSelected)
     return (
         <div>
             <Modal
@@ -572,27 +535,27 @@ function ManagePostsComponent() {
             </Row>
             <Tabs type="card" onChange={callback}>
                 <TabPane tab="Tất cả" key="1">
-                    <Spin size="large" spinning={data.all === null ? true : false}>
+                    <Spin size="large" spinning={dt === null ? true : false}>
                         <All />
                     </Spin>
                 </TabPane>
                 <TabPane tab="Xe" key="2">
-                    <Spin size="large" spinning={data.car === null ? true : false}>
+                    <Spin size="large" spinning={data === null ? true : false}>
                         <GetAll />
                     </Spin>
                 </TabPane>
                 <TabPane tab="Phụ kiện" key="3">
-                    <Spin size="large" spinning={data.accessory === null ? true : false}>
+                    <Spin size="large" spinning={dt === null ? true : false}>
                         <GetAll />
                     </Spin>
                 </TabPane>
                 <TabPane tab="Sự kiện" key="4">
-                    <Spin size="large" spinning={data.event === null ? true : false}>
+                    <Spin size="large" spinning={dt === null ? true : false}>
                         <GetAll />
                     </Spin>
                 </TabPane>
                 <TabPane tab="Cuộc thi" key="5">
-                    <Spin size="large" spinning={data.contest === null ? true : false}>
+                    <Spin size="large" spinning={dt === null ? true : false}>
                         <GetAll />
                     </Spin>
                 </TabPane>

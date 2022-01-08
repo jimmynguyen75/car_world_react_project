@@ -42,11 +42,11 @@ function ManageEventsComponent() {
     const [modalConfirmSelect, setModalConfirmSelect] = useState(false)
     const [brandSelected, setBrandSelected] = useState(null)
     const [key, setKey] = useState(0)
-    const [clear, setClear] = useState(false)
     const [brandSelectValue, setBrandValue] = useState(null)
     const { Option } = Select;
     const [brands, setBrands] = useState([]);
-
+    const [dt, setDt] = useState([])
+    const [filteredTable, setFilteredTable] = useState(null);
     if (location.state === true) {
         EventService.getAllEvents()
             .then((response) => {
@@ -100,82 +100,56 @@ function ManageEventsComponent() {
     const handleCancelEvent = () => {
         setLoadingButton(true);
     };
-    const callback = (key) => {
-        console.log(key)
-        setBrandValue(null)
-        setClear(true)
-        setKey(key)
-    }
-    useEffect(() => {
-        if (key === 0) {
-            setBrandSelected(events)
-        } else if (key === '1') {
-            setBrandSelected(events)
-        } else if (key === '2') {
-            setBrandSelected(readyEvent)
-        } else if (key === '3') {
-            setBrandSelected(loadingEvent)
-        } else if (key === '4') {
-            setBrandSelected(historyEvent)
-        } else if (key === '5') {
-            setBrandSelected(cancelEvent)
-        }
-    }, [key, events, readyEvent, loadingEvent, historyEvent, cancelEvent])
     //register
     useEffect(() => {
         EventService.getAllEvents()
             .then((response) => {
                 setEvents(response.data)
-                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [clear])
+    }, [])
     //ready
     useEffect(() => {
         EventService.getPreparedEvents()
             .then((response) => {
                 setReadyEvent(response.data)
-                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [clear])
+    }, [])
     //loading
     useEffect(() => {
         EventService.getOngoingEvents()
             .then((response) => {
                 setLoadingEvent(response.data)
-                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [clear])
+    }, [])
     //history
     useEffect(() => {
         EventService.getFinishedEvents()
             .then((response) => {
                 setHistoryEvent(response.data)
-                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [clear])
+    }, [])
     //cancal 
     useEffect(() => {
         EventService.getCanceledEvent()
             .then((response) => {
                 setCancelEvent(response.data)
-                setClear(false)
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, [clear])
+    }, [])
     //proposal
     useEffect(() => {
         let result = [];
@@ -191,7 +165,32 @@ function ManageEventsComponent() {
                 setProposals(result)
             })
     }, [])
-
+    const callback = (keyValue) => {
+        setKey(keyValue)
+        setBrandValue(null)
+        setFilteredTable(null)
+    }
+    useEffect(() => {
+        if (key === 0) {
+            setDt(events)
+            setBrandSelected(events)
+        } else if (key === '1') {
+            setDt(events)
+            setBrandSelected(events)
+        } else if (key === '2') {
+            setDt(readyEvent)
+            setBrandSelected(readyEvent)
+        } else if (key === '3') {
+            setDt(loadingEvent)
+            setBrandSelected(loadingEvent)
+        } else if (key === '4') {
+            setDt(historyEvent)
+            setBrandSelected(historyEvent)
+        } else if (key === '5') {
+            setDt(cancelEvent)
+            setBrandSelected(cancelEvent)
+        }
+    }, [key, events, readyEvent, loadingEvent, historyEvent, cancelEvent])
     class Register extends React.Component {
         state = {
             searchText: '',
@@ -373,7 +372,7 @@ function ManageEventsComponent() {
             return <Table
                 rowKey="eventKey2"
                 columns={columns}
-                dataSource={events}
+                dataSource={filteredTable === null ? dt : filteredTable}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -545,7 +544,7 @@ function ManageEventsComponent() {
             return <Table
                 rowKey="eventKey2"
                 columns={columns}
-                dataSource={readyEvent}
+                dataSource={filteredTable === null ? dt : filteredTable}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -632,7 +631,6 @@ function ManageEventsComponent() {
                 {
                     title: 'Tên sự kiện',
                     key: 'name',
-                    width: '30%',
                     ...this.getColumnSearchProps('Title'),
                     render: (data) => {
                         return (
@@ -646,7 +644,6 @@ function ManageEventsComponent() {
                 {
                     title: 'Ngày diễn ra',
                     key: 'age',
-                    width: '28%',
                     render: (data) => {
                         return (
                             <Row>
@@ -702,7 +699,7 @@ function ManageEventsComponent() {
             return <Table
                 rowKey="eventKey2"
                 columns={columns}
-                dataSource={loadingEvent}
+                dataSource={filteredTable === null ? dt : filteredTable}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -870,7 +867,7 @@ function ManageEventsComponent() {
             return <Table
                 rowKey="eventKey2"
                 columns={columns}
-                dataSource={historyEvent}
+                dataSource={filteredTable === null ? dt : filteredTable}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -957,7 +954,6 @@ function ManageEventsComponent() {
                 {
                     title: 'Tên sự kiện',
                     key: 'name',
-                    width: '30%',
                     ...this.getColumnSearchProps('Title'),
                     render: (data) => {
                         return (
@@ -971,7 +967,6 @@ function ManageEventsComponent() {
                 {
                     title: 'Ngày diễn ra',
                     key: 'age',
-                    width: '28%',
                     render: (data) => {
                         return (
                             <Row>
@@ -1027,7 +1022,7 @@ function ManageEventsComponent() {
             return <Table
                 rowKey="eventKey2"
                 columns={columns}
-                dataSource={cancelEvent}
+                dataSource={filteredTable === null ? dt : filteredTable}
                 pagination={{
                     current: page,
                     pageSize: pageSize,
@@ -1135,47 +1130,14 @@ function ManageEventsComponent() {
     }, [])
     const handleSelectBrand = (value) => {
         setBrandValue(value)
-        if (key === 0) {
-            const filterTable = events.filter(o => Object.keys(o).some(k =>
-                String(o[k])
-                    .includes(value)
-            ))
-            setEvents(filterTable)
-        } else if (key === '1') {
-            const filterTable = events.filter(o => Object.keys(o).some(k =>
-                String(o[k])
-                    .includes(value)
-            ))
-            setEvents(filterTable)
-        } else if (key === '2') {
-            const filterTable = readyEvent.filter(o => Object.keys(o).some(k =>
-                String(o[k])
-                    .includes(value)
-            ))
-            setReadyEvent(filterTable)
-        } else if (key === '3') {
-            const filterTable = loadingEvent.filter(o => Object.keys(o).some(k =>
-                String(o[k])
-                    .includes(value)
-            ))
-            setLoadingEvent(filterTable)
-        } else if (key === '4') {
-            const filterTable = historyEvent.filter(o => Object.keys(o).some(k =>
-                String(o[k])
-                    .includes(value)
-            ))
-            setHistoryEvent(filterTable)
-        } else if (key === '5') {
-            const filterTable = cancelEvent.filter(o => Object.keys(o).some(k =>
-                String(o[k])
-                    .includes(value)
-            ))
-            setCancelEvent(filterTable)
-        }
+        const filterTable = dt.filter(o => Object.keys(o).some(k =>
+            String(o[k])
+                .includes(value)
+        ))
+        value !== undefined && setFilteredTable(filterTable)
     }
     const handleBrandClear = () => {
-        setClear(true)
-        history.push('/su-kien')
+        setFilteredTable(null)
     }
     return (
         <div>

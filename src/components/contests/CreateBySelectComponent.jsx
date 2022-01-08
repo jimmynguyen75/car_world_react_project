@@ -1,11 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Col, ConfigProvider, DatePicker, Form, Image, Input, message, Modal, Row, Tooltip, Upload } from "antd";
+import { Col, ConfigProvider, DatePicker, Form, Image, Input, message, Modal, Row, Tooltip, Upload, Select, Spin } from "antd";
 import locale from 'antd/es/locale-provider/fr_FR';
 import moment from 'moment';
 import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import AccountService from '../../services/AccountService';
+import BrandService from '../../services/BrandService';
 import ContestService from '../../services/ContestService';
 import storage from '../../services/ImageFirebase';
 import numberToWord from '../../utils/numberToWord';
@@ -22,6 +23,15 @@ export default function CreateBySelectComponent({ record, recordImage }) {
     const [images, setImages] = useState([]);
     const [r, setR] = useState([]);
     const [s, setS] = useState([]);
+    const [brands, setBrands] = useState([]);
+    const { Option } = Select;
+    useEffect(() => {
+        BrandService.getAllBrand()
+            .then(res => {
+                setBrands(res.data);
+            })
+            .catch(err => console.log(err))
+    }, [])
     //Date --------------------
     function minRegister(value) {
         form.setFieldsValue({
@@ -307,7 +317,25 @@ export default function CreateBySelectComponent({ record, recordImage }) {
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={6}>
+                        <Spin spinning={brands.length !== 0 ? false : true}>
+                            <Form.Item label="Chọn hãng" name="brandId" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
+                                <Select
+                                    showSearch
+                                    placeholder="Chọn hãng xe"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {brands.map(brands => (
+                                        <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Spin>
+                    </Col>
+                    <Col span={6}>
                         <Form.Item label={<div>Lệ phí:&nbsp;<span style={{ color: '#8F4068' }}>{numberToWord.DocTienBangChu(price)}</span></div>} name="Giá" >
                             <NumberFormat
                                 allowNegative={false}
