@@ -40,10 +40,10 @@ function ManageAttributesComponent() {
             })
         }, [data])
         useEffect(() => {
-            CarService.getAttributeByTypeId(items.length !== 0 && items[0].Id)
+            CarService.getAttributeByTypeId("0416e0c8-2120-4d3f-8656-5c708d263c04")
                 .then((result) => { setAttributesSelected(result.data) })
                 .catch((error) => { console.log(error) });
-        }, [items])
+        }, [])
         function handleChangeSelect(value) {
             setSearchValue('')
             setFilterTable(null)
@@ -67,6 +67,9 @@ function ManageAttributesComponent() {
                     setItems(result.data)
                 })
                 .catch((error) => console.log(error))
+            attributeId !== 0 && CarService.getAttributeByTypeId(attributeId)
+                .then((result) => { setAttributesSelected(result.data) })
+                .catch((error) => { console.log(error) });
             setVisibleEngine(false);
         };
         const onClickEdit = (data) => {
@@ -88,7 +91,7 @@ function ManageAttributesComponent() {
             console.log(values)
             CarService.updateAttributeId(values.id, values)
                 .then(() => {
-                    CarService.getAttributeByTypeId(attributeId !== 0 ? attributeId : (items.length !== 0 && items[0].Id))
+                    CarService.getAttributeByTypeId(attributeId !== 0 ? attributeId : "0416e0c8-2120-4d3f-8656-5c708d263c04")
                         .then((result) => { setAttributesSelected(result.data) })
                         .catch((error) => { console.log(error) });
                     form.resetFields();
@@ -237,7 +240,7 @@ function ManageAttributesComponent() {
                                     setItems(result.data)
                                 })
                                 .catch((error) => console.log(error))
-                            CarService.getAttributeByTypeId(attributeId !== 0 ? attributeId : (items.length !== 0 && items[0].Id))
+                            CarService.getAttributeByTypeId(attributeId !== 0 ? attributeId : "0416e0c8-2120-4d3f-8656-5c708d263c04")
                                 .then((result) => { setAttributesSelected(result.data) })
                                 .catch((error) => { console.log(error) });
                             message.success("Tạo thuộc tính thành công")
@@ -381,7 +384,7 @@ function ManageAttributesComponent() {
             console.log(id)
             CarService.deleteAttributeById(id)
                 .then(() => {
-                    CarService.getAttributeByTypeId(attributeId !== 0 ? attributeId : (items.length !== 0 && items[0].Id))
+                    CarService.getAttributeByTypeId(attributeId !== 0 ? attributeId : "0416e0c8-2120-4d3f-8656-5c708d263c04")
                         .then((result) => { setAttributesSelected(result.data) })
                         .catch((error) => { console.log(error) });
                     message.success("Xóa thuộc tính xe thành công")
@@ -613,7 +616,7 @@ function ManageAttributesComponent() {
                                         okText="Có"
                                         cancelText="Không"
                                     >
-                                        <i className="far fa-trash-alt" ></i> 
+                                        <i className="far fa-trash-alt" ></i>
                                     </Popconfirm>
                                 </Col>}
                             </Row >
@@ -775,10 +778,10 @@ function ManageAttributesComponent() {
                 <div>
                     <Row>
                         <Button type="primary" shape="round" onClick={setVisibleCreate} className="createButton" style={{ height: 36, float: 'left', marginRight: 15 }} icon={<PlusCircleOutlined />}><span style={{ marginTop: 2.5 }}>Tạo thuộc tính</span></Button>
-                        <Button type="primary" shape="round" onClick={setVisibleEngine} className="createButton" style={{ height: 36, float: 'left' }} icon={<SettingOutlined />}><span style={{ marginTop: 2.5 }}>Quản loại thuộc tính</span></Button>
+                        <Button type="primary" shape="round" onClick={setVisibleEngine} className="createButton" style={{ height: 36, float: 'left' }} icon={<SettingOutlined />}><span style={{ marginTop: 2.5 }}>Quản lý loại thuộc tính</span></Button>
                     </Row>
                     <Select
-                        defaultValue={items.length !== 0 && items[0].Id}
+                        defaultValue={"0416e0c8-2120-4d3f-8656-5c708d263c04"}
                         onChange={handleChangeSelect}
                         style={{ width: 240 }}
                         placeholder="Chọn loại thuộc tính"
