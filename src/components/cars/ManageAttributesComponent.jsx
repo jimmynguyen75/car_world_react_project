@@ -219,9 +219,9 @@ function ManageAttributesComponent() {
                 CarService.createEngineType(nameItemsCreate)
                     .then(() => {
                         CarService.getEngineType().then((result) => { setEngineCreate(result.data) }).catch((error) => console.log(error))
-                        message.success("Tạo thuộc tính thành công")
+                        message.success("Tạo loại thuộc tính thành công")
                     })
-                    .catch(() => { message.error("Tạo thuộc tính không thành công") })
+                    .catch(() => { message.error("Tạo loại thuộc tính không thành công") })
                 setEngineCreate([...engineCreate, nameItemsCreate || `New item ${index++}`])
                 setNameItemsCreate('')
             };
@@ -399,9 +399,9 @@ function ManageAttributesComponent() {
                             setItems(result.data)
                         })
                         .catch((error) => console.log(error))
-                    message.success("Tạo thuộc tính thành công")
+                    message.success("Tạo loại thuộc tính thành công")
                 })
-                .catch(() => { message.error("Tạo thuộc tính không thành công") })
+                .catch(() => { message.error("Tạo loại thuộc tính không thành công") })
             setItems([...items, name || `New item ${index++}`])
             setName('')
         };
@@ -613,7 +613,7 @@ function ManageAttributesComponent() {
                                         okText="Có"
                                         cancelText="Không"
                                     >
-                                        <i className="far fa-trash-alt" ></i>
+                                        <i className="far fa-trash-alt" ></i> 
                                     </Popconfirm>
                                 </Col>}
                             </Row >
@@ -641,9 +641,9 @@ function ManageAttributesComponent() {
                             })
                             .catch((error) => console.log(error))
                         setVisibleCreateEngine(false)
-                        message.success("Tạo thuộc tính thành công")
+                        message.success("Tạo loại thuộc tính thành công")
                     })
-                    .catch(() => { message.error("Tạo thuộc tính không thành công") })
+                    .catch(() => { message.error("Tạo loại thuộc tính không thành công") })
             }
             return (
                 <div>

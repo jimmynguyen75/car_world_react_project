@@ -25,7 +25,7 @@ function ManageCarsComponent() {
         const { Option } = Select;
         const [generations, setGenerations] = useState([])
         const [brands, setBrands] = useState([]);
-        const history = useHistory();     
+        const history = useHistory();
         const [visibleEdit, setVisibleEdit] = useState(false)
         const [editInfo, setEditInfo] = useState('')
         const baseColumns = [
@@ -74,11 +74,28 @@ function ManageCarsComponent() {
             },
             {
                 title: 'Tác vụ',
-                width: '15%',
+                width: '10%',
                 key: 'carAction',
                 render: (data) => {
                     return (
-                        <i className="far fa-edit" onClick={() => { handleVisibleCarDetail(data) }} />
+                        <Row gutter={15}>
+                            <Col span={8}>
+                                <i className="far fa-eye" onClick={() => { handleVisibleCarDetail(data) }} />
+                            </Col>
+                            <Col span={8}>
+                                <i className="far fa-edit" onClick={() => { handleVisibleCarDetail(data) }} />
+                            </Col>
+                            <Col span={8}>
+                                <Popconfirm
+                                    title="Bạn có muốn xóa xe này không?"
+                                    onConfirm={() => confirmDeleteCar(data.Id)}
+                                    okText="Có"
+                                    cancelText="Không"
+                                >
+                                    <i className="far fa-trash-alt" />
+                                </Popconfirm>
+                            </Col>
+                        </Row>
                     )
                 }
             }
@@ -230,104 +247,6 @@ function ManageCarsComponent() {
                 </div>
             )
         }
-        // const CreateCarModelsComponent = () => {
-        //     const [validate, setValidate] = useState(0);
-        //     const [carModels, setCarModels] = useState([]);
-        //     const [form] = Form.useForm();
-        //     const [visible, setVisible] = React.useState(false);
-
-        //     useEffect(() => {
-        //         let data = []
-        //         CarService.getCarModelsByBrand(brandId)
-        //             .then((models) => {
-        //                 models.data.forEach((filter) => {
-        //                     data.push(filter.Name)
-        //                 })
-        //                 setCarModels(data)
-        //             })
-        //             .catch((error) => console.log(error))
-        //     }, [brandId])
-        //     const handleChange = (e) => {
-        //         var data = e.target.value.toLowerCase().replace(/\s/g, '');
-        //         console.log(e.target.value);
-        //         for (var i = 0; i < carModels.length; i++) {
-        //             if (data === (carModels[i].toLowerCase().replace(/\s/g, ''))) {
-        //                 form.setFieldsValue({ name: data })
-        //                 setValidate(1)
-        //                 break;
-        //             } else {
-        //                 setValidate(0)
-        //             }
-        //         }
-        //     };
-        //     const handleSelectBrand = (id) => {
-        //         setValidate(0)
-        //         form.setFieldsValue({ name: null })
-        //         let data = []
-        //         CarService.getCarModelsByBrand(id)
-        //             .then((models) => {
-        //                 models.data.forEach((filter) => {
-        //                     data.push(filter.Name)
-        //                 })
-        //                 setCarModels(data)
-        //             })
-        //             .catch((error) => console.log(error))
-        //     };
-        //     const handleAddBrand = () => {
-        //         console.log('ok')
-        //         window.location.href = '/thuong-hieu'
-        //     };
-        //     const onFinish = (values) => {
-        //         console.log(values)
-        //         CarService.createCarModel(values)
-        //             .then(() => {
-        //                 setVisible(false);
-        //                 CarService.getCarModelsByBrand(brandId).then((models) => { setModel(models.data) }).catch((err) => { console.log(err) })
-        //                 message.success("Tạo mẫu xe thành công")
-        //             })
-        //             .catch(() => { message.error("Tạo mẫu xe không thành công") })
-        //     };
-        //     return (
-        //         <div>
-        //             <Form
-        //                 layout="vertical"
-        //                 id="createCarModel"
-        //                 onFinish={onFinish}
-        //                 form={form}
-        //             >
-        //                 <Form.Item label={<div>Hãng xe <Tag icon={<PlusCircleOutlined />} onClick={handleAddBrand} color="success">
-        //                     Thêm hãng
-        //                 </Tag></div>} name="brandId" rules={[{ required: true, message: "Hãng xe không được bỏ trống" }]}>
-        //                     <Select
-        //                         showSearch
-        //                         placeholder="Chọn hãng xe"
-        //                         optionFilterProp="children"
-        //                         filterOption={(input, option) =>
-        //                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-        //                         }
-        //                         onChange={handleSelectBrand}
-        //                     >
-        //                         {brands.map(brands => (
-        //                             <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
-        //                         ))}
-        //                     </Select>
-        //                 </Form.Item>
-        //                 <Form.Item label="Tên mẫu xe" name="name" rules={[{ required: true, message: "Tên mẫu xe không được bỏ trống" }]}
-        //                     help={validate === 1 && "Mẫu xe không được trùng nhau"}
-        //                     hasFeedback
-        //                     validateStatus={validate === 1 ? "error" : "success"}
-        //                 >
-        //                     <Input.TextArea
-        //                         onChange={handleChange}
-        //                         placeholder="Nhập tên mẫu xe"
-        //                         showCount maxLength={100}
-        //                         autoSize={{ minRows: 1, maxRows: 10 }}
-        //                     />
-        //                 </Form.Item>
-        //             </Form>
-        //         </div>
-        //     )
-        // }
         const CreateCarComponent = () => {
             const { Step } = Steps;
             const [visibleStep, setVisibleStep] = React.useState(false);
@@ -358,7 +277,6 @@ function ManageCarsComponent() {
             const handleCancelStep = () => {
                 setVisibleStep(false);
             };
-
             const CreateAttribute = () => {
                 const [engine, setEngine] = useState([])
                 const [showAttribute, setShowAttribute] = useState(0)
@@ -714,6 +632,11 @@ function ManageCarsComponent() {
                 const [brands, setBrands] = useState([]);
                 const [models, setModels] = useState([]);
                 const [price, setPrice] = useState(0);
+                const [visibleCreateModel, setVisibleCreateModel] = React.useState(false);
+                const [key, setKey] = useState(null)
+                const handleCancelCreateModel = () => {
+                    setVisibleCreateModel(false);
+                };
                 function deleteImage(index) {
 
                 }
@@ -801,6 +724,7 @@ function ManageCarsComponent() {
                 }
                 const handleBrandChange = (id, key) => {
                     console.log(key.key)
+                    setKey(key.key)
                     formCreateBase.setFieldsValue({ carModelId: [], brandName: key.key })
                     CarService.getCarModelsByBrand(key.key).then((res) => setModels(res.data)).catch((err) => console.log(err))
                 }
@@ -817,8 +741,113 @@ function ManageCarsComponent() {
                     console.log(dateString);
                     formCreateBase.setFieldsValue({ yearOfManufactor: dateString })
                 }
+                const CreateCarModelsComponent = () => {
+                    const [validate, setValidate] = useState(0);
+                    const [carModels, setCarModels] = useState([]);
+                    const [form] = Form.useForm();
+                    const handleChange = (e) => {
+                        var data = e.target.value.toLowerCase().replace(/\s/g, '');
+                        console.log(e.target.value);
+                        for (var i = 0; i < carModels.length; i++) {
+                            if (data === (carModels[i].toLowerCase().replace(/\s/g, ''))) {
+                                form.setFieldsValue({ name: data })
+                                setValidate(1)
+                                break;
+                            } else {
+                                setValidate(0)
+                            }
+                        }
+                    };
+                    const handleSelectBrand = (id) => {
+                        setValidate(0)
+                        form.setFieldsValue({ name: null })
+                        let data = []
+                        CarService.getCarModelsByBrand(id)
+                            .then((models) => {
+                                models.data.forEach((filter) => {
+                                    data.push(filter.Name)
+                                })
+                                setCarModels(data)
+                            })
+                            .catch((error) => console.log(error))
+                    };
+                    const handleAddBrand = () => {
+                        console.log('ok')
+                        window.location.href = '/thuong-hieu'
+                    };
+                    const onFinish = (values) => {
+                        console.log(values)
+                        CarService.createCarModel(values)
+                            .then(() => {
+                                setVisibleCreateModel(false);
+                                CarService.getCarModelsByBrand(key).then((res) => setModels(res.data)).catch((err) => console.log(err))
+                                message.success("Tạo mẫu xe thành công")
+                            })
+                            .catch(() => { message.error("Tạo mẫu xe không thành công") })
+                    };
+                    return (
+                        <div>
+                            <Form
+                                layout="vertical"
+                                id="createCarModel"
+                                onFinish={onFinish}
+                                form={form}
+                            >
+                                <Form.Item label={<div>Hãng xe <Tag icon={<PlusCircleOutlined />} onClick={handleAddBrand} color="success">
+                                    Thêm hãng
+                                </Tag></div>} name="brandId" rules={[{ required: true, message: "Hãng xe không được bỏ trống" }]}>
+                                    <Select
+                                        showSearch
+                                        placeholder="Chọn hãng xe"
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }
+                                        onChange={handleSelectBrand}
+                                    >
+                                        {brands.map(brands => (
+                                            <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item label="Tên mẫu xe" name="name" rules={[{ required: true, message: "Tên mẫu xe không được bỏ trống" }]}
+                                    help={validate === 1 && "Mẫu xe không được trùng nhau"}
+                                    hasFeedback
+                                    validateStatus={validate === 1 ? "error" : "success"}
+                                >
+                                    <Input.TextArea
+                                        onChange={handleChange}
+                                        placeholder="Nhập tên mẫu xe"
+                                        showCount maxLength={100}
+                                        autoSize={{ minRows: 1, maxRows: 10 }}
+                                    />
+                                </Form.Item>
+                            </Form>
+                        </div>
+                    )
+                }
+                console.log(models)
                 return (
                     <div>
+                        <Modal
+                            destroyOnClose={true}
+                            title='Tạo mẫu xe'
+                            visible={visibleCreateModel}
+                            onCancel={handleCancelCreateModel}
+                            width={600}
+                            footer={[
+                                <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
+                                    <Button onClick={handleCancelCreateModel}>
+                                        Hủy
+                                    </Button>
+                                    <Button type="primary" form="createCarModel" key="submit" htmlType="submit" >
+                                        Hoàn tất
+                                    </Button>
+                                </Row>
+                            ]}
+                        >
+                            <CreateCarModelsComponent />
+                        </Modal>
                         <Modal
                             animation={false}
                             visible={visible}
@@ -885,13 +914,13 @@ function ManageCarsComponent() {
                                                 {brands.map(brands => (
                                                     <Option key={brands.Id} value={brands.Name}>{brands.Name}</Option>
                                                 ))}
-                                            </Select> 
+                                            </Select>
                                         </Form.Item>
                                     </Spin>
                                 </Col>
                                 <Col span={8}>
                                     <Form.Item
-                                        label={<div>Chọn mẫu xe <Tag icon={<PlusCircleOutlined />} color="success">
+                                        label={<div>Chọn mẫu xe <Tag icon={<PlusCircleOutlined />} color="success" onClick={setVisibleCreateModel}>
                                             Thêm mẫu
                                         </Tag></div>}
                                         name="carModelName" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
@@ -1427,25 +1456,6 @@ function ManageCarsComponent() {
             return (
                 <>
                     <div>
-                        {/* <Modal
-                            destroyOnClose={true}
-                            title='Tạo mẫu xe'
-                            visible={visible}
-                            onCancel={handleCancel}
-                            width={600}
-                            footer={[
-                                <Row style={{ float: 'right', paddingBottom: 30, marginRight: 8 }}>
-                                    <Button onClick={handleCancel}>
-                                        Hủy
-                                    </Button>
-                                    <Button type="primary" form="createCarModel" key="submit" htmlType="submit" onClick={handleCreateModel}>
-                                        Hoàn tất
-                                    </Button>
-                                </Row>
-                            ]}
-                        >
-                            <CreateCarModelsComponent />
-                        </Modal> */}
                         <Modal
                             destroyOnClose={true}
                             title='Tạo xe mới'
@@ -1602,8 +1612,6 @@ function ManageCarsComponent() {
                     id: editInfo.editInfo.Id,
                     name: editInfo.editInfo.Name,
                     Gia: editInfo.editInfo.Price,
-                    // brand: editInfo.editInfo.CarModel.BrandId,
-                    // brand: editInfo.editInfo.CarModel.BrandId,
                     carModelName: editInfo.editInfo.CarModel.Name,
                     image: editInfo.editInfo.Image,
                     nam: moment(editInfo.editInfo.YearOfManufactor, 'yyyy')
@@ -1665,7 +1673,7 @@ function ManageCarsComponent() {
                                 <Col span={8}>
                                     <Spin spinning={brands.length !== 0 ? false : true}>
                                         <Form.Item label="Chọn hãng" name="brand" rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
-                                            <Select 
+                                            <Select
                                                 showSearch
                                                 placeholder="Chọn hãng xe"
                                                 optionFilterProp="children"
