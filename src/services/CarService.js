@@ -85,6 +85,9 @@ class CarService {
     createCarWithAttribute(attributes) {
         return axios.post(CARS_WITH_ATTRIBUTE_URL + "CreateCarWithAtts", attributes, { headers: authHeader() })
     }
+    updateCarWithAttribute(attributes) {
+        return axios.put(CARS_WITH_ATTRIBUTE_URL + "UpdateGenWithAtts", attributes, { headers: authHeader() })
+    }
     getCarWithAttributeByGenerationId(id) {
         return axios.get(CARS_WITH_ATTRIBUTE_URL + "GetGenerationWithAtts?generationId=" + id, { headers: authHeader() })
     }

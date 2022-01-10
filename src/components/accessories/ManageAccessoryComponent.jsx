@@ -100,17 +100,18 @@ function ManageAccessoryComponent() {
             ),
             okText: "Có",
             onOk() {
-                console.log(data.Id)
-                AccessoryService.deleteAccessoryById(data.Id)
+                console.log("id", data)
+                AccessoryService.deleteAccessoryById(data)
                     .then(() => {
-                        setTimeout(() => {
-                            message.success("Xóa phụ kiện thành công");
-                        }, 500)
+                        message.success("Xóa phụ kiện thành công");
                         setTimeout(() => {
                             window.location.href = '/phu-kien'
-                        }, 1500)
+                        }, 500)
                     })
-                    .catch((err) => console.log(err))
+                    .catch((err) => {
+                        message.success("Xóa phụ kiện thành công");
+                        console.log(err)
+                    })
             },
             cancelText: "Không"
         })
@@ -250,7 +251,7 @@ function ManageAccessoryComponent() {
                 {
                     title: 'Các tác vụ',
                     key: 'action',
-                    render: (text, record, index) => {
+                    render: (record) => {
                         return (
                             <Space size="middle">
                                 {/* <a>Invite {record.lastName}</a> */}
@@ -282,10 +283,10 @@ function ManageAccessoryComponent() {
                                 </Popover>
                                 <Popover content={contentDelete} title="Xóa phụ kiện">
                                     <Button
-                                        onClick={() => confirmDelete({ record })}
+                                        onClick={() => confirmDelete(record.Id)}
                                         block className="deleteButton"><i className="far fa-trash-alt fa-xs"></i></Button>
                                 </Popover>
-                            </Space>
+                            </Space >
                         )
                     },
                 }

@@ -1,5 +1,5 @@
 import { PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Carousel, Col, DatePicker, Tag, Descriptions, Divider, Form, Image, Input, InputNumber, message, Modal, Popconfirm, Row, Select, Spin, Steps, Table, Tooltip, Upload } from 'antd';
+import { Button, Carousel, Col, DatePicker, Tag, Descriptions, Divider, Form, Image, Input, InputNumber, message, Modal, Popconfirm, Row, Select, Spin, Steps, Table, Tooltip, Upload, Transfer } from 'antd';
 import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
@@ -83,7 +83,7 @@ function ManageCarsComponent() {
                                 <i className="far fa-eye" onClick={() => { handleVisibleCarDetail(data) }} />
                             </Col>
                             <Col span={8}>
-                                <i className="far fa-edit" onClick={() => { handleVisibleCarDetail(data) }} />
+                                <i className="far fa-edit" onClick={() => { handleShowEdit(data) }} />
                             </Col>
                             <Col span={8}>
                                 <Popconfirm
@@ -150,7 +150,7 @@ function ManageCarsComponent() {
             CarService.getCarModelsByBrand(value).then((res) => setModels(res.data)).catch((err) => console.log(err))
             CarService.getGenerationByBrand(value)
                 .then((result) => {
-                    setGenerations(result.data)
+                    setFilterTable(result.data)
                 })
                 .catch((err) => console.log(err))
         }
@@ -164,7 +164,7 @@ function ManageCarsComponent() {
             console.log(value)
             CarService.getGenerationByCarModel(value)
                 .then((result) => {
-                    setGenerations(result.data)
+                    setFilterTable(result.data)
                 })
                 .catch((err) => console.log(err))
         }
@@ -231,15 +231,7 @@ function ManageCarsComponent() {
                         <Col span={12}></Col>
                         <Col span={12}>
                             <div style={{ marginTop: '15px', float: 'right' }}>
-                                <Popconfirm
-                                    title="Bạn có muốn xóa xe này không?"
-                                    onConfirm={() => confirmDeleteCar(carDetail.Id)}
-                                    okText="Có"
-                                    cancelText="Không"
-                                >
-                                    <Button style={{ marginRight: '8px' }}>Xóa</Button>
-                                </Popconfirm>
-                                <Button style={{ marginRight: '8px' }} onClick={() => handleShowEdit(carDetail)}>Sửa</Button>
+
                                 <Button type="primary" onClick={handleCancelCarDetail}>Xong</Button>
                             </div>
                         </Col>
@@ -987,7 +979,6 @@ function ManageCarsComponent() {
             const CreateSub = () => {
                 const [subData, setSubData] = useState([])
                 const [visibleCreate, setVisibleCreate] = React.useState(false);
-
                 const onFinishCreateSub = (values) => {
                     let attId = []
                     let ref = []
@@ -1304,7 +1295,6 @@ function ManageCarsComponent() {
                         "value": sub.length !== 0 && sub.attributionWithValues[i].value
                     })
                 }
-                console.log("sub:", sub)
                 return (
                     <div style={{ marginTop: '25px' }}>
                         <Row gutter={15} style={{ marginBottom: 15 }}>
@@ -1320,25 +1310,31 @@ function ManageCarsComponent() {
                             </Col>
                             <Col span={12}>
                                 <Descriptions title="Thông số chính" bordered>
-                                    <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Tên xe" span={3}>{base.name}</Descriptions.Item>
-                                    <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Mẫu" span={3}>{base.carModelName}</Descriptions.Item>
-                                    <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Hãng" span={3}>{base.brand}</Descriptions.Item>
-                                    <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Năm sản xuất" span={3}>{base.yearOfManufactor}</Descriptions.Item>
-                                    <Descriptions.Item labelStyle={{ fontWeight: '600' }} label="Giá tham khảo" span={3}>{base.price}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Tên xe" span={3}>{base.name}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Mẫu" span={3}>{base.carModelName}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Hãng" span={3}>{base.brand}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Năm sản xuất" span={3}>{base.yearOfManufactor}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Giá tham khảo" span={3}>
+                                        <NumberFormat
+                                            value={base.price}
+                                            displayType="text"
+                                            suffix=" vnđ"
+                                            thousandSeparator={'.'}
+                                            decimalSeparator={','} /></Descriptions.Item>
                                 </Descriptions>
                             </Col>
                         </Row>
                         <Descriptions title="Thông số cơ bản" bordered layout="horizontal" style={{ marginBottom: 15 }}>
                             {subDataPrint.map((sub) => (
-                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label={sub.name}>{sub.value}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} contentStyle={{ width: 200 }} label={sub.name}>{sub.value}</Descriptions.Item>
                             ))}
                         </Descriptions>
                         <Descriptions title="Thông số xe" bordered layout="horizontal" style={{ marginBottom: 15 }}>
                             {data.map((attribute) => (
-                                <Descriptions.Item labelStyle={{ fontWeight: '600' }} label={attribute.name}>{attribute.value}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} contentStyle={{ width: 200 }} label={attribute.name}>{attribute.value}</Descriptions.Item>
                             ))}
                         </Descriptions>
-                    </div>
+                    </div >
                 )
             }
             const StepSubmit = () => {
@@ -1452,7 +1448,6 @@ function ManageCarsComponent() {
                     </>
                 );
             };
-
             return (
                 <>
                     <div>
@@ -1476,6 +1471,7 @@ function ManageCarsComponent() {
             const [current, setCurrent] = React.useState(0);
             const [visibleStep, setVisibleStep] = React.useState(false);
             const [base, setBase] = useState([]);
+            const [baseData, setBaseData] = useState([]);
             const [sub, setSub] = useState([]);
             const [attribute, setAttribute] = useState([]);
             const [img, setImg] = useState([]);
@@ -1484,7 +1480,11 @@ function ManageCarsComponent() {
             const [formUpdateSub] = Form.useForm();
             const [type, setType] = useState('');
             const [engineAttribute, setEngineAttribute] = useState([]);
+            const [attributeName, setAttributeName] = useState([]);
 
+            useEffect(() => {
+                CarService.getAttributeByTypeId(type).then((result) => setAttributeName(result.data)).catch((error) => console.log(error))
+            }, [type])
             useEffect(() => {
                 let data = [];
                 data = editInfo.editInfo.Image.split('|')
@@ -1495,13 +1495,13 @@ function ManageCarsComponent() {
             }, [editInfo])
             useEffect(() => {
                 let dt = []
-                sub.forEach((data) => {
+                base.forEach((data) => {
                     if (data.Attribution.EngineType !== "0416e0c8-2120-4d3f-8656-5c708d263c04") {
                         dt.push(data)
                     }
                 })
                 setEngineAttribute(dt)
-            }, [sub])
+            }, [base])
             const prev = () => {
                 setCurrent(current - 1);
             };
@@ -1604,17 +1604,31 @@ function ManageCarsComponent() {
                     CarService.getCarModelsByBrand(key.key).then((res) => setModels(res.data)).catch((err) => console.log(err))
                 }
                 const onFinishUpdateBase = (values) => {
-                    CarService.getCarWithAttributeByGenerationId(values.id).then((res) => setSub(res.data)).catch((err) => console.log(err))
+                    CarService.getCarWithAttributeByGenerationId(values.id).then((res) => setBase(res.data)).catch((err) => console.log(err))
+                    setBaseData(values)
+                    console.log("ccc: ", values)
                     next()
                 }
+                const [brandName, setBrandName] = useState('')
+                BrandService.getBrandById(editInfo.editInfo.CarModel.BrandId)
+                    .then((res) => {
+                        setBrandName(res.data.Name)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
                 formUpdateBase.setFieldsValue({
-                    brand: editInfo.editInfo.CarModel.BrandId,
+                    brand: brandName,
+                    brandName: editInfo.editInfo.CarModel.BrandId,
                     id: editInfo.editInfo.Id,
                     name: editInfo.editInfo.Name,
                     Gia: editInfo.editInfo.Price,
+                    price: editInfo.editInfo.Price,
                     carModelName: editInfo.editInfo.CarModel.Name,
                     image: editInfo.editInfo.Image,
-                    nam: moment(editInfo.editInfo.YearOfManufactor, 'yyyy')
+                    nam: moment(editInfo.editInfo.YearOfManufactor, 'yyyy'),
+                    yearOfManufactor: editInfo.editInfo.YearOfManufactor,
+                    carModelId: editInfo.editInfo.CarModelId
                 })
                 return (
                     <div>
@@ -1755,45 +1769,50 @@ function ManageCarsComponent() {
                 )
             }
             const UpdateSub = () => {
-                const [subData, setSubData] = useState([])
                 const [visibleCreate, setVisibleCreate] = React.useState(false);
                 const [engineBase, setEngineBase] = useState([]);
-                useEffect(() => {
-                    CarService.getAttributeByTypeId("0416e0c8-2120-4d3f-8656-5c708d263c04").then((res) => { setSubData(res.data) }).catch((err) => { console.log(err) })
-                }, [])
                 const onFinishUpdateSub = (values) => {
-                    // let attId = []
-                    // let ref = []
-                    // let repo = (JSON.stringify(values)).split('",')
-                    // subData.forEach((filterData) => {
-                    //     ref.push(filterData.Id)
-                    // })
-                    // for (let i = 0; i < ref.length; i++) {
-                    //     attId.push({
-                    //         "value": repo[i].replace("{", "").replace('"}', "").replace(ref[i], "").replace('""', '').replace(':"', '').replace('" ', ''),
-                    //         "attributionId": subData[i].Id
-                    //     })
-                    // }
-                    // let data = {
-                    //     "generationId": "null",
-                    //     "attributionWithValues": attId
-                    // }
-                    // setSub(data)
+                    let attId = []
+                    var result = Object.entries(values)
+                    result.forEach((res) => {
+                        attId.push({
+                            "value": res[1],
+                            "attributionId": res[0]
+                        })
+                    })
+                    let data = {
+                        "generationId": "null",
+                        "attributionWithValues": attId
+                    }
+                    setSub(data)
                     next()
                 }
-                console.log("sub: ", sub)
+                console.log("base: ", base)
                 const handleCancelCreate = () => {
                     setVisibleCreate(false);
                 };
                 useEffect(() => {
                     let dt = []
-                    sub.forEach((data) => {
+                    base.forEach((data) => {
                         if (data.Attribution.EngineType === "0416e0c8-2120-4d3f-8656-5c708d263c04") {
                             dt.push(data)
                         }
                     })
                     setEngineBase(dt)
                 }, [])
+                useEffect(() => {
+                    let useData = {}
+                    let idV = null
+                    let valueV = null
+                    engineBase.map((eb) => (
+                        idV = eb.Attribution.Id,
+                        valueV = eb.Value,
+                        useData = { ...useData, [idV]: valueV }
+                    ))
+                    formUpdateSub.setFieldsValue(
+                        useData
+                    )
+                }, [engineBase])
                 return (
                     <>
                         <Form
@@ -1803,53 +1822,51 @@ function ManageCarsComponent() {
                             id="createSub"
                             form={formUpdateSub}
                         >
-                            {
-                                <Spin spinning={engineBase.length !== 0 ? false : true}>
-                                    <Row gutter={15}>
-                                        {engineBase.map((attribute) =>
-                                            attribute.Attribution.Type === 1 ?
-                                                <Col span={8}>
-                                                    <Form.Item label={attribute.Attribution.Name} name={attribute.Attribution.Id}>
-                                                        <Input.TextArea
-                                                            defaultValue={attribute.Value}
-                                                            placeholder={"Nhập " + attribute.Attribution.Name.toLowerCase()}
-                                                            showCount maxLength={attribute.Attribution.RangeOfValue}
-                                                            autoSize={{ minRows: 1, maxRows: 10 }}
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                                :
-                                                <Col span={8}>
-                                                    <Form.Item label={attribute.Attribution.Name} name={attribute.Attribution.Id} >
-                                                        <NumberFormat
-                                                            defaultValue={attribute.Value}
-                                                            decimalScale={0}
-                                                            allowNegative={false}
-                                                            isAllowed={(values) => {
-                                                                const { formattedValue, floatValue } = values;
-                                                                return formattedValue === "" || floatValue <= attribute.Attribution.RangeOfValue;
-                                                            }}
-                                                            placeholder={"Nhập " + attribute.Attribution.Name.toLowerCase() + " (" + attribute.Attribution.Measure + ")"}
-                                                            className="currency"
-                                                            displayType="input"
-                                                            type="primary"
-                                                            suffix={" " + attribute.Attribution.Measure}
-                                                            thousandSeparator={'.'}
-                                                            decimalSeparator={','}
-                                                            spellCheck="false"
-                                                            style={{
-                                                                width: '100%',
-                                                                border: '1px solid #d9d9d9',
-                                                                padding: '4px 11px'
+                            <Spin spinning={engineBase.length !== 0 ? false : true}>
+                                <Row gutter={15}>
+                                    {engineBase.map((attribute) =>
+                                        attribute.Attribution.Type === 1 ?
+                                            <Col span={8}>
+                                                <Form.Item label={attribute.Attribution.Name} name={attribute.Attribution.Id}>
+                                                    <Input.TextArea
+                                                        // defaultValue={attribute.Value}
+                                                        placeholder={"Nhập " + attribute.Attribution.Name.toLowerCase()}
+                                                        showCount maxLength={attribute.Attribution.RangeOfValue}
+                                                        autoSize={{ minRows: 1, maxRows: 10 }}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            :
+                                            <Col span={8}>
+                                                <Form.Item label={attribute.Attribution.Name} name={attribute.Attribution.Id} >
+                                                    <NumberFormat
+                                                        // defaultValue={attribute.Value}
+                                                        decimalScale={0}
+                                                        allowNegative={false}
+                                                        isAllowed={(values) => {
+                                                            const { formattedValue, floatValue } = values;
+                                                            return formattedValue === "" || floatValue <= attribute.Attribution.RangeOfValue;
+                                                        }}
+                                                        placeholder={"Nhập " + attribute.Attribution.Name.toLowerCase() + " (" + attribute.Attribution.Measure + ")"}
+                                                        className="currency"
+                                                        displayType="input"
+                                                        type="primary"
+                                                        suffix={" " + attribute.Attribution.Measure}
+                                                        thousandSeparator={'.'}
+                                                        decimalSeparator={','}
+                                                        spellCheck="false"
+                                                        style={{
+                                                            width: '100%',
+                                                            border: '1px solid #d9d9d9',
+                                                            padding: '4px 11px'
 
-                                                            }}
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                        )}
-                                    </Row>
-                                </Spin>
-                            }
+                                                        }}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                    )}
+                                </Row>
+                            </Spin>
                         </Form>
                         <Row>
                             <Col span={12}></Col>
@@ -1876,42 +1893,50 @@ function ManageCarsComponent() {
                         })
                         .catch((error) => console.log(error))
                 }, [])
-                useEffect(() => {
-                    type !== '' && setShowAttribute(1)
-                    CarService.getAttributeByTypeId(type).then((result) => {
-                        setTypeId(type)
-                        setAttributes(result.data)
-                    }).catch((error) => console.log(error))
-                }, [])
+                // useEffect(() => {
+                //     CarService.getAttributeByTypeId(type).then((result) => {
+                //         setTypeId(type)
+                //         setAttributes(result.data)
+                //     }).catch((error) => console.log(error))
+                // }, [])
                 const onFinishCreateAttribute = (values) => {
                     let attId = []
-                    let ref = []
-                    let repo = (JSON.stringify(values)).split('",')
-                    attributes.forEach((filterData) => {
-                        ref.push(filterData.Id)
-                    })
-                    for (let i = 0; i < ref.length; i++) {
+                    var result = Object.entries(values)
+
+                    result.forEach((res) => {
                         attId.push({
-                            "value": repo[i].replace("{", "").replace('"}', "").replace(ref[i], "").replace('""', '').replace(':"', '').replace('" ', ''),
-                            "attributionId": attributes[i].Id
+                            "value": res[1],
+                            "attributionId": res[0]
                         })
-                    }
+                    })
                     let data = {
                         "generationId": "null",
                         "attributionWithValues": attId
                     }
+                    console.log("asd", data)
                     setAttribute(data)
-                    setType(typeId)
+                    setType(engineAttribute[0].Attribution.EngineType)
+                    console.log("type: ", typeId)
                     next()
                 }
                 const handleChangeEngine = (values) => {
                     setShowAttribute(1)
                     setTypeId(values)
-                    CarService.getAttributeByTypeId(values).then((result) => setAttributes(result.data)).catch((error) => console.log(error))
+                    // CarService.getAttributeByTypeId(values).then((result) => setAttributes(result.data)).catch((error) => console.log(error))
                 }
-                const handleCancelCreate = () => {
-                    setVisibleCreate(false);
-                };
+                useEffect(() => {
+                    let useData = {}
+                    let idV = null
+                    let valueV = null
+                    engineAttribute.map((eb) => (
+                        idV = eb.Attribution.Id,
+                        valueV = eb.Value,
+                        useData = { ...useData, [idV]: valueV }
+                    ))
+                    formUpdateAttribute.setFieldsValue(
+                        useData
+                    )
+                }, [])
                 return (
                     <>
                         <div style={{ marginBottom: 15 }}>
@@ -1949,7 +1974,6 @@ function ManageCarsComponent() {
                                             <Col span={8}>
                                                 <Form.Item label={attribute.Attribution.Name} name={attribute.Attribution.Id}>
                                                     <Input.TextArea
-                                                        defaultValue={attribute.Value}
                                                         placeholder={"Nhập " + attribute.Attribution.Name.toLowerCase()}
                                                         showCount maxLength={attribute.Attribution.RangeOfValue}
                                                         autoSize={{ minRows: 1, maxRows: 10 }}
@@ -1960,7 +1984,6 @@ function ManageCarsComponent() {
                                             <Col span={8}>
                                                 <Form.Item label={attribute.Attribution.Name} name={attribute.Attribution.Id} >
                                                     <NumberFormat
-                                                        defaultValue={attribute.Value}
                                                         decimalScale={0}
                                                         allowNegative={false}
                                                         isAllowed={(values) => {
@@ -1998,8 +2021,75 @@ function ManageCarsComponent() {
                 )
             }
             const Confirm = () => {
+                const [subName, setSubName] = useState([])
+                useEffect(() => {
+                    CarService.getAttributeByTypeId("0416e0c8-2120-4d3f-8656-5c708d263c04").then((res) => { setSubName(res.data) }).catch((err) => { console.log(err) })
+                }, [])
+                const data = []
+                const subDataPrint = []
+                attributeName.forEach((name) => {
+                    attribute.attributionWithValues.forEach((s) => {
+                        if (name.Id === s.attributionId) {
+                            data.push({
+                                "name": name.Name,
+                                "value": s.value
+                            })
+                        }
+                    })
+                })
+                subName.forEach((name) => {
+                    sub.attributionWithValues.forEach((s) => {
+                        if (name.Id === s.attributionId) {
+                            subDataPrint.push({
+                                "name": name.Name,
+                                "value": s.value
+                            })
+                        }
+                    })
+                })
+                console.log("sub:", sub)
+                console.log("att:", attribute)
+                console.log("attName: ", attributeName)
                 return (
-                    <></>
+                    <div style={{ marginTop: '25px' }}>
+                        <Row gutter={15} style={{ marginBottom: 15 }}>
+                            <Col span={12} style={{ marginTop: '15px' }}>
+                                <Carousel effect="fade">
+                                    {img.length !== 0 && img.map((object, i) => {
+                                        return (
+                                            <div>
+                                                <Image preview={false} style={{ display: 'block', margin: 'auto', maxHeight: '300px' }} key={i} src={object} />
+                                            </div>)
+                                    })}
+                                </Carousel>
+                            </Col>
+                            <Col span={12}>
+                                <Descriptions title="Thông số chính" bordered>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Tên xe" span={3}>{baseData.name}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Mẫu" span={3}>{baseData.carModelName}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Hãng" span={3}>{baseData.brand}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Năm sản xuất" span={3}>{baseData.yearOfManufactor}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Giá tham khảo" span={3}>
+                                        <NumberFormat
+                                            value={baseData.price}
+                                            displayType="text"
+                                            suffix=" vnđ"
+                                            thousandSeparator={'.'}
+                                            decimalSeparator={','} /></Descriptions.Item>
+                                </Descriptions>
+                            </Col>
+                        </Row>
+                        <Descriptions title="Thông số cơ bản" bordered layout="horizontal" style={{ marginBottom: 15 }}>
+                            {subDataPrint.map((sub) => (
+                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} contentStyle={{ width: 200 }} label={sub.name}>{sub.value}</Descriptions.Item>
+                            ))}
+                        </Descriptions>
+                        <Descriptions title="Thông số xe" bordered layout="horizontal" style={{ marginBottom: 15 }}>
+                            {data.map((attribute) => (
+                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} contentStyle={{ width: 200 }} label={attribute.name}>{attribute.value}</Descriptions.Item>
+                            ))}
+                        </Descriptions>
+                    </div >
                 )
             }
             const StepSubmit = () => {
@@ -2023,50 +2113,53 @@ function ManageCarsComponent() {
                 ];
                 const handleSubmit = () => {
                     message.loading("Đang tải...")
-                    CarService.createGeneration(base)
+                    CarService.updateCarGeneration(baseData.id, baseData)
                         .then(() => {
-                            CarService.getGenerationByCarModel(base.carModelId)
+                            CarService.getGenerationByCarModel(baseData.carModelId)
                                 .then((result) => {
                                     result.data.forEach((data) => {
-                                        if (data.Name === base.name && data.YearOfManufactor.toString() === base.yearOfManufactor) {
+                                        if (data.Name === baseData.name && (data.YearOfManufactor === baseData.yearOfManufactor || data.YearOfManufactor.toString() === baseData.yearOfManufactor)) {
                                             var old = JSON.stringify(attribute).replace(/null/g, data.Id)
                                             var news = JSON.parse(old)
                                             var oldSub = JSON.stringify(sub).replace(/null/g, data.Id)
                                             var newsSub = JSON.parse(oldSub)
                                             console.log(newsSub)
-                                            CarService.createCarWithAttribute(news)
+                                            CarService.updateCarWithAttribute(news)
                                                 .then(() => {
-                                                    CarService.createCarWithAttribute(newsSub)
+                                                    CarService.updateCarWithAttribute(newsSub)
                                                         .then(() => {
                                                             message.destroy()
-                                                            message.success("Tạo xe thành công")
-                                                            setVisibleStep(false)
+                                                            message.success("Cập nhật xe thành công")
+                                                            setVisibleEdit(false)
                                                             CarService.getAllGeneration().then((res) => setGenerations(res.data)).catch((err) => console.log(err))
                                                             BrandService.getAllBrand().then((res) => { setBrands(res.data) }).catch((err) => console.log(err))
                                                         })
                                                         .catch((err) => {
                                                             message.destroy()
-                                                            message.error("Tạo xe không thành công")
+                                                            message.error("Cập nhật xe không thành công")
                                                             console.log(err)
                                                         })
                                                 })
                                                 .catch((err) => {
                                                     message.destroy()
-                                                    message.error("Tạo xe không thành công")
+                                                    message.error("Cập nhật xe không thành công")
                                                     console.log(err)
                                                 })
+                                        } else {
+                                            message.destroy()
+                                            message.error("Cập nhật xe không thành công")
                                         }
                                     })
                                 })
                                 .catch((err) => {
                                     message.destroy()
-                                    message.error("Tạo xe không thành công")
+                                    message.error("Cập nhật xe không thành công")
                                     console.log(err)
                                 })
                         })
                         .catch((err) => {
                             message.destroy()
-                            message.error("Tạo xe không thành công")
+                            message.error("Cập nhật xe không thành công")
                             console.log(err)
                         })
                 }
@@ -2113,7 +2206,7 @@ function ManageCarsComponent() {
                     </>
                 );
             };
-
+            console.log(editInfo)
             return (
                 <>
                     <StepSubmit />
@@ -2167,8 +2260,10 @@ function ManageCarsComponent() {
                         onClear={handleBrandClear}
                         allowClear
                     >
-                        {brands.map(brands => (
-                            <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                        {generations !== null && Array.from(new Set(generations.map(obj => obj.CarModel.BrandId))).map((contest) => (
+                            brands.map((brands) => (
+                                contest === brands.Id && <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
+                            ))
                         ))}
                     </Select>
                     <Select
@@ -2184,8 +2279,10 @@ function ManageCarsComponent() {
                         onClear={handleModelClear}
                         allowClear
                     >
-                        {models.map(model => (
-                            <Option key={model.Id} value={model.Id}>{model.Name}</Option>
+                        {generations !== null && Array.from(new Set(generations.map(obj => obj.CarModel.Id))).map((contest) => (
+                            models.map((model) => (
+                                contest === model.Id && <Option key={model.Id} value={model.Id}>{model.Name}</Option>
+                            ))
                         ))}
                     </Select>
                     <div style={{ textAlign: 'center', marginBottom: 15 }}>
@@ -2196,6 +2293,7 @@ function ManageCarsComponent() {
                             enterButton
                             onSearch={search}
                             allowClear
+                            onClear={handleModelClear}
                         />
                     </div>
                     <Spin spinning={generations ? false : true}>
