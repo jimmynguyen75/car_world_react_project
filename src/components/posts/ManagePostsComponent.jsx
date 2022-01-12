@@ -67,10 +67,12 @@ function ManagePostsComponent() {
     }, [data])
     useEffect(() => {
         BrandService.getAllBrand()
-            .then(res => {
-                setBrands(res.data);
-            })
-            .catch(err => console.log(err))
+            .then(car => {
+                BrandService.getAllAccessoriesBrand()
+                    .then(acc => {
+                        setBrands([...car.data, ...acc.data])
+                    }).catch(err => console.log(err))
+            }).catch(err => console.log(err))
     }, [])
     const createModal = () => {
         history.push("/tao-bai-dang");

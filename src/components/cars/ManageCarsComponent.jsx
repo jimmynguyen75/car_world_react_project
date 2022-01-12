@@ -1,14 +1,15 @@
 import { PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Carousel, Col, DatePicker, Tag, Descriptions, Divider, Form, Image, Input, InputNumber, message, Modal, Popconfirm, Row, Select, Spin, Steps, Table, Tooltip, Upload, Transfer } from 'antd';
+import { Button, Carousel, Col, DatePicker, Descriptions, Divider, Form, Image, Input, InputNumber, message, Modal, Popconfirm, Row, Select, Spin, Steps, Table, Tag, Tooltip, Upload } from 'antd';
+import moment from 'moment';
 import 'moment/locale/vi';
 import React, { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
+import { useHistory } from "react-router-dom";
 import BrandService from '../../services/BrandService';
 import CarService from '../../services/CarService';
 import storage from '../../services/ImageFirebase';
 import numberToWord from '../../utils/numberToWord';
-import { useHistory } from "react-router-dom";
-import moment from 'moment';
+
 function ManageCarsComponent() {
     const imgPlacehoder = 'https://via.placeholder.com/120';
     const CarsTable = () => {
@@ -1381,22 +1382,21 @@ function ManageCarsComponent() {
                                                         })
                                                         .catch((err) => {
                                                             message.destroy()
+                                                            CarService.deleteCarWithAttributesByGenerationId(data.Id).then(() => {
+                                                                CarService.deleteCarGeneration(data.Id).then((res) => console.log(res)).catch((err) => console.log(err))
+                                                            }).catch(err => console.log(err))
                                                             message.error("Tạo xe không thành công")
                                                             console.log(err)
                                                         })
                                                 })
                                                 .catch((err) => {
                                                     message.destroy()
+                                                    CarService.deleteCarGeneration(data.Id).then((res) => console.log(res)).catch((err) => console.log(err))
                                                     message.error("Tạo xe không thành công")
                                                     console.log(err)
                                                 })
                                         }
                                     })
-                                })
-                                .catch((err) => {
-                                    message.destroy()
-                                    message.error("Tạo xe không thành công")
-                                    console.log(err)
                                 })
                         })
                         .catch((err) => {
@@ -1469,7 +1469,6 @@ function ManageCarsComponent() {
         const EditCarComponent = (editInfo) => {
             const { Step } = Steps;
             const [current, setCurrent] = React.useState(0);
-            const [visibleStep, setVisibleStep] = React.useState(false);
             const [base, setBase] = useState([]);
             const [baseData, setBaseData] = useState([]);
             const [sub, setSub] = useState([]);
@@ -1769,7 +1768,6 @@ function ManageCarsComponent() {
                 )
             }
             const UpdateSub = () => {
-                const [visibleCreate, setVisibleCreate] = React.useState(false);
                 const [engineBase, setEngineBase] = useState([]);
                 const onFinishUpdateSub = (values) => {
                     let attId = []
@@ -1787,10 +1785,6 @@ function ManageCarsComponent() {
                     setSub(data)
                     next()
                 }
-                console.log("base: ", base)
-                const handleCancelCreate = () => {
-                    setVisibleCreate(false);
-                };
                 useEffect(() => {
                     let dt = []
                     base.forEach((data) => {
@@ -1802,12 +1796,10 @@ function ManageCarsComponent() {
                 }, [])
                 useEffect(() => {
                     let useData = {}
-                    let idV = null
-                    let valueV = null
+                    // let idV = null
+                    // let valueV = null
                     engineBase.map((eb) => (
-                        idV = eb.Attribution.Id,
-                        valueV = eb.Value,
-                        useData = { ...useData, [idV]: valueV }
+                        useData = { ...useData, [eb.Attribution.Id]: eb.Value }
                     ))
                     formUpdateSub.setFieldsValue(
                         useData
@@ -1871,7 +1863,7 @@ function ManageCarsComponent() {
                         <Row>
                             <Col span={12}></Col>
                             <Col span={12}>
-                                <div style={{ float: 'right', marginTop: 15 }}> <Button type="primary" onClick={setVisibleCreate} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}>Thêm thuộc tính</Button></div>
+                                <div style={{ float: 'right', marginTop: 15 }}> <Button type="primary" className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}>Thêm thuộc tính</Button></div>
                             </Col>
                         </Row>
                     </>
@@ -1879,10 +1871,7 @@ function ManageCarsComponent() {
             }
             const UpdateAttribute = () => {
                 const [engine, setEngine] = useState([])
-                const [showAttribute, setShowAttribute] = useState(0)
-                const [attributes, setAttributes] = useState([])
                 const [typeId, setTypeId] = useState('');
-                const [visibleCreate, setVisibleCreate] = React.useState(false);
                 useEffect(() => {
                     let data = []
                     CarService.getEngineType()
@@ -1893,12 +1882,6 @@ function ManageCarsComponent() {
                         })
                         .catch((error) => console.log(error))
                 }, [])
-                // useEffect(() => {
-                //     CarService.getAttributeByTypeId(type).then((result) => {
-                //         setTypeId(type)
-                //         setAttributes(result.data)
-                //     }).catch((error) => console.log(error))
-                // }, [])
                 const onFinishCreateAttribute = (values) => {
                     let attId = []
                     var result = Object.entries(values)
@@ -1920,18 +1903,15 @@ function ManageCarsComponent() {
                     next()
                 }
                 const handleChangeEngine = (values) => {
-                    setShowAttribute(1)
                     setTypeId(values)
                     // CarService.getAttributeByTypeId(values).then((result) => setAttributes(result.data)).catch((error) => console.log(error))
                 }
                 useEffect(() => {
                     let useData = {}
-                    let idV = null
-                    let valueV = null
+                    // let idV = null
+                    // let valueV = null
                     engineAttribute.map((eb) => (
-                        idV = eb.Attribution.Id,
-                        valueV = eb.Value,
-                        useData = { ...useData, [idV]: valueV }
+                        useData = { ...useData, [eb.Attribution.Id]: eb.Value }
                     ))
                     formUpdateAttribute.setFieldsValue(
                         useData
@@ -2014,7 +1994,7 @@ function ManageCarsComponent() {
                         <Row>
                             <Col span={12}></Col>
                             <Col span={12}>
-                                <div style={{ float: 'right', marginTop: 15 }}> <Button type="primary" onClick={setVisibleCreate} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}>Thêm thuộc tính</Button></div>
+                                <div style={{ float: 'right', marginTop: 15 }}> <Button type="primary" className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}>Thêm thuộc tính</Button></div>
                             </Col>
                         </Row>
                     </>
