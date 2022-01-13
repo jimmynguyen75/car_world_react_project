@@ -39,7 +39,7 @@ function ManageCarsComponent() {
                 render: (data) => {
                     return (
                         <Row>
-                            <Col span={3} style={{ height: 50, textAlign: 'center', display: 'flex', alignItems: 'center' }}><img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
+                            <Col span={3} style={{ height: 50, justifyContent: 'center', display: 'flex', alignItems: 'center' }}><img alt="" style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: "60px" }} src={data.Image === "string" ? imgPlacehoder : data.Image} /></Col>
                             <Col span={21} style={{ display: 'flex', alignItems: 'center' }}><div style={{ paddingLeft: 10, color: '#035B81', fontWeight: '600', fontSize: 15, width: '100%' }} class="textOverflow">{data.Name}</div></Col>
                         </Row>
                     )
@@ -589,7 +589,7 @@ function ManageCarsComponent() {
                                                 <Col span={8}>
                                                     <Form.Item label={attribute.Name} name={attribute.Id} rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                                                         <NumberFormat
-                                                            decimalScale={0}
+                                                           // decimalScale={0}
                                                             allowNegative={false}
                                                             isAllowed={(values) => {
                                                                 const { formattedValue, floatValue } = values;
@@ -1255,7 +1255,7 @@ function ManageCarsComponent() {
                                                 <Col span={8}>
                                                     <Form.Item label={attribute.Name} name={attribute.Id} rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                                                         <NumberFormat
-                                                            decimalScale={0}
+                                                            // decimalScale={0}
                                                             allowNegative={false}
                                                             isAllowed={(values) => {
                                                                 const { formattedValue, floatValue } = values;
@@ -1848,7 +1848,7 @@ function ManageCarsComponent() {
                                                 <Form.Item label={attribute.Attribution.Name} name={attribute.Attribution.Id} >
                                                     <NumberFormat
                                                         // defaultValue={attribute.Value}
-                                                        decimalScale={0}
+                                                       // decimalScale={0}
                                                         allowNegative={false}
                                                         isAllowed={(values) => {
                                                             const { formattedValue, floatValue } = values;
@@ -1979,7 +1979,7 @@ function ManageCarsComponent() {
                                             <Col span={8}>
                                                 <Form.Item label={attribute.Attribution.Name} name={attribute.Attribution.Id} >
                                                     <NumberFormat
-                                                        decimalScale={0}
+                                                      //  decimalScale={0}
                                                         allowNegative={false}
                                                         isAllowed={(values) => {
                                                             const { formattedValue, floatValue } = values;
@@ -2266,7 +2266,7 @@ function ManageCarsComponent() {
                         ))}
                     </Select>
                     <Select
-                        style={{ width: 130 }}
+                        style={{ minWidth: 180 }}
                         disabled={models.length !== 0 ? false : true}
                         showSearch
                         placeholder="Chọn mẫu xe"
