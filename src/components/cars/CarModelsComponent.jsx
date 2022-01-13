@@ -197,11 +197,12 @@ function CarModelsComponent() {
         const search = value => {
             console.log("PASS", { value });
             const filterTable = brands.filter(o =>
-                Object.keys(o).some(k =>
-                    String(o[k])
-                        .toLowerCase()
-                        .includes(value.toLowerCase())
-                )
+                // Object.keys(o).some(k =>
+                //     String(o[k])
+                o.Name
+                    .toLowerCase()
+                    .includes(value.toLowerCase())
+                // )
             );
             setFilterTable(filterTable)
         }
@@ -334,7 +335,7 @@ function CarModelsComponent() {
                             />
                         </Col>
                         <Col span={4}>
-                            <Button type="primary" shape="round" onClick={showModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined style={{ marginTop: 5.5 }} />}></Button> 
+                            <Button type="primary" shape="round" onClick={showModal} className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined style={{ marginTop: 5.5 }} />}></Button>
                         </Col>
                     </Row>
                 </div>

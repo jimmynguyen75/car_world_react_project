@@ -496,11 +496,12 @@ function ManageAttributesComponent() {
         const search = () => {
             console.log("PASS", searchValue);
             const filterTable = attributesSelected.filter(o =>
-                Object.keys(o).some(k =>
-                    String(o[k])
-                        .toLowerCase()
-                        .includes(searchValue.toLowerCase())
-                )
+                // Object.keys(o).some(k =>
+                //     String(o[k])
+                o.Name
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase())
+                // )
             );
             setFilterTable(filterTable)
         }

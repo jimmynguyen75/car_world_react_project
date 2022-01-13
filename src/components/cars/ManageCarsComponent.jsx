@@ -29,6 +29,9 @@ function ManageCarsComponent() {
         const history = useHistory();
         const [visibleEdit, setVisibleEdit] = useState(false)
         const [editInfo, setEditInfo] = useState('')
+        const [brandSelectValue, setBrandValue] = useState(null)
+        const [modelSelectValue, setModelValue] = useState(null)
+
         const baseColumns = [
             {
                 title: 'Tên xe',
@@ -148,6 +151,7 @@ function ManageCarsComponent() {
                 .catch((error) => { console.log(error) })
         }
         const handleSelectBrand = (value) => {
+            setBrandValue(value)
             CarService.getCarModelsByBrand(value).then((res) => setModels(res.data)).catch((err) => console.log(err))
             CarService.getGenerationByBrand(value)
                 .then((result) => {
@@ -163,6 +167,7 @@ function ManageCarsComponent() {
         }
         const handleModelChange = (value) => {
             console.log(value)
+            setModelValue(value)
             CarService.getGenerationByCarModel(value)
                 .then((result) => {
                     setFilterTable(result.data)
@@ -204,8 +209,8 @@ function ManageCarsComponent() {
                         <Col span={12}>
                             <Descriptions title="Thông số chính" bordered>
                                 <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Tên xe" span={3}>{carDetail.Name}</Descriptions.Item>
-                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Mẫu" span={3}>{carDetail.CarModel.Name}</Descriptions.Item>
-                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Hãng" span={3}>{brandName}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Mẫu xe" span={3}>{carDetail.CarModel.Name}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Hãng xe" span={3}>{brandName}</Descriptions.Item>
                                 <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Năm sản xuất" span={3}>{carDetail.YearOfManufactor}</Descriptions.Item>
                                 <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Giá tham khảo" span={3}>
                                     <NumberFormat
@@ -220,12 +225,12 @@ function ManageCarsComponent() {
                     </Row>
                     <Descriptions title="Thông số cơ bản" bordered layout="horizontal" style={{ marginBottom: 15 }}>
                         {subs.length !== 0 && subs.map((attribute) => (
-                            <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} contentStyle={{ width: 200 }} label={attribute.Attribution.Name}>{attribute.Value}</Descriptions.Item>
+                            <Descriptions.Item labelStyle={{ fontWeight: '600', width: '139.24px' }} contentStyle={{ width: '177.14px' }} label={attribute.Attribution.Name}>{attribute.Value}</Descriptions.Item>
                         ))}
                     </Descriptions>
                     <Descriptions title="Thông số xe" bordered layout="horizontal" style={{ marginBottom: 15 }}>
                         {attributes.length !== 0 && attributes.map((attribute) => (
-                            <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} contentStyle={{ width: 200 }} label={attribute.Attribution.Name}>{attribute.Value}</Descriptions.Item>
+                            <Descriptions.Item labelStyle={{ fontWeight: '600', width: '139.24px' }} contentStyle={{ width: '177.14px' }} label={attribute.Attribution.Name}>{attribute.Value}</Descriptions.Item>
                         ))}
                     </Descriptions>
                     <Row>
@@ -367,20 +372,25 @@ function ManageCarsComponent() {
                     const onCreateAttributeFinish = (values) => {
                         console.log(values)
                         message.loading("Đang tải...")
-                        CarService.createAttribute([values])
-                            .then(() => {
-                                message.destroy()
-                                setVisibleCreate(false)
-                                typeId !== '' && setShowAttribute(1)
-                                CarService.getAttributeByTypeId(typeId).then((result) => {
-                                    // setTypeId(typeId)
-                                    setAttributes(result.data)
-                                }).catch((error) => console.log(error))
-                                message.success("Tạo thuộc tính thành công")
-                            })
-                            .catch(() => {
-                                message.error("Tạo thuộc tính không thành công")
-                            })
+                        if (validate === 1) {
+                            message.destroy()
+                            message.error("Thuộc tính bị trùng nhau")
+                        } else {
+                            CarService.createAttribute([values])
+                                .then(() => {
+                                    message.destroy()
+                                    setVisibleCreate(false)
+                                    typeId !== '' && setShowAttribute(1)
+                                    CarService.getAttributeByTypeId(typeId).then((result) => {
+                                        // setTypeId(typeId)
+                                        setAttributes(result.data)
+                                    }).catch((error) => console.log(error))
+                                    message.success("Tạo thuộc tính thành công")
+                                })
+                                .catch(() => {
+                                    message.error("Tạo thuộc tính không thành công")
+                                })
+                        }
                     }
                     const handleChangeSelectCheckValidate = (value) => {
                         let data = []
@@ -433,7 +443,7 @@ function ManageCarsComponent() {
                                     )}
                                 >
                                     {engineCreate.length !== 0 && engineCreate.map(item => (
-                                        <Option key={item.Id}>{item.Name}</Option>
+                                        item.Id !== '0416e0c8-2120-4d3f-8656-5c708d263c04' && <Option key={item.Id}>{item.Name}</Option>
                                     ))}
                                 </Select>
                             </Form.Item>
@@ -1048,19 +1058,24 @@ function ManageCarsComponent() {
                     const onCreateAttributeFinish = (values) => {
                         console.log(values)
                         message.loading("Đang tải...")
-                        CarService.createAttribute([values])
-                            .then(() => {
-                                message.destroy()
-                                setVisibleCreate(false)
-                                CarService.getAttributeByTypeId("0416e0c8-2120-4d3f-8656-5c708d263c04").then((result) => {
-                                    // setTypeId(typeId)
-                                    setSubData(result.data)
-                                }).catch((error) => console.log(error))
-                                message.success("Tạo thuộc tính thành công")
-                            })
-                            .catch(() => {
-                                message.error("Tạo thuộc tính không thành công")
-                            })
+                        if (validate === 1) {
+                            message.destroy()
+                            message.error("Thuộc tính bị trùng nhau")
+                        } else {
+                            CarService.createAttribute([values])
+                                .then(() => {
+                                    message.destroy()
+                                    setVisibleCreate(false)
+                                    CarService.getAttributeByTypeId("0416e0c8-2120-4d3f-8656-5c708d263c04").then((result) => {
+                                        // setTypeId(typeId)
+                                        setSubData(result.data)
+                                    }).catch((error) => console.log(error))
+                                    message.success("Tạo thuộc tính thành công")
+                                })
+                                .catch(() => {
+                                    message.error("Tạo thuộc tính không thành công")
+                                })
+                        }
                     }
                     const handleChangeSelectCheckValidate = (value) => {
                         let data = []
@@ -1113,7 +1128,7 @@ function ManageCarsComponent() {
                                     )}
                                 >
                                     {engineCreate.length !== 0 && engineCreate.map(item => (
-                                        <Option key={item.Id}>{item.Name}</Option>
+                                        item.Id === '0416e0c8-2120-4d3f-8656-5c708d263c04' && <Option key={item.Id}>{item.Name}</Option>
                                     ))}
                                 </Select>
                             </Form.Item>
@@ -1312,8 +1327,8 @@ function ManageCarsComponent() {
                             <Col span={12}>
                                 <Descriptions title="Thông số chính" bordered>
                                     <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Tên xe" span={3}>{base.name}</Descriptions.Item>
-                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Mẫu" span={3}>{base.carModelName}</Descriptions.Item>
-                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Hãng" span={3}>{base.brand}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Mẫu xe" span={3}>{base.carModelName}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Hãng xe" span={3}>{base.brand}</Descriptions.Item>
                                     <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Năm sản xuất" span={3}>{base.yearOfManufactor}</Descriptions.Item>
                                     <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Giá tham khảo" span={3}>
                                         <NumberFormat
@@ -1327,12 +1342,12 @@ function ManageCarsComponent() {
                         </Row>
                         <Descriptions title="Thông số cơ bản" bordered layout="horizontal" style={{ marginBottom: 15 }}>
                             {subDataPrint.map((sub) => (
-                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} contentStyle={{ width: 200 }} label={sub.name}>{sub.value}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: '139.24px' }} contentStyle={{ width: '177.14px' }} label={sub.name}>{sub.value}</Descriptions.Item>
                             ))}
                         </Descriptions>
                         <Descriptions title="Thông số xe" bordered layout="horizontal" style={{ marginBottom: 15 }}>
                             {data.map((attribute) => (
-                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} contentStyle={{ width: 200 }} label={attribute.name}>{attribute.value}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: '139.24px' }} contentStyle={{ width: '177.14px' }} label={attribute.name}>{attribute.value}</Descriptions.Item>
                             ))}
                         </Descriptions>
                     </div >
@@ -1860,12 +1875,12 @@ function ManageCarsComponent() {
                                 </Row>
                             </Spin>
                         </Form>
-                        <Row>
+                        {/* <Row>
                             <Col span={12}></Col>
                             <Col span={12}>
                                 <div style={{ float: 'right', marginTop: 15 }}> <Button type="primary" className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}>Thêm thuộc tính</Button></div>
                             </Col>
-                        </Row>
+                        </Row> */}
                     </>
                 )
             }
@@ -1991,12 +2006,12 @@ function ManageCarsComponent() {
                                 </Row>
                             </Spin>
                         </Form>
-                        <Row>
+                        {/* <Row>
                             <Col span={12}></Col>
                             <Col span={12}>
                                 <div style={{ float: 'right', marginTop: 15 }}> <Button type="primary" className="createButton" style={{ height: 36 }} icon={<PlusCircleOutlined />}>Thêm thuộc tính</Button></div>
                             </Col>
-                        </Row>
+                        </Row> */}
                     </>
                 )
             }
@@ -2046,8 +2061,8 @@ function ManageCarsComponent() {
                             <Col span={12}>
                                 <Descriptions title="Thông số chính" bordered>
                                     <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Tên xe" span={3}>{baseData.name}</Descriptions.Item>
-                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Mẫu" span={3}>{baseData.carModelName}</Descriptions.Item>
-                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Hãng" span={3}>{baseData.brand}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Mẫu xe" span={3}>{baseData.carModelName}</Descriptions.Item>
+                                    <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Hãng xe" span={3}>{baseData.brand}</Descriptions.Item>
                                     <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Năm sản xuất" span={3}>{baseData.yearOfManufactor}</Descriptions.Item>
                                     <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} label="Giá tham khảo" span={3}>
                                         <NumberFormat
@@ -2061,12 +2076,12 @@ function ManageCarsComponent() {
                         </Row>
                         <Descriptions title="Thông số cơ bản" bordered layout="horizontal" style={{ marginBottom: 15 }}>
                             {subDataPrint.map((sub) => (
-                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} contentStyle={{ width: 200 }} label={sub.name}>{sub.value}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: '139.24px' }} contentStyle={{ width: '177.14px' }} label={sub.name}>{sub.value}</Descriptions.Item>
                             ))}
                         </Descriptions>
                         <Descriptions title="Thông số xe" bordered layout="horizontal" style={{ marginBottom: 15 }}>
                             {data.map((attribute) => (
-                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: 150 }} contentStyle={{ width: 200 }} label={attribute.name}>{attribute.value}</Descriptions.Item>
+                                <Descriptions.Item labelStyle={{ fontWeight: '600', width: '139.24px' }} contentStyle={{ width: '177.14px' }} label={attribute.name}>{attribute.value}</Descriptions.Item>
                             ))}
                         </Descriptions>
                     </div >
@@ -2194,13 +2209,16 @@ function ManageCarsComponent() {
             )
         }
         const search = value => {
+            setBrandValue(null)
+            setModelValue(null)
             console.log("PASS", { value });
             const filterTable = generations.filter(o =>
-                Object.keys(o).some(k =>
-                    String(o[k])
-                        .toLowerCase()
-                        .includes(value.toLowerCase())
-                )
+                // Object.keys(o).some(k =>
+                //     String(o[k])
+                o.Name
+                    .toLowerCase()
+                    .includes(value.toLowerCase())
+                // )
             );
             setFilterTable(filterTable)
         }
@@ -2238,6 +2256,7 @@ function ManageCarsComponent() {
                         }
                         onChange={handleSelectBrand}
                         onClear={handleBrandClear}
+                        value={brandSelectValue}
                         allowClear
                     >
                         {generations !== null && Array.from(new Set(generations.map(obj => obj.CarModel.BrandId))).map((contest) => (
@@ -2257,6 +2276,7 @@ function ManageCarsComponent() {
                         }
                         onChange={handleModelChange}
                         onClear={handleModelClear}
+                        value={modelSelectValue}
                         allowClear
                     >
                         {generations !== null && Array.from(new Set(generations.map(obj => obj.CarModel.Id))).map((contest) => (
