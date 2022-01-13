@@ -62,11 +62,22 @@ function CarModelsComponent() {
         console.log('cc')
     }
     useEffect(() => {
-        BrandService.getAllBrand()
-            .then((res) => {
-                setBrands(res.data)
-            })
-            .catch(err => console.error(err))
+        let getData = []
+        CarService.getCarModels().then((models) => {
+            let model = Array.from(new Set(models.data.map((obj) => obj.BrandId)))
+            BrandService.getAllBrand()
+                .then((res) => {
+                   model.forEach((md) => {
+                       res.data.forEach((result) => {
+                           if (result.Id === md) {
+                               getData.push(result)
+                           }
+                       })
+                   })
+                    setBrands(getData.sort((a, b) => a.Name.localeCompare(b.Name)))
+                })
+                .catch(err => console.error(err))
+        }).catch(err => console.error(err))
     }, [])
     const onFinish = (values) => {
         console.log(values)
@@ -177,7 +188,7 @@ function CarModelsComponent() {
                 render: (data) => {
                     return (
                         <Row gutter={15}>
-                            <Col span={4} style={{ textAlign: 'center' }}><img alt="" style={{ height: 'auto', width: 'auto', maxHeight: '50px', maxWidth: '80px'}} src={data.Image} /></Col>
+                            <Col span={4} style={{ textAlign: 'center' }}><img alt="" style={{ height: 'auto', width: 'auto', maxHeight: '50px', maxWidth: '80px' }} src={data.Image} /></Col>
                             <Col span={20} style={{ display: 'flex', alignItems: 'center' }}><div>{data.Name}</div></Col>
                         </Row>
                     )
