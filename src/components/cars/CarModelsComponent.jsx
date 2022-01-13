@@ -20,6 +20,7 @@ function CarModelsComponent() {
     const [form] = Form.useForm();
     const buttonRef = useRef(null);
     const { Option } = Select;
+    const [refesh, setRefesh] = React.useState(false)
     form.setFieldsValue({
         brandId: brandId,
         id: modelId,
@@ -40,6 +41,7 @@ function CarModelsComponent() {
     };
     const handleCancelModel = () => {
         setVisibleModel(false);
+        setRefesh(true)
         setBrandId(null)
         setModel(null)
     };
@@ -67,23 +69,25 @@ function CarModelsComponent() {
             let model = Array.from(new Set(models.data.map((obj) => obj.BrandId)))
             BrandService.getAllBrand()
                 .then((res) => {
-                   model.forEach((md) => {
-                       res.data.forEach((result) => {
-                           if (result.Id === md) {
-                               getData.push(result)
-                           }
-                       })
-                   })
+                    model.forEach((md) => {
+                        res.data.forEach((result) => {
+                            if (result.Id === md) {
+                                getData.push(result)
+                            }
+                        })
+                    })
+                    setRefesh(false)
                     setBrands(getData.sort((a, b) => a.Name.localeCompare(b.Name)))
                 })
                 .catch(err => console.error(err))
         }).catch(err => console.error(err))
-    }, [])
+    }, [refesh])
     const onFinish = (values) => {
         console.log(values)
         CarService.createCarModel(values)
             .then(() => {
                 setVisible(false);
+                setRefesh(true)
                 CarService.getCarModelsByBrand(brandId).then((models) => { setModel(models.data) }).catch((err) => { console.log(err) })
                 message.success("Tạo mẫu xe thành công")
             })
@@ -101,6 +105,14 @@ function CarModelsComponent() {
     const CreateCarModelsComponent = () => {
         const [validate, setValidate] = useState(0);
         const [carModels, setCarModels] = useState([]);
+        const [brandss, setBrandss] = useState([]);
+        useEffect(() => {
+            BrandService.getAllBrand()
+                .then((res) => {
+                    setBrandss(res.data)
+                })
+                .catch(err => console.error(err))
+        }, [])
         useEffect(() => {
             let data = []
             CarService.getCarModelsByBrand(brandId)
@@ -113,10 +125,10 @@ function CarModelsComponent() {
                 .catch((error) => console.log(error))
         }, [])
         const handleChange = (e) => {
-            var data = e.target.value.toLowerCase().replace(/\s/g, '');
+            var data = e.target.value.toLowerCase();
             console.log(e.target.value);
             for (var i = 0; i < carModels.length; i++) {
-                if (data === (carModels[i].toLowerCase().replace(/\s/g, ''))) {
+                if (data === (carModels[i].toLowerCase())) {
                     form.setFieldsValue({ name: data })
                     setValidate(1)
                     break;
@@ -158,7 +170,7 @@ function CarModelsComponent() {
                             }
                             onChange={handleSelectBrand}
                         >
-                            {brands.map(brands => (
+                            {brandss.map(brands => (
                                 <Option key={brands.Id} value={brands.Id}>{brands.Name}</Option>
                             ))}
                         </Select>
@@ -221,6 +233,7 @@ function CarModelsComponent() {
             <div>
                 <div style={{ textAlign: 'center' }}>
                     <Input.Search
+                        className="fixAnticon"
                         style={{ marginBottom: 15, width: 500 }}
                         placeholder="Tìm kiếm. . ."
                         enterButton
@@ -338,6 +351,7 @@ function CarModelsComponent() {
                     <Row gutter={15}>
                         <Col span={20}>
                             <Input.Search
+                                className="fixAnticon"
                                 style={{ marginTop: 1 }}
                                 placeholder="Tìm kiếm. . ."
                                 enterButton

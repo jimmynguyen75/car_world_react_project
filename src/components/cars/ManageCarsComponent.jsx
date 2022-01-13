@@ -9,6 +9,7 @@ import BrandService from '../../services/BrandService';
 import CarService from '../../services/CarService';
 import storage from '../../services/ImageFirebase';
 import numberToWord from '../../utils/numberToWord';
+import './styles.less';
 
 function ManageCarsComponent() {
     const imgPlacehoder = 'https://via.placeholder.com/120';
@@ -728,7 +729,7 @@ function ManageCarsComponent() {
                 const handleBrandChange = (id, key) => {
                     console.log(key.key)
                     setKey(key.key)
-                    formCreateBase.setFieldsValue({ carModelId: [], brandName: key.key })
+                    formCreateBase.setFieldsValue({ carModelId: [], brandName: key.key, carModelName: null })
                     CarService.getCarModelsByBrand(key.key).then((res) => setModels(res.data)).catch((err) => console.log(err))
                 }
                 const handleModelChange = (id, key) => {
@@ -749,10 +750,10 @@ function ManageCarsComponent() {
                     const [carModels, setCarModels] = useState([]);
                     const [form] = Form.useForm();
                     const handleChange = (e) => {
-                        var data = e.target.value.toLowerCase().replace(/\s/g, '');
+                        var data = e.target.value.toLowerCase();
                         console.log(e.target.value);
                         for (var i = 0; i < carModels.length; i++) {
-                            if (data === (carModels[i].toLowerCase().replace(/\s/g, ''))) {
+                            if (data === (carModels[i].toLowerCase())) {
                                 form.setFieldsValue({ name: data })
                                 setValidate(1)
                                 break;
@@ -763,7 +764,7 @@ function ManageCarsComponent() {
                     };
                     const handleSelectBrand = (id) => {
                         setValidate(0)
-                        form.setFieldsValue({ name: null })
+                        form.setFieldsValue({ name: null, brandId: id })
                         let data = []
                         CarService.getCarModelsByBrand(id)
                             .then((models) => {
@@ -788,6 +789,11 @@ function ManageCarsComponent() {
                             })
                             .catch(() => { message.error("Tạo mẫu xe không thành công") })
                     };
+                    useEffect(() => {
+                        form.setFieldsValue({
+                            brandId: key
+                        })
+                    },[form])
                     return (
                         <div>
                             <Form
@@ -1019,7 +1025,7 @@ function ManageCarsComponent() {
                     const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít'])
                     const [engineCreate, setEngineCreate] = useState([])
                     const [nameItemss, setNameItemss] = useState('')
-                    const [nameItemsCreate, setNameItemsCreate] = useState('')
+                    // const [nameItemsCreate, setNameItemsCreate] = useState('')
                     const [check, setCheck] = useState(0);
                     const [formCreate] = Form.useForm();
                     const [attributeNameToCheck, setAttributeNameToCheck] = useState([])
@@ -1042,19 +1048,19 @@ function ManageCarsComponent() {
                         setItemss([...itemss, nameItemss || `New item ${index++}`])
                         setNameItemss('')
                     };
-                    const onNameChangeItemsCreate = (event) => {
-                        setNameItemsCreate(event.target.value)
-                    };
-                    const addItemsCreate = () => {
-                        CarService.createEngineType(nameItemsCreate)
-                            .then(() => {
-                                CarService.getEngineType().then((result) => { setEngineCreate(result.data) }).catch((error) => console.log(error))
-                                message.success("Tạo loại thuộc tính thành công")
-                            })
-                            .catch(() => { message.error("Tạo loại thuộc tính không thành công") })
-                        setEngineCreate([...engineCreate, nameItemsCreate || `New item ${index++}`])
-                        setNameItemsCreate('')
-                    };
+                    // const onNameChangeItemsCreate = (event) => {
+                    //     setNameItemsCreate(event.target.value)
+                    // };
+                    // const addItemsCreate = () => {
+                    //     CarService.createEngineType(nameItemsCreate)
+                    //         .then(() => {
+                    //             CarService.getEngineType().then((result) => { setEngineCreate(result.data) }).catch((error) => console.log(error))
+                    //             message.success("Tạo loại thuộc tính thành công")
+                    //         })
+                    //         .catch(() => { message.error("Tạo loại thuộc tính không thành công") })
+                    //     setEngineCreate([...engineCreate, nameItemsCreate || `New item ${index++}`])
+                    //     setNameItemsCreate('')
+                    // };
                     const onCreateAttributeFinish = (values) => {
                         console.log(values)
                         message.loading("Đang tải...")
@@ -1114,18 +1120,18 @@ function ManageCarsComponent() {
                                 <Select
                                     onChange={handleChangeSelectCheckValidate}
                                     placeholder="Chọn loại thuộc tính"
-                                    dropdownRender={menu => (
-                                        <div>
-                                            {menu}
-                                            <Divider style={{ margin: '4px 0' }} />
-                                            <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
-                                                <Input style={{ flex: 'auto' }} value={nameItemsCreate} onChange={onNameChangeItemsCreate} />
-                                                <Button disabled={nameItemsCreate !== '' ? false : true} style={{ marginLeft: '10px' }} onClick={addItemsCreate}>
-                                                    <PlusOutlined /> Thêm
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    )}
+                                    // dropdownRender={menu => (
+                                    //     <div>
+                                    //         {menu}
+                                    //         <Divider style={{ margin: '4px 0' }} />
+                                    //         <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
+                                    //             <Input style={{ flex: 'auto' }} value={nameItemsCreate} onChange={onNameChangeItemsCreate} />
+                                    //             <Button disabled={nameItemsCreate !== '' ? false : true} style={{ marginLeft: '10px' }} onClick={addItemsCreate}>
+                                    //                 <PlusOutlined /> Thêm
+                                    //             </Button>
+                                    //         </div>
+                                    //     </div>
+                                    // )}
                                 >
                                     {engineCreate.length !== 0 && engineCreate.map(item => (
                                         item.Id === '0416e0c8-2120-4d3f-8656-5c708d263c04' && <Option key={item.Id}>{item.Name}</Option>
@@ -2287,7 +2293,7 @@ function ManageCarsComponent() {
                     </Select>
                     <div style={{ textAlign: 'center', marginBottom: 15 }}>
                         <Input.Search
-                            className={"fixAnticon"}
+                            className="fixAnticon"
                             style={{ marginTop: 1, width: 440 }}
                             placeholder="Tìm kiếm. . ."
                             enterButton

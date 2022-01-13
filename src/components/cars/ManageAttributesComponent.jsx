@@ -222,11 +222,11 @@ function ManageAttributesComponent() {
             const addItemsCreate = () => {
                 CarService.createEngineType(nameItemsCreate)
                     .then(() => {
+                        setEngineCreate([...engineCreate, nameItemsCreate || `New item ${index++}`])
                         CarService.getEngineType().then((result) => { setEngineCreate(result.data) }).catch((error) => console.log(error))
                         message.success("Tạo loại thuộc tính thành công")
                     })
                     .catch(() => { message.error("Tạo loại thuộc tính không thành công") })
-                setEngineCreate([...engineCreate, nameItemsCreate || `New item ${index++}`])
                 setNameItemsCreate('')
             };
             const onCreateAttributeFinish = (values) => {
@@ -385,6 +385,7 @@ function ManageAttributesComponent() {
             console.log(id)
             CarService.deleteAttributeById(id)
                 .then(() => {
+                    setFilterTable(null)
                     CarService.getAttributeByTypeId(attributeId !== 0 ? attributeId : "0416e0c8-2120-4d3f-8656-5c708d263c04")
                         .then((result) => { setAttributesSelected(result.data) })
                         .catch((error) => { console.log(error) });
@@ -398,6 +399,7 @@ function ManageAttributesComponent() {
             console.log('addItem: ', name);
             CarService.createEngineType(name)
                 .then(() => {
+                    setItems([...items, name || `New item ${index++}`])
                     CarService.getEngineType()
                         .then((result) => {
                             setItems(result.data)
@@ -406,7 +408,6 @@ function ManageAttributesComponent() {
                     message.success("Tạo loại thuộc tính thành công")
                 })
                 .catch(() => { message.error("Tạo loại thuộc tính không thành công") })
-            setItems([...items, name || `New item ${index++}`])
             setName('')
         };
         const baseColumns = [
@@ -687,7 +688,7 @@ function ManageAttributesComponent() {
                         <Row gutter={15}>
                             <Col span={20}>
                                 <Input.Search
-                                    className={"fixAnticon"}
+                                    className="fixAnticon"
                                     style={{ marginTop: 1 }}
                                     placeholder="Tìm kiếm. . ."
                                     enterButton
