@@ -106,6 +106,7 @@ function ManageAttributesComponent() {
             const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít'])
             const [nameItemss, setNameItemss] = useState('')
             const onNameChangeItemss = (event) => {
+                console.log(event.target.value)
                 setNameItemss(event.target.value)
             };
             const addItemss = () => {
@@ -391,7 +392,7 @@ function ManageAttributesComponent() {
                 }).catch(() => message.error("Xóa thuộc tính xe không thành công"))
         };
         const onNameChange = event => {
-            setName(event.target.value,)
+            setName(event.target.value)
         };
         const addItem = () => {
             console.log('addItem: ', name);

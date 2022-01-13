@@ -589,7 +589,7 @@ function ManageCarsComponent() {
                                                 <Col span={8}>
                                                     <Form.Item label={attribute.Name} name={attribute.Id} rules={[{ required: true, message: "Vui lòng nhập lại!" }]}>
                                                         <NumberFormat
-                                                           // decimalScale={0}
+                                                            // decimalScale={0}
                                                             allowNegative={false}
                                                             isAllowed={(values) => {
                                                                 const { formattedValue, floatValue } = values;
@@ -1049,9 +1049,9 @@ function ManageCarsComponent() {
                         CarService.createEngineType(nameItemsCreate)
                             .then(() => {
                                 CarService.getEngineType().then((result) => { setEngineCreate(result.data) }).catch((error) => console.log(error))
-                                message.success("Tạo thuộc tính thành công")
+                                message.success("Tạo loại thuộc tính thành công")
                             })
-                            .catch(() => { message.error("Tạo thuộc tính không thành công") })
+                            .catch(() => { message.error("Tạo loại thuộc tính không thành công") })
                         setEngineCreate([...engineCreate, nameItemsCreate || `New item ${index++}`])
                         setNameItemsCreate('')
                     };
@@ -1848,7 +1848,7 @@ function ManageCarsComponent() {
                                                 <Form.Item label={attribute.Attribution.Name} name={attribute.Attribution.Id} >
                                                     <NumberFormat
                                                         // defaultValue={attribute.Value}
-                                                       // decimalScale={0}
+                                                        // decimalScale={0}
                                                         allowNegative={false}
                                                         isAllowed={(values) => {
                                                             const { formattedValue, floatValue } = values;
@@ -1979,7 +1979,7 @@ function ManageCarsComponent() {
                                             <Col span={8}>
                                                 <Form.Item label={attribute.Attribution.Name} name={attribute.Attribution.Id} >
                                                     <NumberFormat
-                                                      //  decimalScale={0}
+                                                        //  decimalScale={0}
                                                         allowNegative={false}
                                                         isAllowed={(values) => {
                                                             const { formattedValue, floatValue } = values;
