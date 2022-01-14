@@ -1623,6 +1623,11 @@ function ManageCarsComponent() {
                     formUpdateBase.setFieldsValue({ carModelId: [], brandName: key.key })
                     CarService.getCarModelsByBrand(key.key).then((res) => setModels(res.data)).catch((err) => console.log(err))
                 }
+                const handleModelChangeUpdate = (value, key) => {
+                    console.log("keyyyyy: ", value)
+                    formUpdateBase.setFieldsValue({ carModelId: key.key })
+
+                }
                 const onFinishUpdateBase = (values) => {
                     CarService.getCarWithAttributeByGenerationId(values.id).then((res) => setBase(res.data)).catch((err) => console.log(err))
                     setBaseData(values)
@@ -1738,7 +1743,7 @@ function ManageCarsComponent() {
                                             filterOption={(input, option) =>
                                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                             }
-                                            onChange={handleModelChange}
+                                            onChange={handleModelChangeUpdate}
                                         >
                                             {models.map(model => (
                                                 <Option key={model.Id} value={model.Name}>{model.Name}</Option>
