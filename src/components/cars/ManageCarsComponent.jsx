@@ -167,7 +167,7 @@ function ManageCarsComponent() {
             history.push('/xe')
         }
         const handleModelChange = (value) => {
-            console.log(value)
+            console.log("keyyyyy: ", value)
             setModelValue(value)
             CarService.getGenerationByCarModel(value)
                 .then((result) => {
@@ -331,7 +331,7 @@ function ManageCarsComponent() {
                 };
                 const CreateAttributeModal = () => {
                     let index = 0;
-                    const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít'])
+                    const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít', 'km'])
                     const [engineCreate, setEngineCreate] = useState([])
                     const [nameItemss, setNameItemss] = useState('')
                     const [nameItemsCreate, setNameItemsCreate] = useState('')
@@ -793,7 +793,7 @@ function ManageCarsComponent() {
                         form.setFieldsValue({
                             brandId: key
                         })
-                    },[form])
+                    }, [form])
                     return (
                         <div>
                             <Form
@@ -1022,7 +1022,7 @@ function ManageCarsComponent() {
                 };
                 const CreateAttributeModal = () => {
                     let index = 0;
-                    const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít'])
+                    const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít', 'km'])
                     const [engineCreate, setEngineCreate] = useState([])
                     const [nameItemss, setNameItemss] = useState('')
                     // const [nameItemsCreate, setNameItemsCreate] = useState('')
@@ -1120,18 +1120,18 @@ function ManageCarsComponent() {
                                 <Select
                                     onChange={handleChangeSelectCheckValidate}
                                     placeholder="Chọn loại thuộc tính"
-                                    // dropdownRender={menu => (
-                                    //     <div>
-                                    //         {menu}
-                                    //         <Divider style={{ margin: '4px 0' }} />
-                                    //         <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
-                                    //             <Input style={{ flex: 'auto' }} value={nameItemsCreate} onChange={onNameChangeItemsCreate} />
-                                    //             <Button disabled={nameItemsCreate !== '' ? false : true} style={{ marginLeft: '10px' }} onClick={addItemsCreate}>
-                                    //                 <PlusOutlined /> Thêm
-                                    //             </Button>
-                                    //         </div>
-                                    //     </div>
-                                    // )}
+                                // dropdownRender={menu => (
+                                //     <div>
+                                //         {menu}
+                                //         <Divider style={{ margin: '4px 0' }} />
+                                //         <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
+                                //             <Input style={{ flex: 'auto' }} value={nameItemsCreate} onChange={onNameChangeItemsCreate} />
+                                //             <Button disabled={nameItemsCreate !== '' ? false : true} style={{ marginLeft: '10px' }} onClick={addItemsCreate}>
+                                //                 <PlusOutlined /> Thêm
+                                //             </Button>
+                                //         </div>
+                                //     </div>
+                                // )}
                                 >
                                     {engineCreate.length !== 0 && engineCreate.map(item => (
                                         item.Id === '0416e0c8-2120-4d3f-8656-5c708d263c04' && <Option key={item.Id}>{item.Name}</Option>
@@ -1619,7 +1619,7 @@ function ManageCarsComponent() {
                     formUpdateBase.setFieldsValue({ yearOfManufactor: dateString })
                 }
                 const handleBrandChange = (id, key) => {
-                    console.log(key.key)
+                    console.log("key: ", key.key)
                     formUpdateBase.setFieldsValue({ carModelId: [], brandName: key.key })
                     CarService.getCarModelsByBrand(key.key).then((res) => setModels(res.data)).catch((err) => console.log(err))
                 }
@@ -1637,19 +1637,21 @@ function ManageCarsComponent() {
                     .catch((err) => {
                         console.log(err)
                     })
-                formUpdateBase.setFieldsValue({
-                    brand: brandName,
-                    brandName: editInfo.editInfo.CarModel.BrandId,
-                    id: editInfo.editInfo.Id,
-                    name: editInfo.editInfo.Name,
-                    Gia: editInfo.editInfo.Price,
-                    price: editInfo.editInfo.Price,
-                    carModelName: editInfo.editInfo.CarModel.Name,
-                    image: editInfo.editInfo.Image,
-                    nam: moment(editInfo.editInfo.YearOfManufactor, 'yyyy'),
-                    yearOfManufactor: editInfo.editInfo.YearOfManufactor,
-                    carModelId: editInfo.editInfo.CarModelId
-                })
+                useEffect(() => {
+                    formUpdateBase.setFieldsValue({
+                        brand: brandName,
+                        brandName: editInfo.editInfo.CarModel.BrandId,
+                        id: editInfo.editInfo.Id,
+                        name: editInfo.editInfo.Name,
+                        Gia: editInfo.editInfo.Price,
+                        price: editInfo.editInfo.Price,
+                        carModelName: editInfo.editInfo.CarModel.Name,
+                        image: editInfo.editInfo.Image,
+                        nam: moment(editInfo.editInfo.YearOfManufactor, 'yyyy'),
+                        yearOfManufactor: editInfo.editInfo.YearOfManufactor,
+                        carModelId: editInfo.editInfo.CarModelId
+                    })
+                }, [brandName])
                 return (
                     <div>
                         <Modal
@@ -2302,7 +2304,7 @@ function ManageCarsComponent() {
                             onClear={handleModelClear}
                         />
                     </div>
-                    <Spin spinning={generations ? false : true}>
+                    <Spin spinning={generations.length !== 0 ? false : true}>
                         <Table
                             columns={baseColumns}
                             dataSource={filterTable === null ? generations : filterTable}

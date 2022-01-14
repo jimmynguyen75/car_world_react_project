@@ -103,7 +103,7 @@ function ManageAttributesComponent() {
                 })
         }
         const Edit = () => {
-            const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít'])
+            const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít', 'km'])
             const [nameItemss, setNameItemss] = useState('')
             const onNameChangeItemss = (event) => {
                 console.log(event.target.value)
@@ -190,7 +190,7 @@ function ManageAttributesComponent() {
             )
         }
         const CreateAttribute = () => {
-            const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít'])
+            const [itemss, setItemss] = useState(['mm', 'kg', 'km/h', 'cc', 'lít', 'km'])
             const [engineCreate, setEngineCreate] = useState([])
             const [nameItemss, setNameItemss] = useState('')
             const [nameItemsCreate, setNameItemsCreate] = useState('')
