@@ -64,7 +64,7 @@ function ManagePostsComponent() {
             setData({ all: all, car: car, accessory: accessory, event: event, contest: contest })
         }
         fetchData()
-    }, [data])
+    }, [])
     useEffect(() => {
         BrandService.getAllBrand()
             .then(car => {
@@ -104,11 +104,21 @@ function ManagePostsComponent() {
         }
     }, [data, key])
     const viewPost = (record) => {
-        let repo = removeVietnamese.removeVietnameseTones(record.Title)
-        history.push(`/${repo.replace(/\s+/g, '-').toLowerCase()}`, { record: record });
+        PostService.getPostById(record.Id).then((res) => {
+            console.log(res.data)
+            let repo = removeVietnamese.removeVietnameseTones(record.Title)
+            history.push(`/${repo.replace(/\s+/g, '-').toLowerCase()}`, { record: res.data });
+        }).catch((error) => {
+            console.error(error)
+        })
     }
     const editPost = (record) => {
-        history.push('/sua-bai-dang', { record: record });
+        PostService.getPostById(record.Id).then((res) => {
+            history.push('/sua-bai-dang', { record: res.data });
+            console.log(res.data)
+        }).catch((error) => {
+            console.error(error)
+        })
     }
     const handleCancel = () => {
         console.log('Clicked cancel button');
@@ -263,8 +273,8 @@ function ManagePostsComponent() {
                     render: (data) => {
                         return (
                             <Row>
-                                <Avatar alt="" src={data.CreatedByNavigation.Image}></Avatar>
-                                <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data.CreatedByNavigation.FullName}</div>
+                                <Avatar alt="" src={data.CreatorImage}></Avatar>
+                                <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data.CreatorName}</div>
                             </Row>
                         )
                     }
@@ -420,8 +430,8 @@ function ManagePostsComponent() {
                     render: (data) => {
                         return (
                             <Row>
-                                <Avatar alt="" src={data.CreatedByNavigation.Image}></Avatar>
-                                <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data.CreatedByNavigation.FullName}</div>
+                                <Avatar alt="" src={data.CreatorImage}></Avatar>
+                                <div style={{ display: 'flex', alignItems: 'center', marginLeft: 7 }}>{data.CreatorName}</div>
                             </Row>
                         )
                     }

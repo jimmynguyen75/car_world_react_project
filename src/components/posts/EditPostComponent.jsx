@@ -85,6 +85,7 @@ export default function EditPostComponent({ record }) {
             return new MyUploadAdapter(loader);
         };
     }
+    console.log(record)
     form.setFieldsValue({
         id: record.Id,
         type: record.Type === 1 ? 1 : record.Type === 2 ? 2 : record.Type === 3 ? 3 : record.Type === 4 ? 4 : null,

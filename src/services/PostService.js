@@ -12,7 +12,7 @@ class PostService {
         return axios.put(POST_API_URL + "UpdatePost?id=" + id, post, { headers: authHeader() })
     }
     getPostById(id) {
-        return axios.get(POST_API_URL + "GetPostById?id=" + id, { headers: authHeader })
+        return axios.get(POST_API_URL + "GetPostById?id=" + id)
     }
     changePostStatus(id, status) {
         return axios.put(POST_API_URL + "ChangePostStatus?id=" + id + "&postStatus=" + status, { headers: authHeader })

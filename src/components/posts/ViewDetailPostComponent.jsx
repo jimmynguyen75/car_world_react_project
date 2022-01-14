@@ -13,6 +13,8 @@ export default function ViewDetailPostComponent({ record, recordImage }) {
             setBrand(brand.data);
         }).catch((error) => { console.log(error) })
     }, [record])
+    console.log("ccc: ", record.Contents)
+
     DecoupledEditor
         .create(document.querySelector('#editor'))
         .then(editor => {
@@ -24,6 +26,7 @@ export default function ViewDetailPostComponent({ record, recordImage }) {
         .catch(error => {
             console.error(error);
         });
+
     return (
         <div id="post" style={{ margin: '0 auto', width: 900, marginBottom: 50, backgroundColor: 'white', marginTop: '-20px' }}>
             <div style={{ padding: '30px 30px 0px 30px', fontWeight: 600, fontSize: 32, width: 900, marginTop: 30 }}> {record !== '' && record.Title}</div>
@@ -42,7 +45,7 @@ export default function ViewDetailPostComponent({ record, recordImage }) {
             <div id="editor" style={{ width: 900, padding: '10px 30px 0px 30px' }}>
                 <p>{record !== '' && parse(record.Contents)}</p>
             </div>
-            <div style={{ padding: '0px 30px 30px 30px', fontWeight: '500' }}>Thực hiện: {record !== '' && record.CreatedByNavigation.FullName}</div>
+            <div style={{ padding: '0px 30px 30px 30px', fontWeight: '500' }}>Thực hiện: {record !== '' && record.CreatorName}</div>
         </div>
     )
 }
